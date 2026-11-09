@@ -129,21 +129,20 @@ html[data-theme="noel"] #ecranCredits .credits-honneur-titre{ color: #ffe9ea; }
 /* Télé : code de la télé, en bas de l'écran */
 html[data-theme="noel"] #ecranTele .tele-pied{ color: rgba(255, 233, 234, 0.8); }
 
-/* ----- Aperçu du thème dans les Réglages : une boule de sapin (rouge brillant, bande dorée, culot doré et anneau) ----- */
+/* ----- Aperçu du thème dans les Réglages : une boule à neige (sapin dans une sphère de verre, neige qui retombe, socle doré) ----- */
 .pastilleTheme .rondNoel{
   position: relative;
-  background:
-    radial-gradient(circle at 32% 28%, rgba(255,255,255,.95) 0 3px, rgba(255,255,255,0) 7px),
-    linear-gradient(180deg, transparent 44%, #ffd23f 44% 52%, transparent 52%),
-    radial-gradient(circle at 36% 32%, #ff5a5a, #d3202e 55%, #7e0914 100%) !important;
+  background: url("noel/boule_neige.svg") center / cover no-repeat !important;
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,.28), inset 0 -6px 10px rgba(0,0,0,.25);
 }
-.pastilleTheme .rondNoel::before{ /* culot */
-  content: ""; position: absolute; left: 50%; top: -7px; width: 12px; height: 7px; margin-left: -6px;
-  border-radius: 2px 2px 0 0; background: linear-gradient(90deg, #c68a0a, #fff1a0 45%, #c68a0a);
+.pastilleTheme .rondNoel::after{ /* socle */
+  content: ""; position: absolute; left: 50%; bottom: -4px; width: 26px; height: 11px; margin-left: -13px;
+  border-radius: 3px 3px 6px 6px / 4px 4px 6px 6px;
+  background: linear-gradient(180deg, #ffe27a 0 22%, #c68a0a 24%, #8e5a06);
+  box-shadow: 0 2px 3px rgba(0,0,0,.35);
 }
-.pastilleTheme .rondNoel::after{ /* anneau d'accroche */
-  content: ""; position: absolute; left: 50%; top: -13px; width: 8px; height: 8px; margin-left: -4px;
-  border: 2px solid #ffd23f; border-radius: 50%; box-sizing: border-box;
+.pastilleTheme .rondNoel::before{ /* petit liseré rouge du socle */
+  content: ""; position: absolute; z-index: 1; left: 50%; bottom: 0; width: 18px; height: 2px; margin-left: -9px; background: #c4161c; border-radius: 1px;
 }
 
 /* ----- Bouton « Album de stickers » de l'accueil : même famille que les gros boutons (or opaque, texte blanc), en plus petit ----- */
