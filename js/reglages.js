@@ -95,7 +95,7 @@ const CLE_THEME = "alcuno_theme";
 // Couleur de la barre du téléphone pour chaque thème (= --couleur-barre du CSS, le tout haut de la page).
 // Mêmes couleurs dans le script du <head> de index.html, qui la pose dès le premier affichage.
 const THEMES = { bordeaux: "#2b001d", noir: "#000000", vert: "#08301e", bleu: "#0a1634", soleil: "#1f3566",
-                 cerisier: "#5a1740", givre: "#e4f5fc", prestige: "#937810", galaxie: "#02030a", kawaii: "#ffd6ec", donjon: "#12040a" };
+                 cerisier: "#5a1740", givre: "#e4f5fc", prestige: "#937810", galaxie: "#02030a", kawaii: "#ffd6ec", donjon: "#12040a", noel: "#8e0c18" };
 
 // Thème secret « Prestige » : débloqué en découvrant l'écran des créateurs (4 taps sur le titre)
 const CLE_PRESTIGE = "alcuno_theme_prestige";
@@ -376,6 +376,44 @@ function passageNyanCat(){
   vol.onfinish = () => zone.remove();
 }
 setTimeout(passageNyanCat, 4000);
+
+// Accueil du thème Noël : le Père Noël traverse l'écran en traîneau de temps en temps (comme le Nyan Cat de
+// Star Wars), d'un côté à l'autre, à une hauteur au hasard, derrière les boutons. Il repart du côté par où il
+// est sorti la fois d'avant. noel/traineau.svg regarde vers la droite : retourné quand il va vers la gauche.
+const TRAINEAU_L = 230, TRAINEAU_H = TRAINEAU_L * 130 / 420; // taille à l'écran (proportions de l'image)
+let dernierBordTraineau = null;
+function passageTraineau(){
+  setTimeout(passageTraineau, 18000 + Math.random() * 14000);
+  const accueil = document.getElementById("choixMode");
+  if (document.documentElement.dataset.theme !== "noel" || document.visibilityState !== "visible" ||
+      document.documentElement.classList.contains("mode-tele") || // (pas sur la page de la télé)
+      !accueil || getComputedStyle(accueil).display === "none" || !accueil.clientHeight ||
+      accueil.querySelector(".traineauNoel")) return;
+  const W = accueil.clientWidth, H = accueil.clientHeight;
+  const zone = document.createElement("div");
+  zone.className = "traineauNoel";
+  const vol = document.createElement("div");
+  vol.className = "traineauNoel-vol";
+  vol.style.cssText = `width:${TRAINEAU_L}px;height:${TRAINEAU_H}px`;
+  vol.innerHTML = '<div class="traineauNoel-poussiere"></div><div class="traineauNoel-image"></div>';
+  zone.appendChild(vol);
+  accueil.appendChild(zone);
+  const hasard = (a, b) => a + Math.random() * (b - a);
+  const bord = dernierBordTraineau || (Math.random() < 0.5 ? "gauche" : "droite");
+  dernierBordTraineau = bord === "gauche" ? "droite" : "gauche"; // bord de sortie
+  // en haut des deux tiers de l'écran (en bas, il y a les sapins), un peu en montée : il s'envole
+  const yEntree = hasard(0.2, 0.62) * H, ySortie = yEntree - hasard(0.05, 0.2) * H;
+  const versDroite = bord === "gauche";
+  // (x : bord gauche de l'image ; la traînée dorée fait 1,6 fois sa largeur derrière lui : elle doit être sortie aussi)
+  const x0 = versDroite ? -TRAINEAU_L : W, x1 = versDroite ? W + TRAINEAU_L * 1.6 : -TRAINEAU_L * 2.6;
+  const angle = Math.atan2(ySortie - yEntree, Math.abs(x1 - x0));
+  const sens = versDroite ? "" : " scaleX(-1)";
+  const position = (x, y) => `translate(${x}px, ${y - TRAINEAU_H / 2}px)${sens} rotate(${angle}rad)`;
+  const anim = vol.animate([{ transform: position(x0, yEntree) }, { transform: position(x1, ySortie) }],
+    { duration: Math.abs(x1 - x0) / 0.13, easing: "linear" }); // 130 px par seconde
+  anim.onfinish = () => zone.remove();
+}
+setTimeout(passageTraineau, 2500);
 
 // Halo du sabre sous la barre de l'heure (thème Star Wars, voir le CSS) : dans index.html dès le premier
 // affichage ; créé ici seulement si une ancienne page gardée en cache ne l'a pas
@@ -731,6 +769,20 @@ for (let i = 0; i < 14; i++) {
   petale.style.animationDuration = `${duree}s`;
   petale.style.animationDelay = `${-Math.random() * duree}s`; // déjà en train de tomber à l'ouverture
   zonePetales.appendChild(petale);
+}
+
+// Noël : flocons qui tombent sur l'écran d'accueil (positions, tailles et vitesses au hasard)
+const zoneNeige = document.getElementById("neigeNoel");
+for (let i = 0; i < 40; i++) {
+  const flocon = document.createElement("span");
+  const taille = 4 + Math.random() * 7;
+  const duree = 7 + Math.random() * 9;
+  flocon.style.left = `${Math.random() * 100}%`;
+  flocon.style.width = flocon.style.height = `${taille}px`;
+  flocon.style.opacity = String(0.55 + Math.random() * 0.45);
+  flocon.style.animationDuration = `${duree}s`;
+  flocon.style.animationDelay = `${-Math.random() * duree}s`; // déjà en train de tomber à l'ouverture
+  zoneNeige.appendChild(flocon);
 }
 
 // Prestige : étincelles qui scintillent sur l'écran d'accueil (positions, tailles et rythmes au hasard)

@@ -76,7 +76,7 @@
         try { var theme = localStorage.getItem("alcuno_theme"); if (theme === "violet") { theme = "soleil"; localStorage.setItem("alcuno_theme", theme); } if (theme) document.documentElement.dataset.theme = theme; } catch (e) {}
         // Barre du téléphone à la couleur du thème dès le premier affichage (mêmes couleurs que THEMES dans script.js)
         var couleursBarre = { bordeaux: "#2b001d", noir: "#000000", vert: "#08301e", bleu: "#0a1634", soleil: "#1f3566",
-                              cerisier: "#5a1740", givre: "#e4f5fc", prestige: "#937810", galaxie: "#02030a", kawaii: "#ffd6ec", donjon: "#12040a" };
+                              cerisier: "#5a1740", givre: "#e4f5fc", prestige: "#937810", galaxie: "#02030a", kawaii: "#ffd6ec", donjon: "#12040a", noel: "#8e0c18" };
         document.write('<meta name="theme-color" content="' + (couleursBarre[theme] || couleursBarre.bordeaux) + '">');
         // iPhone : page rechargée après un changement de thème (voir rafraichirBarreIphone dans script.js) :
         // on rouvre les Réglages dès le premier affichage
@@ -84,6 +84,7 @@
         document.write('<link rel="stylesheet" href="style_alcuno.css?t=' + window.ANTI_CACHE + '" />');
         document.write('<link rel="stylesheet" href="style_kawaii.css?t=' + window.ANTI_CACHE + '" />'); // thème Kawaii (généré : outils/generer_kawaii.py)
         document.write('<link rel="stylesheet" href="style_donjon.css?t=' + window.ANTI_CACHE + '" />'); // thème secret Donjon (débloqué par une partie en mode hot)
+        document.write('<link rel="stylesheet" href="style_noel.css?t=' + window.ANTI_CACHE + '" />'); // thème de fête Noël
     </script>
     <title>Alcuno TEST</title>
 
@@ -173,6 +174,8 @@
             <div id="kawaiiFlotteurs" aria-hidden="true"></div>
             <!-- Thème Donjon : objets qui tombent sur l'accueil (remplis par js/reglages.js) -->
             <div id="donjonFlotteurs" aria-hidden="true"></div>
+            <!-- Thème Noël : neige qui tombe (remplie par js/reglages.js) -->
+            <div id="neigeNoel" aria-hidden="true"></div>
             <!-- Réglages : seulement sur l'écran d'accueil -->
             <button type="button" id="btnReglages" title="Réglages" aria-label="Réglages">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -190,7 +193,7 @@
                 </svg>
             </button>
             <div class="titreAccueil">
-                <h1 id="titreAccueil">ALCUNO<span class="couronneTitre" aria-hidden="true"><svg viewBox="0 0 64 48" aria-hidden="true"><defs><linearGradient id="orCouronne" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3a8"/><stop offset="0.45" stop-color="#ffd23f"/><stop offset="1" stop-color="#c8880a"/></linearGradient></defs><path d="M6 40 L3 12 L18 24 L32 4 L46 24 L61 12 L58 40 Z" fill="url(#orCouronne)" stroke="#7a4b00" stroke-width="2.5" stroke-linejoin="round"/><rect x="5" y="38" width="54" height="8" rx="2" fill="url(#orCouronne)" stroke="#7a4b00" stroke-width="2.5"/><circle cx="3" cy="11" r="3.2" fill="#fff3a8" stroke="#7a4b00" stroke-width="1.5"/><circle cx="32" cy="4" r="3.6" fill="#fff3a8" stroke="#7a4b00" stroke-width="1.5"/><circle cx="61" cy="11" r="3.2" fill="#fff3a8" stroke="#7a4b00" stroke-width="1.5"/><circle cx="32" cy="30" r="4" fill="#e0263a" stroke="#7a4b00" stroke-width="1.2"/><circle cx="17" cy="32" r="2.8" fill="#2f7de1" stroke="#7a4b00" stroke-width="1.2"/><circle cx="47" cy="32" r="2.8" fill="#2f7de1" stroke="#7a4b00" stroke-width="1.2"/></svg></span></h1>
+                <h1 id="titreAccueil">ALCUNO<span class="bonnetTitre" aria-hidden="true"><svg viewBox="0 0 64 56" aria-hidden="true"><path d="M8 42 Q12 14 34 8 Q52 4 58 22 Q60 30 54 36 Q52 24 44 20 Q46 34 54 42z" fill="#e3242b" stroke="#7a0a12" stroke-width="2.5" stroke-linejoin="round"/><path d="M14 30 Q20 16 34 12" stroke="#ff6a6a" stroke-width="3" fill="none" stroke-linecap="round"/><rect x="3" y="38" width="56" height="13" rx="6.5" fill="#fff" stroke="#c9d3dd" stroke-width="2"/><circle cx="55" cy="38" r="7" fill="#fff" stroke="#c9d3dd" stroke-width="2"/></svg></span><span class="couronneTitre" aria-hidden="true"><svg viewBox="0 0 64 48" aria-hidden="true"><defs><linearGradient id="orCouronne" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3a8"/><stop offset="0.45" stop-color="#ffd23f"/><stop offset="1" stop-color="#c8880a"/></linearGradient></defs><path d="M6 40 L3 12 L18 24 L32 4 L46 24 L61 12 L58 40 Z" fill="url(#orCouronne)" stroke="#7a4b00" stroke-width="2.5" stroke-linejoin="round"/><rect x="5" y="38" width="54" height="8" rx="2" fill="url(#orCouronne)" stroke="#7a4b00" stroke-width="2.5"/><circle cx="3" cy="11" r="3.2" fill="#fff3a8" stroke="#7a4b00" stroke-width="1.5"/><circle cx="32" cy="4" r="3.6" fill="#fff3a8" stroke="#7a4b00" stroke-width="1.5"/><circle cx="61" cy="11" r="3.2" fill="#fff3a8" stroke="#7a4b00" stroke-width="1.5"/><circle cx="32" cy="30" r="4" fill="#e0263a" stroke="#7a4b00" stroke-width="1.2"/><circle cx="17" cy="32" r="2.8" fill="#2f7de1" stroke="#7a4b00" stroke-width="1.2"/><circle cx="47" cy="32" r="2.8" fill="#2f7de1" stroke="#7a4b00" stroke-width="1.2"/></svg></span></h1>
                 <div class="titreAccueilBarre" aria-hidden="true"></div>
             </div>
             <!-- Annonce pilotée à distance depuis stats.html (voir js/config-distante.js) -->
@@ -240,6 +243,8 @@
                         <button type="button" class="pastilleTheme" data-theme="soleil" style="--c:#ff9a6b;--c-givre:#c8506a"><span class="rond" style="background:linear-gradient(180deg,#4a4f86,#e9787a,#fcc98a)"></span><span class="nomTheme">Soleil couchant</span></button>
                         <button type="button" class="pastilleTheme" data-theme="cerisier" style="--c:#ff9cc5;--c-givre:#c2407a"><span class="rond" style="background:linear-gradient(135deg,#5a1740 35%,#ff9cc5)"></span><span class="nomTheme">Cerisier</span></button>
                         <button type="button" class="pastilleTheme" data-theme="givre" style="--c:#7fd8ff;--c-givre:#0f6aa6"><span class="rond" style="background:linear-gradient(135deg,#9fdcf7 25%,#ffffff)"></span><span class="nomTheme">Givre</span></button>
+                        <!-- Thème de fête : choisi à la main pour l'instant (calendrier automatique plus tard, voir FETES.md) -->
+                        <button type="button" class="pastilleTheme" data-theme="noel" style="--c:#ff6b6b;--c-givre:#b3121f"><span class="rond" style="background:radial-gradient(circle at 30% 30%,#fff 0 2px,transparent 3px),radial-gradient(circle at 68% 58%,#fff 0 1.6px,transparent 2.6px),linear-gradient(180deg,#d61f2e,#8e0c18 70%,#f4f8ff 71%)"></span><span class="nomTheme">Noël</span></button>
                         <!-- Thème secret : débloqué en découvrant l'écran des créateurs (4 taps sur le titre) -->
                         <button type="button" class="pastilleTheme" data-theme="prestige" style="--c:#f5c842;--c-givre:#9a7400" id="pastillePrestige" hidden><span class="rond" style="background:linear-gradient(135deg,#3a2806 15%,#d4a017 60%,#fff2b0)"></span><span class="nomTheme">Prestige</span></button>
                         <!-- Thème secret : débloqué avec les 11 stickers de l'album (js/stickers.js) -->

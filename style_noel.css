@@ -1,0 +1,130 @@
+/* =============================================================================================
+   Thème de fête « Noël » (nom interne : noel) : écran rouge, neige qui tombe, sapins décorés,
+   bonnet de Noël sur le titre et le Père Noël qui traverse l'accueil en traîneau.
+   Pour l'instant choisi à la main dans les Réglages (le calendrier des fêtes viendra plus tard, voir FETES.md).
+   Tout est sous html[data-theme="noel"] : rien ne change pour les autres thèmes.
+   Images : dossier noel/ (traîneau, sapin) ; le bonnet est dans index.html (comme la couronne Prestige).
+   ============================================================================================= */
+
+html[data-theme="noel"]{
+  --fond-theme: #b3121f;
+  --couleur-barre: #8e0c18;
+  /* Fond du jeu, des menus et des réglages : lumière douce en haut et quelques flocons immobiles */
+  --deco-theme:
+    radial-gradient(circle at 22px 34px, rgba(255,255,255,.22) 0 2px, transparent 3px) 0 0 / 150px 150px,
+    radial-gradient(circle at 96px 104px, rgba(255,255,255,.16) 0 1.6px, transparent 2.6px) 0 0 / 150px 150px,
+    radial-gradient(ellipse 120% 55% at 50% 0%, rgba(255,140,140,.28), transparent 70%) no-repeat,
+    linear-gradient(to top, rgba(60,0,8,.35), transparent 45%) no-repeat;
+  /* Accueil : en plus, deux sapins décorés posés sur un tapis de neige, en bas de l'écran */
+  --deco-accueil:
+    url("noel/sapin.svg") left -10px bottom 26px / auto min(30vh, 210px) no-repeat,
+    url("noel/sapin.svg") right 4px bottom 34px / auto min(22vh, 150px) no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 400 80%22 preserveAspectRatio=%22none%22%3E%3Cpath d=%22M0 80 L0 34 Q60 14 130 30 T260 26 T400 22 L400 80z%22 fill=%22%23f4f8ff%22/%3E%3Cpath d=%22M0 34 Q60 14 130 30 T260 26 T400 22%22 fill=%22none%22 stroke=%22%23d5e3f2%22 stroke-width=%223%22/%3E%3C/svg%3E") bottom / 100% 80px no-repeat,
+    radial-gradient(circle at 22px 34px, rgba(255,255,255,.22) 0 2px, transparent 3px) 0 0 / 150px 150px,
+    radial-gradient(ellipse 120% 55% at 50% 0%, rgba(255,140,140,.3), transparent 70%) no-repeat;
+  /* Joueur dont c'est le tour : blanc neige et or */
+  --actif-haut: #ffffff; --actif-bas: #ffd23f; --actif-texte: #5a0610; --actif-halo: #ffe27a;
+  /* Fenêtres du jeu (pigeon, duel, +4, pari…) : halo rouge sur un rouge très sombre (le doré reste lisible) */
+  --overlay-fond: radial-gradient(ellipse 115% 42% at 50% 45%, rgba(220,30,50,.45) 0%, transparent 100%), #1c0306;
+  --overlay-bord: #1c0306;
+}
+
+/* ----- Fenêtres du jeu ----- */
+html[data-theme="noel"] :is(#overlayCouleur, #overlayPlus4, #overlayCupidon, #overlayPigeon,
+  #overlayFinUnRestants, #overlayDuel, #overlayRegleUnique, #overlayAnnulation, #overlayResultatAnnulation,
+  #overlayPredictionFin, .overlay-opaque){
+  background: var(--overlay-fond) !important;
+}
+html[data-theme="noel"].overlay-ouvert,
+html[data-theme="noel"].overlay-ouvert body,
+html[data-theme="noel"] #voileOverlays{ background: var(--overlay-bord); }
+html[data-theme="noel"] .plus4-actions{ background: transparent; }
+html[data-theme="noel"] :is(#overlayCarteDoree, #overlayRegleUnique.overlay-doree){
+  background: radial-gradient(ellipse 95% 34% at 50% 33%, rgba(255,215,0,.26), transparent 100%),
+    radial-gradient(ellipse 120% 60% at 50% 100%, rgba(220,30,50,.45), transparent 100%), #1c0306 !important; box-shadow: none; }
+/* Récap de fin de partie */
+html[data-theme="noel"] #overlayFinUnRestants.overlay-recap{ background: radial-gradient(ellipse 110% 45% at 50% 45%, rgba(220,30,50,.4), transparent 100%), #140204 !important; }
+html[data-theme="noel"] :is(.recap-marche, .recap-liste, .recap-bloc){ background: rgba(120,8,20,.5); border-color: rgba(255,255,255,.4); }
+html[data-theme="noel"] .recap-marche{ background: linear-gradient(180deg, rgba(255,90,100,.3), rgba(120,8,20,.3)); }
+
+/* ----- Télé : même teinte que le thème ----- */
+html[data-theme="noel"] #ecranTele .tele-ecran{ background: radial-gradient(ellipse 110% 70% at 50% 45%, rgba(200,20,40,.5), rgba(28,3,6,.97) 75%), rgb(28,3,6); }
+html[data-theme="noel"] #ecranTele .tele-ecran-recap{ background: radial-gradient(ellipse 110% 60% at 50% 40%, rgba(220,30,50,.3), transparent 100%), #140204 !important; }
+
+/* ----- Bonnet de Noël sur le « A » du titre ALCUNO (accueil), comme la couronne Prestige sur le « O » ----- */
+#choixMode .bonnetTitre{
+  display: none;
+  position: absolute;
+  top: -0.36em;
+  left: 0.03em;
+  width: 0.82em;
+  transform: rotate(-12deg);
+  transform-origin: 50% 100%;
+  filter: drop-shadow(0 3px 0 rgba(90, 0, 10, 0.7)) drop-shadow(0 0 8px rgba(255, 255, 255, 0.35));
+  pointer-events: none;
+}
+#choixMode .bonnetTitre svg{ display: block; width: 100%; height: auto; }
+html[data-theme="noel"] #choixMode .bonnetTitre{ display: block; }
+
+/* ----- Neige qui tombe sur l'accueil (flocons remplis par js/reglages.js) ----- */
+#neigeNoel{
+  display: none;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1; /* derrière le contenu de l'accueil, au-dessus de son fond */
+  animation: none !important;
+}
+html[data-theme="noel"] #neigeNoel{ display: block; }
+#neigeNoel span{
+  position: absolute;
+  top: -16px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 0 45%, rgba(255,255,255,0) 72%);
+  animation: chuteNeige linear infinite;
+}
+@keyframes chuteNeige{
+  0%   { transform: translate(0, 0); }
+  25%  { transform: translate(14px, 26vh); }
+  50%  { transform: translate(-10px, 52vh); }
+  75%  { transform: translate(12px, 78vh); }
+  100% { transform: translate(-4px, 106vh); }
+}
+
+/* ----- Le Père Noël en traîneau traverse l'accueil (js/reglages.js, comme le Nyan Cat de Star Wars) -----
+   La zone coupe ce qui dépasse (sinon l'écran défilerait de côté pendant son passage) ; derrière les boutons.
+   Le traîneau monte et descend doucement, et laisse une traînée de poussière dorée. */
+#choixMode .traineauNoel{ position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+#choixMode .traineauNoel-vol{ position: absolute; left: 0; top: 0; }
+#choixMode .traineauNoel-image{
+  position: absolute; inset: 0;
+  background: url("noel/traineau.svg") center / contain no-repeat;
+  filter: drop-shadow(0 0 1.5px #fff) drop-shadow(0 0 6px rgba(255, 240, 200, 0.75));
+  animation: traineauBalance 1.6s ease-in-out infinite alternate;
+}
+#choixMode .traineauNoel-poussiere{
+  position: absolute; top: 62%; right: 92%; width: 160%; height: 30%;
+  background:
+    radial-gradient(circle at 10% 50%, #fff6c2 0 1.5px, transparent 2.5px) 0 0 / 22px 14px,
+    radial-gradient(circle at 60% 20%, #ffd23f 0 1.8px, transparent 3px) 0 0 / 30px 18px,
+    radial-gradient(circle at 40% 80%, #fff 0 1.2px, transparent 2.2px) 0 0 / 18px 12px;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 85%); mask-image: linear-gradient(to right, transparent 0, #000 85%);
+  animation: traineauPoussiere 0.6s steps(3) infinite;
+}
+@keyframes traineauBalance{ from{ transform: translateY(-5px) rotate(-1.5deg); } to{ transform: translateY(5px) rotate(1.5deg); } }
+@keyframes traineauPoussiere{ from{ background-position: 0 0, 0 0, 0 0; } to{ background-position: -22px 3px, -30px -3px, -18px 2px; } }
+
+@media (prefers-reduced-motion: reduce){
+  #neigeNoel, #choixMode .traineauNoel{ display: none !important; }
+}
+
+/* ----- Lisibilité sur le rouge (Réglages, écran des créateurs) ----- */
+/* Cadres des Réglages plus sombres : les noms des thèmes (chacun de sa couleur) restent lisibles */
+html[data-theme="noel"] #ecranReglages .blocReglage{ background: rgba(60, 0, 10, 0.55); border-color: rgba(255, 255, 255, 0.22); }
+/* Petits textes gris : blanc cassé */
+html[data-theme="noel"] #ecranReglages :is(.lienBug, .versionJeu){ color: #ffe9ea !important; }
+html[data-theme="noel"] #ecranReglages .btnDiagnostic{ color: #ffe9ea !important; border-color: rgba(255, 255, 255, 0.5) !important; background: rgba(60, 0, 10, 0.4) !important; }
+html[data-theme="noel"] #ecranCredits .credits-honneur-titre{ color: #ffe9ea; }
+/* Télé : code de la télé, en bas de l'écran */
+html[data-theme="noel"] #ecranTele .tele-pied{ color: rgba(255, 233, 234, 0.8); }

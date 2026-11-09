@@ -7,7 +7,7 @@
 //
 // Changer CACHE (ex. "alcuno-v2") force les téléphones à repartir d'une copie locale propre.
 
-const CACHE = "alcuno-test-v1"; // APPLI TEST (dépôt Alcuno-test) : nom propre au test. Historique du vrai jeu : alcuno-v22 ; // v22 : sons des boutons BDSM retouchés (le test du cache était en échec) ; v21 : sons des boutons du thème BDSM (Sons/bdsm_buttons/) ; v20 : musique du thème BDSM, son de l'étoile filante ; v19 : faces de cartes du thème BDSM (Cartes/donjon/) ; v18 : dos des cartes du thème Donjon (cœur masqué) ; v17 : thème Donjon (style_donjon.css, donjon/) ; v16 : mode hot (js/mode-hot.js, carte Cupidon) ; v15 : 4 sons de sabre retirés ; v14 : FAQ (js/faq.js) ; // v13 : musique d'ambiance gardée en cache à la première écoute (hors connexion) ; v12 : trois dos Star Wars qui alternent ; v11 : dos Star Wars en acier (dos_galaxie_argent.svg) ; v10 : faces de cartes Star Wars (Cartes/galaxie/) ; v9 : faces de cartes Kawaii (Cartes/kawaii/) ; v8 : dos Kawaii renommés (dos_kawaii_alcuno_*) pour sortir des anciens caches ; v7 : dos Kawaii avec « ALC UNO » ; v6 : dos de cartes Kawaii ; v5 : petits personnages flottants du thème Kawaii ; v4 : album de stickers et thème Kawaii ; v3 : QR code de la partie (js/qrcode.js) ; v2 : cartes HD en WebP (les anciennes .jpg sont supprimées du cache)
+const CACHE = "alcuno-test-v2"; // APPLI TEST (dépôt Alcuno-test) : nom propre au test. Test v2 : thème Noël (style_noel.css, noel/). Historique du vrai jeu : alcuno-v22 ; // v22 : sons des boutons BDSM retouchés (le test du cache était en échec) ; v21 : sons des boutons du thème BDSM (Sons/bdsm_buttons/) ; v20 : musique du thème BDSM, son de l'étoile filante ; v19 : faces de cartes du thème BDSM (Cartes/donjon/) ; v18 : dos des cartes du thème Donjon (cœur masqué) ; v17 : thème Donjon (style_donjon.css, donjon/) ; v16 : mode hot (js/mode-hot.js, carte Cupidon) ; v15 : 4 sons de sabre retirés ; v14 : FAQ (js/faq.js) ; // v13 : musique d'ambiance gardée en cache à la première écoute (hors connexion) ; v12 : trois dos Star Wars qui alternent ; v11 : dos Star Wars en acier (dos_galaxie_argent.svg) ; v10 : faces de cartes Star Wars (Cartes/galaxie/) ; v9 : faces de cartes Kawaii (Cartes/kawaii/) ; v8 : dos Kawaii renommés (dos_kawaii_alcuno_*) pour sortir des anciens caches ; v7 : dos Kawaii avec « ALC UNO » ; v6 : dos de cartes Kawaii ; v5 : petits personnages flottants du thème Kawaii ; v4 : album de stickers et thème Kawaii ; v3 : QR code de la partie (js/qrcode.js) ; v2 : cartes HD en WebP (les anciennes .jpg sont supprimées du cache)
 
 // Copié dès l'installation : de quoi jouer en classique sans réseau
 const A_PRECHARGER = [
@@ -32,6 +32,9 @@ const A_PRECHARGER = [
   "./style_alcuno.css",
   "./style_kawaii.css",
   "./style_donjon.css",
+  "./style_noel.css",
+  "./noel/traineau.svg",
+  "./noel/sapin.svg",
   "./stickers/cupcake.svg",
   "./stickers/chat.svg",
   "./stickers/lapin.svg",
