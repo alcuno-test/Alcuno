@@ -121,7 +121,7 @@ html[data-theme="noel"] #neigeNoel{ display: block; }
 
 /* ----- Lisibilité sur le rouge (Réglages, écran des créateurs) ----- */
 /* Cadres des Réglages plus sombres : les noms des thèmes (chacun de sa couleur) restent lisibles */
-html[data-theme="noel"] #ecranReglages .blocReglage{ background: rgba(60, 0, 10, 0.55); border-color: rgba(255, 255, 255, 0.22); }
+html[data-theme="noel"] #ecranReglages .blocReglage{ background: rgba(30, 0, 5, 0.72); border-color: rgba(255, 255, 255, 0.22); }
 /* Petits textes gris : blanc cassé */
 html[data-theme="noel"] #ecranReglages :is(.lienBug, .versionJeu){ color: #ffe9ea !important; }
 html[data-theme="noel"] #ecranReglages .btnDiagnostic{ color: #ffe9ea !important; border-color: rgba(255, 255, 255, 0.5) !important; background: rgba(60, 0, 10, 0.4) !important; }
@@ -155,3 +155,12 @@ html[data-theme="noel"] #choixMode .btnInstaller{
   box-shadow: 0 3px 0 rgba(110, 6, 16, 0.55), 0 6px 12px rgba(60, 0, 8, 0.3);
 }
 @media (hover: hover){ html[data-theme="noel"] #choixMode .btnInstaller:hover{ background: linear-gradient(180deg, #ffd23f, #e2aa00); } }
+
+/* Textes secondaires un peu trop effacés sur le rouge (comparés au jeu de base avec SEUIL_CONTRASTE=4.5) : plus clairs */
+html[data-theme="noel"] #ecranReglages .optionNote{ color: rgba(255, 255, 255, 0.92); }
+html[data-theme="noel"] #ecranReglages .aProposTitre{ color: #ffe27a; }
+html[data-theme="noel"] #ecranReglages .lienJeu{ color: #fff; }
+html[data-theme="noel"] #enLigne .separateurOu, html[data-theme="noel"] #ecranInstallation #btnInstallationPlusTard{ color: #fff; }
+html[data-theme="noel"] #listeJoueursEnLigne div{ color: #b8fff6; }
+html[data-theme="noel"] #btnFaqDepuisRegles{ color: #fff; }
+html[data-theme="noel"] #ecranTele .tele-tour.tele-pigeon .tele-tour-nom{ color: #b8fff6; } /* « PIGEON (nom) » de la télé */

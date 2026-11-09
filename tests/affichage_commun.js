@@ -59,6 +59,7 @@ function lireThemesDuJeu() {
   return res;
 }
 
+// (SEUIL_CONTRASTE=4.5 node tests/test_affichage_telephone.js <thème> : cherche aussi les textes un peu moins lisibles que dans le jeu de base)
 // Script injecté dans la page : contraste.js + mesure des boutons + débordement
 function scriptMesure() {
   return fs.readFileSync(path.join(__dirname, "contraste.js"), "utf8") + `
@@ -86,7 +87,7 @@ window.__mesurerAffichage = function (mode) {
       if (r.right > innerWidth + 2 || r.bottom > innerHeight + 2 || r.left < -2 || r.top < -2) debord.push("« " + texte.slice(0, 30) + " » sort de l'écran");
     });
   }
-  return { contraste: verifierContraste(3), boutons, debord };
+  return { contraste: verifierContraste(${Number(process.env.SEUIL_CONTRASTE) || 3}), boutons, debord };
 };`;
 }
 
