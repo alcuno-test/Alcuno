@@ -14,7 +14,9 @@ html[data-theme="noel"]{
     radial-gradient(circle at 22px 34px, rgba(255,255,255,.22) 0 2px, transparent 3px) 0 0 / 150px 150px,
     radial-gradient(circle at 96px 104px, rgba(255,255,255,.16) 0 1.6px, transparent 2.6px) 0 0 / 150px 150px,
     radial-gradient(ellipse 120% 24% at 50% 24%, rgba(255,140,140,.28), transparent 100%) no-repeat,
-    linear-gradient(to top, rgba(60,0,8,.35), transparent 45%) no-repeat;
+    linear-gradient(to top, rgba(60,0,8,.35), transparent 45%) no-repeat,
+    /* motif de fond : cannes à sucre, cadeaux, étoiles, flocons, houx (noel/deco_fond.svg), sous tout le reste */
+    url("noel/deco_fond.svg") 0 0 / 240px 240px repeat;
   /* Accueil : en plus, deux sapins décorés posés sur un tapis de neige, en bas de l'écran */
   --deco-accueil:
     url("noel/sapin.svg") left -10px bottom 26px / auto min(30vh, 210px) no-repeat,
@@ -163,3 +165,6 @@ html[data-theme="noel"] #enLigne .separateurOu, html[data-theme="noel"] #ecranIn
 html[data-theme="noel"] #listeJoueursEnLigne div{ color: #b8fff6; }
 html[data-theme="noel"] #btnFaqDepuisRegles{ color: #fff; }
 html[data-theme="noel"] #ecranTele .tele-tour.tele-pigeon .tele-tour-nom{ color: #b8fff6; } /* « PIGEON (nom) » de la télé */
+
+/* Plateau : les panneaux (titre, boutons, joueurs, règles) cachent le motif de fond derrière leur texte */
+html[data-theme="noel"] :is(header, #menu, .messages){ background-color: rgba(78, 4, 12, 0.8); }

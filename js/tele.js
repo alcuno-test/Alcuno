@@ -640,7 +640,9 @@ const PHRASES_TELE = [
   // thème Star Wars seulement : mêlées aux autres, même rythme
   { galaxie: true, sansNom: true, texte: () => `Obi-Wan Kenobière, tu es mon seul espoir.` },
   { galaxie: true, texte: n => `Dark Vodka n’est PAS ton père <b>${n}</b>.` },
-  { galaxie: true, sansNom: true, texte: () => `Luke, je suis ton verre.` }
+  { galaxie: true, sansNom: true, texte: () => `Luke, je suis ton verre.` },
+  // thème Noël seulement : mêlée aux autres, même rythme
+  { noel: true, sansNom: true, texte: () => `HoHoHo Joyeuse cuite ! 🎅🎄` }
 ];
 const PAS_NOTIFS_TELE = 5000;
 // Quelqu'un qui traîne à jouer : une fois par tour, au bout de 1 min 20 (temps sans choix ni annonce à
@@ -694,7 +696,8 @@ function phraseNotifTele(etat){
   const possibles = PHRASES_TELE
     .map((phrase, i) => ({ phrase, i }))
     .filter(({ phrase, i }) => i !== dernierePhraseTele && (!phrase.pigeon || pigeon) && (!phrase.aSec || aSecVraiment) &&
-      (!phrase.galaxie || document.documentElement.dataset.theme === "galaxie"));
+      (!phrase.galaxie || document.documentElement.dataset.theme === "galaxie") &&
+      (!phrase.noel || document.documentElement.dataset.theme === "noel"));
   const { phrase, i } = possibles[Math.floor(Math.random() * possibles.length)];
   dernierePhraseTele = i;
   let candidats = phrase.pigeon ? [pigeon] : phrase.aSec ? [aSecVraiment] : joueurs;
