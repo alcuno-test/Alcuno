@@ -152,7 +152,7 @@ try {
 }
 finally {
   if ($code) {
-    Invoke-RestMethod -Method Delete -Uri "https://alcuno-default-rtdb.europe-west1.firebasedatabase.app/parties/$code.json" | Out-Null
+    Invoke-RestMethod -Method Delete -Uri "https://alcuno-test-default-rtdb.europe-west1.firebasedatabase.app/parties/$code.json" | Out-Null
     Write-Output "Partie de test $code supprimée de Firebase."
   }
   Stop-Process -Id $chrome.Id -Force -ErrorAction SilentlyContinue

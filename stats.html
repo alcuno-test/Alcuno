@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow">
     <meta name="theme-color" content="#020713">
-    <title>Alcuno Stats</title>
+    <title>Alcuno Stats TEST</title>
     <!-- Installable à part (sa propre icône sur l'écran d'accueil, « Alcuno Stats ») -->
     <link rel="manifest" href="manifest-stats.json">
     <link rel="icon" type="image/png" href="icones/icone-stats-192.png">
@@ -13,7 +13,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-title" content="Alcuno Stats">
+    <meta name="apple-mobile-web-app-title" content="Alcuno Stats TEST">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&family=Inter:wght@500;600;700&display=swap" rel="stylesheet">
@@ -605,13 +605,13 @@
         // L'accès se fait avec le compte administrateur Firebase (e-mail + mot de passe) : les règles de la base ne laissent lire
         // les statistiques, la santé et la présence qu'à ce compte. La session est gardée par Firebase : on ne retape rien ensuite.
         const app = initializeApp({
-            apiKey: "AIzaSyApZL1dCQLGdrZFjsGJC0y4DxLUzorum4M",
-            authDomain: "alcuno.firebaseapp.com",
-            databaseURL: "https://alcuno-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "alcuno",
-            storageBucket: "alcuno.firebasestorage.app",
-            messagingSenderId: "481896309098",
-            appId: "1:481896309098:web:c84fe2d2ded1df80810513"
+            apiKey: "AIzaSyB5EFLm9xqi7ZPO54-QctSk-j6uirvlPJs",
+            authDomain: "alcuno-test.firebaseapp.com",
+            databaseURL: "https://alcuno-test-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "alcuno-test", // APPLI TEST : projet Firebase séparé du vrai jeu
+            storageBucket: "alcuno-test.firebasestorage.app",
+            messagingSenderId: "691029716865",
+            appId: "1:691029716865:web:e56344f576171874ab0280"
         });
         const authPorte = getAuth(app);
         // Version de la page de stats (à part de celle du jeu : +0.0.1 à chaque modification de cette page)

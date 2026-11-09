@@ -1599,7 +1599,7 @@ function afficherRappelEau(){
 }
 
 // ===== Partager le jeu : bouton « Partager » du téléphone, sinon lien copié =====
-const ADRESSE_JEU = "https://tristan-escardo.github.io/Alcuno/";
+const ADRESSE_JEU = new URL("./", location.href).href; // appli TEST : adresse calculée (pas celle du vrai jeu)
 
 document.getElementById("btnPartagerJeu").addEventListener("click", () => {
   if (navigator.share) {

@@ -1,7 +1,7 @@
 {
   "rules": {
     "stats": {
-      ".read": "auth != null && auth.uid === 'Ex6dzCTIfGhZXPhedzIYzKZWxQm1'",
+      ".read": "auth != null && auth.uid === 'UID_ADMIN_A_REMPLACER'",
       "jours": {
         "$jour": {
           ".validate": "$jour.matches(/^20[0-9][0-9]-[01][0-9]-[0-3][0-9]$/)",
@@ -52,7 +52,7 @@
     },
     "config": {
       ".read": true,
-      ".write": "auth != null && auth.uid === 'Ex6dzCTIfGhZXPhedzIYzKZWxQm1'",
+      ".write": "auth != null && auth.uid === 'UID_ADMIN_A_REMPLACER'",
       "annonce": {
         ".validate": "newData.hasChild('texte')",
         "texte": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 140" },
@@ -98,13 +98,13 @@
       "$autre": { ".validate": false }
     },
     "config_hist": {
-      ".read": "auth != null && auth.uid === 'Ex6dzCTIfGhZXPhedzIYzKZWxQm1'",
-      ".write": "auth != null && auth.uid === 'Ex6dzCTIfGhZXPhedzIYzKZWxQm1'"
+      ".read": "auth != null && auth.uid === 'UID_ADMIN_A_REMPLACER'",
+      ".write": "auth != null && auth.uid === 'UID_ADMIN_A_REMPLACER'"
     },
     "sante": {
-      ".read": "auth != null && auth.uid === 'Ex6dzCTIfGhZXPhedzIYzKZWxQm1'",
+      ".read": "auth != null && auth.uid === 'UID_ADMIN_A_REMPLACER'",
       "jours": {
-        ".write": "auth != null && auth.uid === 'Ex6dzCTIfGhZXPhedzIYzKZWxQm1'",
+        ".write": "auth != null && auth.uid === 'UID_ADMIN_A_REMPLACER'",
         "$jour": {
           ".validate": "$jour.matches(/^20[0-9][0-9]-[01][0-9]-[0-3][0-9]$/)",
           "$sig": {
@@ -122,14 +122,14 @@
       },
       "ignores": {
         "$sig": {
-          ".write": "auth != null && auth.uid === 'Ex6dzCTIfGhZXPhedzIYzKZWxQm1'",
+          ".write": "auth != null && auth.uid === 'UID_ADMIN_A_REMPLACER'",
           ".validate": "$sig.matches(/^[a-z0-9]{12}$/) && newData.val() === true"
         }
       },
       "$autre": { ".validate": false }
     },
     "presence": {
-      ".read": "auth != null && auth.uid === 'Ex6dzCTIfGhZXPhedzIYzKZWxQm1'",
+      ".read": "auth != null && auth.uid === 'UID_ADMIN_A_REMPLACER'",
       "$id": {
         ".write": true,
         ".validate": "$id.matches(/^[a-z0-9]{12}$/) && newData.hasChildren(['etat', 'maj'])",

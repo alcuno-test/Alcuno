@@ -126,7 +126,7 @@ window.fbUpdate = function (ref, valeurs) {
   Write-Output "[$label] erreurs JS : A $(Eval $A 'JSON.stringify(window.__erreurs)') B $(Eval $B 'JSON.stringify(window.__erreurs)')"
 }
 finally {
-  if ($code) { Invoke-RestMethod -Method Delete -Uri "https://alcuno-default-rtdb.europe-west1.firebasedatabase.app/parties/$code.json" | Out-Null }
+  if ($code) { Invoke-RestMethod -Method Delete -Uri "https://alcuno-test-default-rtdb.europe-west1.firebasedatabase.app/parties/$code.json" | Out-Null }
   Stop-Process -Id $chrome.Id -Force -ErrorAction SilentlyContinue
   Get-Process chrome -ErrorAction SilentlyContinue | Where-Object { $_.CommandLine -like "*$profil*" } | Stop-Process -Force -ErrorAction SilentlyContinue
 }

@@ -222,7 +222,8 @@ const VERSION_AFFICHEE = "9.85.0";
 // elle n'envoie ni statistiques ni plantages (les chiffres restent ceux de la vraie appli) et affiche « TEST » dans les Réglages
 // Un navigateur piloté par un programme (tests automatiques de Claude : navigator.webdriver) est aussi en mode test, pour que
 // ses passages ne comptent pas dans les stats ; « ?vraistats » force le comptage (le test qui vérifie justement les stats).
-const MODE_TEST = !/(^|\.)github\.io$|^localhost$|^127\.0\.0\.1$|^\[?::1\]?$|^$/i.test(location.hostname) || /[?&]modetest(=|&|$)/.test(location.search) ||
+// APPLI TEST (dépôt alcuno-test/Alcuno) : sur alcuno-test.github.io, toujours en mode test (le reste de github.io = vrai jeu)
+const MODE_TEST = /^alcuno-test\.github\.io$/i.test(location.hostname) || !/(^|\.)github\.io$|^localhost$|^127\.0\.0\.1$|^\[?::1\]?$|^$/i.test(location.hostname) || /[?&]modetest(=|&|$)/.test(location.search) ||
   (navigator.webdriver === true && !/[?&]vraistats(=|&|$)/.test(location.search)) || /[?&]apercu_defi=/.test(location.search);
 const VERSION_JEU = VERSION_AFFICHEE.split(".")
   .reduce((total, partie, i) => total + Number(partie) * [10000, 100, 1][i], 0);

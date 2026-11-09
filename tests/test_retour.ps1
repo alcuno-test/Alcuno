@@ -106,7 +106,7 @@ try {
   $vuAlerte = Attendre $C "window.__alertes.some(a => a.includes('retiré'))" 20
   Start-Sleep -Seconds 3
   Write-Output "C a reçu l'alerte : $vuAlerte | mémoire C : $(Eval $C "localStorage.getItem('alcuno_partie_en_ligne')") | bouton Revenir : $(Eval $C "getComputedStyle(document.getElementById('btnRevenirPartie')).display")"
-  Write-Output "Fiche Firebase de TestC : $(Invoke-RestMethod -Uri "https://alcuno-default-rtdb.europe-west1.firebasedatabase.app/parties/$code/joueurs/TestC.json" | ConvertTo-Json -Compress)"
+  Write-Output "Fiche Firebase de TestC : $(Invoke-RestMethod -Uri "https://alcuno-test-default-rtdb.europe-west1.firebasedatabase.app/parties/$code/joueurs/TestC.json" | ConvertTo-Json -Compress)"
   Comparer "Après le retrait (A, B)" @($A, $B)
 
   Write-Output ("Jeu A+B : " + (Jouer @($A, $B) 13))
@@ -140,7 +140,7 @@ try {
 }
 finally {
   if ($code) {
-    Invoke-RestMethod -Method Delete -Uri "https://alcuno-default-rtdb.europe-west1.firebasedatabase.app/parties/$code.json" | Out-Null
+    Invoke-RestMethod -Method Delete -Uri "https://alcuno-test-default-rtdb.europe-west1.firebasedatabase.app/parties/$code.json" | Out-Null
     Write-Output "Partie de test $code supprimée de Firebase."
   }
   Stop-Process -Id $chrome.Id -Force -ErrorAction SilentlyContinue

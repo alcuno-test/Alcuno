@@ -8,3 +8,8 @@ tests/acc/
 tests/contraste_actuel.txt
 tests/resultats/
 tests/debordement_actuel.txt
+
+# Appli TEST : Playwright installé ici pour les tests (npm i playwright), pas envoyé sur GitHub
+node_modules/
+package.json
+package-lock.json

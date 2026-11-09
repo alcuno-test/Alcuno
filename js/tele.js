@@ -9,7 +9,7 @@
 // =============================================================================================
 
 // #region Commun : codes de télé
-const ADRESSE_SITE_TELE = "https://tristan-escardo.github.io/Alcuno/";
+const ADRESSE_SITE_TELE = new URL("./", location.href).href; // appli TEST : adresse calculée (pas celle du vrai jeu)
 const CARACTERES_CODE_TELE = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // pas de 0/O ni 1/I
 const estPageTele = document.documentElement.classList.contains("mode-tele");
 

@@ -80,7 +80,7 @@ function Retirer($onglet, [string]$nom) {
   return Eval $onglet "document.getElementById('supprimerJoueur').click(); const b = Array.from(document.querySelectorAll('#listeSuppression button')).find(x => x.innerText.startsWith('$nom')); if (b) { b.click(); document.getElementById('btnConfirmerRetraitOui').click(); 'retrait demandé' } else ('pas de bouton, toast: ' + (document.getElementById('toastEnLigne')||{}).innerText)"
 }
 
-$fb = "https://alcuno-default-rtdb.europe-west1.firebasedatabase.app/parties"
+$fb = "https://alcuno-test-default-rtdb.europe-west1.firebasedatabase.app/parties"
 $etatFile = "JSON.stringify({ file: window.__etatFileAlcuno && window.__etatFileAlcuno(), tour: ((document.querySelector('#stickyJoueurActif') || {}).innerText || '').replace(/\s+/g, ' '), overlays: Array.from(document.querySelectorAll('[id^=overlay]')).map(o => o.id), visible: document.visibilityState, toasts: window.__toasts, console: window.__console, erreurs: window.__erreurs })"
 foreach ($essai in 1..6) {
   $code = $null

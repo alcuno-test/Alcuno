@@ -299,7 +299,7 @@ function afficherCodePartie(code){
   const zone = document.getElementById("qrPartie");
   try {
     const qr = qrcode(0, "M");
-    qr.addData("https://tristan-escardo.github.io/Alcuno/?code=" + encodeURIComponent(code));
+    qr.addData(new URL("./", location.href).href + "?code=" + encodeURIComponent(code));
     qr.make();
     zone.innerHTML = qr.createSvgTag({ cellSize: 4, margin: 4, scalable: true });
     zone.style.display = "";
@@ -342,7 +342,7 @@ let numeroScanner = 0; // change à chaque ouverture / fermeture : une lecture e
 // et le lien qui ouvre le jeu avec le code déjà rempli (comme le QR code) ; sinon le message est copié
 document.getElementById("btnInviterPartie").addEventListener("click", () => {
   if (!codeAInviter) return;
-  const lien = "https://tristan-escardo.github.io/Alcuno/?code=" + encodeURIComponent(codeAInviter);
+  const lien = new URL("./", location.href).href + "?code=" + encodeURIComponent(codeAInviter);
   const texte = `🍻 Rejoins ma partie d'Alcuno ! Code : ${codeAInviter}`;
   if (navigator.share) {
     navigator.share({ text: texte, url: lien }).catch(() => {});

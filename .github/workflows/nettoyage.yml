@@ -4,30 +4,35 @@
 #   - elle a été créée il y a plus de 10 h, quelle que soit l'activité.
 # Tourne toutes les heures ; peut aussi être lancé à la main depuis l'onglet « Actions » de GitHub.
 # Nécessite le secret de dépôt FIREBASE_SECRET (code secret de la base Firebase).
+#
+# APPLI TEST : nettoie UNIQUEMENT la base de TEST (alcuno-test-default-rtdb). Le secret FIREBASE_SECRET de ce dépôt
+# doit être celui du projet Firebase alcuno-test, JAMAIS celui du vrai jeu. Sans secret, le nettoyage est sauté
+# (pas d'échec toutes les heures). Ne tourne que dans le dépôt alcuno-test/Alcuno.
 
 name: Nettoyage des parties
 
 on:
   schedule:
-    - cron: "17 * * * *"   # toutes les heures, à la 17e minute
+    - cron: "17 */6 * * *"  # appli TEST : toutes les 6 heures (peu de parties), à la 17e minute
   workflow_dispatch:        # bouton « Run workflow » dans GitHub
 
 jobs:
   nettoyer:
+    if: github.repository == 'alcuno-test/Alcuno'
     runs-on: ubuntu-latest
     steps:
       - name: Supprimer les parties inactives ou trop vieilles
         env:
           FIREBASE_SECRET: ${{ secrets.FIREBASE_SECRET }}
-          DB_URL: https://alcuno-default-rtdb.europe-west1.firebasedatabase.app
+          DB_URL: https://alcuno-test-default-rtdb.europe-west1.firebasedatabase.app
           HEURES_INACTIVITE: 3
           HEURES_MAX: 10
         run: |
           set -euo pipefail
 
           if [ -z "$FIREBASE_SECRET" ]; then
-            echo "Secret FIREBASE_SECRET manquant dans les réglages du dépôt."
-            exit 1
+            echo "Secret FIREBASE_SECRET manquant (appli TEST) : nettoyage sauté."
+            exit 0
           fi
 
           maintenant=$(( $(date +%s) * 1000 ))
@@ -59,10 +64,11 @@ jobs:
       - name: Supprimer les télés (mode « Caster ») abandonnées depuis 6 h
         env:
           FIREBASE_SECRET: ${{ secrets.FIREBASE_SECRET }}
-          DB_URL: https://alcuno-default-rtdb.europe-west1.firebasedatabase.app
+          DB_URL: https://alcuno-test-default-rtdb.europe-west1.firebasedatabase.app
           HEURES_TELE: 6
         run: |
           set -euo pipefail
+          if [ -z "$FIREBASE_SECRET" ]; then echo "Secret manquant (appli TEST) : nettoyage sauté."; exit 0; fi
           maintenant=$(( $(date +%s) * 1000 ))
           limite=$(( maintenant - HEURES_TELE * 3600 * 1000 ))
 

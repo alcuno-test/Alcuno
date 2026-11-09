@@ -7,7 +7,7 @@
          Un paramètre différent à chaque chargement force toujours la dernière version. -->
     <script>
         window.ANTI_CACHE = Date.now();
-        // Page privée des statistiques : …/Alcuno/?stats (ou tinyurl.com/alcuno?stats) => stats.html
+        // Page privée des statistiques : …/Alcuno/?stats (appli TEST : alcuno-test.github.io/Alcuno/?stats) => stats.html
         if (/[?&]stats(=|&|$)/.test(location.search)) location.replace("stats.html");
         // Page de la télé (…/Alcuno/tele ou …/Alcuno/?tele) : seulement l'affichage de la partie, voir js/tele.js.
         // Ouverte aussi toute seule sur un navigateur de télé reconnu (Samsung, LG, Sony, Philips, Fire TV…) :
@@ -85,7 +85,7 @@
         document.write('<link rel="stylesheet" href="style_kawaii.css?t=' + window.ANTI_CACHE + '" />'); // thème Kawaii (généré : outils/generer_kawaii.py)
         document.write('<link rel="stylesheet" href="style_donjon.css?t=' + window.ANTI_CACHE + '" />'); // thème secret Donjon (débloqué par une partie en mode hot)
     </script>
-    <title>Alcuno</title>
+    <title>Alcuno TEST</title>
 
     <!-- Appli installable (PWA) : manifest.json + sw.js -->
     <link rel="manifest" href="manifest.json">
@@ -101,14 +101,14 @@
          bas). iOS retient la barre choisie à l'installation : il faut réinstaller l'appli pour qu'elle change.
          Les appareils installés entre la 8.8.9 et la 8.8.23 doivent réinstaller l'appli. -->
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-title" content="Alcuno">
+    <meta name="apple-mobile-web-app-title" content="Alcuno TEST">
     <!-- Aperçu du lien partagé (Messages, WhatsApp…) : grande image du jeu (icones/apercu-lien.jpg, 1200 × 630 ;
          pas la carte dorée, c'est la surprise). Les applis gardent l'ancien aperçu en mémoire quelques jours. -->
-    <meta property="og:title" content="Alcuno">
+    <meta property="og:title" content="Alcuno TEST">
     <meta property="og:description" content="Comme un UNO mais en mieux. Gratuit, sur téléphone.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://tristan-escardo.github.io/Alcuno/">
-    <meta property="og:image" content="https://tristan-escardo.github.io/Alcuno/icones/apercu-lien.jpg">
+    <meta property="og:url" content="https://alcuno-test.github.io/Alcuno/">
+    <meta property="og:image" content="https://alcuno-test.github.io/Alcuno/icones/apercu-lien.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="Alcuno : comme un UNO mais en mieux">
@@ -424,7 +424,7 @@
                 <div class="blocPartage">
                     <div class="aProposTitre">Partager le jeu</div>
                     <img src="icones/qr_alcuno.svg" alt="QR code du jeu Alcuno" class="qrJeu" width="180" height="180">
-                    <p class="lienJeu">tristan-escardo.github.io/Alcuno</p>
+                    <p class="lienJeu">alcuno-test.github.io/Alcuno</p>
                     <button type="button" id="btnPartagerJeu">📤 Partager le lien</button>
                     <p class="lienBug">Un problème ? <button type="button" id="btnSignalerBug">Signaler un bug</button></p>
                     <!-- Aide : la FAQ s'ouvre dans l'écran des Règles (js/faq.js) -->
@@ -504,7 +504,7 @@
             <button type="button" id="btnCasterFermer" class="btnRetour">← Retour</button>
             <h2 id="titreCaster">Caster sur la télé</h2>
             <div id="casterRelier">
-                <p class="texteConfirmation">1. Sur la télé, ouvre :<br><b class="adresseTele">tinyurl.com/alcuno</b></p>
+                <p class="texteConfirmation">1. Sur la télé, ouvre :<br><b class="adresseTele">alcuno-test.github.io/Alcuno/tele</b></p>
                 <p class="texteConfirmation">2. Scanne le QR code affiché sur la télé</p>
                 <button type="button" id="btnCasterScanner"><svg class="iconeBouton" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z"/><circle cx="12" cy="13" r="3.2"/></svg>Scanner la télé</button>
                 <div class="casterCode">
@@ -687,13 +687,13 @@
         } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
 
         const firebaseConfig = {
-            apiKey: "AIzaSyApZL1dCQLGdrZFjsGJC0y4DxLUzorum4M",
-            authDomain: "alcuno.firebaseapp.com",
-            databaseURL: "https://alcuno-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "alcuno",
-            storageBucket: "alcuno.firebasestorage.app",
-            messagingSenderId: "481896309098",
-            appId: "1:481896309098:web:c84fe2d2ded1df80810513"
+            apiKey: "AIzaSyB5EFLm9xqi7ZPO54-QctSk-j6uirvlPJs",
+            authDomain: "alcuno-test.firebaseapp.com",
+            databaseURL: "https://alcuno-test-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "alcuno-test", // APPLI TEST : projet Firebase séparé du vrai jeu
+            storageBucket: "alcuno-test.firebasestorage.app",
+            messagingSenderId: "691029716865",
+            appId: "1:691029716865:web:e56344f576171874ab0280"
         };
 
         const app = initializeApp(firebaseConfig);

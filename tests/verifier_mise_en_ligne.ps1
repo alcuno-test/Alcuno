@@ -8,7 +8,7 @@ $ErrorActionPreference = "Stop"
 $banc = Split-Path -Parent $MyInvocation.MyCommand.Path
 $jeuDossier = Split-Path -Parent $banc
 $depot = "Tristan-Escardo/Alcuno"
-$site = "https://tristan-escardo.github.io/Alcuno/script.js"
+$site = "https://alcuno-test.github.io/Alcuno/script.js"
 
 $commit = (git -C $jeuDossier rev-parse HEAD).Trim()
 $version = ([regex]::Match((Get-Content -Raw -Encoding UTF8 (Join-Path $jeuDossier "script.js")), 'VERSION_AFFICHEE = "([^"]+)"')).Groups[1].Value
