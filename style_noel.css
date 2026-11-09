@@ -128,3 +128,20 @@ html[data-theme="noel"] #ecranReglages .btnDiagnostic{ color: #ffe9ea !important
 html[data-theme="noel"] #ecranCredits .credits-honneur-titre{ color: #ffe9ea; }
 /* Télé : code de la télé, en bas de l'écran */
 html[data-theme="noel"] #ecranTele .tele-pied{ color: rgba(255, 233, 234, 0.8); }
+
+/* ----- Aperçu du thème dans les Réglages : une boule de sapin (rouge brillant, bande dorée, culot doré et anneau) ----- */
+.pastilleTheme .rondNoel{
+  position: relative;
+  background:
+    radial-gradient(circle at 32% 28%, rgba(255,255,255,.95) 0 3px, rgba(255,255,255,0) 7px),
+    linear-gradient(180deg, transparent 44%, #ffd23f 44% 52%, transparent 52%),
+    radial-gradient(circle at 36% 32%, #ff5a5a, #d3202e 55%, #7e0914 100%) !important;
+}
+.pastilleTheme .rondNoel::before{ /* culot */
+  content: ""; position: absolute; left: 50%; top: -7px; width: 12px; height: 7px; margin-left: -6px;
+  border-radius: 2px 2px 0 0; background: linear-gradient(90deg, #c68a0a, #fff1a0 45%, #c68a0a);
+}
+.pastilleTheme .rondNoel::after{ /* anneau d'accroche */
+  content: ""; position: absolute; left: 50%; top: -13px; width: 8px; height: 8px; margin-left: -4px;
+  border: 2px solid #ffd23f; border-radius: 50%; box-sizing: border-box;
+}
