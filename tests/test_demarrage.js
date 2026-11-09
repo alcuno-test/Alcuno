@@ -936,35 +936,7 @@ function verifier(ok, texte){
     verifier(differents.length === 0, `survol collé : aspect des boutons des Réglages inchangé au survol sur téléphone dans les 10 thèmes ${differents.join(", ")}`);
   }
 
-  // 35. Réglages à distance (js/config-distante.js) : une copie de « config » gardée dans le téléphone est appliquée tout de suite
-  // (annonce sur l'accueil, voix coupée, mode en ligne coupé, thème caché => retour à Bordeaux, mise à jour demandée)
-  {
-    const ctx = await nav.newContext({ viewport: { width: 390, height: 780 } });
-    const page = await ctx.newPage();
-    const erreurs = [];
-    page.on("pageerror", (e) => erreurs.push(e.message));
-    const config = { annonce: { texte: "Soirée ce soir !", maj: 1 }, coupures: { voix: true, enligne: true }, themes: { givre: { actif: false }, cerisier: { debut: "01-01", fin: "01-01" } } };
-    await page.addInitScript((c) => { try { localStorage.setItem("alcuno_theme", "givre"); if (!localStorage.getItem("alcuno_config_distante")) localStorage.setItem("alcuno_config_distante", JSON.stringify(c)); } catch (e) {} }, config);
-    await page.goto(url); await page.waitForTimeout(800);
-    const etat = await page.evaluate(() => {
-      const vis = (id) => { const e = document.getElementById(id); return !!e && !e.hidden && getComputedStyle(e).display !== "none" && e.getBoundingClientRect().height > 0; };
-      const pastille = (t) => getComputedStyle(document.querySelector(`.pastilleTheme[data-theme="${t}"]`)).display;
-      return { annonce: vis("annonceAccueil"), texte: document.getElementById("texteAnnonce").textContent, maj: vis("btnAnnonceMaj"), enligne: document.getElementById("btnModeEnLigne").disabled,
-        theme: document.documentElement.dataset.theme, givre: pastille("givre"), bordeaux: pastille("bordeaux"), cerisier: pastille("cerisier"),
-        voix: document.querySelector('[data-cle="voix"]') ? getComputedStyle(document.querySelector('[data-cle="voix"]')).display : "absent", classe: document.documentElement.classList.contains("coupure-voix") };
-    });
-    // fermer l'annonce : elle ne revient pas au rechargement, mais une nouvelle annonce oui
-    await page.click("#btnAnnonceFermer"); await page.waitForTimeout(200);
-    await page.reload(); await page.waitForTimeout(800);
-    const apresFermeture = await page.evaluate(() => document.getElementById("annonceAccueil").hidden);
-    await page.evaluate(() => { localStorage.setItem("alcuno_config_distante", JSON.stringify({ annonce: { texte: "Autre annonce", maj: 2 }, majMin: "99.0.0" })); });
-    await page.reload(); await page.waitForTimeout(800);
-    const miseAJour = await page.evaluate(() => ({ visible: !document.getElementById("annonceAccueil").hidden, texte: document.getElementById("texteAnnonce").textContent, btnMaj: !document.getElementById("btnAnnonceMaj").hidden, fermer: !document.getElementById("btnAnnonceFermer").hidden, enligne: document.getElementById("btnModeEnLigne").disabled }));
-    verifier(etat.annonce && etat.texte === "Soirée ce soir !" && !etat.maj && etat.enligne && etat.theme === "bordeaux" && etat.givre === "none" && etat.bordeaux !== "none" && etat.cerisier === "none" &&
-      etat.voix === "none" && etat.classe && apresFermeture === true && miseAJour.visible && /99\.0\.0/.test(miseAJour.texte) && miseAJour.btnMaj && !miseAJour.fermer && !miseAJour.enligne && erreurs.length === 0,
-      `réglages à distance : ${JSON.stringify(etat)} après fermeture caché ${apresFermeture}, mise à jour ${JSON.stringify(miseAJour)} ${erreurs.join(" | ")}`);
-    await ctx.close();
-  }
+  // 35. APPLI TEST : retiré (annonce d'accueil par config distante : pas d'annonce en mode test ; la base de test, vide, efface la copie locale)
 
   // 36. Réglages à distance, suite : annonce programmée (pas avant son début), annonce visée par version, valeurs de départ des curseurs
   // (seulement pour ceux qui n'ont jamais touché au curseur)
@@ -989,7 +961,7 @@ function verifier(ok, texte){
     const defauts = await lire({ defauts: { volumeMusique: 55, vitesseVoix: 1.4 } });
     const choisi = await lire({ defauts: { volumeMusique: 55, vitesseVoix: 1.4 } }, { alcuno_volume_musique: "20", alcuno_vitesse_voix: "0.8" });
     const aucun = await lire({});
-    verifier(!plusTard.annonce && dejaDebutee.annonce && !terminee.annonce && !vieux.annonce && recent.annonce && plusTard.erreurs + recent.erreurs + defauts.erreurs === 0, `annonce programmée / terminée / visée par version : ${plusTard.annonce}/${dejaDebutee.annonce}/${terminee.annonce}/${vieux.annonce}/${recent.annonce}`);
+    // APPLI TEST : vérification des annonces programmées retirée (pas d'annonce en mode test)
     verifier(defauts.volume === "55" && defauts.volumeJeu === 55 && defauts.vitesse === "1.4" && defauts.vitesseJeu === 1.4 && /55/.test(defauts.texteVolume) && choisi.volumeJeu === 20 && choisi.vitesseJeu === 0.8 && aucun.volumeJeu === 30 && aucun.vitesseJeu === 1,
       `valeurs de départ : ${JSON.stringify(defauts)} / déjà choisies ${JSON.stringify(choisi)} / aucune ${JSON.stringify(aucun)}`);
   }
@@ -1006,10 +978,7 @@ function verifier(ok, texte){
       const reglages = document.querySelector("#ecranReglages [data-annonce-relais] .annonceAccueil"), credits = document.querySelector("#ecranCredits [data-annonce-relais] .annonceAccueil");
       return { reglages: !!reglages && reglages.textContent.includes("Soirée samedi !"), credits: !!credits && credits.textContent.includes("Soirée samedi !"), accueil: visible(document.getElementById("annonceAccueil")) };
     });
-    await page.click("#btnReglages"); await page.waitForTimeout(400);
-    const dansReglages = await page.evaluate(() => { const c = document.querySelector("#ecranReglages .annonceAccueil"); const r = c && c.getBoundingClientRect(); return !!c && r.height > 30 && r.width > 200 && r.top >= 0; });
-    await page.click("#ecranReglages .annonceFermer"); await page.waitForTimeout(200);
-    const apres = await page.evaluate(() => ({ relais: document.querySelectorAll("[data-annonce-relais] .annonceAccueil").length, accueil: document.getElementById("annonceAccueil").hidden }));
+    // APPLI TEST : clic sur « fermer l'annonce » retiré (pas d'annonce en mode test)
     const plantage = await page.evaluate(() => {
       const base = location.href.split("?")[0].replace(/[^/]*$/, "");
       const p = (message, fichier, ligne) => preparerPlantage({ message, fichier, ligne });
@@ -1026,7 +995,7 @@ function verifier(ok, texte){
       window.dispatchEvent(new ErrorEvent("error", { message: "Plantage numéro x 'secret'", filename: base + "js/plateau.js", lineno: 10 }));
       return { envoyes: plantagesEnvoyes.size };
     });
-    verifier(cartes.reglages && cartes.credits && cartes.accueil && dansReglages && apres.relais === 0 && apres.accueil, `annonce aussi dans Réglages et Crédits, fermée partout (${JSON.stringify(cartes)} ${dansReglages} ${JSON.stringify(apres)})`);
+    // APPLI TEST : pas de vérification d'annonce (pas d'annonce sur l'accueil en mode test)
     verifier(plantage.a && plantage.a.msg === "TypeError: Cannot read properties of undefined (reading '…') pour '…'" && plantage.a.fichier === "plateau.js:120" && plantage.memeSig && plantage.autreSig && plantage.sigOk && plantage.bruit.every((x) => x === null) && envoi.envoyes === 5,
       `plantages : message sans rien de personnel, bruit ignoré, 5 au plus (${JSON.stringify(plantage)} ${JSON.stringify(envoi)})`);
     await ctx.close();
