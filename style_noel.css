@@ -8,12 +8,12 @@
 
 html[data-theme="noel"]{
   --fond-theme: #b3121f;
-  --couleur-barre: #8e0c18;
+  --couleur-barre: #b3121f; /* = la couleur du tout haut du décor ci-dessous (la barre du téléphone ne doit pas être plus sombre) */
   /* Fond du jeu, des menus et des réglages : lumière douce en haut et quelques flocons immobiles */
   --deco-theme:
     radial-gradient(circle at 22px 34px, rgba(255,255,255,.22) 0 2px, transparent 3px) 0 0 / 150px 150px,
     radial-gradient(circle at 96px 104px, rgba(255,255,255,.16) 0 1.6px, transparent 2.6px) 0 0 / 150px 150px,
-    radial-gradient(ellipse 120% 55% at 50% 0%, rgba(255,140,140,.28), transparent 70%) no-repeat,
+    radial-gradient(ellipse 120% 24% at 50% 24%, rgba(255,140,140,.28), transparent 100%) no-repeat,
     linear-gradient(to top, rgba(60,0,8,.35), transparent 45%) no-repeat;
   /* Accueil : en plus, deux sapins décorés posés sur un tapis de neige, en bas de l'écran */
   --deco-accueil:
@@ -21,7 +21,7 @@ html[data-theme="noel"]{
     url("noel/sapin.svg") right 4px bottom 34px / auto min(22vh, 150px) no-repeat,
     url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 400 80%22 preserveAspectRatio=%22none%22%3E%3Cpath d=%22M0 80 L0 34 Q60 14 130 30 T260 26 T400 22 L400 80z%22 fill=%22%23f4f8ff%22/%3E%3Cpath d=%22M0 34 Q60 14 130 30 T260 26 T400 22%22 fill=%22none%22 stroke=%22%23d5e3f2%22 stroke-width=%223%22/%3E%3C/svg%3E") bottom / 100% 80px no-repeat,
     radial-gradient(circle at 22px 34px, rgba(255,255,255,.22) 0 2px, transparent 3px) 0 0 / 150px 150px,
-    radial-gradient(ellipse 120% 55% at 50% 0%, rgba(255,140,140,.3), transparent 70%) no-repeat;
+    radial-gradient(ellipse 120% 24% at 50% 24%, rgba(255,140,140,.3), transparent 100%) no-repeat;
   /* Joueur dont c'est le tour : blanc neige et or */
   --actif-haut: #ffffff; --actif-bas: #ffd23f; --actif-texte: #5a0610; --actif-halo: #ffe27a;
   /* Fenêtres du jeu (pigeon, duel, +4, pari…) : halo rouge sur un rouge très sombre (le doré reste lisible) */
@@ -145,3 +145,13 @@ html[data-theme="noel"] #ecranTele .tele-pied{ color: rgba(255, 233, 234, 0.8); 
   content: ""; position: absolute; left: 50%; top: -13px; width: 8px; height: 8px; margin-left: -4px;
   border: 2px solid #ffd23f; border-radius: 50%; box-sizing: border-box;
 }
+
+/* ----- Bouton « Album de stickers » de l'accueil : même famille que les gros boutons (or opaque, texte blanc), en plus petit ----- */
+html[data-theme="noel"] #choixMode .btnInstaller{
+  color: #fff;
+  background: linear-gradient(180deg, #f6c62c, #d9a000);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  text-shadow: 0 1px 0 rgba(122, 74, 0, 0.85), 0 2px 4px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 3px 0 rgba(110, 6, 16, 0.55), 0 6px 12px rgba(60, 0, 8, 0.3);
+}
+@media (hover: hover){ html[data-theme="noel"] #choixMode .btnInstaller:hover{ background: linear-gradient(180deg, #ffd23f, #e2aa00); } }
