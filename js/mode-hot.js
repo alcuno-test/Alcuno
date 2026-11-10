@@ -320,7 +320,7 @@ function afficherOverlayCoupDeFoudre(joueurActuel, classeCarte, suite = null){
 
   function refresh(){
     // Titre, puis « défi hot spécial Saint-Valentin », puis la consigne, bien séparés (style_alcuno.css : .foudre-*)
-    titre.innerHTML = `<span class="foudre-titre">COUP DE FOUDRE ⚡</span><span class="foudre-badge">🔥 Défi hot spécial Saint-Valentin 💘</span>`
+    titre.innerHTML = `<span class="foudre-titre">COUP DE FOUDRE ⚡</span><span class="foudre-badge">🔥 Défi hot spécial <span class="foudre-nowrap">Saint-Valentin</span> 💘</span>`
       + `<span class="foudre-consigne">${etape === "choix" ? "Choisis quelqu'un"
         : `${echapperHtml(avecCouronne(elu))} : un bisou sur la bouche… ou ${culSec} ?`}</span>`;
     boutons.forEach(({ el, etapes }) => { el.style.display = etapes.includes(etape) ? "" : "none"; });
