@@ -34,9 +34,9 @@ html.feux-artifice #feuxArtifice{ display: block; }
   position: absolute;
   left: 50%;
   bottom: calc(100% - 0.31em); /* le bas du chapeau chevauche un peu le haut du O (comme un chapeau sur une tête) */
-  width: 0.72em;
-  margin-left: -0.41em; /* centré sur la lettre : moitié du chapeau + moitié de l'espacement (0,1 em) laissé après le O */
-  transform: rotate(9deg);
+  width: 0.66em;
+  margin-left: -0.43em; /* décalé vers la droite du O : posé de travers sur le haut, côté droit */
+  transform: rotate(22deg);
   transform-origin: 50% 100%;
   filter: drop-shadow(0 3px 0 rgba(90, 20, 70, 0.55)) drop-shadow(0 0 10px rgba(255, 226, 122, 0.6));
   pointer-events: none;
