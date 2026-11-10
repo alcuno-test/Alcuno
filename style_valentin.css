@@ -131,7 +131,7 @@ html[data-theme="valentin"] header #btnReglesJeu path.couverture{ fill: var(--ca
 
 /* ----- Accueil : le cœur traversé d'une flèche prend la place du dernier O du titre ALCUNO -----
    (le O est dans <span class="lettreOTitre"> : sa lettre devient transparente, le cœur est posé au même endroit) */
-html[data-theme="valentin"] #choixMode .lettreOTitre{ color: transparent !important; -webkit-text-fill-color: transparent; text-shadow: none !important; }
+html[data-theme="valentin"] #choixMode .lettreOTitre{ visibility: hidden; } /* la lettre garde sa place mais ne se voit pas : le cœur (::after, visible) la remplace */
 html[data-theme="valentin"] #choixMode .lettreOTitre::after{
   content: "";
   position: absolute;
@@ -142,6 +142,7 @@ html[data-theme="valentin"] #choixMode .lettreOTitre::after{
   transform: translateX(-50%);
   background: url("valentin/coeur_titre.svg") center / contain no-repeat;
   filter: drop-shadow(0 3px 0 rgba(90, 0, 40, 0.55));
+  visibility: visible;
   pointer-events: none;
 }
 
