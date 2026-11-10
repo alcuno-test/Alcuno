@@ -8,6 +8,7 @@
 
 html[data-theme="noel"]{
   --fond-theme: #b3121f;
+  --carte-noel: rgba(104, 8, 22, 0.94); /* ton de TOUTES les cartes et panneaux : bordeaux franc (pas noir), quasi opaque pour cacher le motif derrière le texte */
   --couleur-barre: #b3121f; /* = la couleur du tout haut du décor ci-dessous (la barre du téléphone ne doit pas être plus sombre) */
   /* Fond du jeu, des menus et des réglages : lumière douce en haut et quelques flocons immobiles */
   --deco-theme:
@@ -27,8 +28,8 @@ html[data-theme="noel"]{
   /* Joueur dont c'est le tour : blanc neige et or */
   --actif-haut: #ffffff; --actif-bas: #ffd23f; --actif-texte: #5a0610; --actif-halo: #ffe27a;
   /* Fenêtres du jeu (pigeon, duel, +4, pari…) : halo rouge sur un rouge très sombre (le doré reste lisible) */
-  --overlay-fond: radial-gradient(ellipse 115% 42% at 50% 45%, rgba(220,30,50,.45) 0%, transparent 100%), #1c0306;
-  --overlay-bord: #1c0306;
+  --overlay-fond: radial-gradient(ellipse 115% 42% at 50% 45%, rgba(235,45,65,.5) 0%, transparent 100%), #4a0814;
+  --overlay-bord: #4a0814;
 }
 
 /* ----- Fenêtres du jeu ----- */
@@ -43,15 +44,15 @@ html[data-theme="noel"] #voileOverlays{ background: var(--overlay-bord); }
 html[data-theme="noel"] .plus4-actions{ background: transparent; }
 html[data-theme="noel"] :is(#overlayCarteDoree, #overlayRegleUnique.overlay-doree){
   background: radial-gradient(ellipse 95% 34% at 50% 33%, rgba(255,215,0,.26), transparent 100%),
-    radial-gradient(ellipse 120% 60% at 50% 100%, rgba(220,30,50,.45), transparent 100%), #1c0306 !important; box-shadow: none; }
+    radial-gradient(ellipse 120% 60% at 50% 100%, rgba(235,45,65,.5), transparent 100%), #4a0814 !important; box-shadow: none; }
 /* Récap de fin de partie */
-html[data-theme="noel"] #overlayFinUnRestants.overlay-recap{ background: radial-gradient(ellipse 110% 45% at 50% 45%, rgba(220,30,50,.4), transparent 100%), #140204 !important; }
+html[data-theme="noel"] #overlayFinUnRestants.overlay-recap{ background: radial-gradient(ellipse 110% 45% at 50% 45%, rgba(235,45,65,.45), transparent 100%), #3e0610 !important; }
 html[data-theme="noel"] :is(.recap-marche, .recap-liste, .recap-bloc){ background: rgba(120,8,20,.5); border-color: rgba(255,255,255,.4); }
 html[data-theme="noel"] .recap-marche{ background: linear-gradient(180deg, rgba(255,90,100,.3), rgba(120,8,20,.3)); }
 
 /* ----- Télé : même teinte que le thème ----- */
-html[data-theme="noel"] #ecranTele .tele-ecran{ background: radial-gradient(ellipse 110% 70% at 50% 45%, rgba(200,20,40,.5), rgba(28,3,6,.97) 75%), rgb(28,3,6); }
-html[data-theme="noel"] #ecranTele .tele-ecran-recap{ background: radial-gradient(ellipse 110% 60% at 50% 40%, rgba(220,30,50,.3), transparent 100%), #140204 !important; }
+html[data-theme="noel"] #ecranTele .tele-ecran{ background: radial-gradient(ellipse 110% 70% at 50% 45%, rgba(225,40,60,.5), rgba(74,8,20,.97) 75%), rgb(74,8,20); }
+html[data-theme="noel"] #ecranTele .tele-ecran-recap{ background: radial-gradient(ellipse 110% 60% at 50% 40%, rgba(235,45,65,.35), transparent 100%), #3e0610 !important; }
 
 /* ----- Bonnet de Noël sur le « A » du titre ALCUNO (accueil), comme la couronne Prestige sur le « O » ----- */
 #choixMode .bonnetTitre{
@@ -127,12 +128,12 @@ html[data-theme="noel"] #neigeNoel{ display: block; }
    du fond ne passe jamais derrière un texte ; les noms de thèmes (chacun de sa couleur) restent lisibles. */
 html[data-theme="noel"] :is(#ecranReglages .blocReglage, #ecranReglages .reglages-contenu > .optionReglage, .optionsPartie > .optionReglage:not(.optionsSuite),
   .blocRegles, #ecranCredits .credits-nom, #ecranInstallation .etapeInstallation, #listeJoueursEnLigne div, #listeSuppression){
-  background: rgba(30, 0, 5, 0.93); border: 1px solid rgba(255, 255, 255, 0.22);
+  background: var(--carte-noel); border: 1px solid rgba(255, 255, 255, 0.22);
 }
-html[data-theme="noel"] #ecranCredits .cadrePhoto.sansPhoto{ background: rgba(30, 0, 5, 0.93); }
+html[data-theme="noel"] #ecranCredits .cadrePhoto.sansPhoto{ background: var(--carte-noel); }
 /* Boutons secondaires (translucides dans le jeu de base) : même ton sombre que les cartes, liseré blanc */
-html[data-theme="noel"] :is(#ecranRegles .btnFaqLien, #enLigne #btnInviterPartie, .voletPause-annuler, #ecranReglages .btnDiagnostic, #ecranBug .bugFermer){
-  background: rgba(30, 0, 5, 0.93) !important; border: 1px solid rgba(255, 255, 255, 0.35) !important;
+html[data-theme="noel"] :is(#enLigne #btnInviterPartie, .voletPause-annuler, #ecranReglages .btnDiagnostic, #ecranBug .bugFermer){
+  background: var(--carte-noel) !important; border: 1px solid rgba(255, 255, 255, 0.35) !important;
 }
 /* Petits textes gris : blanc cassé */
 html[data-theme="noel"] #ecranReglages :is(.lienBug, .versionJeu){ color: #ffe9ea !important; }
@@ -164,7 +165,7 @@ html[data-theme="noel"][data-theme] body :is(#btnModeEnLigne, #btnModeClassique,
   #btnCreerPartie, #btnRejoindrePartie, #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #btnScannerQR,
   #lancerPartieEnLigne, #btnChoixPseudoAnnuler, #listeChoixPseudo button, #btnConfirmerAccueilOui, #btnConfirmerAccueilNon,
   #btnConfirmerHoteOui, #btnConfirmerHoteNon, #btnConfirmerRetraitOui, #btnConfirmerRetraitNon, #termineSuppression,
-  #btnInstallationInstaller, #choixMode .btnInstaller, #menu #btnCaster, #ecranCaster button:not(.btnRetour), #btnFermerScanner, #ecranReprise button,
+  #btnInstallationInstaller, #ecranRegles .btnFaqLien, #choixMode .btnInstaller, #menu #btnCaster, #ecranCaster button:not(.btnRetour), #btnFermerScanner, #ecranReprise button,
   #overlayPigeon .bouton-pigeon, #overlayPlus4 .bouton-pigeon, #overlayCupidon .bouton-pigeon, #overlayFinUnRestants .bouton-pigeon,
   #overlayAnnulation button, #overlayRegleUnique .bouton-annulation, #overlayDuel button:not(:disabled), #overlayPredictionFin .bouton-pigeon){
   background: linear-gradient(180deg, #ffe27a, #e8a900) !important;
@@ -201,8 +202,7 @@ html[data-theme="noel"] #ecranReglages .aProposTitre{ color: #ffe27a; }
 html[data-theme="noel"] #ecranReglages .lienJeu{ color: #fff; }
 html[data-theme="noel"] #enLigne .separateurOu, html[data-theme="noel"] #ecranInstallation #btnInstallationPlusTard{ color: #fff; }
 html[data-theme="noel"] #listeJoueursEnLigne div{ color: #b8fff6; }
-html[data-theme="noel"] #btnFaqDepuisRegles{ color: #fff; }
 html[data-theme="noel"] #ecranTele .tele-tour.tele-pigeon .tele-tour-nom{ color: #b8fff6; } /* « PIGEON (nom) » de la télé */
 
 /* ----- Plateau : les panneaux (titre, boutons, joueurs, règles) cachent le motif de fond derrière leur texte ----- */
-html[data-theme="noel"] :is(header, #menu, .messages){ background-color: rgba(78, 4, 12, 0.95); }
+html[data-theme="noel"] :is(header, #menu, .messages, #ecranTele .tele-bloc, #ecranTele .tele-entete, #ecranTele .tele-prepa-joueur){ background-color: var(--carte-noel); }
