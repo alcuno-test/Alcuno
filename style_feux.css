@@ -33,10 +33,10 @@ html.feux-artifice #feuxArtifice{ display: block; }
   display: none;
   position: absolute;
   left: 50%;
-  bottom: calc(100% - 0.31em); /* le bas du chapeau chevauche un peu le haut du O (comme un chapeau sur une tête) */
+  bottom: calc(100% - 0.34em); /* le bord du chapeau effleure le haut du O (pas trop enfoncé) */
   width: 0.66em;
-  margin-left: -0.43em; /* décalé vers la droite du O : posé de travers sur le haut, côté droit */
-  transform: rotate(22deg);
+  margin-left: -0.32em; /* un peu à droite du centre du O */
+  transform: rotate(20deg);
   transform-origin: 50% 100%;
   filter: drop-shadow(0 3px 0 rgba(90, 20, 70, 0.55)) drop-shadow(0 0 10px rgba(255, 226, 122, 0.6));
   pointer-events: none;
