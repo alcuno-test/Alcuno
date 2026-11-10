@@ -249,7 +249,7 @@ function finirBoireHot(etat, joueurIndex, nbGorgees, onFinish){
 }
 
 // ----- Carte Coup de foudre (période Saint-Valentin) : celui qui la tire choisit quelqu'un, puis
-// un bisou sur la bouche… ou un cul sec (3 gorgées en mode PJ). Synchronisé en ligne comme Cupidon (surAction).
+// un bisou sur la bouche… ou un cul sec (4 gorgées en mode PJ). Synchronisé en ligne comme Cupidon (surAction).
 function afficherOverlayCoupDeFoudre(joueurActuel, classeCarte, suite = null){
   if(document.getElementById("overlayCoupDeFoudre")) return;
   const choisisseur = joueurs[joueurActuel];
@@ -261,7 +261,7 @@ function afficherOverlayCoupDeFoudre(joueurActuel, classeCarte, suite = null){
   }
   choixPigeonEnCours = true;
   lockScroll();
-  const culSec = estModeSoft() ? "3 gorgées" : "CUL SEC";
+  const culSec = estModeSoft() ? "4 gorgées" : "CUL SEC";
   let etape = "choix", elu = null;
 
   const overlay = document.createElement("div");
@@ -313,14 +313,16 @@ function afficherOverlayCoupDeFoudre(joueurActuel, classeCarte, suite = null){
     terminer(`💋 ${avecCouronne(choisisseur)} et ${avecCouronne(elu)} : coup de foudre !`);
   }, { once: true });
   nouveau(actions, `🥃 ${culSec}`, "foudre:culsec", ["action"], () => {
-    noterGorgees(choisisseur, estModeSoft() ? 3 : GORGEES_CUL_SEC);
-    terminer(`🥃 ${avecCouronne(choisisseur)} préfère ${estModeSoft() ? "boire 3 gorgées" : "le CUL SEC"} !`);
+    noterGorgees(choisisseur, estModeSoft() ? 4 : GORGEES_CUL_SEC);
+    terminer(`🥃 ${avecCouronne(choisisseur)} préfère ${estModeSoft() ? "boire 4 gorgées" : "le CUL SEC"} !`);
   }, { once: true });
   nouveau(actions, "Retour", "foudre:retour", ["action"], () => { elu = null; etape = "choix"; refresh(); });
 
   function refresh(){
-    titre.innerText = etape === "choix" ? "COUP DE FOUDRE ⚡\nChoisis quelqu'un"
-      : `COUP DE FOUDRE ⚡\n${avecCouronne(elu)} : un bisou sur la bouche… ou ${culSec} ?`;
+    // Titre, puis « défi hot spécial Saint-Valentin », puis la consigne, bien séparés (style_alcuno.css : .foudre-*)
+    titre.innerHTML = `<span class="foudre-titre">COUP DE FOUDRE ⚡</span><span class="foudre-badge">🔥 Défi hot spécial Saint-Valentin 💘</span>`
+      + `<span class="foudre-consigne">${etape === "choix" ? "Choisis quelqu'un"
+        : `${echapperHtml(avecCouronne(elu))} : un bisou sur la bouche… ou ${culSec} ?`}</span>`;
     boutons.forEach(({ el, etapes }) => { el.style.display = etapes.includes(etape) ? "" : "none"; });
   }
   document.body.appendChild(overlay);

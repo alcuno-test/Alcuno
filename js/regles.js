@@ -1646,7 +1646,7 @@ function appliquerRegle(carteTiree, joueurActuel, carteElement){
 
   // Mode hot, période Saint-Valentin : carte Coup de foudre (un bisou sur la bouche… ou un cul sec : js/mode-hot.js)
   if(carteTiree === "coup_de_foudre"){
-    const entete = `COUP DE FOUDRE ⚡\nChoisis quelqu'un : un bisou sur la bouche… ou ${estModeSoft() ? "3 gorgées" : "un CUL SEC"} !`;
+    const entete = `COUP DE FOUDRE ⚡\n🔥 Défi hot spécial Saint-Valentin 💘\nChoisis quelqu'un : un bisou sur la bouche… ou ${estModeSoft() ? "4 gorgées" : "un CUL SEC"} !`;
     afficherRegleBloc(regleZero, entete);
     regleZero.style.display = "block";
     zeroEnCours = true;

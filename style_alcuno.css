@@ -521,6 +521,15 @@ button,
   animation: pop 0.5s ease forwards;
 }
 
+/* Carte Coup de foudre (mode hot, Saint-Valentin) : titre, mention « défi hot spécial Saint-Valentin », puis consigne, espacés */
+#overlayCoupDeFoudre .titre-pigeon span{ display: block; }
+#overlayCoupDeFoudre .foudre-titre{ font-size: 1.15em; line-height: 1.1; }
+#overlayCoupDeFoudre .foudre-badge{
+  display: inline-block !important; margin: 0.55em auto 0; padding: 0.25em 0.8em; border-radius: 999px;
+  font-size: 0.55em; letter-spacing: 0.04em; color: #fff; background: rgba(255, 60, 120, 0.35); border: 1px solid rgba(255, 255, 255, 0.45); text-shadow: none;
+}
+#overlayCoupDeFoudre .foudre-consigne{ margin-top: 0.75em; font-size: 0.72em; line-height: 1.3; color: #fff; }
+
 /* Boutons plus compacts pour le +4 (sinon ça déborde) */
 #overlayPlus4 .bouton-pigeon,#overlayCupidon .bouton-pigeon,#overlayCoupDeFoudre .bouton-pigeon{
   max-width: 320px;

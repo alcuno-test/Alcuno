@@ -2857,7 +2857,7 @@ function reglesDuJeu(){
         : { carte: "un_rouge", nom: "1 : annulation", texte: `Tu gardes la carte : quand tu dois boire, tu peux t'en servir pour annuler ${g(1)}.` },
       ...(hot && saintValentinEnCours() ? [{ carte: "coup_de_foudre", nom: "Coup de foudre (Saint-Valentin)", texte: [
             "Choisis quelqu'un : <b>un bisou sur la bouche</b>…",
-            `… ou tu prends ${pj ? g(3) : "<em>un CUL SEC</em>"}`
+            `… ou tu prends ${pj ? g(4) : "<em>un CUL SEC</em>"}`
           ]}] : []),
       { carte: "plus_2_jaune", nom: "+2", texte: `Tu bois ${g(gorgeesPlus2())}.` },
       { carte: "plus_4", nom: "+4", texte: `Tu distribues ${g(gorgeesPlus4())} comme tu veux.` },
