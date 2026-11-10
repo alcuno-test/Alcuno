@@ -493,7 +493,7 @@ html[data-theme="patrick"] :is(header, #menu, .messages, #ecranTele .tele-bloc, 
 
 
 /* ----- Aperçu du thème dans les Réglages : un simple rond de la couleur du fond (pas de dessin, pas d'animation) ----- */
-.pastilleTheme .rondPatrick{ background: #0f6a44 !important; }
+.pastilleTheme .rondPatrick{ background: url("patrick/trefle_apercu.svg") center / 84% 84% no-repeat, #0f6a44 !important; } /* rond vert avec un trèfle dedans */
 
 /* ----- Télé : pastilles de choix (« Je bois 2 », noms des joueurs…) au ton des cartes : le doré reste lisible dessus ----- */
 html[data-theme="patrick"] #ecranTele .tele-puce{ background: var(--carte-patrick); border-color: rgba(255, 255, 255, 0.4); }
