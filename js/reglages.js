@@ -821,6 +821,34 @@ for (let i = 0; i < 40; i++) {
   zoneNeige.appendChild(flocon);
 }
 
+// Saint-Valentin : petits cœurs rouges qui flottent sur l'écran d'accueil comme en apesanteur : chacun grossit, rapetisse
+// et dérive lentement sur un trajet à lui (3 points, en boucle), à son rythme (voir style_valentin.css)
+const zoneCoeursValentin = document.getElementById("coeursValentin");
+if (zoneCoeursValentin) {
+  const hasardCoeur = (min, max) => min + Math.random() * (max - min);
+  for (let i = 0; i < 34; i++) {
+    const coeur = document.createElement("span");
+    const taille = hasardCoeur(9, 30);
+    const duree = hasardCoeur(9, 18);
+    coeur.style.left = `${hasardCoeur(0, 96)}%`;
+    coeur.style.top = `${hasardCoeur(0, 96)}%`;
+    coeur.style.width = coeur.style.height = `${taille}px`;
+    coeur.style.animationDuration = `${duree}s`;
+    coeur.style.animationDelay = `${-Math.random() * duree}s`; // déjà en vol à l'ouverture
+    const pas = (m) => `${Math.round(hasardCoeur(-m, m))}px`;
+    coeur.style.setProperty("--x1", pas(46)); coeur.style.setProperty("--y1", pas(46));
+    coeur.style.setProperty("--x2", pas(46)); coeur.style.setProperty("--y2", pas(46));
+    coeur.style.setProperty("--x3", pas(30)); coeur.style.setProperty("--y3", pas(30));
+    coeur.style.setProperty("--s0", hasardCoeur(0.5, 0.9).toFixed(2));
+    coeur.style.setProperty("--s1", hasardCoeur(1.1, 1.7).toFixed(2));
+    coeur.style.setProperty("--s2", hasardCoeur(0.45, 0.8).toFixed(2));
+    coeur.style.setProperty("--s3", hasardCoeur(1.0, 1.5).toFixed(2));
+    coeur.style.setProperty("--r1", `${Math.round(hasardCoeur(-25, 25))}deg`);
+    coeur.style.setProperty("--r2", `${Math.round(hasardCoeur(-25, 25))}deg`);
+    zoneCoeursValentin.appendChild(coeur);
+  }
+}
+
 // Prestige : étincelles qui scintillent sur l'écran d'accueil (positions, tailles et rythmes au hasard)
 const zoneEtincelles = document.getElementById("etincellesPrestige");
 for (let i = 0; i < 26; i++) {
