@@ -33,7 +33,7 @@ style_annonce_fete.css.
 ## Poisson d'avril
 
 Trois blagues, une seule tombe le 1er avril (tirage gardé par appareil et par année) :
-1. le titre de l'accueil devient « UNO » et tout texte « Alcuno » du jeu devient « Uno » (adresses laissées telles quelles) ; un tap dessus ouvre « POISSON D’AVRIL !! C’est toujours un jeu d’alcool 😊 » avec le bouton « Trop drôle » ;
+1. le titre de l'accueil devient « UNO » et tout texte « Alcuno » du jeu devient « Uno » (adresses laissées telles quelles) ; les dos de cartes « ALC UNO » (défaut, Star Wars, Kawaii) passent aussi en « UNO » (images Cartes/dos_uno.svg, dos_*_uno.svg ; règles CSS générées par `python3 outils/poisson_dos.py` dans style_poisson.css) ; un tap dessus ouvre « POISSON D’AVRIL !! C’est toujours un jeu d’alcool 😊 » avec le bouton « Trop drôle » ;
 2. fausse mise à jour « tout le monde boit triple » : le bouton OK s'enfuit (7 tentatives, ou 20 s par sécurité), puis avoue « Poisson d’avril ! » ;
 3. faux plantage : le bouton « Réparer » s'enfuit (7 tentatives, ou 20 s par sécurité), puis avoue « Poisson d’avril ! ».
 Les 2 et 3 attendent l'accueil (jamais en pleine partie), ne s'affichent qu'une fois et n'envoient rien à l'onglet Santé.

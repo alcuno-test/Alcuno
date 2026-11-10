@@ -88,6 +88,7 @@ function poissonParcourir(racine){
 let poissonObservateur = null;
 function poissonToutEnUno(){
   if (poissonObservateur) return;
+  document.documentElement.classList.add("poisson-uno"); // dos de cartes « UNO » (style_poisson.css, généré par outils/poisson_dos.py)
   document.title = poissonTexteUno(document.title);
   poissonParcourir(document.body);
   poissonObservateur = new MutationObserver((mutations) => {

@@ -31,3 +31,36 @@
 .fenetrePoisson-bouton.poisson-fuit{ position: fixed; z-index: 100001; transition: left .12s ease-out, top .12s ease-out; }
 .fenetrePoisson-bouton.poisson-aveu{ background: #16a34a; }
 @keyframes poissonEntree{ from{ opacity: 0; } to{ opacity: 1; } }
+
+/* Dos de cartes « UNO » (blague 1 : html.poisson-uno posé par js/poisson.js) */
+/* >>> généré par outils/poisson_dos.py : ne pas modifier à la main >>> */
+html.poisson-uno .Carte:not(.retournee):not([class*="_"]):not([class*="couleur"]){ background-image: url("Cartes/dos_uno.svg") !important; }
+html.poisson-uno.faces-fermees #plateau .Carte.retournee.recachee,
+html.poisson-uno .tele-plateau .Carte.carte-recachee{ background-image: url("Cartes/dos_uno.svg") !important; }
+html.poisson-uno[data-theme="galaxie"] .Carte:not(.retournee):not([class*="_"]):not([class*="couleur"]),
+html.poisson-uno.faces-fermees[data-theme="galaxie"] #plateau .Carte.retournee.recachee,
+html.poisson-uno[data-theme="galaxie"] .tele-plateau .Carte.carte-recachee{ background-image: url("Cartes/dos_galaxie_argent_uno.svg") !important; }
+html.poisson-uno[data-theme="galaxie"] .Carte:not(.retournee):not([class*="_"]):not([class*="couleur"]):nth-child(3n+2),
+html.poisson-uno.faces-fermees[data-theme="galaxie"] #plateau .Carte.retournee.recachee:nth-child(3n+2),
+html.poisson-uno[data-theme="galaxie"] .tele-plateau .Carte.carte-recachee:nth-child(3n+2),
+html.poisson-uno[data-theme="galaxie"] .Carte.dos_dore:not(.retournee):nth-child(3n+2){ background-image: url("Cartes/dos_galaxie_hyperespace_uno.svg") !important; }
+html.poisson-uno[data-theme="galaxie"] .Carte:not(.retournee):not([class*="_"]):not([class*="couleur"]):nth-child(3n),
+html.poisson-uno.faces-fermees[data-theme="galaxie"] #plateau .Carte.retournee.recachee:nth-child(3n),
+html.poisson-uno[data-theme="galaxie"] .tele-plateau .Carte.carte-recachee:nth-child(3n),
+html.poisson-uno[data-theme="galaxie"] .Carte.dos_dore:not(.retournee):nth-child(3n){ background-image: url("Cartes/dos_galaxie_planete_uno.svg") !important; }
+html.poisson-uno[data-theme="galaxie"] .Carte.dos_dore:not(.retournee){ background-image: url("Cartes/dos_galaxie_argent_uno.svg") !important; }
+html.poisson-uno[data-theme="galaxie"] #ecranRegles .ligneRegle .Carte.retournee:not([class*="_"]):not([class*="couleur"]){ background-image: url("Cartes/dos_galaxie_argent_uno.svg") !important; }
+html.poisson-uno[data-theme="kawaii"] .Carte:not(.retournee):not([class*="_"]):not([class*="couleur"]):nth-child(3n+1),
+html.poisson-uno.faces-fermees[data-theme="kawaii"] #plateau .Carte.retournee.recachee:nth-child(3n+1),
+html.poisson-uno[data-theme="kawaii"] .tele-plateau .Carte.carte-recachee:nth-child(3n+1){ background-image: url("Cartes/dos_kawaii_uno_licorne.svg") !important; }
+html.poisson-uno[data-theme="kawaii"] .Carte:not(.retournee):not([class*="_"]):not([class*="couleur"]):nth-child(3n+2),
+html.poisson-uno.faces-fermees[data-theme="kawaii"] #plateau .Carte.retournee.recachee:nth-child(3n+2),
+html.poisson-uno[data-theme="kawaii"] .tele-plateau .Carte.carte-recachee:nth-child(3n+2){ background-image: url("Cartes/dos_kawaii_uno_nuages.svg") !important; }
+html.poisson-uno[data-theme="kawaii"] .Carte:not(.retournee):not([class*="_"]):not([class*="couleur"]):nth-child(3n),
+html.poisson-uno.faces-fermees[data-theme="kawaii"] #plateau .Carte.retournee.recachee:nth-child(3n),
+html.poisson-uno[data-theme="kawaii"] .tele-plateau .Carte.carte-recachee:nth-child(3n){ background-image: url("Cartes/dos_kawaii_uno_gourmand.svg") !important; }
+html.poisson-uno[data-theme="kawaii"] .Carte.dos_dore:not(.retournee):nth-child(3n+1){ background-image: url("Cartes/dos_kawaii_uno_licorne.svg") !important; }
+html.poisson-uno[data-theme="kawaii"] .Carte.dos_dore:not(.retournee):nth-child(3n+2){ background-image: url("Cartes/dos_kawaii_uno_nuages.svg") !important; }
+html.poisson-uno[data-theme="kawaii"] .Carte.dos_dore:not(.retournee):nth-child(3n){ background-image: url("Cartes/dos_kawaii_uno_gourmand.svg") !important; }
+html.poisson-uno[data-theme="kawaii"] #ecranRegles .ligneRegle .Carte.retournee:not([class*="_"]):not([class*="couleur"]){ background-image: url("Cartes/dos_kawaii_uno_licorne.svg") !important; }
+/* <<< fin du bloc généré <<< */
