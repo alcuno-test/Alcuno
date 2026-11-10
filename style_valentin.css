@@ -180,3 +180,9 @@ html[data-theme="valentin"] :is(#choixMode #btnReglages svg, #choixMode #btnRegl
   filter: drop-shadow(0 2px 0 #8a1244) drop-shadow(0 3px 6px rgba(60, 0, 30, 0.45));
 }
 html[data-theme="valentin"] :is(#btnAccueilClassique, #enLigne #btnAccueilEnLigne, #ecranNouvellePartie #btnAccueil){ color: #fff; -webkit-text-stroke-color: #fff; text-shadow: 0 2px 0 #8a1244, 0 3px 8px rgba(60, 0, 30, 0.45); } /* le ⌂ des écrans : blanc, contour compris */
+
+/* ----- Titres des écrans (Réglages, Ta partie, Règles du jeu, FAQ, Album, Caster, Signaler un bug, Installer, créateurs…) : blancs aussi ----- */
+html[data-theme="valentin"] :is(#ecranReglages, #ecranRegles, #ecranCaster, #ecranBug, #ecranInstallation, #ecranCredits, #ecranConfirmerAccueil, #ecranConfirmerHote, #ecranConfirmerRetrait, #ecranReprise, #ecranPause, #suppression) :is(h2, .credits-titre){
+  color: #fff;
+  text-shadow: 0 2px 0 #8a1244, 0 4px 12px rgba(60, 0, 30, 0.4);
+}
