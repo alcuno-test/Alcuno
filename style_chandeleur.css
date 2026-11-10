@@ -128,12 +128,28 @@ html[data-theme="chandeleur"] :is(header, #menu, .messages, #ecranTele .tele-blo
   width: min(92%, 360px);
   aspect-ratio: 300 / 170;
   transform: translateX(-50%);
-  background: url("chandeleur/poele.svg") center / contain no-repeat;
   z-index: -1;
   pointer-events: none;
   animation: none !important;
 }
 html[data-theme="chandeleur"] #poeleChandeleur{ display: block; }
+/* La poêle bouge avec la crêpe : elle s'abaisse (élan), donne un coup sec vers le haut au lancer, puis amortit la réception */
+#poeleChandeleur .poeleImage{
+  position: absolute; inset: 0;
+  background: url("chandeleur/poele.svg") center / contain no-repeat;
+  transform-origin: 90% 88%; /* vers le bout du manche */
+  animation: sautPoele 3.6s ease-in-out infinite;
+}
+@keyframes sautPoele{
+  0%, 36% { transform: translateY(0)   rotate(0); }
+  44%     { transform: translateY(7%)  rotate(3.5deg); }
+  52%     { transform: translateY(-9%) rotate(-6deg); }
+  60%     { transform: translateY(-2%) rotate(-1deg); }
+  70%, 80%{ transform: translateY(0)   rotate(0); }
+  87%     { transform: translateY(-4%) rotate(-2deg); }
+  92%     { transform: translateY(6%)  rotate(2.5deg); }
+  100%    { transform: translateY(0)   rotate(0); }
+}
 #poeleChandeleur .crepeSaute{
   position: absolute;
   left: 38.7%;
@@ -146,15 +162,17 @@ html[data-theme="chandeleur"] #poeleChandeleur{ display: block; }
   animation: sautCrepe 3.6s ease-in-out infinite;
 }
 @keyframes sautCrepe{
-  0%, 42% { bottom: 24%;  transform: rotate(-6deg)  scaleY(1); }
+  0%, 36% { bottom: 24%;  transform: rotate(-6deg)  scaleY(1); }
+  44%     { bottom: 17%;  transform: rotate(-3deg)  scaleY(1); }
+  52%     { bottom: 31%;  transform: rotate(-8deg)  scaleY(1); }
   58%     { bottom: 100%; transform: rotate(-14deg) scaleY(.3); }
   70%     { bottom: 128%; transform: rotate(-20deg) scaleY(-1); }
   84%     { bottom: 52%;  transform: rotate(-10deg) scaleY(-.6); }
-  92%     { bottom: 22%;  transform: rotate(-6deg)  scaleY(.8); }
+  92%     { bottom: 18%;  transform: rotate(-4deg)  scaleY(.85); }
   100%    { bottom: 24%;  transform: rotate(-6deg)  scaleY(1); }
 }
 @media (prefers-reduced-motion: reduce){
-  #poeleChandeleur .crepeSaute{ animation: none; }
+  #poeleChandeleur .crepeSaute, #poeleChandeleur .poeleImage{ animation: none; }
 }
 
 /* ----- Aperçu du thème dans les Réglages : poêle de cuivre et crêpe qui saute (chandeleur/apercu.svg, animé) ----- */
