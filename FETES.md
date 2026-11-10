@@ -8,7 +8,7 @@ Dates incluses, heure du téléphone. « du X au Y » = du X à 0 h au Y à 23 h
 
 | Fête | Début | Fin | Remarques | État |
 |---|---|---|---|---|
-| Nouvel An | 1er janvier, 0 h | 2 janvier, 0 h (exclu) | 24 h pile | à faire |
+| Nouvel An | 1er janvier, 0 h | 2 janvier, 0 h (exclu) | 24 h pile. Pas un thème : des feux d'artifice sur tous les écrans, dans tous les thèmes (style_feux.css ; pour l'instant case « Feux d'artifice » dans les Réglages) | à valider |
 | Chandeleur | 28 janvier | 3 février | | à faire |
 | Saint-Valentin | 7 février | 15 février | + un truc spécial sur le mode hot | à faire |
 | Saint-Patrick | 14 mars | 18 mars | | à faire |
@@ -17,7 +17,7 @@ Dates incluses, heure du téléphone. « du X au Y » = du X à 0 h au Y à 23 h
 | Fête de la musique | 18 juin | 22 juin | | à faire |
 | Fête nationale | 13 juillet | 15 juillet | | à faire |
 | Halloween | 20 octobre | 1er novembre | | à faire |
-| Noël | 18 décembre | 26 décembre | | à faire |
+| Noël | 18 décembre | 26 décembre | | fait |
 
 Aucune période ne se chevauche (vérifié à la main sur ce tableau).
 

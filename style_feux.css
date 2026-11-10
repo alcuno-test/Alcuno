@@ -1,0 +1,27 @@
+/* =============================================================================================
+   Feux d'artifice du Nouvel An : sur TOUS les écrans (téléphone et télé) et dans TOUS les thèmes.
+   Ce n'est pas un thème : une couche fixe par-dessus la page (html.feux-artifice), qui ne reçoit jamais le doigt.
+   Pour l'instant activée à la main (Réglages → « Feux d'artifice ») ; le calendrier des fêtes (1er janvier, voir
+   FETES.md) viendra plus tard. Code : js/reglages.js (feuArtifice).
+   Chaque feu : un éclat au centre puis des étincelles qui partent en gerbe et retombent en s'éteignant.
+   ============================================================================================= */
+#feuxArtifice{ display: none; position: fixed; inset: 0; z-index: 10050; overflow: hidden; pointer-events: none; }
+html.feux-artifice #feuxArtifice{ display: block; }
+#feuxArtifice .feuNA{ position: absolute; width: 0; height: 0; }
+#feuxArtifice .feuNA i{
+  position: absolute; left: 0; top: 0; width: var(--t); height: var(--t); margin: calc(var(--t) / -2);
+  border-radius: 50%; background: var(--c); box-shadow: 0 0 8px 2px var(--c), 0 0 2px 1px #fff;
+  opacity: 0; animation: feuNAEclat var(--d) cubic-bezier(.1,.75,.4,1) forwards;
+}
+#feuxArtifice .feuNA b{ /* éclat du départ */
+  position: absolute; left: -22px; top: -22px; width: 44px; height: 44px; border-radius: 50%; opacity: 0;
+  background: radial-gradient(circle, #fff 0 18%, var(--c) 40%, transparent 70%); animation: feuNAFlash .45s ease-out forwards;
+}
+@keyframes feuNAEclat{
+  0%   { transform: translate(0, 0) scale(1); opacity: 0; }
+  6%   { opacity: 1; }
+  60%  { opacity: 1; }
+  100% { transform: translate(var(--dx), calc(var(--dy) + 60px)) scale(.4); opacity: 0; }
+}
+@keyframes feuNAFlash{ 0%{ transform: scale(.2); opacity: .9; } 100%{ transform: scale(1.6); opacity: 0; } }
+@media (prefers-reduced-motion: reduce){ #feuxArtifice{ display: none !important; } }

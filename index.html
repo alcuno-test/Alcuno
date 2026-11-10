@@ -84,6 +84,7 @@
         document.write('<link rel="stylesheet" href="style_alcuno.css?t=' + window.ANTI_CACHE + '" />');
         document.write('<link rel="stylesheet" href="style_kawaii.css?t=' + window.ANTI_CACHE + '" />'); // thème Kawaii (généré : outils/generer_kawaii.py)
         document.write('<link rel="stylesheet" href="style_donjon.css?t=' + window.ANTI_CACHE + '" />'); // thème secret Donjon (débloqué par une partie en mode hot)
+        document.write('<link rel="stylesheet" href="style_feux.css?t=' + window.ANTI_CACHE + '" />'); // feux d'artifice du Nouvel An (tous écrans, tous thèmes)
         document.write('<link rel="stylesheet" href="style_noel.css?t=' + window.ANTI_CACHE + '" />'); // thème de fête Noël
     </script>
     <title>Alcuno TEST</title>
@@ -396,6 +397,18 @@
                         </span>
                         <input type="checkbox" id="optionGaucher" aria-label="Mode gaucher">
                         <label class="interrupteur" for="optionGaucher" aria-hidden="true"></label>
+                    </div>
+                </div>
+
+                <!-- Fête : feux d'artifice sur tous les écrans (Nouvel An). À la main pour l'instant, le calendrier des fêtes viendra plus tard (FETES.md) -->
+                <div class="blocReglage" data-cle="feux-artifice">
+                    <div class="optionReglage">
+                        <span class="optionTexte">
+                            <span class="optionTitre">Feux d'artifice 🎆</span>
+                            <span class="optionNote">Des feux d'artifice éclatent sur tous les écrans, comme au Nouvel An.</span>
+                        </span>
+                        <input type="checkbox" id="optionFeuxArtifice" aria-label="Feux d'artifice">
+                        <label class="interrupteur" for="optionFeuxArtifice" aria-hidden="true"></label>
                     </div>
                 </div>
 
@@ -727,5 +740,7 @@
     </script>
     <!-- Thème Prestige : reflet doré qui traverse l'écran de temps en temps (ne bloque aucun tap) -->
     <div id="refletPrestige" aria-hidden="true"></div>
+    <!-- Feux d'artifice du Nouvel An, sur tous les écrans et dans tous les thèmes (remplis par js/reglages.js ; ne bloque aucun tap) -->
+    <div id="feuxArtifice" aria-hidden="true"></div>
 </body>
 </html>

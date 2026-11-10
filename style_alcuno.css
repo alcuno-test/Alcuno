@@ -5846,7 +5846,7 @@ html.mode-tele body{
   overflow: hidden;
   background: var(--fond-theme);
 }
-html.mode-tele body > *:not(#ecranTele):not(#refletPrestige){
+html.mode-tele body > *:not(#ecranTele):not(#refletPrestige):not(#feuxArtifice){ /* (feux d'artifice du Nouvel An : aussi sur la télé, voir style_feux.css) */
   display: none !important;
 }
 /* Prestige : le reflet doré passe aussi sur la télé, sauf sur l'écran noir des annonces (comme sur le téléphone) */
