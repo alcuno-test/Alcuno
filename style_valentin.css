@@ -510,8 +510,8 @@ html[data-theme="valentin"] #ecranTele .tele-compteur[hidden]{ display: none; }
 html[data-theme="valentin"] header #btnReglesJeu path.couverture{ fill: var(--carte-valentin); }
 
 /* ----- Aperçu du thème dans les Réglages : un simple rond de la couleur du fond (pas de dessin, pas d'animation) ----- */
-#ecranReglages .pastilleTheme .rond.rondValentin{ /* un cœur framboise à la place du rond */
-  border-color: transparent; border-radius: 0; box-shadow: none;
+#ecranReglages .pastilleTheme .rond.rondValentin{ /* un cœur framboise à la place du rond (aucun cadre : Givre et Kawaii en mettent un à leurs ronds) */
+  border: 2px solid transparent !important; border-radius: 0; box-shadow: none !important; outline: none !important;
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 36'%3E%3Cpath d='M20 34 C-6 16 4 -2 20 8 C36 -2 46 16 20 34z' fill='%23c2185b' stroke='rgba(255,255,255,.4)' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat !important;
 }
 #ecranReglages .pastilleTheme[aria-pressed="true"] .rond.rondValentin{ /* choisi : halo doré autour du cœur (comme l'anneau doré des ronds) */
@@ -520,22 +520,20 @@ html[data-theme="valentin"] header #btnReglesJeu path.couverture{ fill: var(--ca
 }
 
 /* ----- Accueil : un cœur traversé d'une flèche remplace le O du titre ALCUNO -----
-   La lettre est masquée (elle garde sa place) et le cœur est posé à la hauteur des autres lettres : son haut sur le haut
-   des lettres, sa pointe sur leur ligne de base. Le titre laisse 0,1 em d'espacement après le O : la lettre est 0,05 em à gauche
-   du centre de sa boîte. La flèche reste dans le cœur (rien ne touche le N). Image : valentin/coeur_o.svg */
-html[data-theme="valentin"] #choixMode .lettreOTitre{ visibility: hidden; }
-html[data-theme="valentin"] #choixMode .lettreOTitre::after{
-  content: "";
-  visibility: visible;
-  position: absolute;
-  left: calc(50% - 0.05em);
-  top: 0.15em;
-  width: 0.86em;   /* aussi large qu'un O : même écart avec le N qu'entre les autres lettres */
-  height: 0.76em;  /* du haut des lettres à leur ligne de base */
-  transform: translateX(-50%);
-  background: url("valentin/coeur_o.svg") center / 100% 100% no-repeat;
+   Le cœur est DANS la ligne du titre (pas posé par-dessus à une distance fixe) : posé sur la même ligne de base que les
+   lettres et haut comme une majuscule de la police utilisée (unité « cap »). Il suit donc n'importe quelle police : sur
+   un téléphone sans la police Impact, les lettres n'ont pas la même hauteur et un cœur calé au pixel tombait trop haut.
+   Image : valentin/coeur_o.svg */
+html[data-theme="valentin"] #choixMode .lettreO{ display: none; }
+html[data-theme="valentin"] #choixMode #titreAccueil{ white-space: nowrap; } /* (le cœur ne passe jamais à la ligne) */
+html[data-theme="valentin"] #choixMode .coeurO{
+  display: inline-block;
+  width: 0.84em;
+  height: 0.72em;  /* (navigateurs sans l'unité cap) */
+  height: 1cap;
+  vertical-align: baseline;
+  background: url("valentin/coeur_o.svg") center bottom / 100% 100% no-repeat;
   filter: drop-shadow(0 3px 0 #8a1244);
-  pointer-events: none;
 }
 
 /* ----- Accueil : petits cœurs rouges qui flottent comme en apesanteur (js/reglages.js remplit #coeursValentin) -----

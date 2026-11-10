@@ -522,18 +522,18 @@ button,
 }
 
 /* Carte Coup de foudre (mode hot, Saint-Valentin) : titre, mention « défi hot spécial Saint-Valentin », puis consigne, espacés */
-#overlayCoupDeFoudre .titre-pigeon span{ display: block; }
 #overlayCoupDeFoudre .titre-pigeon .foudre-nowrap{ display: inline; white-space: nowrap; }
 #overlayCoupDeFoudre .foudre-titre{ font-size: 1.15em; line-height: 1.1; }
-#overlayCoupDeFoudre .foudre-badge{
-  display: inline-block !important; margin: 0.5em auto 0; padding: 0.35em 1em; border-radius: 999px;
+#overlayCoupDeFoudre .foudre-badge, #overlayRegleUnique .foudre-badge{
+  display: inline-block !important; margin: 0 auto 0.5em; padding: 0.35em 1em; border-radius: 999px;
   font-size: 0.68em; font-weight: 900; letter-spacing: 0.02em; text-transform: uppercase; max-width: 88%;
   color: #c2185b !important; background: #fff; border: 3px solid #ff3d7a; text-shadow: none !important;
   box-shadow: 0 0 0 4px rgba(255, 61, 122, 0.35), 0 0 22px rgba(255, 120, 170, 0.9);
   animation: foudreBadge 1.4s ease-in-out infinite;
 }
 @keyframes foudreBadge{ 0%, 100%{ transform: scale(1); } 50%{ transform: scale(1.06); box-shadow: 0 0 0 6px rgba(255, 61, 122, 0.45), 0 0 34px rgba(255, 150, 190, 1); } }
-@media (prefers-reduced-motion: reduce){ #overlayCoupDeFoudre .foudre-badge{ animation: none; } }
+#overlayRegleUnique .foudre-badge{ font-size: 0.5em; margin-bottom: 0.6em; } #overlayRegleUnique .foudre-nowrap{ white-space: nowrap; }
+@media (prefers-reduced-motion: reduce){ #overlayCoupDeFoudre .foudre-badge, #overlayRegleUnique .foudre-badge{ animation: none; } }
 #overlayCoupDeFoudre .foudre-consigne{ margin-top: 0.75em; font-size: 0.72em; line-height: 1.3; color: #fff; }
 
 /* Boutons plus compacts pour le +4 (sinon ça déborde) */

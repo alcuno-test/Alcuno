@@ -1646,12 +1646,20 @@ function appliquerRegle(carteTiree, joueurActuel, carteElement){
 
   // Mode hot, période Saint-Valentin : carte Coup de foudre (un bisou sur la bouche… ou un cul sec : js/mode-hot.js)
   if(carteTiree === "coup_de_foudre"){
-    const entete = `COUP DE FOUDRE ⚡\n🔥 DÉFI HOT SPÉCIAL SAINT-VALENTIN 💘\nChoisis quelqu'un : un bisou sur la bouche… ou ${estModeSoft() ? "4 gorgées" : "un CUL SEC"} !`;
+    const entete = `COUP DE FOUDRE ⚡\nChoisis quelqu'un : un bisou sur la bouche… ou ${estModeSoft() ? "4 gorgées" : "un CUL SEC"} !`;
     afficherRegleBloc(regleZero, entete);
     regleZero.style.display = "block";
     zeroEnCours = true;
     choixPigeonEnCours = true; // plateau bloqué jusqu'au choix
     montrerOverlayRegle(entete, carteTiree);
+    // pastille « Défi hot spécial Saint-Valentin » au-dessus du titre de l'annonce (même style que la fenêtre de choix)
+    const titreAnnonce = document.querySelector("#overlayRegleUnique .regle-titre");
+    if(titreAnnonce && !titreAnnonce.previousElementSibling?.classList.contains("foudre-badge")){
+      const badge = document.createElement("div");
+      badge.className = "foudre-badge";
+      badge.innerHTML = '🔥 Défi hot spécial <span class="foudre-nowrap">Saint-Valentin</span> 💘';
+      titreAnnonce.before(badge);
+    }
     executerApresOverlayRegleUnique(() => afficherOverlayCoupDeFoudre(joueurActuel, carteTiree, () => {
       appliquerBonusCouleurSiBesoin(carteTiree, { couleur: couleurBue, joueur: joueurActuel, preserveRuleMessage: true });
     }));

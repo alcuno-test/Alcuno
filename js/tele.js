@@ -461,6 +461,7 @@ const THEME_TELE_ATTENTE = "bordeaux";
 function appliquerThemeTele(nom){
   if (!nom || !THEMES[nom] || document.documentElement.dataset.theme === nom) return;
   document.documentElement.dataset.theme = nom;
+  try { majReglageFeuxArtifice(); } catch (e) {} // (thème de fête : feux d'artifice arrêtés et effacés, js/reglages.js)
 }
 
 // Thème Kawaii : petits personnages qui lévitent et paillettes qui scintillent derrière le jeu et derrière l'écran des annonces

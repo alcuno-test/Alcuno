@@ -107,6 +107,7 @@ function majReglageFeuxArtifice(){
   const bloc = document.querySelector('#ecranReglages [data-cle="feux-artifice"]');
   if (bloc) bloc.hidden = festif;
   document.documentElement.classList.toggle("feux-actifs", !festif && document.documentElement.classList.contains("feux-artifice"));
+  if (festif) { const zone = document.getElementById("feuxArtifice"); if (zone) zone.innerHTML = ""; } // (feux déjà partis : effacés tout de suite)
 }
 
 // Thème secret « Prestige » : débloqué en découvrant l'écran des créateurs (4 taps sur le titre)
