@@ -135,10 +135,10 @@ html[data-theme="valentin"] #choixMode .lettreOTitre{ visibility: hidden; } /* l
 html[data-theme="valentin"] #choixMode .lettreOTitre::after{
   content: "";
   position: absolute;
-  left: calc(50% + 0.03em); /* centré sur la lettre (un peu à gauche du centre de sa boîte : le titre laisse 0,1 em après le O), puis décalé vers la droite pour ne pas coller le N */
-  top: 0.135em;
-  width: 0.92em;
-  height: 0.84em;
+  left: calc(50% - 0.02em); /* centré sur la lettre (un peu à gauche du centre de sa boîte : le titre laisse 0,1 em après le O), à mi-distance : ni collé au N, ni trop loin */
+  top: 0.105em;
+  width: 0.96em;
+  height: 0.9em;
   transform: translateX(-50%);
   background: url("valentin/coeur_titre.svg") center / contain no-repeat;
   filter: drop-shadow(0 3px 0 rgba(90, 0, 40, 0.55));
@@ -166,3 +166,17 @@ html[data-theme="valentin"] #coeursValentin{ display: block; }
 @media (prefers-reduced-motion: reduce){
   #coeursValentin span{ animation: none; transform: scale(var(--s0)); }
 }
+
+/* ----- Titre ALCUNO et icônes Réglages / Règles : blancs, comme les boutons (rose pâle et blanc) au lieu du jaune doré -----
+   (accueil et en-tête du plateau ; l'ombre dorée devient framboise foncé) */
+html[data-theme="valentin"] :is(#choixMode #titreAccueil, header h1){
+  color: #fff;
+  text-shadow: 0 3px 0 #8a1244, 0 6px 16px rgba(60, 0, 30, 0.45), 0 0 30px rgba(255, 255, 255, 0.3);
+}
+html[data-theme="valentin"] #choixMode #titreAccueil{ animation: fadeIn 0.25s ease forwards; } /* (sans la lueur dorée qui pulse) */
+html[data-theme="valentin"] :is(#choixMode #btnReglages, #choixMode #btnRegles, header #btnReglesJeu) path:not(.couverture){ stroke: #fff; }
+html[data-theme="valentin"] :is(#choixMode #btnReglages circle, #choixMode #btnRegles path.couverture, header #btnReglesJeu path.couverture){ stroke: #fff; }
+html[data-theme="valentin"] :is(#choixMode #btnReglages svg, #choixMode #btnRegles svg, header #btnReglesJeu svg){
+  filter: drop-shadow(0 2px 0 #8a1244) drop-shadow(0 3px 6px rgba(60, 0, 30, 0.45));
+}
+html[data-theme="valentin"] :is(#btnAccueilClassique, #enLigne #btnAccueilEnLigne, #ecranNouvellePartie #btnAccueil){ color: #fff; -webkit-text-stroke-color: #fff; text-shadow: 0 2px 0 #8a1244, 0 3px 8px rgba(60, 0, 30, 0.45); } /* le ⌂ des écrans : blanc, contour compris */
