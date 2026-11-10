@@ -180,3 +180,9 @@ html[data-theme="chandeleur"] #poeleChandeleur{ display: block; }
 
 /* ----- Télé : pastilles de choix (« Je bois 2 », noms des joueurs…) au ton des cartes : le doré reste lisible dessus ----- */
 html[data-theme="chandeleur"] #ecranTele .tele-puce{ background: var(--carte-chandeleur); border-color: rgba(255, 255, 255, 0.4); }
+
+/* ----- Télé : « Il reste N cartes » et « Dernières cartes tirées » (sous le plateau) ne sont dans aucun panneau : ils se lisaient mal sur le motif de fond.
+   Même ton que toutes les cartes. ----- */
+html[data-theme="chandeleur"] #ecranTele :is(.tele-restantes, .tele-compteur){ background: var(--carte-chandeleur); border-radius: 1.4vh; padding: 0.6vh 2vh; }
+html[data-theme="chandeleur"] #ecranTele .tele-compteur{ display: table; margin-left: auto; margin-right: auto; color: #fff3dc; } /* (« Il reste N cartes » : le panneau épouse le texte, centré) */
+html[data-theme="chandeleur"] #ecranTele .tele-compteur[hidden]{ display: none; }
