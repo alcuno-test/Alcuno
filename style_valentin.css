@@ -186,3 +186,15 @@ html[data-theme="valentin"] :is(#ecranReglages, #ecranRegles, #ecranCaster, #ecr
   color: #fff;
   text-shadow: 0 2px 0 #8a1244, 0 4px 12px rgba(60, 0, 30, 0.4);
 }
+
+/* ----- Tous les autres titres en blanc aussi : titres des cartes des Réglages et des règles, titres des fenêtres de jeu (pigeon, couleur, +4,
+   Cupidon, duel, pari…), récap de fin, créateurs, code de la partie, et ceux de la télé. Les valeurs en doré (« 1 gorgée »…) ne changent pas.
+   (La carte dorée garde son or : c'est son thème.) ----- */
+html[data-theme="valentin"] :is(.optionTitre, .aProposTitre, .titreBloc, .regleBloc-titre, .recap-titre, .annonce-titre, .regle-titre,
+  #ecranCredits .credits-phrase strong, #codePartieAffiche,
+  #overlayCouleur .titre-couleur,
+  :is(#overlayPlus4, #overlayCupidon, #overlayPigeon, #overlayFinUnRestants, #overlayDuel, #overlayPredictionFin, #overlayRegleUnique, #overlayAnnulation, #overlayResultatAnnulation) .titre-pigeon,
+  #ecranTele :is(.tele-titre, .tele-ecran-titre, .tele-pause-titre, .tele-prepa-titre)){
+  color: #fff;
+  text-shadow: 0 2px 0 #8a1244, 0 4px 12px rgba(60, 0, 30, 0.4);
+}
