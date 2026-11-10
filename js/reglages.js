@@ -384,6 +384,8 @@ const TRAINEAU_L = 230, TRAINEAU_H = TRAINEAU_L * 130 / 420; // taille à l'écr
 let dernierBordTraineau = null;
 function passageTraineau(){
   setTimeout(passageTraineau, 18000 + Math.random() * 14000);
+  // grelots du traîneau : seulement dans ce thème, chargés d'avance (sinon le son arriverait après le passage)
+  if (document.documentElement.dataset.theme === "noel" && caseSons.checked && volumeSons > 0) { const ctx = contexteAudio(); if (ctx) chargerSon(ctx, "traineau_noel"); }
   const accueil = document.getElementById("choixMode");
   if (document.documentElement.dataset.theme !== "noel" || document.visibilityState !== "visible" ||
       document.documentElement.classList.contains("mode-tele") || // (pas sur la page de la télé)
@@ -409,6 +411,7 @@ function passageTraineau(){
   const angle = Math.atan2(ySortie - yEntree, Math.abs(x1 - x0));
   const sens = versDroite ? "" : " scaleX(-1)";
   const position = (x, y) => `translate(${x}px, ${y - TRAINEAU_H / 2}px)${sens} rotate(${angle}rad)`;
+  jouerSon("traineau_noel"); // grelots : une seule fois, au départ du passage (pas en boucle)
   const anim = vol.animate([{ transform: position(x0, yEntree) }, { transform: position(x1, ySortie) }],
     { duration: Math.abs(x1 - x0) / 0.13, easing: "linear" }); // 130 px par seconde
   anim.onfinish = () => zone.remove();
@@ -1017,7 +1020,7 @@ curseurVolume.addEventListener("change", () => jouerSon("reglage_son")); // essa
 // Quand ce téléphone caste, c'est la télé qui la joue (à ce volume, avec le thème du téléphone).
 const CLE_MUSIQUE = "alcuno_musique";
 const CLE_VOLUME_MUSIQUE = "alcuno_volume_musique";
-const THEMES_AVEC_MUSIQUE = ["givre", "cerisier", "prestige", "soleil", "galaxie", "noir", "kawaii", "donjon"];
+const THEMES_AVEC_MUSIQUE = ["givre", "cerisier", "prestige", "soleil", "galaxie", "noir", "kawaii", "donjon", "noel"];
 // thème « noir » (affiché Sombre) : musique_ambiance_sombre.mp3 ; thème « donjon » (affiché BDSM) : musique_ambiance_bdsm.mp3
 const NOM_FICHIER_MUSIQUE = { noir: "sombre", donjon: "bdsm" };
 const caseMusique = document.getElementById("optionMusique");
@@ -1068,6 +1071,7 @@ const BOUCLES_EXACTES = {
   musique_ambiance_kawaii: { avant: 0.3, longueur: 4111952 / 44100 }, // 93,24 s = 64 mesures à 164,7 BPM (de 25,5 s à 1 min 58,8 du morceau)
   musique_ambiance_bdsm: { avant: 0.3, longueur: 4492064 / 44100 }, // 101,86 s à 172 BPM (de 4 min 15,1 à 5 min 56,97 du morceau : fin de phrase du drop, puis 25 mesures avant le drop)
   musique_ambiance_galaxie: { avant: 0.3, longueur: 7898850 / 44100 }, // 179,11 s (de 10,7 s à 3 min 10 du morceau, qui se répète)
+  musique_ambiance_noel: { avant: 0.3, longueur: 6048177 / 44100 }, // 137,15 s = 80 mesures à 140 BPM (de 41,36 s à 2 min 58,5 du morceau : 2 cycles complets + la montée). Les 2 dernières mesures sont un fondu vers ce qui précédait 41,36 s, pour que le retour au début enchaîne sans saut de niveau.
   debloquage_theme_galaxie: { avant: 0.3, longueur: 4201001 / 44100 }, // 95,26 s (générique du thème Star Wars)
 };
 const FONDU_BOUCLE_EXACTE = 0.03;
