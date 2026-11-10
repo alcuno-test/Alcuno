@@ -136,18 +136,22 @@ html[data-theme="valentin"] header #btnReglesJeu path.couverture{ fill: var(--ca
   filter: drop-shadow(0 0 1.5px #FFD700) drop-shadow(0 0 1.5px #FFD700) drop-shadow(0 0 6px rgba(255, 215, 0, 0.6));
 }
 
-/* ----- Accueil : le A du titre ALCUNO en « cœur et flèche » : la flèche de Cupidon passe sur la barre du A et un cœur est dans son creux.
-   La lettre reste un vrai A (texte), le dessin est posé par-dessus en proportions de la lettre (valentin/a_coeur_fleche.svg). ----- */
-html[data-theme="valentin"] #choixMode .lettreATitre{ position: relative; }
-html[data-theme="valentin"] #choixMode .lettreATitre::after{
+/* ----- Accueil : un cœur traversé d'une flèche remplace le O du titre ALCUNO -----
+   La lettre est masquée (elle garde sa place) et le cœur est posé à la hauteur des autres lettres : son haut sur le haut
+   des lettres, sa pointe sur leur ligne de base. Le titre laisse 0,1 em d'espacement après le O : la lettre est 0,05 em à gauche
+   du centre de sa boîte. La flèche reste dans le cœur (rien ne touche le N). Image : valentin/coeur_o.svg */
+html[data-theme="valentin"] #choixMode .lettreOTitre{ visibility: hidden; }
+html[data-theme="valentin"] #choixMode .lettreOTitre::after{
   content: "";
+  visibility: visible;
   position: absolute;
-  left: -0.12em;
-  top: 0.1em;
-  width: 0.96em;
-  height: 0.8em;
-  background: url("valentin/a_coeur_fleche.svg") center / 100% 100% no-repeat;
-  filter: drop-shadow(0 2px 0 rgba(90, 0, 40, 0.5));
+  left: calc(50% - 0.05em);
+  top: 0.15em;
+  width: 0.86em;   /* aussi large qu'un O : même écart avec le N qu'entre les autres lettres */
+  height: 0.76em;  /* du haut des lettres à leur ligne de base */
+  transform: translateX(-50%);
+  background: url("valentin/coeur_o.svg") center / 100% 100% no-repeat;
+  filter: drop-shadow(0 3px 0 #8a1244);
   pointer-events: none;
 }
 
