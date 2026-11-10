@@ -136,7 +136,7 @@ html[data-theme="chandeleur"] #poeleChandeleur{ display: block; }
 /* La poêle bouge avec la crêpe : elle s'abaisse (élan), donne un coup sec vers le haut au lancer, puis amortit la réception */
 #poeleChandeleur .poeleImage{
   position: absolute; inset: 0;
-  background: url("chandeleur/poele.svg") center / contain no-repeat;
+  background: url("chandeleur/poele_sans_citron.svg") center / contain no-repeat;
   transform-origin: 90% 88%; /* vers le bout du manche */
   animation: sautPoele 3.6s ease-in-out infinite;
 }
