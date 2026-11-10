@@ -113,7 +113,7 @@ function poissonTitreUno(){
 function ouvrirMessagePoissonUno(){
   const voile = poissonFenetre("fenetrePoisson", "poisson-message", `
     <div class="poisson-carte">
-      <div class="poisson-texte"><strong>POISSON D’AVRIL !!</strong><br>C’est toujours un jeu d’alcool 😊</div>
+      <div class="poisson-texte"><strong>POISSON D’AVRIL !! 🐟</strong><br>C’est toujours un jeu d’alcool 😊</div>
       <button type="button" class="fenetrePoisson-bouton">Trop drôle</button>
     </div>`);
   if (!voile) return;
