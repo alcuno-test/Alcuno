@@ -25,3 +25,20 @@ html.feux-artifice #feuxArtifice{ display: block; }
 }
 @keyframes feuNAFlash{ 0%{ transform: scale(.2); opacity: .9; } 100%{ transform: scale(1.6); opacity: 0; } }
 @media (prefers-reduced-motion: reduce){ #feuxArtifice{ display: none !important; } }
+
+/* ----- Chapeau de fête sur le titre ALCUNO (accueil), en haut à droite, là où Prestige a sa couronne (qu'il remplace) -----
+   Affiché quand les feux d'artifice sont actifs (html.feux-actifs : réglage coché ET pas un thème de fête : js/reglages.js). */
+#choixMode .chapeauFeteTitre{
+  display: none;
+  position: absolute;
+  top: -0.42em;
+  right: 0.06em;
+  width: 0.46em;
+  transform: rotate(16deg);
+  transform-origin: 50% 100%;
+  filter: drop-shadow(0 3px 0 rgba(90, 20, 70, 0.55)) drop-shadow(0 0 8px rgba(255, 255, 255, 0.35));
+  pointer-events: none;
+}
+#choixMode .chapeauFeteTitre svg{ display: block; width: 100%; height: auto; }
+html.feux-actifs #choixMode .chapeauFeteTitre{ display: block; }
+html.feux-actifs #choixMode .couronneTitre{ display: none !important; } /* Prestige : le chapeau remplace la couronne */

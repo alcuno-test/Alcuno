@@ -101,9 +101,12 @@ const THEMES = { bordeaux: "#2b001d", noir: "#000000", vert: "#08301e", bleu: "#
 // réglage « Feux d'artifice » n'apparaît pas dans les Réglages quand l'un d'eux est actif.
 // Y ajouter chaque nouveau thème de fête (Chandeleur, Saint-Valentin, Halloween…).
 const THEMES_DE_FETE = ["noel"];
+// html.feux-actifs = les feux (et le chapeau de fête du titre) sont à l'écran : réglage coché ET pas un thème de fête.
 function majReglageFeuxArtifice(){
+  const festif = THEMES_DE_FETE.includes(document.documentElement.dataset.theme);
   const bloc = document.querySelector('#ecranReglages [data-cle="feux-artifice"]');
-  if (bloc) bloc.hidden = THEMES_DE_FETE.includes(document.documentElement.dataset.theme);
+  if (bloc) bloc.hidden = festif;
+  document.documentElement.classList.toggle("feux-actifs", !festif && document.documentElement.classList.contains("feux-artifice"));
 }
 
 // Thème secret « Prestige » : débloqué en découvrant l'écran des créateurs (4 taps sur le titre)
@@ -1687,9 +1690,11 @@ if (caseFeuxArtifice) {
   caseFeuxArtifice.addEventListener("change", () => {
     ecrireReglage(CLE_FEUX_ARTIFICE, caseFeuxArtifice.checked);
     document.documentElement.classList.toggle("feux-artifice", caseFeuxArtifice.checked);
+    majReglageFeuxArtifice();
     if (caseFeuxArtifice.checked) jouerSon("sons_on");
   });
 }
+majReglageFeuxArtifice(); // (la classe html.feux-artifice vient d'être posée ci-dessus)
 function feuArtifice(){
   const zone = document.getElementById("feuxArtifice");
   if (!zone) return;
