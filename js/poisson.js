@@ -1,7 +1,7 @@
 // ===== Poisson d'avril : 3 blagues en réserve, une seule tombe le 1er avril (style_poisson.css) =====
-// 1 = le titre de l'accueil devient « UNO » ; un tap dessus ouvre un message qui reste jusqu'à « Trop drôle ».
-// 2 = fausse mise à jour « tout le monde boit triple » : le bouton OK s'enfuit, puis avoue « Poisson d'avril ».
-// 3 = faux plantage : le bouton « Réparer » s'enfuit et, au bout de 5 s, avoue « Poisson d'avril ».
+// 1 = le titre de l'accueil devient « UNO » et tout texte « Alcuno » du jeu devient « Uno » (partout, y compris ce qui s'affiche plus tard) ; un tap dessus ouvre un message qui reste jusqu'à « Trop drôle ».
+// 2 = fausse mise à jour « tout le monde boit triple » : le bouton OK s'enfuit (7 tentatives), puis avoue « Poisson d'avril ».
+// 3 = faux plantage : le bouton « Réparer » s'enfuit (7 tentatives) et avoue « Poisson d'avril ». Par sécurité, les deux avouent aussi au bout de 20 s.
 // Le tirage est gardé par appareil et par année (relancer le jeu ne change pas la blague). Les blagues 2 et 3 attendent l'accueil
 // (jamais en pleine partie) et ne s'affichent qu'une fois ; la 1 dure toute la journée. Rien n'est envoyé à l'onglet Santé :
 // le faux plantage est un simple dessin, aucune vraie erreur n'est déclenchée.
@@ -57,7 +57,50 @@ function poissonFenetre(id, classe, html){
 }
 
 // ----- 1 : titre « UNO » -----
+// « Alcuno » -> « Uno » dans tout texte visible et dans alt / title / aria-label / placeholder, en gardant la casse.
+// On laisse les adresses (alcuno-test.github.io/Alcuno…) : les changer les rendrait fausses.
+const ATTRIBUTS_POISSON = ["alt", "title", "aria-label", "placeholder"];
+function poissonTexteUno(t){
+  return t.replace(/(?<![\w\/.@#-])(alc ?uno)(?![\w.\/-])/gi, (m) => m === m.toUpperCase() ? "UNO" : m[0] === m[0].toUpperCase() ? "Uno" : "uno");
+}
+function poissonParcourir(racine){
+  if (!racine) return;
+  if (racine.nodeType === 3) {
+    const t = racine.nodeValue, n = poissonTexteUno(t);
+    if (n !== t) racine.nodeValue = n;
+    return;
+  }
+  if (racine.nodeType !== 1 || /^(SCRIPT|STYLE|TEXTAREA)$/.test(racine.tagName)) return;
+  const elements = [racine, ...racine.querySelectorAll("*")];
+  for (const el of elements) {
+    for (const a of ATTRIBUTS_POISSON) {
+      const v = el.getAttribute(a);
+      if (v) { const n = poissonTexteUno(v); if (n !== v) el.setAttribute(a, n); }
+    }
+  }
+  const marcheur = document.createTreeWalker(racine, NodeFilter.SHOW_TEXT, {
+    acceptNode: (nd) => /^(SCRIPT|STYLE|TEXTAREA)$/.test(nd.parentNode?.tagName) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT
+  });
+  const noeuds = [];
+  while (marcheur.nextNode()) noeuds.push(marcheur.currentNode);
+  noeuds.forEach(poissonParcourir);
+}
+let poissonObservateur = null;
+function poissonToutEnUno(){
+  if (poissonObservateur) return;
+  document.title = poissonTexteUno(document.title);
+  poissonParcourir(document.body);
+  poissonObservateur = new MutationObserver((mutations) => {
+    for (const m of mutations) {
+      if (m.type === "attributes") poissonParcourir(m.target);
+      else if (m.type === "characterData") poissonParcourir(m.target);
+      else m.addedNodes.forEach(poissonParcourir);
+    }
+  });
+  poissonObservateur.observe(document.body, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ATTRIBUTS_POISSON });
+}
 function poissonTitreUno(){
+  poissonToutEnUno();
   const titre = document.getElementById("titreAccueil");
   if (!titre) return;
   if (!titre.classList.contains("poisson-uno")) {
@@ -87,7 +130,7 @@ function poissonFausseMiseAJour(){
       <button type="button" class="fenetrePoisson-bouton">OK</button>
     </div>`);
   if (!voile) return;
-  boutonFuyard(voile.querySelector("button"), { apresFuites: 4, apresMs: 12000, aveu: "Poisson d’avril ! 🐟", fermer: () => voile.remove() });
+  boutonFuyard(voile.querySelector("button"), { apresFuites: 7, apresMs: 20000, aveu: "Poisson d’avril ! 🐟", fermer: () => voile.remove() });
 }
 
 // ----- 3 : faux plantage -----
@@ -101,7 +144,7 @@ function poissonFauxPlantage(){
       <button type="button" class="fenetrePoisson-bouton">Réparer</button>
     </div>`);
   if (!voile) return;
-  boutonFuyard(voile.querySelector("button"), { apresMs: 5000, aveu: "Poisson d’avril ! 🐟", fermer: () => voile.remove() });
+  boutonFuyard(voile.querySelector("button"), { apresFuites: 7, apresMs: 20000, aveu: "Poisson d’avril ! 🐟", fermer: () => voile.remove() });
 }
 
 // ----- Tirage du 1er avril -----
