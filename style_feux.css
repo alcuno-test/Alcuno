@@ -31,12 +31,12 @@ html.feux-artifice #feuxArtifice{ display: block; }
 #choixMode .chapeauFeteTitre{
   display: none;
   position: absolute;
-  top: -0.42em;
-  right: 0.06em;
-  width: 0.46em;
-  transform: rotate(16deg);
+  top: -0.72em;
+  right: 0.1em;
+  width: 0.72em;
+  transform: rotate(14deg);
   transform-origin: 50% 100%;
-  filter: drop-shadow(0 3px 0 rgba(90, 20, 70, 0.55)) drop-shadow(0 0 8px rgba(255, 255, 255, 0.35));
+  filter: drop-shadow(0 3px 0 rgba(90, 20, 70, 0.55)) drop-shadow(0 0 10px rgba(255, 226, 122, 0.6));
   pointer-events: none;
 }
 #choixMode .chapeauFeteTitre svg{ display: block; width: 100%; height: auto; }
