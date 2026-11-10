@@ -1,0 +1,146 @@
+/* =============================================================================================
+   Thème de fête « Saint-Valentin » (nom interne : valentin) : écran framboise, cœurs en motif de fond, et sur
+   l'accueil un cœur traversé d'une flèche de Cupidon qui remplace le O du titre ALCUNO.
+   Pour l'instant choisi à la main dans les Réglages (le calendrier des fêtes viendra plus tard, voir FETES.md).
+   Tout est sous html[data-theme="valentin"] : rien ne change pour les autres thèmes.
+   Images : dossier valentin/.
+   ============================================================================================= */
+
+html[data-theme="valentin"]{
+  --fond-theme: #c2185b;
+  --carte-valentin: rgba(104, 10, 52, 0.94); /* ton de TOUTES les cartes et panneaux : framboise foncé franc (pas noir), quasi opaque pour cacher le motif derrière le texte */
+  --couleur-barre: #c2185b; /* = la couleur du tout haut du décor ci-dessous (la barre du téléphone ne doit pas être plus sombre) */
+  /* Fond du jeu, des menus et des réglages : lumière douce en haut, puis le motif de cœurs, flèches et étoiles (valentin/deco_fond.svg) */
+  --deco-theme:
+    radial-gradient(ellipse 120% 24% at 50% 24%, rgba(255,190,215,.4), transparent 100%) no-repeat,
+    linear-gradient(to top, rgba(40,0,20,.25), transparent 45%) no-repeat,
+    url("valentin/deco_fond.svg") 0 0 / 300px 300px repeat;
+  --deco-accueil:
+    radial-gradient(ellipse 120% 24% at 50% 24%, rgba(255,190,215,.4), transparent 100%) no-repeat;
+  /* Joueur dont c'est le tour : blanc et or */
+  --actif-haut: #ffffff; --actif-bas: #ffd23f; --actif-texte: #6a0a34; --actif-halo: #ffe27a;
+  /* texte sélectionné dans les champs (nom du joueur, code de la partie…) : l'or du thème, texte framboise foncé */
+  --selection-fond: #ffe27a; --selection-texte: #6a0a34;
+  /* Fenêtres du jeu (pigeon, duel, +4, pari…) : halo rose sur un framboise foncé (le doré reste lisible) */
+  --overlay-fond: radial-gradient(ellipse 115% 42% at 50% 45%, rgba(255,90,150,.5) 0%, transparent 100%), #6a0a34;
+  --overlay-bord: #6a0a34;
+}
+
+/* ----- Fenêtres du jeu ----- */
+html[data-theme="valentin"] :is(#overlayCouleur, #overlayPlus4, #overlayCupidon, #overlayPigeon,
+  #overlayFinUnRestants, #overlayDuel, #overlayRegleUnique, #overlayAnnulation, #overlayResultatAnnulation,
+  #overlayPredictionFin, .overlay-opaque){
+  background: var(--overlay-fond) !important;
+}
+html[data-theme="valentin"].overlay-ouvert,
+html[data-theme="valentin"].overlay-ouvert body,
+html[data-theme="valentin"] #voileOverlays{ background: var(--overlay-bord); }
+html[data-theme="valentin"] .plus4-actions{ background: transparent; }
+html[data-theme="valentin"] :is(#overlayCarteDoree, #overlayRegleUnique.overlay-doree){
+  background: radial-gradient(ellipse 95% 34% at 50% 33%, rgba(255,215,0,.26), transparent 100%),
+    radial-gradient(ellipse 120% 60% at 50% 100%, rgba(255,90,150,.5), transparent 100%), #6a0a34 !important; box-shadow: none; }
+/* Récap de fin de partie */
+html[data-theme="valentin"] #overlayFinUnRestants.overlay-recap{ background: radial-gradient(ellipse 110% 45% at 50% 45%, rgba(255,90,150,.5), transparent 100%), #5a082c !important; }
+html[data-theme="valentin"] :is(.recap-marche, .recap-liste, .recap-bloc){ background: rgba(140,20,72,.5); border-color: rgba(255,255,255,.4); }
+html[data-theme="valentin"] .recap-marche{ background: linear-gradient(180deg, rgba(255,150,190,.3), rgba(140,20,72,.5)); }
+
+/* ----- Télé : même teinte que le thème ----- */
+html[data-theme="valentin"] #ecranTele .tele-ecran{ background: radial-gradient(ellipse 110% 70% at 50% 45%, rgba(255,80,140,.5), rgba(96,10,48,.97) 75%), rgb(96,10,48); }
+html[data-theme="valentin"] #ecranTele .tele-ecran-recap{ background: radial-gradient(ellipse 110% 60% at 50% 40%, rgba(255,90,150,.5), transparent 100%), #5a082c !important; }
+
+/* ----- Lisibilité sur le framboise (Réglages, écran des créateurs) ----- */
+/* Cartes : TOUTES au même ton (framboise foncé, quasi opaque, liseré blanc fin) : Réglages (blocs et lignes isolées), « Ta partie »,
+   règles / FAQ / album, créateurs, étapes d'installation, salle d'attente, retrait d'un joueur. Quasi opaque pour que le motif
+   du fond ne passe jamais derrière un texte ; les noms de thèmes (chacun de sa couleur) restent lisibles. */
+html[data-theme="valentin"] :is(#ecranReglages .blocReglage, #ecranReglages .reglages-contenu > .optionReglage, .optionsPartie > .optionReglage:not(.optionsSuite),
+  .blocRegles, #ecranCredits .credits-nom, #ecranInstallation .etapeInstallation, #listeJoueursEnLigne div, #listeSuppression){
+  background: var(--carte-valentin); border: 1px solid rgba(255, 255, 255, 0.22);
+}
+html[data-theme="valentin"] #ecranCredits .cadrePhoto.sansPhoto{ background: var(--carte-valentin); }
+/* Boutons secondaires (translucides dans le jeu de base) : même ton sombre que les cartes, liseré blanc */
+html[data-theme="valentin"] :is(#enLigne #btnInviterPartie, .voletPause-annuler, #ecranReglages .btnDiagnostic, #ecranBug .bugFermer){
+  background: var(--carte-valentin) !important; border: 1px solid rgba(255, 255, 255, 0.35) !important;
+}
+/* Petits textes gris : blanc cassé */
+html[data-theme="valentin"] #ecranReglages :is(.lienBug, .versionJeu){ color: #fff0f6 !important; }
+html[data-theme="valentin"] #ecranReglages .btnDiagnostic{ color: #fff0f6 !important; }
+html[data-theme="valentin"] #ecranCredits .credits-honneur-titre{ color: #fff0f6; }
+/* Télé : code de la télé, en bas de l'écran */
+html[data-theme="valentin"] #ecranTele .tele-pied{ color: rgba(255,240,246,.8); }
+
+/* ----- Boutons : or avec un anneau blanc (comme une étiquette de cadeau) et texte framboise foncé, sur tous les écrans -----
+   (mêmes boutons que les autres thèmes habillés, Soleil couchant par exemple : tous les boutons du jeu doivent être aux couleurs du thème) */
+html[data-theme="valentin"][data-theme] body :is(#btnModeEnLigne, #btnModeClassique, #btnContinuerOptions, .btnRetour, #btnPartagerJeu, #ajouterJoueur, #jouer, #supprimerJoueur,
+  #nouvellePartie, #btnRejouerMemes, #btnModifierJoueurs, #btnReprendrePause,
+  #btnCreerPartie, #btnRejoindrePartie, #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #btnScannerQR,
+  #lancerPartieEnLigne, #btnChoixPseudoAnnuler, #listeChoixPseudo button, #btnConfirmerAccueilOui, #btnConfirmerAccueilNon,
+  #btnConfirmerHoteOui, #btnConfirmerHoteNon, #btnConfirmerRetraitOui, #btnConfirmerRetraitNon, #termineSuppression,
+  #btnInstallationInstaller, #ecranRegles .btnFaqLien, #choixMode .btnInstaller, #menu #btnCaster, #ecranCaster button:not(.btnRetour), #btnFermerScanner, #ecranReprise button,
+  #overlayPigeon .bouton-pigeon, #overlayPlus4 .bouton-pigeon, #overlayCupidon .bouton-pigeon, #overlayFinUnRestants .bouton-pigeon,
+  #overlayAnnulation button, #overlayRegleUnique .bouton-annulation, #overlayDuel button:not(:disabled), #overlayPredictionFin .bouton-pigeon){
+  background: linear-gradient(180deg, #fff6fa, #ffc9de) !important;
+  color: #6a0a34 !important;
+  text-shadow: 0 1px 0 rgba(255, 244, 190, 0.7) !important;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.95), 0 6px 14px rgba(60,0,30,.4) !important;
+}
+@media (hover: hover){
+  html[data-theme="valentin"][data-theme] body :is(#btnModeEnLigne, #btnModeClassique, #choixMode .btnInstaller):hover{ background: linear-gradient(180deg, #ffffff, #ffd9e8) !important; }
+}
+
+/* ----- Volet « Mettre … en pause » et bandeaux du bas (« Mauvais joueur ? Annuler », « Nouvelle version ») ----- */
+html[data-theme="valentin"] .voletPause-ok{
+  background: linear-gradient(180deg, #fff6fa, #ffc9de); color: #6a0a34;
+  text-shadow: 0 1px 0 rgba(255, 244, 190, 0.7); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.95);
+}
+html[data-theme="valentin"] :is(#annulerChoix, #bandeauMiseAJour){
+  --bandeau-fond: #4e0626; --bandeau-bord: rgba(255, 255, 255, 0.5); --bandeau-texte: #fff;
+  --bandeau-bouton: linear-gradient(180deg, #fff6fa, #ffc9de); --bandeau-bouton-texte: #6a0a34;
+}
+html[data-theme="valentin"] :is(#annulerChoix .annulerChoix-bouton, #bandeauMiseAJour .maj){
+  text-shadow: 0 1px 0 rgba(255, 244, 190, 0.7); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.95);
+}
+
+/* ----- Pari de fin et choix de fin : cadres framboise avec un liseré blanc (au lieu du brun-doré de base) ----- */
+html[data-theme="valentin"] :is(.prediction-header, .fin-choix-recap, .fin-choix-card){
+  background: linear-gradient(180deg, rgba(124,18,64,.9), rgba(84,8,44,.9)) !important;
+  border-color: rgba(255, 255, 255, 0.45) !important;
+}
+
+/* ----- Textes secondaires un peu trop effacés sur le framboise : plus clairs ----- */
+html[data-theme="valentin"] #ecranReglages .optionNote{ color: rgba(255, 255, 255, 0.92); }
+html[data-theme="valentin"] #ecranReglages .aProposTitre{ color: #ffe27a; }
+html[data-theme="valentin"] #ecranReglages .lienJeu{ color: #fff; }
+html[data-theme="valentin"] #enLigne .separateurOu, html[data-theme="valentin"] #ecranInstallation #btnInstallationPlusTard{ color: #fff; }
+html[data-theme="valentin"] #listeJoueursEnLigne div{ color: #b8fff6; }
+html[data-theme="valentin"] #ecranTele .tele-tour.tele-pigeon .tele-tour-nom{ color: #b8fff6; } /* « PIGEON (nom) » de la télé */
+
+/* ----- Plateau : les panneaux (titre, boutons, joueurs, règles) cachent le motif de fond derrière leur texte ----- */
+html[data-theme="valentin"] :is(header, #menu, .messages, #ecranTele .tele-bloc, #ecranTele .tele-entete, #ecranTele .tele-prepa-joueur){ background-color: var(--carte-valentin); }
+
+/* ----- Télé : pastilles de choix (« Je bois 2 », noms des joueurs…) au ton des cartes : le doré reste lisible dessus ----- */
+html[data-theme="valentin"] #ecranTele .tele-puce{ background: var(--carte-valentin); border-color: rgba(255, 255, 255, 0.4); }
+/* Télé : « Il reste N cartes » et « Dernières cartes tirées » en panneaux au ton des cartes (sinon posés sur le motif de fond) */
+html[data-theme="valentin"] #ecranTele :is(.tele-restantes, .tele-compteur){ background: var(--carte-valentin); border-radius: 1.4vh; padding: 0.6vh 2vh; }
+html[data-theme="valentin"] #ecranTele .tele-compteur{ display: table; margin-left: auto; margin-right: auto; color: #fff0f6; }
+html[data-theme="valentin"] #ecranTele .tele-compteur[hidden]{ display: none; }
+/* Plateau : l'intérieur de l'icône Règles (le livre) prend le ton de l'en-tête, pas la couleur de l'accueil */
+html[data-theme="valentin"] header #btnReglesJeu path.couverture{ fill: var(--carte-valentin); }
+
+/* ----- Aperçu du thème dans les Réglages : un simple rond de la couleur du fond (pas de dessin, pas d'animation) ----- */
+.pastilleTheme .rondValentin{ background: #c2185b !important; }
+
+/* ----- Accueil : le cœur traversé d'une flèche prend la place du dernier O du titre ALCUNO -----
+   (le O est dans <span class="lettreOTitre"> : sa lettre devient transparente, le cœur est posé au même endroit) */
+html[data-theme="valentin"] #choixMode .lettreOTitre{ color: transparent !important; -webkit-text-fill-color: transparent; text-shadow: none !important; }
+html[data-theme="valentin"] #choixMode .lettreOTitre::after{
+  content: "";
+  position: absolute;
+  left: calc(50% - 0.05em); /* le titre laisse 0,1 em d'espacement après le O : la lettre est un peu à gauche du centre de sa boîte */
+  top: 0.08em;
+  width: 1.04em;
+  height: 0.95em;
+  transform: translateX(-50%);
+  background: url("valentin/coeur_titre.svg") center / contain no-repeat;
+  filter: drop-shadow(0 3px 0 rgba(90, 0, 40, 0.55));
+  pointer-events: none;
+}

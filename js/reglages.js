@@ -95,12 +95,12 @@ const CLE_THEME = "alcuno_theme";
 // Couleur de la barre du téléphone pour chaque thème (= --couleur-barre du CSS, le tout haut de la page).
 // Mêmes couleurs dans le script du <head> de index.html, qui la pose dès le premier affichage.
 const THEMES = { bordeaux: "#2b001d", noir: "#000000", vert: "#08301e", bleu: "#0a1634", soleil: "#1f3566",
-                 cerisier: "#5a1740", givre: "#e4f5fc", prestige: "#937810", galaxie: "#02030a", kawaii: "#ffd6ec", donjon: "#12040a", noel: "#b3121f", chandeleur: "#bd4f10" };
+                 cerisier: "#5a1740", givre: "#e4f5fc", prestige: "#937810", galaxie: "#02030a", kawaii: "#ffd6ec", donjon: "#12040a", noel: "#b3121f", chandeleur: "#bd4f10", valentin: "#c2185b" };
 
 // Thèmes de fête : pas de feux d'artifice dedans (ils ne tomberont jamais en même temps que le Nouvel An), et le
 // réglage « Feux d'artifice » n'apparaît pas dans les Réglages quand l'un d'eux est actif.
 // Y ajouter chaque nouveau thème de fête (Chandeleur, Saint-Valentin, Halloween…).
-const THEMES_DE_FETE = ["noel", "chandeleur"];
+const THEMES_DE_FETE = ["noel", "chandeleur", "valentin"];
 // html.feux-actifs = les feux (et le chapeau de fête du titre) sont à l'écran : réglage coché ET pas un thème de fête.
 function majReglageFeuxArtifice(){
   const festif = THEMES_DE_FETE.includes(document.documentElement.dataset.theme);

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 100" width="110" height="100">
+  <!-- Le cœur qui remplace le O du titre ALCUNO sur l'accueil du thème Saint-Valentin : cœur rose traversé d'une flèche dorée -->
+  <defs><radialGradient id="g" cx=".35" cy=".3" r=".9"><stop offset="0" stop-color="#ff9cc0"/><stop offset=".55" stop-color="#f0306c"/><stop offset="1" stop-color="#b8123f"/></radialGradient>
+    <path id="c" d="M0 44 C-54 -2 -40 -50 0 -26 C40 -50 54 -2 0 44z"/></defs>
+  <g transform="translate(55 48)">
+    <use href="#c" fill="url(#g)" stroke="#8a0e32" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M-28 -22 C-40 -28 -45 -10 -33 -1" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" opacity=".65"/>
+  </g>
+  <g transform="translate(55 52) rotate(-24)">
+    <path d="M-40 0 H34" stroke="#c98a00" stroke-width="7" stroke-linecap="round"/><path d="M-40 0 H34" stroke="#ffe27a" stroke-width="3.6" stroke-linecap="round"/>
+    <path d="M34 0 l-5 -11 l21 11 l-21 11z" fill="#ffe27a" stroke="#c98a00" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M-40 0 l-11 -10 h9 l9 10z M-40 0 l-11 10 h9 l9 -10z M-29 0 l-11 -10 h9 l9 10z M-29 0 l-11 10 h9 l9 -10z" fill="#fff" stroke="#b9a0aa" stroke-width="2" stroke-linejoin="round"/>
+  </g>
+</svg>

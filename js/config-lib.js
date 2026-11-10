@@ -19,10 +19,10 @@
 (function (global) {
   "use strict";
 
-  const THEMES_CONNUS = ["bordeaux", "noir", "vert", "bleu", "soleil", "cerisier", "givre", "prestige", "galaxie", "kawaii", "donjon", "noel", "chandeleur"];
+  const THEMES_CONNUS = ["bordeaux", "noir", "vert", "bleu", "soleil", "cerisier", "givre", "prestige", "galaxie", "kawaii", "donjon", "noel", "chandeleur", "valentin"];
   const NOMS_THEMES = {
     bordeaux: "Bordeaux", noir: "Sombre", vert: "Casino", bleu: "Nuit", soleil: "Soleil couchant",
-    cerisier: "Cerisier", givre: "Givre", prestige: "Prestige", galaxie: "Star Wars", kawaii: "Kawaii", donjon: "BDSM", noel: "Noël", chandeleur: "Chandeleur"
+    cerisier: "Cerisier", givre: "Givre", prestige: "Prestige", galaxie: "Star Wars", kawaii: "Kawaii", donjon: "BDSM", noel: "Noël", chandeleur: "Chandeleur", valentin: "Saint-Valentin"
   };
   const COUPURES_CONNUES = ["voix", "musique", "enligne"];
   const NOMS_COUPURES = { voix: "les annonces à voix haute", musique: "la musique", enligne: "le mode en ligne" };
@@ -255,7 +255,7 @@
   function sansAccent(s) { return String(s).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase(); }
 
   const SYNONYMES_THEMES = [
-    ["galaxie", /star ?wars|galaxie/], ["noel", /\bnoel\b/], ["chandeleur", /chandeleur/], ["kawaii", /kawaii|kawai/], ["donjon", /bdsm|donjon/], ["prestige", /prestige/], ["cerisier", /cerisier/],
+    ["galaxie", /star ?wars|galaxie/], ["noel", /\bnoel\b/], ["chandeleur", /chandeleur/], ["valentin", /valentin/], ["kawaii", /kawaii|kawai/], ["donjon", /bdsm|donjon/], ["prestige", /prestige/], ["cerisier", /cerisier/],
     ["givre", /givre/], ["soleil", /soleil/], ["vert", /casino|\bvert\b/], ["bleu", /\bnuit\b|\bbleu\b/],
     ["noir", /sombre|\bnoir\b/], ["bordeaux", /bordeaux/]
   ];
