@@ -12,7 +12,7 @@ Dates incluses, heure du téléphone. « du X au Y » = du X à 0 h au Y à 23 h
 | Chandeleur | 28 janvier | 3 février | Poêle de cuivre et crêpe qui saute (style_chandeleur.css, chandeleur/) ; pas de musique ni de son pour l'instant | fait |
 | Saint-Valentin | 7 février | 15 février | Cœur et flèche à la place du O du titre, cœurs rouges qui flottent sur l'accueil (style_valentin.css, valentin/). musique (boucle de 1 min 38) ; mode hot : carte « Coup de foudre » (voir MODE_HOT.md) | à valider |
 | Saint-Patrick | 14 mars | 18 mars | Tout en vert : chapeau de lutin sur le O du titre, deux pintes en bas de l’accueil, trèfles / chapeaux / pintes en motif, joueur actif vert brillant (style_patrick.css, patrick/). Pas de musique pour l’instant | à valider |
-| 1er avril | 1er avril | 1er avril | pas un thème : une blague / un piège dans le jeu (à inventer) | à faire |
+| 1er avril | 1er avril | 1er avril | pas un thème : 3 blagues en réserve (js/poisson.js, style_poisson.css), une seule tirée au hasard par appareil le 1er avril ; voir « Poisson d'avril » plus bas | à valider |
 | Just Rosé | 4 mai | 12 mai | | à faire |
 | Fête de la musique | 18 juin | 22 juin | | à faire |
 | Fête nationale | 13 juillet | 15 juillet | | à faire |
@@ -29,6 +29,15 @@ même style que les « thème débloqué » annonce « Nouveau thème X disponib
 Saint-Patrick « Sláinte is táinte ! », les autres « L'essayer maintenant » ; et « Plus tard » partout. Pour la voir hors période : ouvrir
 le jeu avec `?annonce_fete=patrick` (ou noel, chandeleur, valentin). Chaque nouvelle fête : l'ajouter dans `FETES_ANNONCE` et
 style_annonce_fete.css.
+
+## Poisson d'avril
+
+Trois blagues, une seule tombe le 1er avril (tirage gardé par appareil et par année) :
+1. le titre de l'accueil devient « UNO » ; un tap dessus ouvre « POISSON D’AVRIL !! C’est toujours un jeu d’alcool 😊 » avec le bouton « Trop drôle » ;
+2. fausse mise à jour « tout le monde boit triple » : le bouton OK s'enfuit (4 tentatives ou 12 s), puis avoue « Poisson d’avril ! » ;
+3. faux plantage : le bouton « Réparer » s'enfuit, puis avoue « Poisson d’avril ! » au bout de 5 s.
+Les 2 et 3 attendent l'accueil (jamais en pleine partie), ne s'affichent qu'une fois et n'envoient rien à l'onglet Santé.
+Pour les voir hors du 1er avril : ouvrir le jeu avec `?poisson=1`, `?poisson=2` ou `?poisson=3`.
 
 ## Tester un thème (avant de le valider)
 
