@@ -60,13 +60,13 @@
   :where(html[data-theme="valentin"]) #termineSuppression:hover{ background-color: #ffe0ec; }
 }
 :where(html[data-theme="valentin"]) #overlayCouleur div.titre-couleur{ color: #ffe3ee; }
-:where(html[data-theme="valentin"]) #overlayPlus4 .titre-pigeon, :where(html[data-theme="valentin"]) #overlayCupidon .titre-pigeon{ color: #ffe3ee; }
-:where(html[data-theme="valentin"]) #overlayPlus4 .bouton-pigeon, :where(html[data-theme="valentin"]) #overlayCupidon .bouton-pigeon{ background-color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #overlayPlus4 .titre-pigeon, :where(html[data-theme="valentin"]) #overlayCupidon .titre-pigeon, :where(html[data-theme="valentin"]) #overlayCoupDeFoudre .titre-pigeon{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #overlayPlus4 .bouton-pigeon, :where(html[data-theme="valentin"]) #overlayCupidon .bouton-pigeon, :where(html[data-theme="valentin"]) #overlayCoupDeFoudre .bouton-pigeon{ background-color: #ffe3ee; }
 @media (hover: hover){
-  :where(html[data-theme="valentin"]) #overlayPlus4 .bouton-pigeon:hover, :where(html[data-theme="valentin"]) #overlayCupidon .bouton-pigeon:hover{ background-color: #ffe0ec; }
+  :where(html[data-theme="valentin"]) #overlayPlus4 .bouton-pigeon:hover, :where(html[data-theme="valentin"]) #overlayCupidon .bouton-pigeon:hover, :where(html[data-theme="valentin"]) #overlayCoupDeFoudre .bouton-pigeon:hover{ background-color: #ffe0ec; }
 }
-:where(html[data-theme="valentin"]) #overlayPlus4 .plus4-joueur-btn, :where(html[data-theme="valentin"]) #overlayCupidon .plus4-joueur-btn{ background: rgba(255,200,222,0.94); }
-:where(html[data-theme="valentin"]) #overlayPlus4 .plus4-total, :where(html[data-theme="valentin"]) #overlayCupidon .plus4-total{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #overlayPlus4 .plus4-joueur-btn, :where(html[data-theme="valentin"]) #overlayCupidon .plus4-joueur-btn, :where(html[data-theme="valentin"]) #overlayCoupDeFoudre .plus4-joueur-btn{ background: rgba(255,200,222,0.94); }
+:where(html[data-theme="valentin"]) #overlayPlus4 .plus4-total, :where(html[data-theme="valentin"]) #overlayCupidon .plus4-total, :where(html[data-theme="valentin"]) #overlayCoupDeFoudre .plus4-total{ color: #ffe3ee; }
 :where(html[data-theme="valentin"]) #overlayPigeon .titre-pigeon{ color: #ffe3ee; }
 :where(html[data-theme="valentin"]) #overlayPigeon .bouton-pigeon{ background-color: #ffe3ee; }
 @media (hover: hover){
@@ -255,6 +255,13 @@
     #btnConfirmerRetraitNon, #ajouterJoueur, #jouer, #supprimerJoueur, #nouvellePartie, #termineSuppression,
     #btnInstallationInstaller, #overlayPigeon .bouton-pigeon, #overlayPlus4 .bouton-pigeon, #overlayCupidon .bouton-pigeon, #overlayDuel button,
     #overlayFinUnRestants .bouton-pigeon, #overlayPredictionFin .bouton-pigeon, #overlayRegleUnique .bouton-annulation,
+    #overlayAnnulation button):hover:not(:disabled), :where(html[data-theme="valentin"]) body :is(#btnModeEnLigne, #btnModeClassique, #btnContinuerOptions, .btnRetour, #btnPartagerJeu, #btnCreerPartie, #btnRejoindrePartie,
+    #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #btnScannerQR, #lancerPartieEnLigne, #btnRejouerMemes,
+    #btnModifierJoueurs, #btnChoixPseudoAnnuler, #listeChoixPseudo button, #btnConfirmerAccueilOui,
+    #btnConfirmerAccueilNon, #btnConfirmerHoteOui, #btnConfirmerHoteNon, #btnConfirmerRetraitOui,
+    #btnConfirmerRetraitNon, #ajouterJoueur, #jouer, #supprimerJoueur, #nouvellePartie, #termineSuppression,
+    #btnInstallationInstaller, #overlayPigeon .bouton-pigeon, #overlayPlus4 .bouton-pigeon, #overlayCoupDeFoudre .bouton-pigeon, #overlayDuel button,
+    #overlayFinUnRestants .bouton-pigeon, #overlayPredictionFin .bouton-pigeon, #overlayRegleUnique .bouton-annulation,
     #overlayAnnulation button):hover:not(:disabled){ box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.9), 0 6px 20px rgba(255,200,222,0.55) !important; }
 }
 :where(html[data-theme="valentin"]) #overlayDuel .duel-boutons button:disabled{ background: #fcc0d8 !important; }
@@ -365,6 +372,8 @@
 
 
 
+
+
 html[data-theme="valentin"]{
   --fond-theme: #c2185b;
   --carte-valentin: rgba(104, 10, 52, 0.94); /* ton de TOUTES les cartes et panneaux : framboise foncé franc (pas noir), quasi opaque pour cacher le motif derrière le texte */
@@ -387,6 +396,9 @@ html[data-theme="valentin"]{
 
 /* ----- Fenêtres du jeu ----- */
 html[data-theme="valentin"] :is(#overlayCouleur, #overlayPlus4, #overlayCupidon, #overlayPigeon,
+  #overlayFinUnRestants, #overlayDuel, #overlayRegleUnique, #overlayAnnulation, #overlayResultatAnnulation,
+  #overlayPredictionFin, .overlay-opaque),
+html[data-theme="valentin"] :is(#overlayCouleur, #overlayPlus4, #overlayCoupDeFoudre, #overlayPigeon,
   #overlayFinUnRestants, #overlayDuel, #overlayRegleUnique, #overlayAnnulation, #overlayResultatAnnulation,
   #overlayPredictionFin, .overlay-opaque){
   background: var(--overlay-fond) !important;
@@ -436,6 +448,14 @@ html[data-theme="valentin"][data-theme] body :is(#btnModeEnLigne, #btnModeClassi
   #btnConfirmerHoteOui, #btnConfirmerHoteNon, #btnConfirmerRetraitOui, #btnConfirmerRetraitNon, #termineSuppression,
   #btnInstallationInstaller, #ecranRegles .btnFaqLien, #choixMode .btnInstaller, #menu #btnCaster, #ecranCaster button:not(.btnRetour), #btnFermerScanner, #ecranReprise button,
   #overlayPigeon .bouton-pigeon, #overlayPlus4 .bouton-pigeon, #overlayCupidon .bouton-pigeon, #overlayFinUnRestants .bouton-pigeon,
+  #overlayAnnulation button, #overlayRegleUnique .bouton-annulation, #overlayDuel button:not(:disabled), #overlayPredictionFin .bouton-pigeon),
+html[data-theme="valentin"][data-theme] body :is(#btnModeEnLigne, #btnModeClassique, #btnContinuerOptions, .btnRetour, #btnPartagerJeu, #ajouterJoueur, #jouer, #supprimerJoueur,
+  #nouvellePartie, #btnRejouerMemes, #btnModifierJoueurs, #btnReprendrePause,
+  #btnCreerPartie, #btnRejoindrePartie, #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #btnScannerQR,
+  #lancerPartieEnLigne, #btnChoixPseudoAnnuler, #listeChoixPseudo button, #btnConfirmerAccueilOui, #btnConfirmerAccueilNon,
+  #btnConfirmerHoteOui, #btnConfirmerHoteNon, #btnConfirmerRetraitOui, #btnConfirmerRetraitNon, #termineSuppression,
+  #btnInstallationInstaller, #ecranRegles .btnFaqLien, #choixMode .btnInstaller, #menu #btnCaster, #ecranCaster button:not(.btnRetour), #btnFermerScanner, #ecranReprise button,
+  #overlayPigeon .bouton-pigeon, #overlayPlus4 .bouton-pigeon, #overlayCoupDeFoudre .bouton-pigeon, #overlayFinUnRestants .bouton-pigeon,
   #overlayAnnulation button, #overlayRegleUnique .bouton-annulation, #overlayDuel button:not(:disabled), #overlayPredictionFin .bouton-pigeon){
   background: linear-gradient(180deg, #fff6fa, #ffc9de) !important;
   color: #6a0a34 !important;
@@ -562,6 +582,11 @@ html[data-theme="valentin"] :is(.optionTitre, .aProposTitre, .titreBloc, .regleB
   #ecranCredits .credits-phrase strong, #codePartieAffiche,
   #overlayCouleur .titre-couleur,
   :is(#overlayPlus4, #overlayCupidon, #overlayPigeon, #overlayFinUnRestants, #overlayDuel, #overlayPredictionFin, #overlayRegleUnique, #overlayAnnulation, #overlayResultatAnnulation) .titre-pigeon,
+  #ecranTele :is(.tele-titre, .tele-ecran-titre, .tele-pause-titre, .tele-prepa-titre)),
+html[data-theme="valentin"] :is(.optionTitre, .aProposTitre, .titreBloc, .regleBloc-titre, .recap-titre, .annonce-titre, .regle-titre,
+  #ecranCredits .credits-phrase strong, #codePartieAffiche,
+  #overlayCouleur .titre-couleur,
+  :is(#overlayPlus4, #overlayCoupDeFoudre, #overlayPigeon, #overlayFinUnRestants, #overlayDuel, #overlayPredictionFin, #overlayRegleUnique, #overlayAnnulation, #overlayResultatAnnulation) .titre-pigeon,
   #ecranTele :is(.tele-titre, .tele-ecran-titre, .tele-pause-titre, .tele-prepa-titre)){
   color: #fff;
   text-shadow: 0 2px 0 #8a1244, 0 4px 12px rgba(60, 0, 30, 0.4);

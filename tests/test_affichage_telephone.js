@@ -111,6 +111,8 @@ const ECRANS = [
   ["fin de partie", [], "statsPartie.doree = { personne: false, soft: false, tireur: joueurs[0], victime: joueurs[1] }; afficherOverlayFinUnRestants()", 1200],
   ["défi hot", ["optionModeHot"], "montrerOverlayRegle('Ylana boit 2 gorgées', 'deux_bleu'); montrerDefiHot(1, 2); reglerDureeOverlayRegle('', null)", 900],
   ["Cupidon", ["optionModeHot"], "afficherOverlayCupidon(0, 'cupidon_a')", 900],
+  ["Coup de foudre (choix)", ["optionModeHot"], "afficherOverlayCoupDeFoudre(0, 'coup_de_foudre')", 900],
+  ["Coup de foudre (bisou ou cul sec)", ["optionModeHot"], "afficherOverlayCoupDeFoudre(0, 'coup_de_foudre'); document.querySelector('#overlayCoupDeFoudre button').dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }))", 900],
 ];
 
 (async () => {

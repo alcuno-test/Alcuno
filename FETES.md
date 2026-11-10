@@ -10,7 +10,7 @@ Dates incluses, heure du téléphone. « du X au Y » = du X à 0 h au Y à 23 h
 |---|---|---|---|---|
 | Nouvel An | 1er janvier, 0 h | 2 janvier, 0 h (exclu) | 24 h pile. Pas un thème : des feux d'artifice sur tous les écrans, dans tous les thèmes (style_feux.css ; pour l'instant case « Feux d'artifice » dans les Réglages) | fait |
 | Chandeleur | 28 janvier | 3 février | Poêle de cuivre et crêpe qui saute (style_chandeleur.css, chandeleur/) ; pas de musique ni de son pour l'instant | fait |
-| Saint-Valentin | 7 février | 15 février | Cœur et flèche à la place du O du titre, cœurs rouges qui flottent sur l'accueil (style_valentin.css, valentin/). + un truc spécial sur le mode hot : PAS ENCORE FAIT (à décider) | à valider |
+| Saint-Valentin | 7 février | 15 février | Cœur et flèche à la place du O du titre, cœurs rouges qui flottent sur l'accueil (style_valentin.css, valentin/). musique (boucle de 1 min 38) ; mode hot : carte « Coup de foudre » (voir MODE_HOT.md) | à valider |
 | Saint-Patrick | 14 mars | 18 mars | | à faire |
 | 1er avril | 1er avril | 1er avril | pas un thème : une blague / un piège dans le jeu (à inventer) | à faire |
 | Just Rosé | 4 mai | 12 mai | | à faire |

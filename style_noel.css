@@ -37,6 +37,9 @@ html[data-theme="noel"]{
 /* ----- Fenêtres du jeu ----- */
 html[data-theme="noel"] :is(#overlayCouleur, #overlayPlus4, #overlayCupidon, #overlayPigeon,
   #overlayFinUnRestants, #overlayDuel, #overlayRegleUnique, #overlayAnnulation, #overlayResultatAnnulation,
+  #overlayPredictionFin, .overlay-opaque),
+html[data-theme="noel"] :is(#overlayCouleur, #overlayPlus4, #overlayCoupDeFoudre, #overlayPigeon,
+  #overlayFinUnRestants, #overlayDuel, #overlayRegleUnique, #overlayAnnulation, #overlayResultatAnnulation,
   #overlayPredictionFin, .overlay-opaque){
   background: var(--overlay-fond) !important;
 }
@@ -169,6 +172,14 @@ html[data-theme="noel"][data-theme] body :is(#btnModeEnLigne, #btnModeClassique,
   #btnConfirmerHoteOui, #btnConfirmerHoteNon, #btnConfirmerRetraitOui, #btnConfirmerRetraitNon, #termineSuppression,
   #btnInstallationInstaller, #ecranRegles .btnFaqLien, #choixMode .btnInstaller, #menu #btnCaster, #ecranCaster button:not(.btnRetour), #btnFermerScanner, #ecranReprise button,
   #overlayPigeon .bouton-pigeon, #overlayPlus4 .bouton-pigeon, #overlayCupidon .bouton-pigeon, #overlayFinUnRestants .bouton-pigeon,
+  #overlayAnnulation button, #overlayRegleUnique .bouton-annulation, #overlayDuel button:not(:disabled), #overlayPredictionFin .bouton-pigeon),
+html[data-theme="noel"][data-theme] body :is(#btnModeEnLigne, #btnModeClassique, #btnContinuerOptions, .btnRetour, #btnPartagerJeu, #ajouterJoueur, #jouer, #supprimerJoueur,
+  #nouvellePartie, #btnRejouerMemes, #btnModifierJoueurs, #btnReprendrePause,
+  #btnCreerPartie, #btnRejoindrePartie, #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #btnScannerQR,
+  #lancerPartieEnLigne, #btnChoixPseudoAnnuler, #listeChoixPseudo button, #btnConfirmerAccueilOui, #btnConfirmerAccueilNon,
+  #btnConfirmerHoteOui, #btnConfirmerHoteNon, #btnConfirmerRetraitOui, #btnConfirmerRetraitNon, #termineSuppression,
+  #btnInstallationInstaller, #ecranRegles .btnFaqLien, #choixMode .btnInstaller, #menu #btnCaster, #ecranCaster button:not(.btnRetour), #btnFermerScanner, #ecranReprise button,
+  #overlayPigeon .bouton-pigeon, #overlayPlus4 .bouton-pigeon, #overlayCoupDeFoudre .bouton-pigeon, #overlayFinUnRestants .bouton-pigeon,
   #overlayAnnulation button, #overlayRegleUnique .bouton-annulation, #overlayDuel button:not(:disabled), #overlayPredictionFin .bouton-pigeon){
   background: linear-gradient(180deg, #ffe27a, #e8a900) !important;
   color: #6e0a14 !important;
