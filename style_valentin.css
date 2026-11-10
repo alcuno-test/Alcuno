@@ -6,21 +6,353 @@
    Images : dossier valentin/.
    ============================================================================================= */
 
+/* === DÉBUT : doré du jeu de base teinté au thème (généré par outils/teinter_or_theme.py valentin : ne pas modifier à la main) === */
+@keyframes lueurDoree_valentin{
+  0%, 100% { box-shadow: 0 0 0 1px rgba(255,200,222,0.5), 0 10px 26px rgba(0,0,0,0.5), 0 0 18px rgba(255,200,222,0.30); }
+  50%      { box-shadow: 0 0 0 1px rgba(255,200,222,0.9), 0 10px 26px rgba(0,0,0,0.5), 0 0 38px rgba(255,200,222,0.60); }
+}
+@keyframes rappelTour_valentin{
+  0%, 100% { scale: 1; filter: none; }
+  50%      { scale: 1.14; filter: brightness(1.35) drop-shadow(0 0 10px rgba(255,200,222, 0.95)); }
+}
+@keyframes rappelTourDoux_valentin{
+    0%, 100% { filter: none; }
+    50%      { filter: brightness(1.35) drop-shadow(0 0 10px rgba(255,200,222, 0.95)); }
+  }
+@keyframes duelPulse_valentin{
+  0%, 100% { box-shadow: 0 0 0 2px rgba(255,200,222,0.55), 0 0 10px rgba(255,200,222,0.25); }
+  50%      { box-shadow: 0 0 0 2px rgba(255,200,222,0.95), 0 0 28px rgba(255,200,222,0.60); }
+}
+@keyframes lueurTitreAccueil_valentin{
+  0%, 100% {
+    text-shadow:
+      0 3px 0 rgba(138,18,68, 0.95),
+      0 6px 16px rgba(0,0,0,0.5),
+      0 0 34px rgba(255,200,222, 0.28);
+  }
+  50% {
+    text-shadow:
+      0 3px 0 rgba(138,18,68, 0.95),
+      0 6px 16px rgba(0,0,0,0.5),
+      0 0 48px rgba(255,200,222, 0.55);
+  }
+}
+@keyframes fenetrePrestigeBrille_valentin{
+  0%, 100%{ box-shadow: 0 0 0 4px #fff2b0, 0 0 26px rgba(255,200,222, 0.6); }
+  50%{ box-shadow: 0 0 0 4px #fff2b0, 0 0 48px rgba(255,200,222, 0.95); }
+}
+:where(html[data-theme="valentin"]) ::selection{ background: var(--selection-fond, #ffe3ee); }
+:where(html[data-theme="valentin"]) .messages::before{ background: linear-gradient(90deg, #ff5b5b 0%, #ff9ec2 25%, #6eff72 50%, #58d4ff 75%, #8b7dff 100%); }
+:where(html[data-theme="valentin"]) .bonus-annulation{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) .regleZero, :where(html[data-theme="valentin"]) .reglePigeon, :where(html[data-theme="valentin"]) .rappelTour{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) .menu button, :where(html[data-theme="valentin"]) .suppression button{ background-color: #ff9ec2; }
+@media (hover: hover){
+  :where(html[data-theme="valentin"]) .menu button:hover, :where(html[data-theme="valentin"]) .suppression button:hover{ background-color: #ffe0ec; }
+}
+:where(html[data-theme="valentin"]) #suppression h2{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #listeSuppression{ box-shadow: 0 0 0 1px rgba(255,200,222,0.18) inset; }
+@media (hover: hover){
+  :where(html[data-theme="valentin"]) #listeSuppression .supp-item:hover{ background: rgba(255,200,222,0.10); box-shadow: 0 0 0 1px rgba(255,200,222,0.22) inset; }
+}
+:where(html[data-theme="valentin"]) #listeSuppression .supp-check{ accent-color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #termineSuppression{ background-color: #ffe3ee; }
+@media (hover: hover){
+  :where(html[data-theme="valentin"]) #termineSuppression:hover{ background-color: #ffe0ec; }
+}
+:where(html[data-theme="valentin"]) #overlayCouleur div.titre-couleur{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #overlayPlus4 .titre-pigeon, :where(html[data-theme="valentin"]) #overlayCupidon .titre-pigeon{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #overlayPlus4 .bouton-pigeon, :where(html[data-theme="valentin"]) #overlayCupidon .bouton-pigeon{ background-color: #ffe3ee; }
+@media (hover: hover){
+  :where(html[data-theme="valentin"]) #overlayPlus4 .bouton-pigeon:hover, :where(html[data-theme="valentin"]) #overlayCupidon .bouton-pigeon:hover{ background-color: #ffe0ec; }
+}
+:where(html[data-theme="valentin"]) #overlayPlus4 .plus4-joueur-btn, :where(html[data-theme="valentin"]) #overlayCupidon .plus4-joueur-btn{ background: rgba(255,200,222, 0.94); }
+:where(html[data-theme="valentin"]) #overlayPlus4 .plus4-total, :where(html[data-theme="valentin"]) #overlayCupidon .plus4-total{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #overlayPigeon .titre-pigeon{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #overlayPigeon .bouton-pigeon{ background-color: #ffe3ee; }
+@media (hover: hover){
+  :where(html[data-theme="valentin"]) #overlayPigeon .bouton-pigeon:hover{ background-color: #ffe0ec; }
+}
+:where(html[data-theme="valentin"]) #overlayDuel button{ background-color: #ffe3ee; }
+@media (hover: hover){
+  :where(html[data-theme="valentin"]) #overlayDuel button:hover{ background-color: #ffe0ec; }
+}
+@media (hover: hover){
+  :where(html[data-theme="valentin"]) #overlayDuel .Carte:not(.retournee):not(.duel-selected):hover{ box-shadow: 0 0 20px #ffe3ee; }
+}
+:where(html[data-theme="valentin"]) #overlayRegleUnique .bouton-annulation{ background-color: #ffe3ee; }
+@media (hover: hover){
+  :where(html[data-theme="valentin"]) #overlayRegleUnique .bouton-annulation:hover{ background-color: #ffe0ec; }
+}
+:where(html[data-theme="valentin"]) #overlayFinUnRestants .titre-pigeon, :where(html[data-theme="valentin"]) #overlayPredictionFin .titre-pigeon{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #overlayFinUnRestants .bouton-pigeon, :where(html[data-theme="valentin"]) #overlayPredictionFin .bouton-pigeon{ background-color: #ffe3ee; }
+@media (hover: hover){
+  :where(html[data-theme="valentin"]) #overlayFinUnRestants .bouton-pigeon:hover, :where(html[data-theme="valentin"]) #overlayPredictionFin .bouton-pigeon:hover{ background-color: #ffe0ec; }
+}
+:where(html[data-theme="valentin"]) #overlayFinUnRestants .fin-un-ligne{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) .prediction-header{ background:
+    linear-gradient(180deg, rgba(255,200,222,0.14), rgba(255,255,255,0.04)),
+    rgba(255,255,255,0.03); border: 1px solid rgba(255,200,222,0.24); }
+:where(html[data-theme="valentin"]) .prediction-subtitle{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) .overlay-subtitle{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) .fin-choix-turn{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) .fin-choix-recap .ligne{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) .fin-choix-recap .ligne.en-cours{ background: rgba(255,200,222, 0.12); }
+:where(html[data-theme="valentin"]) .fin-choix-numeros b{ background: #ffe3ee; }
+:where(html[data-theme="valentin"]) .Carte.dos_dore::after{ background: linear-gradient(115deg,
+    transparent 32%,
+    rgba(255,170,200, 0.55) 44%,
+    rgba(255, 246, 200, 0.95) 50%,
+    rgba(255,170,200, 0.55) 56%,
+    transparent 68%); }
+:where(html[data-theme="valentin"]) #stickyJoueurActif{ border: 1px solid rgba(255,200,222, 0.22); }
+:where(html[data-theme="valentin"]) #stickyJoueurActif::before{ background: radial-gradient(circle at 35% 35%, #fff6bf 0%, #ffe3ee 45%, #d6a900 100%); box-shadow: 0 0 10px rgba(255,200,222,0.28); }
+:where(html[data-theme="valentin"]) #stickyJoueurActif .sticky-bonus{ background: rgba(255,200,222,0.16); border: 1px solid rgba(255,200,222,0.18); }
+:where(html[data-theme="valentin"]) .fin-choix-resultat{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #overlayDuel .duel-main-title{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #overlayDuel .duel-info{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #overlayDuel .duel-label{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) header{ background:
+    linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)),
+    linear-gradient(135deg, rgba(255,200,222, 0.08), rgba(255,255,255,0) 45%),
+    rgba(0,0,0,0.22); box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.08),
+    inset 0 0 0 2px rgba(255,200,222,0.10),
+    0 14px 30px rgba(0,0,0,0.20); }
+:where(html[data-theme="valentin"]) header::before{ background: linear-gradient(
+    90deg,
+    rgba(255, 70, 70, 0.14) 0%,
+    rgba(255,200,222, 0.10) 35%,
+    rgba(70, 210, 110, 0.10) 68%,
+    rgba(70, 170, 255, 0.14) 100%
+  ); }
+:where(html[data-theme="valentin"]) header::after{ background: linear-gradient(90deg, #ff4d4d 0%, #ffe3ee 34%, #42d86b 67%, #42b7ff 100%); }
+:where(html[data-theme="valentin"]) header h1{ color: #ffe3ee; text-shadow:
+    0 2px 0 rgba(138,18,68, 0.95),
+    0 4px 10px rgba(0,0,0,0.45),
+    0 0 18px rgba(255,200,222, 0.18); }
+:where(html[data-theme="valentin"]) #menu{ box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.06),
+    inset 0 0 0 2px rgba(255,200,222,0.08); }
+:where(html[data-theme="valentin"]) #menu input{ border: 1px solid rgba(255,200,222,0.18); }
+:where(html[data-theme="valentin"]) #choixMode h2, :where(html[data-theme="valentin"]) #ecranNouvellePartie h2, :where(html[data-theme="valentin"]) #ecranConfirmerHote h2, :where(html[data-theme="valentin"]) #ecranConfirmerRetrait h2, :where(html[data-theme="valentin"]) #ecranReprise h2, :where(html[data-theme="valentin"]) #ecranConfirmerAccueil h2, :where(html[data-theme="valentin"]) #ecranChoixPseudo h2, :where(html[data-theme="valentin"]) #ecranCaster h2, :where(html[data-theme="valentin"]) #enLigne h2, :where(html[data-theme="valentin"]) #enLigne h3{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #choixMode button, :where(html[data-theme="valentin"]) #ecranNouvellePartie button, :where(html[data-theme="valentin"]) #btnContinuerOptions, :where(html[data-theme="valentin"]) #ecranConfirmerHote button, :where(html[data-theme="valentin"]) #ecranConfirmerRetrait button, :where(html[data-theme="valentin"]) #ecranReprise button, :where(html[data-theme="valentin"]) #ecranConfirmerAccueil button, :where(html[data-theme="valentin"]) #ecranChoixPseudo button, :where(html[data-theme="valentin"]) #ecranCaster button, :where(html[data-theme="valentin"]) #enLigne button{ background-color: #ff9ec2; }
+@media (hover: hover){
+  :where(html[data-theme="valentin"]) #choixMode button:hover, :where(html[data-theme="valentin"]) #ecranNouvellePartie button:hover, :where(html[data-theme="valentin"]) #btnContinuerOptions:hover, :where(html[data-theme="valentin"]) #ecranConfirmerHote button:hover, :where(html[data-theme="valentin"]) #ecranConfirmerRetrait button:hover, :where(html[data-theme="valentin"]) #ecranReprise button:hover, :where(html[data-theme="valentin"]) #ecranConfirmerAccueil button:hover, :where(html[data-theme="valentin"]) #ecranChoixPseudo button:hover, :where(html[data-theme="valentin"]) #ecranCaster button:hover, :where(html[data-theme="valentin"]) #enLigne button:hover{ background-color: #ffe0ec; }
+}
+:where(html[data-theme="valentin"]) #enLigne input{ border: 1px solid rgba(255,200,222,0.25); }
+:where(html[data-theme="valentin"]) #enLigne .separateurOu::before, :where(html[data-theme="valentin"]) #enLigne .separateurOu::after{ background: rgba(255,200,222,0.35); }
+:where(html[data-theme="valentin"]) #ecranScanner .cadreScanner{ border: 3px solid #ff9ec2; }
+:where(html[data-theme="valentin"]) #ecranScanner button{ background: #ff9ec2; }
+:where(html[data-theme="valentin"]) #listeJoueursEnLigne div{ box-shadow: 0 0 0 1px rgba(255,200,222,0.18) inset; }
+:where(html[data-theme="valentin"]) .qrPartie{ box-shadow: 0 0 0 3px rgba(255,200,222,0.55), 0 10px 24px rgba(0,0,0,0.35); }
+:where(html[data-theme="valentin"]) #btnAccueilClassique, :where(html[data-theme="valentin"]) #enLigne #btnAccueilEnLigne, :where(html[data-theme="valentin"]) #ecranNouvellePartie #btnAccueil{ -webkit-text-stroke: 1.2px #ffe3ee; color: #ffe3ee; text-shadow:
+    0 2px 0 rgba(138,18,68, 0.95),
+    0 3px 8px rgba(0,0,0,0.45); }
+:where(html[data-theme="valentin"]) #toastEnLigne{ color: #ffe3ee; box-shadow: 0 0 0 1px rgba(255,200,222,0.45) inset, 0 8px 24px rgba(0,0,0,0.45); }
+:where(html[data-theme="valentin"]) #ecranCredits{ background:
+    radial-gradient(ellipse 85% 28% at 50% 30%, rgba(255,200,222,0.16), transparent 100%),
+    radial-gradient(ellipse 45% 22% at 15% 72%, rgba(255,77,77,0.10), transparent 100%),
+    radial-gradient(ellipse 45% 22% at 85% 72%, rgba(66,183,255,0.10), transparent 100%),
+    var(--deco-theme, none),
+    linear-gradient(var(--fond-theme), var(--fond-theme)) var(--couleur-barre); }
+:where(html[data-theme="valentin"]) #ecranCredits .credits-titre{ color: #ffe3ee; text-shadow:
+    0 2px 0 rgba(138,18,68, 0.95),
+    0 4px 10px rgba(0,0,0,0.45),
+    0 0 26px rgba(255,200,222, 0.25); }
+:where(html[data-theme="valentin"]) #ecranCredits .credits-phrase strong{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #ecranCredits .cadrePhoto{ border: 2px solid rgba(255,200,222,0.55); }
+:where(html[data-theme="valentin"]) #ecranCredits .photoVide{ border: 2px dashed rgba(255,200,222,0.45); color: rgba(255,200,222,0.8); }
+:where(html[data-theme="valentin"]) #ecranCredits .credits-nom{ box-shadow: 0 0 0 1px rgba(255,200,222,0.25) inset; color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #ecranCredits .btnRetour{ background-color: #ff9ec2; }
+:where(html[data-theme="valentin"]) #annonceNouvellePartie{ background:
+    radial-gradient(circle at 50% 45%, rgba(255,200,222,0.16), transparent 60%),
+    rgba(20, 0, 14, 0.94); }
+:where(html[data-theme="valentin"]) #annonceNouvellePartie .annonce-titre{ color: #ffe3ee; text-shadow:
+    0 2px 0 rgba(138,18,68, 0.95),
+    0 4px 10px rgba(0,0,0,0.45),
+    0 0 26px rgba(255,200,222, 0.25); }
+:where(html[data-theme="valentin"]) #stickyJoueurActif.rappel-tour{ animation: rappelTour_valentin 0.8s ease-in-out 3; }
+:where(html[data-theme="valentin"]) #haloRappel{ --halo-ecran: rgba(255,200,222, 0.75); }
+@media (prefers-reduced-motion: reduce){
+  :where(html[data-theme="valentin"]) #stickyJoueurActif.rappel-tour{ animation-name: rappelTourDoux_valentin; }
+}
+:where(html[data-theme="valentin"]) #overlayDuel .Carte.duel-a-choisir{ animation: duelPulse_valentin 1.6s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce){
+  :where(html[data-theme="valentin"]) #overlayDuel .Carte.duel-a-choisir{ box-shadow: 0 0 0 2px rgba(255,200,222,0.85), 0 0 18px rgba(255,200,222,0.45); }
+}
+:where(html[data-theme="valentin"]) #choixMode #btnReglages svg{ filter:
+    drop-shadow(0 2px 0 rgba(138,18,68, 0.95))
+    drop-shadow(0 3px 6px rgba(0,0,0,0.45)); }
+:where(html[data-theme="valentin"]) #choixMode #btnReglages path{ stroke: #ffe3ee; }
+:where(html[data-theme="valentin"]) #choixMode #btnReglages circle{ stroke: #ffe3ee; }
+:where(html[data-theme="valentin"]) #ecranReglages h2{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #ecranReglages .btnRetour{ background-color: #ff9ec2; }
+:where(html[data-theme="valentin"]) #ecranReglages .optionReglage{ border: 1px solid rgba(255,200,222,0.18); }
+:where(html[data-theme="valentin"]) #ecranReglages .optionTitre{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #ecranReglages .optionReglage input:checked + .interrupteur{ background: #ffe3ee; }
+:where(html[data-theme="valentin"]) #ecranReglages .optionReglage input:focus-visible + .interrupteur{ outline: 2px solid #ffe3ee; }
+:where(html[data-theme="valentin"]) #ecranReglages .aProposTitre{ color: rgba(255,200,222,0.7); }
+:where(html[data-theme="valentin"]) #choixMode .btnInstaller{ color: #ffe3ee; background: rgba(255,200,222,0.10); border: 1px solid rgba(255,200,222,0.45); }
+@media (hover: hover){
+  :where(html[data-theme="valentin"]) #choixMode .btnInstaller:hover{ background: rgba(255,200,222,0.18); }
+}
+:where(html[data-theme="valentin"]) #overlayRegleUnique .celien-bloc{ border-top: 1px solid rgba(255,200,222, 0.35); }
+:where(html[data-theme="valentin"]) #overlayRegleUnique .celien-citation{ color: #ffe0ec; text-shadow: 0 0 18px rgba(255,200,222, 0.35); }
+:where(html[data-theme="valentin"]) #overlayRegleUnique .celien-signature{ color: #ffe3ee; text-shadow: 0 2px 0 #6b4200, 0 0 16px rgba(255,200,222, 0.35); }
+:where(html[data-theme="valentin"]) #btnCodePartie{ border: 1px solid rgba(255,200,222,0.25); color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #btnCodePartie.ouvert{ border-color: rgba(255,200,222,0.6); }
+:where(html[data-theme="valentin"]) #ecranRattrapage{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #choixMode #titreAccueil{ color: #ffe3ee; text-shadow:
+    0 3px 0 rgba(138,18,68, 0.95),
+    0 6px 16px rgba(0,0,0,0.5),
+    0 0 34px rgba(255,200,222, 0.28); animation: fadeIn 0.25s ease forwards, lueurTitreAccueil_valentin 3.5s ease-in-out 0.3s infinite; }
+:where(html[data-theme="valentin"]) #choixMode .titreAccueilBarre{ background: linear-gradient(90deg, #ff4d4d 0%, #ffe3ee 34%, #42d86b 67%, #42b7ff 100%); box-shadow: 0 0 14px rgba(255,200,222, 0.25); }
+:where(html[data-theme="valentin"]) #ecranReglages .blocReglage{ border: 1px solid rgba(255,200,222,0.18); }
+:where(html[data-theme="valentin"]) #ecranReglages .ligneVolume input[type="range"]{ accent-color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #ecranReglages .volumeValeur{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #ecranReglages .optionAction button{ background: #ffe3ee; }
+:where(html[data-theme="valentin"]) #ecranReglages .qrJeu{ box-shadow: 0 0 0 3px rgba(255,200,222,0.55), 0 10px 24px rgba(0,0,0,0.35); }
+:where(html[data-theme="valentin"]) #ecranReglages #btnPartagerJeu{ background-color: #ff9ec2; }
+:where(html[data-theme="valentin"]) #ecranReglages .btnDiagnostic:active{ color: #ffe3ee; border-color: rgba(255,200,222,0.5); }
+:where(html[data-theme="valentin"]) #notifHaut{ box-shadow: 0 12px 28px rgba(0,0,0,0.5), 0 0 22px rgba(255,170,200, 0.55),
+              inset 0 0 0 1.5px rgba(255, 248, 200, 0.85), inset 0 -3px 0 rgba(138,18,68, 0.45); }
+:where(html[data-theme="valentin"]) #etincellesPrestige span{ text-shadow: 0 0 6px #ffd3e4, 0 0 14px rgba(255,200,222, 0.9), 0 0 24px rgba(255, 190, 40, 0.6); }
+:where(html[data-theme="valentin"]) body::before{ background:
+    var(--deco-theme, radial-gradient(circle at top center, rgba(255,200,222, 0.08) 0%, rgba(255,200,222, 0) 26%) no-repeat),
+    var(--fond-theme); }
+:where(html[data-theme="valentin"]) #choixMode #btnRegles svg, :where(html[data-theme="valentin"]) header #btnReglesJeu svg{ filter: drop-shadow(0 2px 0 rgba(138,18,68, 0.95)) drop-shadow(0 3px 6px rgba(0,0,0,0.45)); }
+:where(html[data-theme="valentin"]) #choixMode #btnRegles path, :where(html[data-theme="valentin"]) header #btnReglesJeu path{ stroke: #ffe3ee; }
+:where(html[data-theme="valentin"]) #ecranRegles .btnRetour{ background-color: #ff9ec2; }
+:where(html[data-theme="valentin"]) #ecranRegles h2{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #ecranRegles .blocRegles{ border: 1px solid rgba(255,200,222,0.18); }
+:where(html[data-theme="valentin"]) #ecranRegles .blocRegles h3{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #ecranRegles .btnFaqLien{ border: 1px solid rgba(255,200,222,0.45); background: rgba(255,200,222,0.10); color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #ecranRegles .faqImage{ border: 1px solid rgba(255,200,222,0.30); }
+:where(html[data-theme="valentin"]) #ecranInstallation h2{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #ecranInstallation .etapeInstallation{ border: 1px solid rgba(255,200,222,0.25); }
+:where(html[data-theme="valentin"]) #ecranInstallation .etapeInstallation b{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #ecranInstallation .numeroEtape{ background: #ffe3ee; }
+:where(html[data-theme="valentin"]) #ecranInstallation #btnInstallationInstaller{ background: #ff9ec2; box-shadow: inset 0 -3px 0 rgba(0,0,0,0.18), 0 0 26px rgba(255,200,222,0.45); }
+@media (hover: hover){
+  :where(html[data-theme="valentin"]) body :is(#btnModeEnLigne, #btnModeClassique, #btnContinuerOptions, .btnRetour, #btnPartagerJeu, #btnCreerPartie, #btnRejoindrePartie,
+    #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #btnScannerQR, #lancerPartieEnLigne, #btnRejouerMemes,
+    #btnModifierJoueurs, #btnChoixPseudoAnnuler, #listeChoixPseudo button, #btnConfirmerAccueilOui,
+    #btnConfirmerAccueilNon, #btnConfirmerHoteOui, #btnConfirmerHoteNon, #btnConfirmerRetraitOui,
+    #btnConfirmerRetraitNon, #ajouterJoueur, #jouer, #supprimerJoueur, #nouvellePartie, #termineSuppression,
+    #btnInstallationInstaller, #overlayPigeon .bouton-pigeon, #overlayPlus4 .bouton-pigeon, #overlayCupidon .bouton-pigeon, #overlayDuel button,
+    #overlayFinUnRestants .bouton-pigeon, #overlayPredictionFin .bouton-pigeon, #overlayRegleUnique .bouton-annulation,
+    #overlayAnnulation button):hover:not(:disabled){ box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.9), 0 6px 20px rgba(255,200,222, 0.55) !important; }
+}
+:where(html[data-theme="valentin"]) #menu #btnCaster{ box-shadow: 0 0 0 1px rgba(255,200,222,0.45) inset; }
+:where(html[data-theme="valentin"]) #menu #btnCaster.caster-actif{ box-shadow: 0 0 0 2px #ffe3ee inset, 0 0 14px rgba(255,200,222,0.35); }
+:where(html[data-theme="valentin"]) #ecranCaster .adresseTele{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #ecranCaster .casterCode input{ border: 1px solid rgba(255,200,222,0.35); }
+:where(html[data-theme="valentin"]) #ecranCaster #btnCasterArreter{ box-shadow: 0 0 0 1px rgba(255,200,222,0.45) inset; }
+:where(html[data-theme="valentin"]) #ecranTele{ background:
+    var(--deco-theme, radial-gradient(circle at top center, rgba(255,200,222,0.10) 0%, rgba(255,200,222,0) 30%) no-repeat),
+    var(--fond-theme); }
+:where(html[data-theme="valentin"]) #ecranTele .tele-titre{ color: #ffe3ee; text-shadow: 0 0.4vh 0 rgba(138,18,68,0.95), 0 0.6vh 1.4vh rgba(0,0,0,0.5); }
+:where(html[data-theme="valentin"]) #ecranTele .tele-sous-titre{ color: #ffe4ef; }
+:where(html[data-theme="valentin"]) #ecranTele .tele-etape .tele-num{ background: #ffe3ee; }
+:where(html[data-theme="valentin"]) #ecranTele .tele-plein-ecran{ box-shadow: 0 0 0 1px rgba(255,200,222,0.45) inset; }
+:where(html[data-theme="valentin"]) #ecranTele .tele-qr{ box-shadow: 0 0 0 0.7vh rgba(255,200,222,0.6), 0 2.6vh 7vh rgba(0,0,0,0.5); }
+:where(html[data-theme="valentin"]) #ecranTele .tele-code{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #ecranTele .tele-code small{ color: #e8bcd0; }
+:where(html[data-theme="valentin"]) #ecranTele .tele-entete{ border: 1px solid rgba(255,200,222,0.25); }
+:where(html[data-theme="valentin"]) #ecranTele .tele-entete::after{ background: linear-gradient(90deg, #ff5e5e, #ffb84d, #ffe3ee, #7dde4f, #4fc3f7); }
+:where(html[data-theme="valentin"]) #ecranTele .tele-prepa-titre{ color: #ffe3ee; text-shadow: 0 0.4vh 0 rgba(138,18,68,0.95), 0 0.6vh 1.4vh rgba(0,0,0,0.5); }
+:where(html[data-theme="valentin"]) #ecranTele .tele-prepa-joueur{ border: 1px solid rgba(255,200,222,0.4); }
+:where(html[data-theme="valentin"]) #ecranTele .tele-prepa-info{ color: #ffe4ef; }
+:where(html[data-theme="valentin"]) #ecranTele .tele-restantes{ color: #e8bcd0; }
+:where(html[data-theme="valentin"]) #ecranTele .tele-bloc-titre{ color: #f6d6e3; }
+:where(html[data-theme="valentin"]) #ecranTele .tele-tour{ border-color: rgba(255,200,222,0.5); }
+:where(html[data-theme="valentin"]) #ecranTele .tele-tour.tele-rappel-tour{ --halo-bord: rgba(255,200,222, 0.95); --halo: rgba(255,200,222, 0.8); }
+:where(html[data-theme="valentin"]) #ecranTele .tele-tour-label{ color: #f6d6e3; }
+:where(html[data-theme="valentin"]) #ecranTele .tele-tour-nom{ color: #ffe3ee; text-shadow: 0 0.4vh 0 rgba(138,18,68,0.9); }
+:where(html[data-theme="valentin"]) #ecranTele .tele-badge{ background: #ffe3ee; }
+:where(html[data-theme="valentin"]) #ecranTele .tele-regles{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #ecranTele .tele-son-coupe{ color: #ffe4ef; }
+:where(html[data-theme="valentin"]) #ecranTele .tele-ecran-titre{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #ecranTele .tele-ecran-detail{ color: #ffe4ef; }
+:where(html[data-theme="valentin"]) #ecranTele .tele-puce{ background: rgba(255,200,222,0.16); border: 1px solid rgba(255,200,222,0.5); color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #ecranReglages :is(#btnSignalerBug, #btnFaq){ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #ecranBug .bugFeuille{ box-shadow: 0 -12px 32px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,200,222,0.4); }
+:where(html[data-theme="valentin"]) #ecranBug h2{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #ecranBug textarea{ border: 1px solid rgba(255,200,222,0.35); }
+:where(html[data-theme="valentin"]) #ecranBug .bugVignette img, :where(html[data-theme="valentin"]) #ecranBug .bugVignette video{ border: 1px solid rgba(255,200,222,0.4); }
+:where(html[data-theme="valentin"]) #ecranBug .bugAjouterPiece{ border: 1px dashed rgba(255,200,222,0.5); }
+:where(html[data-theme="valentin"]) #ecranReglages .optionChevron{ stroke: #ffe3ee; }
+@media (pointer: coarse){
+  :where(html[data-theme="valentin"]) #ecranTele .tele-revenir{ border: 1px solid rgba(255,200,222,0.5); }
+}
+:where(html[data-theme="valentin"]) #stickyJoueurActif #btnPause svg, :where(html[data-theme="valentin"]) #stickyJoueurActif #btnHistorique svg, :where(html[data-theme="valentin"]) #ecranPause .pauseIcone svg, :where(html[data-theme="valentin"]) #ecranTele .tele-pause svg{ stroke: #ffe3ee; }
+:where(html[data-theme="valentin"]) #ecranPause .pauseIcone{ background: rgba(255,200,222, 0.12); border: 2px solid rgba(255,200,222, 0.6); }
+:where(html[data-theme="valentin"]) #ecranPause .pauseIcone svg{ fill: #ffe3ee; }
+:where(html[data-theme="valentin"]) #ecranPause h2{ color: #ffe3ee; text-shadow: 0 4px 0 rgba(138,18,68, 0.9), 0 0 30px rgba(255,200,222, 0.3); }
+:where(html[data-theme="valentin"]) #ecranTele .tele-pause svg{ fill: #ffe3ee; }
+:where(html[data-theme="valentin"]) #ecranTele .tele-pause-titre{ color: #ffe3ee; text-shadow: 0 1vh 0 rgba(138,18,68, 0.9); }
+:where(html[data-theme="valentin"]) :is(#annulerChoix, #bandeauMiseAJour){ --bandeau-bord: rgba(255,200,222, 0.45); --bandeau-bouton: #ffe3ee; }
+:where(html[data-theme="valentin"]) #overlayCouleur .explication-couleur b{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) .btnPauseJoueur{ border: 1px solid rgba(255,200,222, 0.45); color: #ffe3ee; }
+:where(html[data-theme="valentin"]) .btnPauseJoueur.en-pause{ border-color: rgba(255,200,222, 0.9); }
+:where(html[data-theme="valentin"]) .voletPause-feuille{ border-top: 1px solid rgba(255,200,222, 0.35); }
+:where(html[data-theme="valentin"]) .voletPause-nom{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) .aideAccueil-ombre{ fill: rgba(138,18,68, 0.9); }
+:where(html[data-theme="valentin"]) .aideAccueil-repere b, :where(html[data-theme="valentin"]) .aideAccueil-bas b{ color: #ffe3ee; text-shadow: 0 2px 0 rgba(138,18,68, 0.9); }
+:where(html[data-theme="valentin"]) .aideAccueil-bas b{ text-shadow: 0 3px 0 rgba(138,18,68, 0.9); }
+:where(html[data-theme="valentin"]) #plateau .Carte.carte-appuyee{ box-shadow: 0 0 0 3px #ffe3ee, 0 0 22px rgba(255,200,222, 0.7); }
+:where(html[data-theme="valentin"]) #enLigne #btnInviterPartie{ border: 1.5px solid rgba(255,200,222, 0.7); background: rgba(255,200,222, 0.08); color: #ffe3ee; }
+:where(html[data-theme="valentin"]) .lignesRegle li::before{ background: #ffe3ee; }
+:where(html[data-theme="valentin"]) :is(.detailRegle, #voletCarte .voletPause-texte) em{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) .regleBloc-titre{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) .regleBloc em{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) .historique-recente{ background: #ffe3ee; }
+:where(html[data-theme="valentin"]) .historique-quoi em{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #ecranTele .tele-dernieres-titre{ color: #f6d6e3; }
+:where(html[data-theme="valentin"]) #ecranTele .tele-dernieres-titre + .tele-dernieres-item{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #ecranTele .tele-dernieres-titre + .tele-dernieres-item .Carte{ outline: 0.3vh solid #ffe3ee; }
+:where(html[data-theme="valentin"]) #ecranTele .tele-historique-quoi em{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) .recap-titre{ color: #ffe3ee; text-shadow: 0 3px 0 #7a4b00, 0 0 18px rgba(255,200,222,.35); }
+:where(html[data-theme="valentin"]) .recap-marche{ background: linear-gradient(180deg, rgba(255,200,222,.22), rgba(255,200,222,.06)); border: 1px solid rgba(255,200,222,.4); }
+:where(html[data-theme="valentin"]) .recap-g{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) .recap-liste{ border: 1px solid rgba(255,200,222,.25); }
+:where(html[data-theme="valentin"]) .recap-ligne em{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) .recap-eclats{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) .recap-bloc{ border: 1px solid rgba(255,200,222,.22); }
+:where(html[data-theme="valentin"]) .recap-t{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) .recap-restants{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #ecranTele .tele-ecran-recap{ background: radial-gradient(circle at top, rgba(255,200,222,.10), transparent 55%), var(--fond-theme) !important; }
+:where(html[data-theme="valentin"]) .etincelle{ --c: #ffe3ee; }
+:where(html[data-theme="valentin"]) .etincelle.e0{ --c: #ffe3ee; }
+:where(html[data-theme="valentin"]){ --album-barre-plein: #ffe3ee; }
+:where(html[data-theme="valentin"]) #stickyJoueurActif #btnReglagesJeu svg{ stroke: #ffe3ee; }
+:where(html[data-theme="valentin"]) #ecranTele .tele-regles-pj{ color: #ffe4ef; }
+:where(html[data-theme="valentin"]) #ecranTele .tele-regles-partie{ color: #ffe3ee; border-bottom: 1px solid rgba(255,200,222,0.4); }
+:where(html[data-theme="valentin"]) #ecranTele .tele-regles-nom{ color: #ffe3ee; }
+:where(html[data-theme="valentin"]) #ecranTele .tele-regles-ligne em{ color: #ffe4ef; }
+:where(html[data-theme="valentin"]) #ecranTele .tele-faq-image{ border: 1px solid rgba(255,200,222,0.35); }
+/* === FIN du doré teinté (généré) === */
+
+
+
+
+
+
 html[data-theme="valentin"]{
   --fond-theme: #c2185b;
   --carte-valentin: rgba(104, 10, 52, 0.94); /* ton de TOUTES les cartes et panneaux : framboise foncé franc (pas noir), quasi opaque pour cacher le motif derrière le texte */
   --couleur-barre: #c2185b; /* = la couleur du tout haut du décor ci-dessous (la barre du téléphone ne doit pas être plus sombre) */
-  /* Fond du jeu, des menus et des réglages : lumière douce en haut, puis le motif de cœurs, flèches et étoiles (valentin/deco_fond.svg) */
+  /* Fond du jeu, des menus et des réglages : lumière douce en haut, puis le motif de cœurs, flèches et étoiles (valentin/deco_fond_rose.svg) */
   --deco-theme:
     radial-gradient(ellipse 120% 24% at 50% 24%, rgba(255,190,215,.4), transparent 100%) no-repeat,
     linear-gradient(to top, rgba(40,0,20,.25), transparent 45%) no-repeat,
-    url("valentin/deco_fond.svg") 0 0 / 300px 300px repeat;
+    url("valentin/deco_fond_rose.svg") 0 0 / 300px 300px repeat;
   --deco-accueil:
     radial-gradient(ellipse 120% 24% at 50% 24%, rgba(255,190,215,.4), transparent 100%) no-repeat;
-  /* Joueur dont c'est le tour : blanc et or */
-  --actif-haut: #ffffff; --actif-bas: #ffd23f; --actif-texte: #6a0a34; --actif-halo: #ffe27a;
+  /* Joueur dont c'est le tour : blanc néon brillant */
+  --actif-haut: #ffffff; --actif-bas: #ffeef5; --actif-texte: #8a1244; --actif-halo: #ffffff;
   /* texte sélectionné dans les champs (nom du joueur, code de la partie…) : l'or du thème, texte framboise foncé */
-  --selection-fond: #ffe27a; --selection-texte: #6a0a34;
+  --selection-fond: #ffe0ec; --selection-texte: #6a0a34;
   /* Fenêtres du jeu (pigeon, duel, +4, pari…) : halo rose sur un framboise foncé (le doré reste lisible) */
   --overlay-fond: radial-gradient(ellipse 115% 42% at 50% 45%, rgba(255,90,150,.5) 0%, transparent 100%), #6a0a34;
   --overlay-bord: #6a0a34;
@@ -37,7 +369,7 @@ html[data-theme="valentin"].overlay-ouvert body,
 html[data-theme="valentin"] #voileOverlays{ background: var(--overlay-bord); }
 html[data-theme="valentin"] .plus4-actions{ background: transparent; }
 html[data-theme="valentin"] :is(#overlayCarteDoree, #overlayRegleUnique.overlay-doree){
-  background: radial-gradient(ellipse 95% 34% at 50% 33%, rgba(255,215,0,.26), transparent 100%),
+  background: radial-gradient(ellipse 95% 34% at 50% 33%, rgba(255,200,222,.26), transparent 100%),
     radial-gradient(ellipse 120% 60% at 50% 100%, rgba(255,90,150,.5), transparent 100%), #6a0a34 !important; box-shadow: none; }
 /* Récap de fin de partie */
 html[data-theme="valentin"] #overlayFinUnRestants.overlay-recap{ background: radial-gradient(ellipse 110% 45% at 50% 45%, rgba(255,90,150,.5), transparent 100%), #5a082c !important; }
@@ -80,7 +412,7 @@ html[data-theme="valentin"][data-theme] body :is(#btnModeEnLigne, #btnModeClassi
   #overlayAnnulation button, #overlayRegleUnique .bouton-annulation, #overlayDuel button:not(:disabled), #overlayPredictionFin .bouton-pigeon){
   background: linear-gradient(180deg, #fff6fa, #ffc9de) !important;
   color: #6a0a34 !important;
-  text-shadow: 0 1px 0 rgba(255, 244, 190, 0.7) !important;
+  text-shadow: 0 1px 0 rgba(255,236,244, 0.7) !important;
   box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.95), 0 6px 14px rgba(60,0,30,.4) !important;
 }
 @media (hover: hover){
@@ -90,14 +422,14 @@ html[data-theme="valentin"][data-theme] body :is(#btnModeEnLigne, #btnModeClassi
 /* ----- Volet « Mettre … en pause » et bandeaux du bas (« Mauvais joueur ? Annuler », « Nouvelle version ») ----- */
 html[data-theme="valentin"] .voletPause-ok{
   background: linear-gradient(180deg, #fff6fa, #ffc9de); color: #6a0a34;
-  text-shadow: 0 1px 0 rgba(255, 244, 190, 0.7); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.95);
+  text-shadow: 0 1px 0 rgba(255,236,244, 0.7); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.95);
 }
 html[data-theme="valentin"] :is(#annulerChoix, #bandeauMiseAJour){
   --bandeau-fond: #4e0626; --bandeau-bord: rgba(255, 255, 255, 0.5); --bandeau-texte: #fff;
   --bandeau-bouton: linear-gradient(180deg, #fff6fa, #ffc9de); --bandeau-bouton-texte: #6a0a34;
 }
 html[data-theme="valentin"] :is(#annulerChoix .annulerChoix-bouton, #bandeauMiseAJour .maj){
-  text-shadow: 0 1px 0 rgba(255, 244, 190, 0.7); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.95);
+  text-shadow: 0 1px 0 rgba(255,236,244, 0.7); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.95);
 }
 
 /* ----- Pari de fin et choix de fin : cadres framboise avec un liseré blanc (au lieu du brun-doré de base) ----- */
@@ -108,7 +440,7 @@ html[data-theme="valentin"] :is(.prediction-header, .fin-choix-recap, .fin-choix
 
 /* ----- Textes secondaires un peu trop effacés sur le framboise : plus clairs ----- */
 html[data-theme="valentin"] #ecranReglages .optionNote{ color: rgba(255, 255, 255, 0.92); }
-html[data-theme="valentin"] #ecranReglages .aProposTitre{ color: #ffe27a; }
+html[data-theme="valentin"] #ecranReglages .aProposTitre{ color: #ffe0ec; }
 html[data-theme="valentin"] #ecranReglages .lienJeu{ color: #fff; }
 html[data-theme="valentin"] #enLigne .separateurOu, html[data-theme="valentin"] #ecranInstallation #btnInstallationPlusTard{ color: #fff; }
 html[data-theme="valentin"] #listeJoueursEnLigne div{ color: #b8fff6; }
@@ -207,3 +539,15 @@ html[data-theme="valentin"] :is(.optionTitre, .aProposTitre, .titreBloc, .regleB
   color: #fff;
   text-shadow: 0 2px 0 #8a1244, 0 4px 12px rgba(60, 0, 30, 0.4);
 }
+
+/* ----- Joueur dont c'est le tour : blanc néon brillant (lueur blanche autour) ----- */
+html[data-theme="valentin"] .joueur-ligne-actif{
+  box-shadow: 0 0 0 2px #fff, 0 0 12px 2px rgba(255, 255, 255, 0.95), 0 0 30px 6px rgba(255, 220, 235, 0.75) !important;
+}
+
+/* ----- Doré écrit directement par le JavaScript (passe devant le CSS du thème : d'où le !important) -----
+   js/regles.js colore en doré le texte des fenêtres d'annulation et d'annonce de règle (sauf la carte dorée, qui garde son or). */
+html[data-theme="valentin"] :is(#overlayAnnulation, #overlayResultatAnnulation, #overlayRegleUnique:not(.overlay-doree)){ color: #fff !important; }
+/* Aide du début (js/reglages.js) : les deux flèches vers Règles et Réglages, en blanc avec une ombre framboise au lieu du dégradé doré */
+html[data-theme="valentin"] .aideAccueil-fleches path:not(.aideAccueil-ombre){ fill: #fff; }
+html[data-theme="valentin"] .aideAccueil-ombre{ fill: rgba(138, 18, 68, 0.9); }

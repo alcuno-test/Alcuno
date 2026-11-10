@@ -28,7 +28,15 @@ html.feux-artifice #feuxArtifice{ display: block; }
 
 /* ----- Chapeau de fête sur le titre ALCUNO (accueil), posé sur le dernier O, là où Prestige a sa couronne (qu'il remplace) -----
    Affiché quand les feux d'artifice sont actifs (html.feux-actifs : réglage coché ET pas un thème de fête : js/reglages.js). */
-#choixMode .lettreOTitre{ position: relative; }  /* le dernier O du titre : le chapeau est posé dessus */
+#choixMode .lettreOTitre{
+  position: relative;
+  /* Un élément positionné est peint à part : dans un thème dont le titre est un dégradé découpé dans les lettres
+     (BDSM : background-clip: text et lettres transparentes), le O disparaissait. Il reprend donc le même dégradé,
+     découpé dans sa propre lettre. Sans effet ailleurs (le titre n'y a pas de fond). */
+  background: inherit;
+  -webkit-background-clip: text;
+  background-clip: text;
+}  /* le dernier O du titre : le chapeau est posé dessus */
 #choixMode .chapeauFeteTitre{
   display: none;
   position: absolute;
