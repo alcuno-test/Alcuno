@@ -26,15 +26,17 @@ html.feux-artifice #feuxArtifice{ display: block; }
 @keyframes feuNAFlash{ 0%{ transform: scale(.2); opacity: .9; } 100%{ transform: scale(1.6); opacity: 0; } }
 @media (prefers-reduced-motion: reduce){ #feuxArtifice{ display: none !important; } }
 
-/* ----- Chapeau de fête sur le titre ALCUNO (accueil), en haut à droite, là où Prestige a sa couronne (qu'il remplace) -----
+/* ----- Chapeau de fête sur le titre ALCUNO (accueil), posé sur le dernier O, là où Prestige a sa couronne (qu'il remplace) -----
    Affiché quand les feux d'artifice sont actifs (html.feux-actifs : réglage coché ET pas un thème de fête : js/reglages.js). */
+#choixMode .lettreOTitre{ position: relative; }  /* le dernier O du titre : le chapeau est posé dessus */
 #choixMode .chapeauFeteTitre{
   display: none;
   position: absolute;
-  top: -0.72em;
-  right: 0.1em;
+  left: 50%;
+  bottom: calc(100% - 0.31em); /* le bas du chapeau chevauche un peu le haut du O (comme un chapeau sur une tête) */
   width: 0.72em;
-  transform: rotate(14deg);
+  margin-left: -0.41em; /* centré sur la lettre : moitié du chapeau + moitié de l'espacement (0,1 em) laissé après le O */
+  transform: rotate(9deg);
   transform-origin: 50% 100%;
   filter: drop-shadow(0 3px 0 rgba(90, 20, 70, 0.55)) drop-shadow(0 0 10px rgba(255, 226, 122, 0.6));
   pointer-events: none;
