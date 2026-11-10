@@ -41,21 +41,42 @@ GARDER_OR = re.compile(r"fenetre|pastilleTheme|stickerGagne|[Dd]oree|culsec|gene
 def couleur_cle(m):
     return m.group(0).lower()
 
-def teinter(texte, table):
+# Teinte cible de chaque thème (degrés, roue des couleurs) : TOUT jaune / doré / ambre que la table ci-dessus ne
+# connaît pas est reconnu à sa teinte (entre 36° et 64°, assez saturé) et tourné vers cette teinte, en gardant sa
+# clarté. Avant, seule la liste servait : un jaune oublié (ex. #FFE36B du nom dans la bannière « Tour de ») restait jaune.
+TEINTE = {"valentin": 336}
+
+def tourner(r, v, b, cible):
+    import colorsys
+    h, l, s = colorsys.rgb_to_hls(r / 255, v / 255, b / 255)
+    if not (36 / 360 <= h <= 64 / 360 and s > 0.45 and 0.25 < l < 0.97): return None
+    r2, v2, b2 = colorsys.hls_to_rgb(cible / 360, min(l + 0.04, 0.96), min(s, 0.9))
+    return round(r2 * 255), round(v2 * 255), round(b2 * 255)
+
+def teinter(texte, table, cible=None):
     """Remplace le doré dans un morceau de CSS. Renvoie (texte, nombre de remplacements)."""
     n = 0
     def hexa(m):
         nonlocal n
         k = m.group(0).lower()
         if k in table: n += 1; return table[k]
+        if cible is not None and len(k) == 7:
+            t = tourner(int(k[1:3], 16), int(k[3:5], 16), int(k[5:7], 16), cible)
+            if t: n += 1; return "#%02x%02x%02x" % t
         return m.group(0)
     def rgb(m):
         nonlocal n
-        k = ",".join(x.strip() for x in m.group(2).split(",")[:3])
+        parts = [x.strip() for x in m.group(2).split(",")]
+        k = ",".join(parts[:3])
+        reste = parts[3:]
         if k in table:
             n += 1
-            reste = m.group(2).split(",")[3:]
             return f"{m.group(1)}({table[k]}{(',' + ','.join(reste)) if reste else ''})"
+        if cible is not None and len(parts) >= 3 and all(re.fullmatch(r"\d+", x) for x in parts[:3]):
+            t = tourner(int(parts[0]), int(parts[1]), int(parts[2]), cible)
+            if t:
+                n += 1
+                return f"{m.group(1)}({t[0]},{t[1]},{t[2]}{(',' + ','.join(reste)) if reste else ''})"
         return m.group(0)
     texte = re.sub(r"#[0-9a-fA-F]{6}\b", hexa, texte)
     texte = re.sub(r"(rgba?)\(([^)]*)\)", rgb, texte)
@@ -131,7 +152,7 @@ def traiter(liste, theme, table, anims_or, sortie, retrait=""):
                 for nom in anims_or:
                     val = re.sub(rf"\b{re.escape(nom)}\b", nom + "_" + theme, val)
                 if val != d: decls.append(val); continue
-            t, nb = teinter(d, table)
+            t, nb = teinter(d, table, TEINTE.get(theme))
             if nb: decls.append(t)
         if decls:
             sortie.append(f"{retrait}{', '.join(portee(s, theme) for s in sels)}{{ " + "; ".join(decls) + "; }\n")
@@ -148,7 +169,7 @@ def main():
             if prelude.startswith("@media"): cherche_kf(blocs(contenu)); continue
             m = re.match(r"@(-webkit-)?keyframes\s+([\w-]+)", prelude)
             if m:
-                t, nb = teinter(contenu, table)
+                t, nb = teinter(contenu, table, TEINTE.get(theme))
                 if nb and m.group(2) not in anims_or:
                     anims_or.append(m.group(2))
                     kf.append(f"@keyframes {m.group(2)}_{theme}{{{t}}}\n")
