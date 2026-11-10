@@ -1670,6 +1670,9 @@ if (caseGaucher) {
 // Rien quand l'appli n'est pas à l'écran, ni si le téléphone demande moins d'animations.
 const CLE_FEUX_ARTIFICE = "alcuno_feux_artifice";
 const caseFeuxArtifice = document.getElementById("optionFeuxArtifice");
+// Thèmes de fête : pas de feux d'artifice dedans (ils ne tomberont jamais en même temps que le Nouvel An).
+// Y ajouter chaque nouveau thème de fête (Chandeleur, Saint-Valentin, Halloween…).
+const THEMES_DE_FETE = ["noel"];
 const COULEURS_FEUX = ["#ffe27a", "#ff4fa8", "#5be7ff", "#ffffff", "#7dffb0", "#ffb04a", "#b48cff", "#ff5a4a", "#4f8dff"];
 document.documentElement.classList.toggle("feux-artifice", lireReglage(CLE_FEUX_ARTIFICE, true));
 if (caseFeuxArtifice) {
@@ -1707,7 +1710,8 @@ function feuArtifice(){
 }
 function prochainFeuArtifice(){
   setTimeout(() => {
-    if (document.documentElement.classList.contains("feux-artifice") && document.visibilityState === "visible" &&
+    if (document.documentElement.classList.contains("feux-artifice") && !THEMES_DE_FETE.includes(document.documentElement.dataset.theme) &&
+        document.visibilityState === "visible" &&
         !matchMedia("(prefers-reduced-motion: reduce)").matches) feuArtifice();
     prochainFeuArtifice();
   }, 550 + Math.random() * 1000);
