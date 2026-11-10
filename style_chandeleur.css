@@ -7,9 +7,9 @@
    ============================================================================================= */
 
 html[data-theme="chandeleur"]{
-  --fond-theme: #d9651a;
-  --carte-chandeleur: rgba(122, 48, 10, 0.94); /* ton de TOUTES les cartes et panneaux : brun roux franc (pas noir), quasi opaque pour cacher le motif derrière le texte */
-  --couleur-barre: #d9651a; /* = la couleur du tout haut du décor ci-dessous (la barre du téléphone ne doit pas être plus sombre) */
+  --fond-theme: #bd4f10;
+  --carte-chandeleur: rgba(92, 34, 6, 0.94); /* ton de TOUTES les cartes et panneaux : brun roux franc (pas noir), quasi opaque pour cacher le motif derrière le texte */
+  --couleur-barre: #bd4f10; /* = la couleur du tout haut du décor ci-dessous (la barre du téléphone ne doit pas être plus sombre) */
   /* Fond du jeu, des menus et des réglages : lumière douce en haut, puis le motif de crêpes, citrons, fraises et étoiles de sucre (chandeleur/deco_fond.svg) */
   --deco-theme:
     radial-gradient(ellipse 120% 24% at 50% 24%, rgba(255,220,170,.34), transparent 100%) no-repeat,

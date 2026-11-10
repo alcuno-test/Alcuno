@@ -76,7 +76,7 @@
         try { var theme = localStorage.getItem("alcuno_theme"); if (theme === "violet") { theme = "soleil"; localStorage.setItem("alcuno_theme", theme); } if (theme) document.documentElement.dataset.theme = theme; } catch (e) {}
         // Barre du téléphone à la couleur du thème dès le premier affichage (mêmes couleurs que THEMES dans script.js)
         var couleursBarre = { bordeaux: "#2b001d", noir: "#000000", vert: "#08301e", bleu: "#0a1634", soleil: "#1f3566",
-                              cerisier: "#5a1740", givre: "#e4f5fc", prestige: "#937810", galaxie: "#02030a", kawaii: "#ffd6ec", donjon: "#12040a", noel: "#b3121f", chandeleur: "#d9651a" };
+                              cerisier: "#5a1740", givre: "#e4f5fc", prestige: "#937810", galaxie: "#02030a", kawaii: "#ffd6ec", donjon: "#12040a", noel: "#b3121f", chandeleur: "#bd4f10" };
         document.write('<meta name="theme-color" content="' + (couleursBarre[theme] || couleursBarre.bordeaux) + '">');
         // iPhone : page rechargée après un changement de thème (voir rafraichirBarreIphone dans script.js) :
         // on rouvre les Réglages dès le premier affichage
@@ -256,7 +256,7 @@
                         <button type="button" class="pastilleTheme" data-theme="galaxie" style="--c:#FFE81F;--c-givre:#1a3f8a" id="pastilleGalaxie" hidden><span class="rond rondGalaxie"></span><span class="nomTheme">Star Wars</span></button>
                         <!-- Thèmes de fête : TOUJOURS EN DERNIER, après Star Wars (et après les autres thèmes de fête déjà là). Choisi à la main pour l'instant (calendrier automatique plus tard, voir FETES.md) -->
                         <button type="button" class="pastilleTheme" data-theme="noel" style="--c:#ffb0b0;--c-givre:#b3121f"><span class="rond rondNoel"></span><span class="nomTheme">Noël</span></button>
-                        <button type="button" class="pastilleTheme" data-theme="chandeleur" style="--c:#ffc58a;--c-givre:#d9651a"><span class="rond rondChandeleur"></span><span class="nomTheme">Chandeleur</span></button>
+                        <button type="button" class="pastilleTheme" data-theme="chandeleur" style="--c:#ffc58a;--c-givre:#bd4f10"><span class="rond rondChandeleur"></span><span class="nomTheme">Chandeleur</span></button>
                     </div>
                 </div>
 
