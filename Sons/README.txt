@@ -35,6 +35,7 @@ MUSIQUE D'AMBIANCE (en boucle, réglage « Musique d'ambiance ») :
   musique_ambiance_galaxie.mp3   thème Star Wars (boucle exacte de 2 min 59, voir BOUCLES_EXACTES)
   musique_ambiance_kawaii.mp3    thème secret Kawaii (boucle exacte de 1 min 33, voir BOUCLES_EXACTES)
   musique_ambiance_bdsm.mp3      thème secret BDSM (boucle exacte de 1 min 42, voir BOUCLES_EXACTES)
+  musique_ambiance_valentin.mp3  thème de fête Saint-Valentin (boucle exacte de 1 min 38, voir BOUCLES_EXACTES)
   Jusqu'à 3-4 minutes, 128 kbit/s (environ 1 Mo par minute) : elle se lance plus vite.
 
 GÉNÉRIQUE DU THÈME SECRET STAR WARS (au volume des sons, la musique d'ambiance se tait pendant) :
