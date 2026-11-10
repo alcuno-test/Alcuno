@@ -37,7 +37,7 @@ Trois blagues, une seule tombe le 1er avril (tirage gardé par appareil et par a
 2. fausse mise à jour « tout le monde boit triple » : le bouton OK s'enfuit (4 tentatives ou 12 s), puis avoue « Poisson d’avril ! » ;
 3. faux plantage : le bouton « Réparer » s'enfuit, puis avoue « Poisson d’avril ! » au bout de 5 s.
 Les 2 et 3 attendent l'accueil (jamais en pleine partie), ne s'affichent qu'une fois et n'envoient rien à l'onglet Santé.
-Pour les voir hors du 1er avril : ouvrir le jeu avec `?poisson=1`, `?poisson=2` ou `?poisson=3`.
+Bouton de test dans les Réglages (« Tester la blague du 1er avril ») : lance les 3 blagues l'une après l'autre. Autre moyen : ouvrir le jeu avec `?poisson=1`, `?poisson=2` ou `?poisson=3`.
 
 ## Tester un thème (avant de le valider)
 
