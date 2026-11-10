@@ -21,6 +21,15 @@ Dates incluses, heure du téléphone. « du X au Y » = du X à 0 h au Y à 23 h
 
 Aucune période ne se chevauche (vérifié à la main sur ce tableau).
 
+## Annonce d'un thème de fête
+
+Au premier lancement du jeu pendant la période d'une fête (Noël, Chandeleur, Saint-Valentin, Saint-Patrick pour l'instant), une fenêtre du
+même style que les « thème débloqué » annonce « Nouveau thème X disponible pour une durée limitée !! », aux couleurs de CETTE fête
+(style_annonce_fete.css, `FETES_ANNONCE` dans js/reglages.js). Une seule fois par période et par appareil. Boutons : Noël « Joyeux Noël »,
+Saint-Patrick « Sláinte is táinte ! », les autres « L'essayer maintenant » ; et « Plus tard » partout. Pour la voir hors période : ouvrir
+le jeu avec `?annonce_fete=patrick` (ou noel, chandeleur, valentin). Chaque nouvelle fête : l'ajouter dans `FETES_ANNONCE` et
+style_annonce_fete.css.
+
 ## Tester un thème (avant de le valider)
 
 Jeu servi en local (`python -m http.server 8765` depuis le dossier du jeu), puis :

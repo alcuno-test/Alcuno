@@ -173,6 +173,73 @@ function afficherFenetrePrestige(){
   document.body.appendChild(voile);
 }
 
+// ===== Annonce d'un thème de fête (style_annonce_fete.css) =====
+// Au début de chaque période de fête (dates de FETES.md, incluses), une fenêtre du même style que celles des thèmes débloqués
+// annonce le thème, aux couleurs de CETTE fête (quel que soit le thème choisi). Une seule fois par période et par appareil.
+// « L'essayer » met le thème (comme un clic sur sa pastille dans les Réglages), « Plus tard » ferme.
+// Pour la voir hors période (tests) : ouvrir le jeu avec ?annonce_fete=<thème>, ou appeler afficherAnnonceFete("<thème>").
+// mois : 0 = janvier ; Noël est à cheval sur aucune année (18 au 26 décembre).
+const FETES_ANNONCE = {
+  noel:       { nom: "Noël",           debut: [11, 18], fin: [11, 26], essayer: "Joyeux Noël",           image: "noel/boule_neige.svg" },
+  chandeleur: { nom: "Chandeleur",     debut: [0, 28],  fin: [1, 3],   essayer: "L'essayer maintenant", image: "chandeleur/crepe.svg" },
+  valentin:   { nom: "Saint-Valentin", debut: [1, 7],   fin: [1, 15],  essayer: "L'essayer maintenant", image: "valentin/coeur_o.svg" },
+  patrick:    { nom: "Saint-Patrick",  debut: [2, 14],  fin: [2, 18],  essayer: "Sláinte is táinte !",  image: "patrick/trefle_apercu.svg" }
+};
+// Fête en cours à cette date (null si aucune) : du jour de début à 0 h au jour de fin à 23 h 59
+function feteEnCours(date = new Date()){
+  const jour = date.getMonth() * 100 + date.getDate();
+  for (const cle of Object.keys(FETES_ANNONCE)) {
+    const f = FETES_ANNONCE[cle];
+    if (jour >= f.debut[0] * 100 + f.debut[1] && jour <= f.fin[0] * 100 + f.fin[1]) return cle;
+  }
+  return null;
+}
+function afficherAnnonceFete(cle){
+  const f = FETES_ANNONCE[cle];
+  if (!f || document.getElementById("fenetreFete")) return;
+  const voile = document.createElement("div");
+  voile.id = "fenetreFete";
+  voile.dataset.fete = cle;
+  voile.setAttribute("role", "dialog");
+  voile.setAttribute("aria-label", "Nouveau thème " + f.nom);
+  voile.innerHTML = `
+    <div class="fenetreFete-carte">
+      <span class="fenetreFete-image" aria-hidden="true"></span>
+      <div class="fenetreFete-titre">Nouveau thème<br>${f.nom.replace(/-/g, "\u2011")}<br>disponible pour une durée limitée !!</div>
+      <button type="button" class="fenetreFete-essayer"></button>
+      <button type="button" class="fenetreFete-plusTard">Plus tard</button>
+    </div>`;
+  voile.querySelector(".fenetreFete-essayer").textContent = f.essayer;
+  const fermer = () => {
+    voile.classList.add("fenetreFete-sortie");
+    setTimeout(() => voile.remove(), 250);
+  };
+  voile.querySelector(".fenetreFete-essayer").addEventListener("click", () => {
+    fermer();
+    const pastille = document.querySelector('.pastilleTheme[data-theme="' + cle + '"]');
+    if (pastille) pastille.click(); // comme dans les réglages (musique, thème gardé, barre du téléphone…)
+  });
+  voile.querySelector(".fenetreFete-plusTard").addEventListener("click", fermer);
+  vibrer([60, 40, 60]);
+  document.body.appendChild(voile);
+}
+// Au lancement du jeu : annonce de la fête en cours, une seule fois par période (clé = fête + année), seulement sur l'accueil
+function annoncerFeteSiBesoin(){
+  let cle = null, force = false;
+  try { cle = new URLSearchParams(location.search).get("annonce_fete"); force = !!FETES_ANNONCE[cle]; } catch (e) {}
+  if (!force) cle = feteEnCours();
+  if (!cle) return;
+  const accueil = document.getElementById("choixMode");
+  if (!accueil || getComputedStyle(accueil).display === "none") return;
+  if (document.querySelector('[id^="fenetre"], [id^="overlay"][style*="flex"]')) return; // une autre fenêtre est déjà là
+  if (!force) {
+    const cleVue = "alcuno_annonce_fete_" + cle + "_" + new Date().getFullYear();
+    try { if (localStorage.getItem(cleVue)) return; localStorage.setItem(cleVue, "1"); } catch (e) { return; }
+  }
+  afficherAnnonceFete(cle);
+}
+setTimeout(annoncerFeteSiBesoin, 1500);
+
 // ===== Thème secret « Star Wars » (nom interne : galaxie) : un mot de passe tapé comme nom de joueur (mode classique) =====
 // Le mot n'est pas écrit ici (le code du jeu est public) : seulement son empreinte (FNV-1a sur le mot en
 // minuscules, sans accents, espaces ni ponctuation). Le nom n'est pas ajouté : générique qui défile,
