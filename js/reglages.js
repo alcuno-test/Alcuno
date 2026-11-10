@@ -97,6 +97,15 @@ const CLE_THEME = "alcuno_theme";
 const THEMES = { bordeaux: "#2b001d", noir: "#000000", vert: "#08301e", bleu: "#0a1634", soleil: "#1f3566",
                  cerisier: "#5a1740", givre: "#e4f5fc", prestige: "#937810", galaxie: "#02030a", kawaii: "#ffd6ec", donjon: "#12040a", noel: "#b3121f" };
 
+// Thèmes de fête : pas de feux d'artifice dedans (ils ne tomberont jamais en même temps que le Nouvel An), et le
+// réglage « Feux d'artifice » n'apparaît pas dans les Réglages quand l'un d'eux est actif.
+// Y ajouter chaque nouveau thème de fête (Chandeleur, Saint-Valentin, Halloween…).
+const THEMES_DE_FETE = ["noel"];
+function majReglageFeuxArtifice(){
+  const bloc = document.querySelector('#ecranReglages [data-cle="feux-artifice"]');
+  if (bloc) bloc.hidden = THEMES_DE_FETE.includes(document.documentElement.dataset.theme);
+}
+
 // Thème secret « Prestige » : débloqué en découvrant l'écran des créateurs (4 taps sur le titre)
 const CLE_PRESTIGE = "alcuno_theme_prestige";
 function prestigeDebloque(){
@@ -698,6 +707,7 @@ function peindreBarreTelephone(couleur){
 function appliquerTheme(nom, sansMusique = false){
   if (!THEMES[nom] || (typeof themeBloqueADistance === "function" && themeBloqueADistance(nom)) || (nom === "prestige" && !prestigeDebloque()) || (nom === "galaxie" && !galaxieDebloquee()) || (nom === "kawaii" && !kawaiiDebloque()) || (nom === "donjon" && !donjonDebloque())) nom = "bordeaux";
   document.documentElement.dataset.theme = nom;
+  majReglageFeuxArtifice();
   if (nom === "prestige") vuNouveauPrestige(); // thème essayé : le rappel « NOUVEAU » s'en va
   if (nom === "galaxie") vuNouveauGalaxie();
   if (nom === "kawaii") vuNouveauKawaii();
@@ -1670,9 +1680,6 @@ if (caseGaucher) {
 // Rien quand l'appli n'est pas à l'écran, ni si le téléphone demande moins d'animations.
 const CLE_FEUX_ARTIFICE = "alcuno_feux_artifice";
 const caseFeuxArtifice = document.getElementById("optionFeuxArtifice");
-// Thèmes de fête : pas de feux d'artifice dedans (ils ne tomberont jamais en même temps que le Nouvel An).
-// Y ajouter chaque nouveau thème de fête (Chandeleur, Saint-Valentin, Halloween…).
-const THEMES_DE_FETE = ["noel"];
 const COULEURS_FEUX = ["#ffe27a", "#ff4fa8", "#5be7ff", "#ffffff", "#7dffb0", "#ffb04a", "#b48cff", "#ff5a4a", "#4f8dff"];
 document.documentElement.classList.toggle("feux-artifice", lireReglage(CLE_FEUX_ARTIFICE, true));
 if (caseFeuxArtifice) {
