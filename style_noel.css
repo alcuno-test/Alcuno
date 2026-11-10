@@ -122,11 +122,21 @@ html[data-theme="noel"] #neigeNoel{ display: block; }
 }
 
 /* ----- Lisibilité sur le rouge (Réglages, écran des créateurs) ----- */
-/* Cadres des Réglages plus sombres : les noms des thèmes (chacun de sa couleur) restent lisibles */
-html[data-theme="noel"] #ecranReglages .blocReglage{ background: rgba(30, 0, 5, 0.72); border-color: rgba(255, 255, 255, 0.22); }
+/* Cartes : TOUTES au même ton (rouge très sombre, quasi opaque, liseré blanc fin) : Réglages (blocs et lignes isolées), « Ta partie »,
+   règles / FAQ / album, créateurs, étapes d'installation, salle d'attente, retrait d'un joueur. Quasi opaque pour que le motif
+   du fond ne passe jamais derrière un texte ; les noms de thèmes (chacun de sa couleur) restent lisibles. */
+html[data-theme="noel"] :is(#ecranReglages .blocReglage, #ecranReglages .reglages-contenu > .optionReglage, .optionsPartie > .optionReglage:not(.optionsSuite),
+  .blocRegles, #ecranCredits .credits-nom, #ecranInstallation .etapeInstallation, #listeJoueursEnLigne div, #listeSuppression){
+  background: rgba(30, 0, 5, 0.93); border: 1px solid rgba(255, 255, 255, 0.22);
+}
+html[data-theme="noel"] #ecranCredits .cadrePhoto.sansPhoto{ background: rgba(30, 0, 5, 0.93); }
+/* Boutons secondaires (translucides dans le jeu de base) : même ton sombre que les cartes, liseré blanc */
+html[data-theme="noel"] :is(#ecranRegles .btnFaqLien, #enLigne #btnInviterPartie, .voletPause-annuler, #ecranReglages .btnDiagnostic, #ecranBug .bugFermer){
+  background: rgba(30, 0, 5, 0.93) !important; border: 1px solid rgba(255, 255, 255, 0.35) !important;
+}
 /* Petits textes gris : blanc cassé */
 html[data-theme="noel"] #ecranReglages :is(.lienBug, .versionJeu){ color: #ffe9ea !important; }
-html[data-theme="noel"] #ecranReglages .btnDiagnostic{ color: #ffe9ea !important; border-color: rgba(255, 255, 255, 0.5) !important; background: rgba(60, 0, 10, 0.4) !important; }
+html[data-theme="noel"] #ecranReglages .btnDiagnostic{ color: #ffe9ea !important; }
 html[data-theme="noel"] #ecranCredits .credits-honneur-titre{ color: #ffe9ea; }
 /* Télé : code de la télé, en bas de l'écran */
 html[data-theme="noel"] #ecranTele .tele-pied{ color: rgba(255, 233, 234, 0.8); }
