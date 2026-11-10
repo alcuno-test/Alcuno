@@ -27,6 +27,8 @@ html[data-theme="noel"]{
     radial-gradient(ellipse 120% 24% at 50% 24%, rgba(255,140,140,.3), transparent 100%) no-repeat;
   /* Joueur dont c'est le tour : blanc neige et or */
   --actif-haut: #ffffff; --actif-bas: #ffd23f; --actif-texte: #5a0610; --actif-halo: #ffe27a;
+  /* texte sélectionné dans les champs (nom du joueur, code de la partie…) : l'or du thème, texte rouge foncé */
+  --selection-fond: #ffe27a; --selection-texte: #6e0a14;
   /* Fenêtres du jeu (pigeon, duel, +4, pari…) : halo rouge sur un rouge très sombre (le doré reste lisible) */
   --overlay-fond: radial-gradient(ellipse 115% 42% at 50% 45%, rgba(235,45,65,.5) 0%, transparent 100%), #4a0814;
   --overlay-bord: #4a0814;

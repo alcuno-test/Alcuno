@@ -80,7 +80,10 @@ window.__mesurerAffichage = function (mode) {
       if (r.right > innerWidth + 2 || r.bottom > innerHeight + 2 || r.left < -2 || r.top < -2) debord.push("« " + texte.slice(0, 30) + " » sort de l'écran");
     });
   }
-  return { contraste: verifierContraste(3), boutons, debord };
+  // Texte sélectionné (champ du nom du joueur…) : sans règle ::selection, le navigateur le peint en bleu
+  const sel = getComputedStyle(document.documentElement, "::selection");
+  const selection = { fond: sel.backgroundColor, texte: sel.color };
+  return { contraste: verifierContraste(3), boutons, debord, selection };
 };`;
 }
 
@@ -111,7 +114,8 @@ async function verifierEcran(page, theme, mode, controlerBoutons = true) {
     problemes.push(`BOUTON OUBLIÉ  ${x.cle} : resté au style de base`);
   }
   for (const d of avec.debord) problemes.push(`DÉBORDE        ${d}`);
-  return { problemes, boutonsHabilles: avec.boutons.filter((x) => lookBase.has(x.cle) && lookBase.get(x.cle) !== x.look).length };
+  return { problemes, selection: avec.selection,
+    boutonsHabilles: avec.boutons.filter((x) => lookBase.has(x.cle) && lookBase.get(x.cle) !== x.look).length };
 }
 
 // Planche des captures (à ouvrir dans un navigateur) + rapport texte

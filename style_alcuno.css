@@ -4,6 +4,13 @@ html.chargement body{
   pointer-events: none;
 }
 
+/* Texte sélectionné (nom du joueur, code de la partie, pseudo, champ du rapport de bug…) : aux couleurs du
+   jeu au lieu du bleu du navigateur. Chaque thème peut la changer avec --selection-fond / --selection-texte. */
+::selection{
+  background: var(--selection-fond, #FFD700);
+  color: var(--selection-texte, #2b001d);
+}
+
 /* Anti scroll horizontal (iOS/Android) */
 
 body{

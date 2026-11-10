@@ -26,6 +26,31 @@ const LANCER = `(async (options) => {
   // fermer ce qui s'ouvre tout seul au début (aide, annonce)
   document.querySelectorAll('#aideAccueil').forEach((e) => e.remove());
 })`;
+// Couleur du texte sélectionné (quand on sélectionne dans le champ « Nom de joueur », le code de la partie,
+// le pseudo, le rapport de bug…). Sans règle ::selection, le navigateur le peint en BLEU, qui jure avec tous
+// les thèmes : le fond est alors transparent. On vérifie aussi que le texte reste lisible dessus.
+function couleur(c) {
+  const m = String(c).match(/rgba?\(([^)]+)\)/);
+  if (!m) return null;
+  const p = m[1].split(/[ ,\/]+/).filter(Boolean).map(Number);
+  return { r: p[0], v: p[1], b: p[2], a: p.length > 3 ? p[3] : 1 };
+}
+function luminance({ r, v, b }) {
+  const f = (x) => { x /= 255; return x <= 0.03928 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4); };
+  return 0.2126 * f(r) + 0.7152 * f(v) + 0.0722 * f(b);
+}
+function verifierSelection(selection, problemes) {
+  const fond = selection && couleur(selection.fond), texte = selection && couleur(selection.texte);
+  if (!fond || !texte) return;
+  if (fond.a < 0.9) {
+    problemes.push("SÉLECTION      le thème ne colore pas le texte sélectionné (::selection) : le navigateur le peint en bleu");
+    return;
+  }
+  const l1 = luminance(fond), l2 = luminance(texte);
+  const ratio = (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+  if (ratio < 3) problemes.push(`SÉLECTION      texte sélectionné peu lisible : contraste ${ratio.toFixed(2)} (${selection.texte} sur ${selection.fond})`);
+}
+
 // Montre seulement ces éléments (les autres écrans cachés) : pour les écrans rarement affichés
 const MONTRER = `((ids) => {
   document.querySelectorAll("body > section, main > section, #enLigne > div").forEach((e) => { e.style.display = "none"; });
@@ -122,6 +147,7 @@ const ECRANS = [
     (await page.evaluate(() => [...document.querySelectorAll("[id^=overlay], section[id]")].filter((e) => getComputedStyle(e).display !== "none").map((e) => e.id))).forEach((id) => ouverts.add(id));
     const r = await C.verifierEcran(page, theme, "telephone", controlerBoutons);
     if (nom === "accueil") {
+      verifierSelection(r.selection, r.problemes);
       controlerBoutons = r.boutonsHabilles > 0;
       if (!controlerBoutons) { infos.push("les boutons de l'accueil gardent le style de base (jaune) : les « boutons oubliés » ne sont pas cherchés pour ce thème"); r.problemes = r.problemes.filter((p) => !p.startsWith("BOUTON")); }
     }

@@ -382,6 +382,17 @@ setTimeout(passageNyanCat, 4000);
 // est sorti la fois d'avant. noel/traineau.svg regarde vers la droite : retourné quand il va vers la gauche.
 const TRAINEAU_L = 230, TRAINEAU_H = TRAINEAU_L * 130 / 420; // taille à l'écran (proportions de l'image)
 let dernierBordTraineau = null;
+// L'accueil est-il à l'écran, avec rien par-dessus ? Les autres écrans (réglages, règles, FAQ, album,
+// créateurs, en ligne, caster, scan, bug, installation, confirmations, pause, « Ta partie », plateau…)
+// sont des <section> posées par-dessus l'accueil sans le masquer : sans ce contrôle, le traîneau
+// continuait sa course et ses grelots derrière eux.
+function accueilDevant(){
+  const accueil = document.getElementById("choixMode");
+  if (!accueil || accueil.style.display === "none" || !accueil.clientHeight) return false;
+  if (document.documentElement.classList.contains("overlay-ouvert")) return false; // fenêtres du jeu
+  return ![...document.querySelectorAll("main > section, body > section")]
+    .some((e) => e !== accueil && getComputedStyle(e).display !== "none");
+}
 function passageTraineau(){
   setTimeout(passageTraineau, 18000 + Math.random() * 14000);
   // grelots du traîneau : seulement dans ce thème, chargés d'avance (sinon le son arriverait après le passage)
@@ -389,8 +400,7 @@ function passageTraineau(){
   const accueil = document.getElementById("choixMode");
   if (document.documentElement.dataset.theme !== "noel" || document.visibilityState !== "visible" ||
       document.documentElement.classList.contains("mode-tele") || // (pas sur la page de la télé)
-      !accueil || getComputedStyle(accueil).display === "none" || !accueil.clientHeight ||
-      accueil.querySelector(".traineauNoel")) return;
+      !accueil || !accueilDevant() || accueil.querySelector(".traineauNoel")) return;
   const W = accueil.clientWidth, H = accueil.clientHeight;
   const zone = document.createElement("div");
   zone.className = "traineauNoel";
@@ -414,7 +424,17 @@ function passageTraineau(){
   jouerSon("traineau_noel"); // grelots : une seule fois, au départ du passage (pas en boucle)
   const anim = vol.animate([{ transform: position(x0, yEntree) }, { transform: position(x1, ySortie) }],
     { duration: Math.abs(x1 - x0) / 0.13, easing: "linear" }); // 130 px par seconde
-  anim.onfinish = () => zone.remove();
+  // Pendant le passage, on ouvre un autre écran (ou on quitte l'appli) : le traîneau n'est plus visible,
+  // on l'enlève et on coupe ses grelots tout de suite (avant, on l'entendait derrière les règles, les
+  // réglages, l'écran de la partie…).
+  const veille = setInterval(() => {
+    if (!zone.isConnected) { clearInterval(veille); return; }
+    if (accueilDevant() && document.visibilityState === "visible") return;
+    clearInterval(veille);
+    zone.remove();
+    arreterSonTraineau();
+  }, 150);
+  anim.onfinish = () => { clearInterval(veille); zone.remove(); };
 }
 setTimeout(passageTraineau, 2500);
 
@@ -1071,7 +1091,7 @@ const BOUCLES_EXACTES = {
   musique_ambiance_kawaii: { avant: 0.3, longueur: 4111952 / 44100 }, // 93,24 s = 64 mesures à 164,7 BPM (de 25,5 s à 1 min 58,8 du morceau)
   musique_ambiance_bdsm: { avant: 0.3, longueur: 4492064 / 44100 }, // 101,86 s à 172 BPM (de 4 min 15,1 à 5 min 56,97 du morceau : fin de phrase du drop, puis 25 mesures avant le drop)
   musique_ambiance_galaxie: { avant: 0.3, longueur: 7898850 / 44100 }, // 179,11 s (de 10,7 s à 3 min 10 du morceau, qui se répète)
-  musique_ambiance_noel: { avant: 0.3, longueur: 6048177 / 44100 }, // 137,15 s = 80 mesures à 140 BPM (de 41,36 s à 2 min 58,5 du morceau : 2 cycles complets + la montée). Les 2 dernières mesures sont un fondu vers ce qui précédait 41,36 s, pour que le retour au début enchaîne sans saut de niveau.
+  musique_ambiance_noel: { avant: 0.3, longueur: 8467448 / 44100 }, // 192,01 s = 112 mesures à 140 BPM (de 41,36 s à 3 min 53,4 du morceau). La boucle se termine dans le seul passage sans chant du morceau (3 min 50 à 3 min 53) : le retour au début ne coupe aucune parole. La dernière mesure est un fondu vers ce qui précédait 41,36 s, pour enchaîner sans saut de niveau.
   debloquage_theme_galaxie: { avant: 0.3, longueur: 4201001 / 44100 }, // 95,26 s (générique du thème Star Wars)
 };
 const FONDU_BOUCLE_EXACTE = 0.03;
@@ -1573,6 +1593,21 @@ function jouerSon(nom, clicNormal = false){
   lireSon(nom, son);
 }
 
+// Grelots du traîneau (thème Noël) en train d'être joués : on peut les arrêter avant la fin
+let lectureTraineau = null;
+function arreterSonTraineau(){
+  const L = lectureTraineau;
+  lectureTraineau = null;
+  if (!L) return;
+  try {
+    const t = L.ctx.currentTime;
+    L.sortie.gain.cancelScheduledValues(t);
+    L.sortie.gain.setValueAtTime(L.sortie.gain.value, t);
+    L.sortie.gain.linearRampToValueAtTime(0.0001, t + 0.2); // petit fondu : pas de clic
+    L.lecture.stop(t + 0.25);
+  } catch (e) {}
+}
+
 let dernierClicJoueA = 0; // moment où le dernier clic (bouton ou sabre) a vraiment commencé (voir rafraichirBarreIphone)
 function lireSon(nom, son){
   const ctx = contexteAudio();
@@ -1586,6 +1621,12 @@ function lireSon(nom, son){
   lecture.connect(sortie);
   const debut = ctx.currentTime;
   lecture.start(debut);
+  // Grelots du traîneau : gardés de côté pour pouvoir les couper si on quitte l'accueil (voir passageTraineau)
+  if (nom === "traineau_noel") {
+    arreterSonTraineau();
+    lectureTraineau = { ctx, lecture, sortie };
+    lecture.onended = () => { if (lectureTraineau && lectureTraineau.lecture === lecture) lectureTraineau = null; };
+  }
   if (nom === "bouton" || nom.startsWith("sabre/") || nom.startsWith("bdsm_buttons/")) dernierClicJoueA = Date.now();
 
   const dureeMax = DUREE_MAX_SONS[nom];
