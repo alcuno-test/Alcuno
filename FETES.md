@@ -9,7 +9,7 @@ Dates incluses, heure du téléphone. « du X au Y » = du X à 0 h au Y à 23 h
 | Fête | Début | Fin | Remarques | État |
 |---|---|---|---|---|
 | Nouvel An | 1er janvier, 0 h | 2 janvier, 0 h (exclu) | 24 h pile. Pas un thème : des feux d'artifice sur tous les écrans, dans tous les thèmes (style_feux.css ; pour l'instant case « Feux d'artifice » dans les Réglages) | fait |
-| Chandeleur | 28 janvier | 3 février | | à faire |
+| Chandeleur | 28 janvier | 3 février | Poêle de cuivre et crêpe qui saute (style_chandeleur.css, chandeleur/) ; pas de musique ni de son pour l'instant | à valider |
 | Saint-Valentin | 7 février | 15 février | + un truc spécial sur le mode hot | à faire |
 | Saint-Patrick | 14 mars | 18 mars | | à faire |
 | 1er avril | 1er avril | 1er avril | pas un thème : une blague / un piège dans le jeu (à inventer) | à faire |
