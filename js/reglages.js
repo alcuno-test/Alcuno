@@ -1664,16 +1664,16 @@ if (caseGaucher) {
 }
 
 // ===== Feux d'artifice du Nouvel An : sur TOUS les écrans (téléphone et télé) et dans TOUS les thèmes =====
-// Réglage de ce téléphone, désactivé de base (le calendrier des fêtes l'activera plus tard, voir FETES.md).
+// Réglage de ce téléphone, activé de base (le calendrier des fêtes décidera plus tard QUAND il apparaît, voir FETES.md).
 // Les feux sont dessinés dans la couche #feuxArtifice qui recouvre la page (style_feux.css), un toutes les
 // 0,5 à 1,5 s, à un endroit et dans des couleurs au hasard : un éclat, puis une gerbe d'étincelles qui retombent.
 // Rien quand l'appli n'est pas à l'écran, ni si le téléphone demande moins d'animations.
 const CLE_FEUX_ARTIFICE = "alcuno_feux_artifice";
 const caseFeuxArtifice = document.getElementById("optionFeuxArtifice");
 const COULEURS_FEUX = ["#ffe27a", "#ff4fa8", "#5be7ff", "#ffffff", "#7dffb0", "#ffb04a", "#b48cff", "#ff5a4a", "#4f8dff"];
-document.documentElement.classList.toggle("feux-artifice", lireReglage(CLE_FEUX_ARTIFICE, false));
+document.documentElement.classList.toggle("feux-artifice", lireReglage(CLE_FEUX_ARTIFICE, true));
 if (caseFeuxArtifice) {
-  caseFeuxArtifice.checked = lireReglage(CLE_FEUX_ARTIFICE, false);
+  caseFeuxArtifice.checked = lireReglage(CLE_FEUX_ARTIFICE, true);
   caseFeuxArtifice.addEventListener("change", () => {
     ecrireReglage(CLE_FEUX_ARTIFICE, caseFeuxArtifice.checked);
     document.documentElement.classList.toggle("feux-artifice", caseFeuxArtifice.checked);
