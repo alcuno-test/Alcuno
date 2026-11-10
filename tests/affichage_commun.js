@@ -21,14 +21,8 @@ const EXCEPTIONS_BOUTONS = [
   ["*", "bloc-hot-btn fait", "« Je le fais » du défi hot : rose vif voulu dans tous les thèmes (Givre et Soleil couchant le foncent)"],
   ["*", "fenetre", "fenêtres « Thème … débloqué » : leur propre style, le même dans tous les thèmes"],
 ];
-// Boutons qu'un thème peut retoucher sans que cela veuille dire « ce thème habille ses boutons principaux » : ils ne comptent
-// pas pour décider si les « boutons oubliés » sont cherchés. [morceau du nom du bouton, raison]
-const BOUTONS_SANS_HABILLAGE = [
-  ["#btnAlbumAccueil", "petit bouton « Album de stickers » de l'accueil : variante voulue, pas un habillage des boutons principaux (Noël)"],
-];
 // Textes que le calcul de contraste lit mal : [morceau de la clé, raison]
 const EXCEPTIONS_CONTRASTE = [
-  ["#btnAlbumAccueil", "Album de stickers (Noël) : texte blanc sur or avec ombre, comme les gros boutons du jeu (le calcul ne voit pas l'ombre du texte)"],
   ["aideAccueil", "aide du début : son voile est assombri par backdrop-filter, que le calcul ne voit pas (lisible à l'œil)"],
 ];
 
@@ -59,7 +53,6 @@ function lireThemesDuJeu() {
   return res;
 }
 
-// (SEUIL_CONTRASTE=4.5 node tests/test_affichage_telephone.js <thème> : cherche aussi les textes un peu moins lisibles que dans le jeu de base)
 // Script injecté dans la page : contraste.js + mesure des boutons + débordement
 function scriptMesure() {
   return fs.readFileSync(path.join(__dirname, "contraste.js"), "utf8") + `
@@ -87,7 +80,7 @@ window.__mesurerAffichage = function (mode) {
       if (r.right > innerWidth + 2 || r.bottom > innerHeight + 2 || r.left < -2 || r.top < -2) debord.push("« " + texte.slice(0, 30) + " » sort de l'écran");
     });
   }
-  return { contraste: verifierContraste(${Number(process.env.SEUIL_CONTRASTE) || 3}), boutons, debord };
+  return { contraste: verifierContraste(3), boutons, debord };
 };`;
 }
 
@@ -118,7 +111,7 @@ async function verifierEcran(page, theme, mode, controlerBoutons = true) {
     problemes.push(`BOUTON OUBLIÉ  ${x.cle} : resté au style de base`);
   }
   for (const d of avec.debord) problemes.push(`DÉBORDE        ${d}`);
-  return { problemes, boutonsHabilles: avec.boutons.filter((x) => lookBase.has(x.cle) && lookBase.get(x.cle) !== x.look && !BOUTONS_SANS_HABILLAGE.some(([m]) => x.cle.includes(m))).length };
+  return { problemes, boutonsHabilles: avec.boutons.filter((x) => lookBase.has(x.cle) && lookBase.get(x.cle) !== x.look).length };
 }
 
 // Planche des captures (à ouvrir dans un navigateur) + rapport texte

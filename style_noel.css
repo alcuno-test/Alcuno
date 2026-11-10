@@ -16,7 +16,7 @@ html[data-theme="noel"]{
     radial-gradient(ellipse 120% 24% at 50% 24%, rgba(255,140,140,.28), transparent 100%) no-repeat,
     linear-gradient(to top, rgba(60,0,8,.35), transparent 45%) no-repeat,
     /* motif de fond : cannes à sucre, cadeaux, étoiles, flocons, houx (noel/deco_fond.svg), sous tout le reste */
-    url("noel/deco_fond.svg") 0 0 / 240px 240px repeat;
+    url("noel/deco_fond.svg") 0 0 / 300px 300px repeat;
   /* Accueil : en plus, deux sapins décorés posés sur un tapis de neige, en bas de l'écran */
   --deco-accueil:
     url("noel/sapin.svg") left -10px bottom 26px / auto min(30vh, 210px) no-repeat,
@@ -147,17 +147,45 @@ html[data-theme="noel"] #ecranTele .tele-pied{ color: rgba(255, 233, 234, 0.8); 
   content: ""; position: absolute; z-index: 1; left: 50%; bottom: 0; width: 18px; height: 2px; margin-left: -9px; background: #c4161c; border-radius: 1px;
 }
 
-/* ----- Bouton « Album de stickers » de l'accueil : même famille que les gros boutons (or opaque, texte blanc), en plus petit ----- */
-html[data-theme="noel"] #choixMode .btnInstaller{
-  color: #fff;
-  background: linear-gradient(180deg, #f6c62c, #d9a000);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  text-shadow: 0 1px 0 rgba(122, 74, 0, 0.85), 0 2px 4px rgba(0, 0, 0, 0.35);
-  box-shadow: 0 3px 0 rgba(110, 6, 16, 0.55), 0 6px 12px rgba(60, 0, 8, 0.3);
+/* ----- Boutons : or avec un anneau blanc (comme une étiquette de cadeau) et texte rouge foncé, sur tous les écrans -----
+   (mêmes boutons que les autres thèmes habillés, Soleil couchant par exemple : tous les boutons du jeu doivent être aux couleurs du thème) */
+html[data-theme="noel"][data-theme] body :is(#btnModeEnLigne, #btnModeClassique, #btnContinuerOptions, .btnRetour, #btnPartagerJeu, #ajouterJoueur, #jouer, #supprimerJoueur,
+  #nouvellePartie, #btnRejouerMemes, #btnModifierJoueurs, #btnReprendrePause,
+  #btnCreerPartie, #btnRejoindrePartie, #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #btnScannerQR,
+  #lancerPartieEnLigne, #btnChoixPseudoAnnuler, #listeChoixPseudo button, #btnConfirmerAccueilOui, #btnConfirmerAccueilNon,
+  #btnConfirmerHoteOui, #btnConfirmerHoteNon, #btnConfirmerRetraitOui, #btnConfirmerRetraitNon, #termineSuppression,
+  #btnInstallationInstaller, #choixMode .btnInstaller, #menu #btnCaster, #ecranCaster button:not(.btnRetour), #btnFermerScanner, #ecranReprise button,
+  #overlayPigeon .bouton-pigeon, #overlayPlus4 .bouton-pigeon, #overlayCupidon .bouton-pigeon, #overlayFinUnRestants .bouton-pigeon,
+  #overlayAnnulation button, #overlayRegleUnique .bouton-annulation, #overlayDuel button:not(:disabled), #overlayPredictionFin .bouton-pigeon){
+  background: linear-gradient(180deg, #ffe27a, #e8a900) !important;
+  color: #6e0a14 !important;
+  text-shadow: 0 1px 0 rgba(255, 244, 190, 0.7) !important;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.95), 0 6px 14px rgba(60, 0, 8, 0.4) !important;
 }
-@media (hover: hover){ html[data-theme="noel"] #choixMode .btnInstaller:hover{ background: linear-gradient(180deg, #ffd23f, #e2aa00); } }
+@media (hover: hover){
+  html[data-theme="noel"][data-theme] body :is(#btnModeEnLigne, #btnModeClassique, #choixMode .btnInstaller):hover{ background: linear-gradient(180deg, #fff0a8, #f2b400) !important; }
+}
 
-/* Textes secondaires un peu trop effacés sur le rouge (comparés au jeu de base avec SEUIL_CONTRASTE=4.5) : plus clairs */
+/* ----- Volet « Mettre … en pause » et bandeaux du bas (« Mauvais joueur ? Annuler », « Nouvelle version ») ----- */
+html[data-theme="noel"] .voletPause-ok{
+  background: linear-gradient(180deg, #ffe27a, #e8a900); color: #6e0a14;
+  text-shadow: 0 1px 0 rgba(255, 244, 190, 0.7); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.95);
+}
+html[data-theme="noel"] :is(#annulerChoix, #bandeauMiseAJour){
+  --bandeau-fond: #3a0610; --bandeau-bord: rgba(255, 255, 255, 0.5); --bandeau-texte: #fff;
+  --bandeau-bouton: linear-gradient(180deg, #ffe27a, #e8a900); --bandeau-bouton-texte: #6e0a14;
+}
+html[data-theme="noel"] :is(#annulerChoix .annulerChoix-bouton, #bandeauMiseAJour .maj){
+  text-shadow: 0 1px 0 rgba(255, 244, 190, 0.7); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.95);
+}
+
+/* ----- Pari de fin et choix de fin : cadres rouge de Noël avec un liseré blanc (au lieu du brun-doré de base) ----- */
+html[data-theme="noel"] :is(.prediction-header, .fin-choix-recap, .fin-choix-card){
+  background: linear-gradient(180deg, rgba(150, 12, 28, 0.6), rgba(70, 4, 12, 0.6)) !important;
+  border-color: rgba(255, 255, 255, 0.45) !important;
+}
+
+/* ----- Textes secondaires un peu trop effacés sur le rouge : plus clairs ----- */
 html[data-theme="noel"] #ecranReglages .optionNote{ color: rgba(255, 255, 255, 0.92); }
 html[data-theme="noel"] #ecranReglages .aProposTitre{ color: #ffe27a; }
 html[data-theme="noel"] #ecranReglages .lienJeu{ color: #fff; }
@@ -166,5 +194,5 @@ html[data-theme="noel"] #listeJoueursEnLigne div{ color: #b8fff6; }
 html[data-theme="noel"] #btnFaqDepuisRegles{ color: #fff; }
 html[data-theme="noel"] #ecranTele .tele-tour.tele-pigeon .tele-tour-nom{ color: #b8fff6; } /* « PIGEON (nom) » de la télé */
 
-/* Plateau : les panneaux (titre, boutons, joueurs, règles) cachent le motif de fond derrière leur texte */
-html[data-theme="noel"] :is(header, #menu, .messages){ background-color: rgba(78, 4, 12, 0.8); }
+/* ----- Plateau : les panneaux (titre, boutons, joueurs, règles) cachent le motif de fond derrière leur texte ----- */
+html[data-theme="noel"] :is(header, #menu, .messages){ background-color: rgba(78, 4, 12, 0.95); }
