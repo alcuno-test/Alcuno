@@ -186,3 +186,6 @@ html[data-theme="chandeleur"] #ecranTele .tele-puce{ background: var(--carte-cha
 html[data-theme="chandeleur"] #ecranTele :is(.tele-restantes, .tele-compteur){ background: var(--carte-chandeleur); border-radius: 1.4vh; padding: 0.6vh 2vh; }
 html[data-theme="chandeleur"] #ecranTele .tele-compteur{ display: table; margin-left: auto; margin-right: auto; color: #fff3dc; } /* (« Il reste N cartes » : le panneau épouse le texte, centré) */
 html[data-theme="chandeleur"] #ecranTele .tele-compteur[hidden]{ display: none; }
+
+/* ----- Plateau : l'intérieur de l'icône Règles (le livre) prend le ton de l'en-tête (les cartes), pas l'orange de l'accueil ----- */
+html[data-theme="chandeleur"] header #btnReglesJeu path.couverture{ fill: var(--carte-chandeleur); }
