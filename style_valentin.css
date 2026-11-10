@@ -135,10 +135,10 @@ html[data-theme="valentin"] #choixMode .lettreOTitre{ visibility: hidden; } /* l
 html[data-theme="valentin"] #choixMode .lettreOTitre::after{
   content: "";
   position: absolute;
-  left: calc(50% - 0.05em); /* le titre laisse 0,1 em d'espacement après le O : la lettre est un peu à gauche du centre de sa boîte */
-  top: 0.08em;
-  width: 1.04em;
-  height: 0.95em;
+  left: calc(50% + 0.03em); /* centré sur la lettre (un peu à gauche du centre de sa boîte : le titre laisse 0,1 em après le O), puis décalé vers la droite pour ne pas coller le N */
+  top: 0.135em;
+  width: 0.92em;
+  height: 0.84em;
   transform: translateX(-50%);
   background: url("valentin/coeur_titre.svg") center / contain no-repeat;
   filter: drop-shadow(0 3px 0 rgba(90, 0, 40, 0.55));
