@@ -1666,11 +1666,11 @@ if (caseGaucher) {
 // ===== Feux d'artifice du Nouvel An : sur TOUS les écrans (téléphone et télé) et dans TOUS les thèmes =====
 // Réglage de ce téléphone, désactivé de base (le calendrier des fêtes l'activera plus tard, voir FETES.md).
 // Les feux sont dessinés dans la couche #feuxArtifice qui recouvre la page (style_feux.css), un toutes les
-// 1,2 à 3 s, à un endroit et dans une couleur au hasard : un éclat, puis une gerbe d'étincelles qui retombent.
+// 0,5 à 1,5 s, à un endroit et dans des couleurs au hasard : un éclat, puis une gerbe d'étincelles qui retombent.
 // Rien quand l'appli n'est pas à l'écran, ni si le téléphone demande moins d'animations.
 const CLE_FEUX_ARTIFICE = "alcuno_feux_artifice";
 const caseFeuxArtifice = document.getElementById("optionFeuxArtifice");
-const COULEURS_FEUX = ["#ffe27a", "#ff7bd5", "#5be7ff", "#ffffff", "#7dffb0", "#ffb04a"];
+const COULEURS_FEUX = ["#ffe27a", "#ff4fa8", "#5be7ff", "#ffffff", "#7dffb0", "#ffb04a", "#b48cff", "#ff5a4a", "#4f8dff"];
 document.documentElement.classList.toggle("feux-artifice", lireReglage(CLE_FEUX_ARTIFICE, false));
 if (caseFeuxArtifice) {
   caseFeuxArtifice.checked = lireReglage(CLE_FEUX_ARTIFICE, false);
@@ -1688,17 +1688,18 @@ function feuArtifice(){
   const feu = document.createElement("div");
   feu.className = "feuNA";
   const couleur = COULEURS_FEUX[Math.floor(Math.random() * COULEURS_FEUX.length)];
-  const secondeCouleur = COULEURS_FEUX[Math.floor(Math.random() * COULEURS_FEUX.length)];
+  const hasardCouleur = () => COULEURS_FEUX[Math.floor(Math.random() * COULEURS_FEUX.length)];
+  const secondeCouleur = hasardCouleur(), troisiemeCouleur = hasardCouleur();
   feu.style.left = `${W * (0.08 + Math.random() * 0.84)}px`;
   feu.style.top = `${H * (0.08 + Math.random() * 0.6)}px`;
   feu.style.setProperty("--c", couleur);
-  const rayon = Math.min(W, H) * (0.18 + Math.random() * 0.14);
-  const nb = 22;
+  const rayon = Math.min(W, H) * (0.26 + Math.random() * 0.2);
+  const nb = 34;
   let html = "<b></b>";
   for (let i = 0; i < nb; i++) {
     const angle = (i / nb) * Math.PI * 2 + Math.random() * 0.2;
     const r = rayon * (i % 2 ? 0.62 : 1) * (0.9 + Math.random() * 0.2); // deux anneaux
-    html += `<i style="--dx:${Math.round(Math.cos(angle) * r)}px;--dy:${Math.round(Math.sin(angle) * r)}px;--t:${5 + Math.round(Math.random() * 3)}px;--d:${(1.7 + Math.random() * 0.6).toFixed(2)}s;--c:${i % 2 ? secondeCouleur : couleur}"></i>`;
+    html += `<i style="--dx:${Math.round(Math.cos(angle) * r)}px;--dy:${Math.round(Math.sin(angle) * r)}px;--t:${6 + Math.round(Math.random() * 4)}px;--d:${(1.7 + Math.random() * 0.6).toFixed(2)}s;--c:${[couleur, secondeCouleur, troisiemeCouleur][i % 3]}"></i>`;
   }
   feu.innerHTML = html;
   zone.appendChild(feu);
@@ -1709,7 +1710,7 @@ function prochainFeuArtifice(){
     if (document.documentElement.classList.contains("feux-artifice") && document.visibilityState === "visible" &&
         !matchMedia("(prefers-reduced-motion: reduce)").matches) feuArtifice();
     prochainFeuArtifice();
-  }, 1200 + Math.random() * 1800);
+  }, 550 + Math.random() * 1000);
 }
 prochainFeuArtifice();
 
