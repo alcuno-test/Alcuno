@@ -379,6 +379,8 @@
 
 
 html[data-theme="halloween"]{
+  /* Les trois niveaux de rouge du texte (voir le bloc « TOUT LE TEXTE EN ROUGE SANG » en bas) */
+  --hw-titre: #e8252c; --hw-texte: #ff6b6b; --hw-texte-doux: #ff9b9e;
   --fond-theme: #0a0204;
   --carte-halloween: rgba(22, 4, 7, 0.96); /* ton de TOUTES les cartes et panneaux : noir rougeâtre, quasi opaque pour cacher le motif derrière le texte */
   --couleur-barre: #0a0204; /* = la couleur du tout haut du décor ci-dessous (la barre du téléphone ne doit pas être plus sombre) */
@@ -447,9 +449,9 @@ html[data-theme="halloween"] :is(#enLigne #btnInviterPartie, .voletPause-annuler
   background: var(--carte-halloween) !important; border: 1px solid rgba(255, 255, 255, 0.35) !important;
 }
 /* Petits textes gris : blanc cassé */
-html[data-theme="halloween"] #ecranReglages :is(.lienBug, .versionJeu){ color: #ffffff !important; }
-html[data-theme="halloween"] #ecranReglages .btnDiagnostic{ color: #ffffff !important; }
-html[data-theme="halloween"] #ecranCredits .credits-honneur-titre{ color: #ffffff; }
+html[data-theme="halloween"] #ecranReglages :is(.lienBug, .versionJeu){ color: var(--hw-texte-doux) !important; }
+html[data-theme="halloween"] #ecranReglages .btnDiagnostic{ color: var(--hw-texte) !important; }
+html[data-theme="halloween"] #ecranCredits .credits-honneur-titre{ color: var(--hw-texte-doux); }
 /* Télé : code de la télé, en bas de l'écran */
 html[data-theme="halloween"] #ecranTele .tele-pied{ color: rgba(255,255,255,.85); }
 
@@ -472,7 +474,7 @@ html[data-theme="halloween"][data-theme] body :is(#btnModeEnLigne, #btnModeClass
   #overlayPigeon .bouton-pigeon, #overlayPlus4 .bouton-pigeon, #overlayCoupDeFoudre .bouton-pigeon, #overlayFinUnRestants .bouton-pigeon,
   #overlayAnnulation button, #overlayRegleUnique .bouton-annulation, #overlayDuel button:not(:disabled), #overlayPredictionFin .bouton-pigeon){
   background: linear-gradient(180deg, #2a0609, #120203) !important;
-  color: #ffffff !important;
+  color: var(--hw-texte) !important;
   border: 1px solid rgba(163, 21, 26, 0.9) !important; /* liseré de sang : le bouton ne doit pas éclairer l'écran, juste se détacher du noir */
   text-shadow: 0 1px 3px #000 !important;
   box-shadow: inset 0 0 22px rgba(0,0,0,.75), 0 0 16px rgba(163,21,26,.55), 0 6px 16px rgba(0,0,0,.6) !important;
@@ -483,7 +485,7 @@ html[data-theme="halloween"][data-theme] body :is(#btnModeEnLigne, #btnModeClass
 
 /* ----- Volet « Mettre … en pause » et bandeaux du bas (« Mauvais joueur ? Annuler », « Nouvelle version ») ----- */
 html[data-theme="halloween"] .voletPause-ok{
-  background: linear-gradient(180deg, #2a0609, #120203); color: #ffffff;
+  background: linear-gradient(180deg, #2a0609, #120203); color: var(--hw-texte);
   border: 1px solid rgba(163, 21, 26, 0.9);
   text-shadow: 0 1px 3px #000; box-shadow: 0 0 16px rgba(163,21,26,.45);
 }
@@ -503,11 +505,11 @@ html[data-theme="halloween"] :is(.prediction-header, .fin-choix-recap, .fin-choi
 
 /* ----- Textes secondaires un peu trop effacés sur le noir : plus clairs ----- */
 html[data-theme="halloween"] #ecranReglages .optionNote{ color: rgba(255, 255, 255, 0.92); }
-html[data-theme="halloween"] #ecranReglages .aProposTitre{ color: #ffffff; }
-html[data-theme="halloween"] #ecranReglages .lienJeu{ color: #fff; }
-html[data-theme="halloween"] #enLigne .separateurOu, html[data-theme="halloween"] #ecranInstallation #btnInstallationPlusTard{ color: #fff; }
-html[data-theme="halloween"] #listeJoueursEnLigne div{ color: #ffffff; }
-html[data-theme="halloween"] #ecranTele .tele-tour.tele-pigeon .tele-tour-nom{ color: #ffffff; } /* « PIGEON (nom) » de la télé */
+html[data-theme="halloween"] #ecranReglages .aProposTitre{ color: var(--hw-texte-doux); }
+html[data-theme="halloween"] #ecranReglages .lienJeu{ color: var(--hw-texte-doux); }
+html[data-theme="halloween"] #enLigne .separateurOu{ color: var(--hw-texte-doux); }
+html[data-theme="halloween"] #listeJoueursEnLigne div{ color: var(--hw-texte); }
+html[data-theme="halloween"] #ecranTele .tele-tour.tele-pigeon .tele-tour-nom{ color: var(--hw-texte); } /* « PIGEON (nom) » de la télé */
 
 /* ----- Plateau : les panneaux (titre, boutons, joueurs, règles) cachent le motif de fond derrière leur texte ----- */
 html[data-theme="halloween"] :is(header, #menu, .messages, #ecranTele .tele-bloc, #ecranTele .tele-entete, #ecranTele .tele-prepa-joueur){ background-color: var(--carte-halloween); }
@@ -522,7 +524,7 @@ html[data-theme="halloween"] #ecranTele .tele-puce{ background: var(--carte-hall
 /* ----- Télé : « Il reste N cartes » et « Dernières cartes tirées » (sous le plateau) ne sont dans aucun panneau : ils se lisaient mal sur le motif de fond.
    Même ton que toutes les cartes. ----- */
 html[data-theme="halloween"] #ecranTele :is(.tele-restantes, .tele-compteur){ background: var(--carte-halloween); border-radius: 1.4vh; padding: 0.6vh 2vh; }
-html[data-theme="halloween"] #ecranTele .tele-compteur{ display: table; margin-left: auto; margin-right: auto; color: #ffffff; } /* (« Il reste N cartes » : le panneau épouse le texte, centré) */
+html[data-theme="halloween"] #ecranTele .tele-compteur{ display: table; margin-left: auto; margin-right: auto; color: var(--hw-texte); } /* (« Il reste N cartes » : le panneau épouse le texte, centré) */
 html[data-theme="halloween"] #ecranTele .tele-compteur[hidden]{ display: none; }
 
 /* ----- Plateau : l'intérieur de l'icône Règles (le livre) prend le ton de l'en-tête (les cartes) ----- */
@@ -549,9 +551,9 @@ html[data-theme="halloween"] :is(#choixMode #btnReglages circle, #choixMode #btn
 html[data-theme="halloween"] :is(#choixMode #btnReglages svg, #choixMode #btnRegles svg, header #btnReglesJeu svg){
   filter: drop-shadow(0 2px 0 #1a0204) drop-shadow(0 3px 6px rgba(0, 0, 0, 0.7));
 }
-html[data-theme="halloween"] :is(#btnAccueilClassique, #enLigne #btnAccueilEnLigne, #ecranNouvellePartie #btnAccueil){ color: #fff; -webkit-text-stroke-color: #fff; text-shadow: 0 2px 0 #1a0204, 0 3px 8px rgba(0, 0, 0, 0.7); }
+html[data-theme="halloween"] :is(#btnAccueilClassique, #enLigne #btnAccueilEnLigne, #ecranNouvellePartie #btnAccueil){ color: var(--hw-texte); -webkit-text-stroke-color: #fff; text-shadow: 0 2px 0 #1a0204, 0 3px 8px rgba(0, 0, 0, 0.7); }
 html[data-theme="halloween"] :is(#ecranReglages, #ecranRegles, #ecranCaster, #ecranBug, #ecranInstallation, #ecranCredits, #ecranConfirmerAccueil, #ecranConfirmerHote, #ecranConfirmerRetrait, #ecranReprise, #ecranPause, #suppression) :is(h2, .credits-titre){
-  color: #fff;
+  color: var(--hw-titre);
   text-shadow: 0 2px 0 #1a0204, 0 4px 12px rgba(0, 0, 0, 0.65);
 }
 html[data-theme="halloween"] :is(.optionTitre, .aProposTitre, .titreBloc, .regleBloc-titre, .recap-titre, .annonce-titre, .regle-titre,
@@ -559,7 +561,7 @@ html[data-theme="halloween"] :is(.optionTitre, .aProposTitre, .titreBloc, .regle
   #overlayCouleur .titre-couleur,
   :is(#overlayPlus4, #overlayCupidon, #overlayCoupDeFoudre, #overlayPigeon, #overlayFinUnRestants, #overlayDuel, #overlayPredictionFin, #overlayRegleUnique, #overlayAnnulation, #overlayResultatAnnulation) .titre-pigeon,
   #ecranTele :is(.tele-titre, .tele-ecran-titre, .tele-pause-titre, .tele-prepa-titre)){
-  color: #fff;
+  color: var(--hw-titre);
   text-shadow: 0 2px 0 #1a0204, 0 4px 12px rgba(0, 0, 0, 0.65);
 }
 
@@ -569,13 +571,13 @@ html[data-theme="halloween"] .joueur-ligne-actif{
 }
 
 /* ----- Doré écrit directement par le JavaScript (passe devant le CSS du thème : d'où le !important) ----- */
-html[data-theme="halloween"] :is(#overlayAnnulation, #overlayResultatAnnulation, #overlayRegleUnique:not(.overlay-doree)){ color: #fff !important; }
+html[data-theme="halloween"] :is(#overlayAnnulation, #overlayResultatAnnulation, #overlayRegleUnique:not(.overlay-doree)){ color: var(--hw-texte) !important; }
 html[data-theme="halloween"] .aideAccueil-fleches path:not(.aideAccueil-ombre){ fill: #fff; }
 html[data-theme="halloween"] .aideAccueil-ombre{ fill: rgba(10, 2, 4, 0.9); }
 
 /* ----- Bannière « Tour de » : nom du joueur en blanc qui luit de rouge (si une couleur est choisie, le jeu garde la couleur de la carte) ----- */
 html[data-theme="halloween"] #stickyJoueurActif:not(.has-couleur):not(.is-pigeon) .sticky-nom{
-  color: #fff;
+  color: var(--hw-texte);
   text-shadow: 0 0 6px rgba(255, 255, 255, 0.9), 0 0 14px rgba(197, 22, 28, 0.9);
 }
 html[data-theme="halloween"] #stickyJoueurActif::before{ background: radial-gradient(circle at 35% 35%, #ff9a9a 0%, #c5161c 45%, #6d0a0d 100%); box-shadow: 0 0 10px rgba(197, 22, 28, 0.9); }
@@ -590,14 +592,14 @@ html[data-theme="halloween"] #choixMode .titreAccueilBarre{
 }
 
 /* ----- Pas de bleu ni de turquoise : noms des joueurs, « PIGEON », pastille du bandeau, lueurs du pigeon ----- */
-html[data-theme="halloween"] #listeJoueurs{ color: #fff; }
+html[data-theme="halloween"] #listeJoueurs{ color: var(--hw-texte); }
 html[data-theme="halloween"] #stickyJoueurActif.is-pigeon{ border-color: rgba(197, 22, 28, 0.6); }
 html[data-theme="halloween"] #stickyJoueurActif.is-pigeon::before{
   background: radial-gradient(circle at 35% 35%, #ff9a9a 0%, #c5161c 52%, #6d0a0d 100%); box-shadow: 0 0 10px rgba(197, 22, 28, 0.7);
 }
-html[data-theme="halloween"] #stickyJoueurActif.is-pigeon .sticky-nom{ color: #fff; }
-html[data-theme="halloween"] #stickyJoueurActif.is-pigeon .sticky-bonus{ background: rgba(197, 22, 28, 0.2); border-color: rgba(197, 22, 28, 0.5); color: #fff; }
-html[data-theme="halloween"] #ecranTele :is(.tele-joueur, .tele-prepa-joueur){ color: #fff; }
+html[data-theme="halloween"] #stickyJoueurActif.is-pigeon .sticky-nom{ color: var(--hw-texte); }
+html[data-theme="halloween"] #stickyJoueurActif.is-pigeon .sticky-bonus{ background: rgba(197, 22, 28, 0.2); border-color: rgba(197, 22, 28, 0.5); color: var(--hw-texte); }
+html[data-theme="halloween"] #ecranTele :is(.tele-joueur, .tele-prepa-joueur){ color: var(--hw-texte); }
 html[data-theme="halloween"] #ecranTele .tele-prepa-joueur{ border-color: rgba(197, 22, 28, 0.5); }
 /* Télé : le joueur dont c'est le tour est sur fond rouge clair : son nom reste foncé */
 html[data-theme="halloween"] #ecranTele .tele-joueur.tele-joueur-actif, html[data-theme="halloween"] #ecranTele .tele-joueur.tele-joueur-actif > span{ color: var(--actif-texte); }
@@ -624,3 +626,65 @@ html[data-theme="halloween"] #ecranRegles .ligneRegle .Carte.retournee:not([clas
 
 /* ----- Feuille « Signaler un bug » : fond uni (le motif passait derrière le texte et le rendait illisible) ----- */
 html[data-theme="halloween"] #ecranBug .bugFeuille{ background: radial-gradient(ellipse 120% 40% at 50% 0%, rgba(163,21,26,.22), transparent 100%), var(--fond-theme); }
+
+/* ============================================================================================
+   TOUT LE TEXTE EN ROUGE SANG (demandé : pas de blanc, pas de jaune, pas de bleu dans ce thème)
+   Trois niveaux, du plus foncé au plus clair, pour que les petits textes restent lisibles sur le noir :
+     --hw-titre      #e8252c  titres et gros textes        (contraste 4,5 sur les panneaux)
+     --hw-texte      #ff6b6b  texte courant et boutons     (contraste 7,2)
+     --hw-texte-doux #ff9b9e  notes, liens, petits textes  (contraste 10)
+   Les seuls textes qui restent sombres sont ceux posés SUR du rouge clair (le joueur dont c'est le
+   tour), sinon ils disparaîtraient : ils gardent --actif-texte.
+   !important parce que beaucoup de ces textes viennent de règles du jeu de base avec un identifiant.
+   ============================================================================================ */
+html[data-theme="halloween"]{ --hw-titre: #e8252c; --hw-texte: #ff6b6b; --hw-texte-doux: #ff9b9e; }
+
+/* Titres : écrans, blocs, règles */
+html[data-theme="halloween"] :is(h2, #titreReglages, .titreBloc, .aProposTitre, .nomRegle, .regleBloc-titre,
+  .recap-titre, .annonce-titre, .regle-titre, .credits-titre, .optionTitre, .tele-titre, .tele-ecran-titre,
+  .tele-pause-titre, .tele-prepa-titre, .titre-couleur, .titre-pigeon){
+  color: var(--hw-titre) !important;
+}
+/* Texte courant et boutons */
+html[data-theme="halloween"] body :is(#btnModeEnLigne, #btnModeClassique, #btnContinuerOptions, #nouvellePartie,
+  #btnPartagerJeu, #btnRejouerMemes, #btnModifierJoueurs, #btnReprendrePause, #ajouterJoueur, #jouer, #supprimerJoueur,
+  #btnCreerPartie, #btnRejoindrePartie, #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre,
+  #btnScannerQR, #lancerPartieEnLigne, #btnChoixPseudoAnnuler, #btnConfirmerAccueilOui, #btnConfirmerAccueilNon,
+  #btnConfirmerHoteOui, #btnConfirmerHoteNon, #btnConfirmerRetraitOui, #btnConfirmerRetraitNon, #termineSuppression,
+  #btnInstallationInstaller, #btnFermerScanner, .btnRetour, .btnAccueilTexte, .btnInstaller, .btnDiagnostic,
+  .btnFaqLien, .voletPause-ok, .bouton-pigeon, .bouton-annulation, #listeChoixPseudo button, #ecranReprise button,
+  #ecranCaster button, #menu #btnCaster, #compteurCartes, #listeSuppression, #listeJoueursEnLigne div){
+  color: var(--hw-texte) !important;
+}
+/* Les balises générales sont dans leur PROPRE règle, sans identifiant : une exception (les fenêtres du
+   poisson d'avril, plus bas) peut ainsi passer devant sans avoir à surenchérir en spécificité. */
+html[data-theme="halloween"] :is(li, b, strong, .detailRegle, .mainGauche, .volumeIcone, .messages, .regleBloc, .blocRegles){
+  color: var(--hw-texte) !important;
+}
+/* Petits textes et liens */
+html[data-theme="halloween"] :is(.optionNote, .lienBug, .lienJeu, .versionJeu, .credits-phrase,
+  .credits-honneur-titre, .separateurOu, #btnInstallationPlusTard, .installationPourquoi, .tele-pied, .sticky-bonus){
+  color: var(--hw-texte-doux) !important;
+}
+/* Joueurs : le nom est rouge, sauf celui dont c'est le tour (pastille rouge clair : texte sombre) */
+html[data-theme="halloween"] #listeJoueurs{ color: var(--hw-texte); }
+html[data-theme="halloween"] .joueur-ligne:not(.joueur-ligne-actif) .joueur-nom{ color: var(--hw-texte) !important; }
+html[data-theme="halloween"] .joueur-ligne-actif .joueur-nom{ color: var(--actif-texte) !important; }
+html[data-theme="halloween"] #ecranTele .tele-joueur:not(.tele-joueur-actif){ color: var(--hw-texte) !important; }
+html[data-theme="halloween"] #stickyJoueurActif:not(.has-couleur):not(.is-pigeon) .sticky-nom{
+  color: var(--hw-texte) !important; text-shadow: 0 0 6px rgba(197, 22, 28, 0.9), 0 0 14px rgba(197, 22, 28, 0.6);
+}
+html[data-theme="halloween"] #stickyJoueurActif.is-pigeon .sticky-nom{ color: var(--hw-texte) !important; }
+
+/* ----- Noms des thèmes dans les Réglages : en orange citrouille, et plus en bleu / vert / violet -----
+   (chaque thème montrait son nom de SA couleur ; le rond coloré à gauche suffit à les reconnaître) */
+html[data-theme="halloween"] .pastilleTheme .nomTheme{ color: #ff9a3c !important; }
+
+/* Deux exceptions au « tout en rouge », vérifiées par le test d'affichage :
+   - la pastille « hors connexion » des Réglages est une pastille d'état (fond gris, vert ou ROUGE) :
+     son ✓ / ✗ doit rester blanc, sinon il disparaît sur le fond rouge ;
+   - les fenêtres du poisson d'avril sont volontairement neutres, sur une carte gris clair (le faux
+     plantage doit avoir l'air vrai) : leur texte reste gris foncé. */
+html[data-theme="halloween"] #ecranReglages .pastilleHorsLigne{ color: #ffffff !important; }
+html[data-theme="halloween"] .poisson-voile :is(b, strong, li, h2, .poisson-titre, .poisson-texte){ color: #1f2937 !important; }
+html[data-theme="halloween"] .poisson-voile .fenetrePoisson-bouton{ color: #ffffff !important; }
