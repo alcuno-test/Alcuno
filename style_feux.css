@@ -47,5 +47,8 @@ html[data-theme="donjon"] #choixMode .lettreOTitre{ background: inherit; -webkit
   pointer-events: none;
 }
 #choixMode .chapeauFeteTitre svg{ display: block; width: 100%; height: auto; }
-html.feux-actifs #choixMode .chapeauFeteTitre{ display: block; }
-html.feux-actifs #choixMode .couronneTitre{ display: none !important; } /* Prestige : le chapeau remplace la couronne */
+/* Fête nationale (13-15 juillet) : les mêmes feux d'artifice que le Nouvel An, mais pas de chapeau de fête
+   sur le titre (html[data-fete="nationale"], posé par le script du <head> de index.html). La couronne du
+   thème Prestige reprend donc sa place, puisque rien ne vient la remplacer. */
+html.feux-actifs:not([data-fete="nationale"]) #choixMode .chapeauFeteTitre{ display: block; }
+html.feux-actifs:not([data-fete="nationale"]) #choixMode .couronneTitre{ display: none !important; } /* Prestige : le chapeau remplace la couronne */

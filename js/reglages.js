@@ -106,6 +106,8 @@ function majReglageFeuxArtifice(){
   const festif = THEMES_DE_FETE.includes(document.documentElement.dataset.theme);
   const bloc = document.querySelector('#ecranReglages [data-cle="feux-artifice"]');
   if (bloc) bloc.hidden = festif;
+  const blocNationale = document.querySelector('#ecranReglages [data-cle="fete-nationale"]'); // (case de test, voir plus bas)
+  if (blocNationale) blocNationale.hidden = festif;
   document.documentElement.classList.toggle("feux-actifs", !festif && document.documentElement.classList.contains("feux-artifice"));
   if (festif) { const zone = document.getElementById("feuxArtifice"); if (zone) zone.innerHTML = ""; } // (feux déjà partis : effacés tout de suite)
 }
@@ -1783,7 +1785,10 @@ if (caseGaucher) {
   });
 }
 
-// ===== Feux d'artifice du Nouvel An : sur TOUS les écrans (téléphone et télé) et dans TOUS les thèmes =====
+// ===== Feux d'artifice du Nouvel An et de la Fête nationale : sur TOUS les écrans (téléphone et télé) et dans TOUS les thèmes =====
+// Les deux fêtes partagent exactement les mêmes feux. La seule différence : le Nouvel An pose aussi un chapeau
+// de fête sur le O du titre, pas la Fête nationale (html[data-fete="nationale"], voir le <head> de index.html
+// et style_feux.css).
 // Réglage de ce téléphone, activé de base (le calendrier des fêtes décidera plus tard QUAND il apparaît, voir FETES.md).
 // Les feux sont dessinés dans la couche #feuxArtifice qui recouvre la page (style_feux.css), un toutes les
 // 0,5 à 1,5 s, à un endroit et dans des couleurs au hasard : un éclat, puis une gerbe d'étincelles qui retombent.
@@ -1802,6 +1807,27 @@ if (caseFeuxArtifice) {
   });
 }
 majReglageFeuxArtifice(); // (la classe html.feux-artifice vient d'être posée ci-dessus)
+
+// Case de TEST « Fête nationale 🇫🇷 » : les mêmes feux, sans le chapeau de fête sur le titre
+// (html[data-fete="nationale"], voir style_feux.css). Plus tard, la Fête nationale réutilisera simplement la
+// case « Feux d'artifice » ci-dessus, puisque les deux fêtes ne tombent jamais en même temps : c'est le
+// calendrier des fêtes qui posera l'attribut aux bonnes dates. Cette case est alors à retirer (voir FETES.md).
+const CLE_FETE_NATIONALE = "alcuno_fete_nationale";
+const caseFeteNationale = document.getElementById("optionFeteNationale");
+function poserFeteNationale(actif){
+  if (actif) document.documentElement.dataset.fete = "nationale";
+  else if (document.documentElement.dataset.fete === "nationale") delete document.documentElement.dataset.fete;
+}
+if (caseFeteNationale) {
+  // ?fete=nationale dans l'adresse (posé par le <head> de index.html) : la case démarre cochée
+  caseFeteNationale.checked = document.documentElement.dataset.fete === "nationale" || lireReglage(CLE_FETE_NATIONALE, false);
+  poserFeteNationale(caseFeteNationale.checked);
+  caseFeteNationale.addEventListener("change", () => {
+    ecrireReglage(CLE_FETE_NATIONALE, caseFeteNationale.checked);
+    poserFeteNationale(caseFeteNationale.checked);
+    if (caseFeteNationale.checked) jouerSon("sons_on");
+  });
+}
 function feuArtifice(){
   const zone = document.getElementById("feuxArtifice");
   if (!zone) return;
