@@ -1146,12 +1146,12 @@ curseurVolume.addEventListener("input", () => {
 curseurVolume.addEventListener("change", () => jouerSon("reglage_son")); // essai au relâchement (Sons/reglage_son.mp3)
 
 // ===== Musique d'ambiance : Sons/musique_ambiance_<thème>.mp3 (givre, cerisier, prestige, soleil, galaxie, sombre,
-// kawaii, bdsm),
+// kawaii, bdsm, noel, valentin, patrick),
 // sinon Sons/musique_ambiance.mp3 (bordeaux, casino, nuit). En boucle, à son propre volume.
 // Quand ce téléphone caste, c'est la télé qui la joue (à ce volume, avec le thème du téléphone).
 const CLE_MUSIQUE = "alcuno_musique";
 const CLE_VOLUME_MUSIQUE = "alcuno_volume_musique";
-const THEMES_AVEC_MUSIQUE = ["givre", "cerisier", "prestige", "soleil", "galaxie", "noir", "kawaii", "donjon", "noel", "valentin"];
+const THEMES_AVEC_MUSIQUE = ["givre", "cerisier", "prestige", "soleil", "galaxie", "noir", "kawaii", "donjon", "noel", "valentin", "patrick"];
 // thème « noir » (affiché Sombre) : musique_ambiance_sombre.mp3 ; thème « donjon » (affiché BDSM) : musique_ambiance_bdsm.mp3
 const NOM_FICHIER_MUSIQUE = { noir: "sombre", donjon: "bdsm" };
 const caseMusique = document.getElementById("optionMusique");
@@ -1204,6 +1204,7 @@ const BOUCLES_EXACTES = {
   musique_ambiance_galaxie: { avant: 0.3, longueur: 7898850 / 44100 }, // 179,11 s (de 10,7 s à 3 min 10 du morceau, qui se répète)
   musique_ambiance_noel: { avant: 0.3, longueur: 8467448 / 44100 }, // 192,01 s = 112 mesures à 140 BPM (de 41,36 s à 3 min 53,4 du morceau). La boucle se termine dans le seul passage sans chant du morceau (3 min 50 à 3 min 53) : le retour au début ne coupe aucune parole. La dernière mesure est un fondu vers ce qui précédait 41,36 s, pour enchaîner sans saut de niveau.
   musique_ambiance_valentin: { avant: 0.3, longueur: 4341972 / 44100 }, // 98,46 s = 48 mesures à 117 BPM (de 16,80 s à 1 min 55,26 du morceau). Le morceau se répète toutes les 32 mesures à partir de 16,8 s ; la boucle se termine juste après la respiration de 1 min 53-1 min 55. La dernière mesure est un fondu vers ce qui précédait 16,80 s, pour enchaîner sans saut de niveau.
+  musique_ambiance_patrick: { avant: 0.3, longueur: 2860541 / 44100 }, // 64,86 s = 40 mesures à 148 BPM (le morceau entier, « Irish Jig »). Le fondu de fin du morceau est retiré ; sa dernière résonance (1,07 s) est repliée par-dessus le début, donc l'accord final sonne encore pendant la reprise.
   debloquage_theme_galaxie: { avant: 0.3, longueur: 4201001 / 44100 }, // 95,26 s (générique du thème Star Wars)
 };
 const FONDU_BOUCLE_EXACTE = 0.03;
