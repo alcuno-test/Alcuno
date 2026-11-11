@@ -403,7 +403,12 @@ html[data-theme="halloween"]{
     radial-gradient(ellipse 95% 62% at 50% 42%, transparent 18%, rgba(0,0,0,.92) 100%) no-repeat,
     url("halloween/grain.svg") 0 0 / 140px 140px repeat,
     url("halloween/accueil.svg") center top / 100% auto no-repeat,
-    url("halloween/citrouilles.svg") center 75% / 280px 128px no-repeat,
+    /* Le dessin des citrouilles a été rallongé de 128 à 196 px pour que le sang qui coule ne soit plus coupé.
+       Ancré en pourcentage pur, un dessin plus haut remonte : les citrouilles se retrouvaient derrière les
+       boutons. Le « + 51 px » les remet exactement là où elles étaient, à n'importe quelle hauteur d'écran.
+       Un simple pourcentage ne peut pas suffire : la place libre sous les boutons ne fait que 106 px sur un
+       iPhone 13, moins que le dessin lui-même. */
+    url("halloween/citrouilles.svg") center calc(75% + 51px) / 280px 196px no-repeat,
     radial-gradient(ellipse 90% 34% at 50% 100%, rgba(163,21,26,.2), transparent 100%) no-repeat;
   /* Joueur dont c'est le tour : rouge sang qui luit */
   --actif-haut: #ff6b6b; --actif-bas: #8f0b10; --actif-texte: #140102; --actif-halo: #c5161c;
