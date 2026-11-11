@@ -1,5 +1,5 @@
 /* =============================================================================================
-   Thème de fête « Fête de la musique » (nom interne : musique) : fond violet électrique, panneaux indigo, boutons rose néon à
+   Thème de fête « Fête de la musique » (nom interne : musique) : fond violet électrique, panneaux indigo, boutons vert fluo à
    liseré blanc, notes de musique néon en motif de fond, deux faisceaux de projecteur et un égaliseur sur l'accueil, et un PIANO à
    la place de la ligne colorée sous le titre ALCUNO. Le O du titre reste un O.
    Pour l'instant choisi à la main dans les Réglages (le calendrier des fêtes viendra plus tard, voir FETES.md).
@@ -455,26 +455,26 @@ html[data-theme="musique"][data-theme] body :is(#btnModeEnLigne, #btnModeClassiq
   #btnInstallationInstaller, #ecranRegles .btnFaqLien, #choixMode .btnInstaller, #menu #btnCaster, #ecranCaster button:not(.btnRetour), #btnFermerScanner, #ecranReprise button,
   #overlayPigeon .bouton-pigeon, #overlayPlus4 .bouton-pigeon, #overlayCoupDeFoudre .bouton-pigeon, #overlayFinUnRestants .bouton-pigeon,
   #overlayAnnulation button, #overlayRegleUnique .bouton-annulation, #overlayDuel button:not(:disabled), #overlayPredictionFin .bouton-pigeon){
-  background: linear-gradient(180deg, #ff4fb0, #c01584) !important;
-  color: #ffffff !important;
-  text-shadow: 0 1px 0 rgba(42, 14, 110, 0.6) !important;
+  background: linear-gradient(180deg, #8dffa0, #1fc85a) !important;
+  color: #1a0a5e !important;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45) !important;
   box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.95), 0 6px 14px rgba(20,0,80,.4) !important;
 }
 @media (hover: hover){
-  html[data-theme="musique"][data-theme] body :is(#btnModeEnLigne, #btnModeClassique, #choixMode .btnInstaller):hover{ background: linear-gradient(180deg, #ff6ac0, #d01f94) !important; }
+  html[data-theme="musique"][data-theme] body :is(#btnModeEnLigne, #btnModeClassique, #choixMode .btnInstaller):hover{ background: linear-gradient(180deg, #b0ffbf, #3ddc78) !important; }
 }
 
 /* ----- Volet « Mettre … en pause » et bandeaux du bas (« Mauvais joueur ? Annuler », « Nouvelle version ») ----- */
 html[data-theme="musique"] .voletPause-ok{
-  background: linear-gradient(180deg, #ff4fb0, #c01584); color: #ffffff;
-  text-shadow: 0 1px 0 rgba(42, 14, 110, 0.6); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.95);
+  background: linear-gradient(180deg, #8dffa0, #1fc85a); color: #1a0a5e;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.95);
 }
 html[data-theme="musique"] :is(#annulerChoix, #bandeauMiseAJour){
   --bandeau-fond: #240a6e; --bandeau-bord: rgba(255, 255, 255, 0.5); --bandeau-texte: #fff;
-  --bandeau-bouton: linear-gradient(180deg, #ff4fb0, #c01584); --bandeau-bouton-texte: #ffffff;
+  --bandeau-bouton: linear-gradient(180deg, #8dffa0, #1fc85a); --bandeau-bouton-texte: #1a0a5e;
 }
 html[data-theme="musique"] :is(#annulerChoix .annulerChoix-bouton, #bandeauMiseAJour .maj){
-  text-shadow: 0 1px 0 rgba(42, 14, 110, 0.6); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.95);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.95);
 }
 
 /* ----- Pari de fin et choix de fin : cadres brun-orangé avec un liseré blanc (au lieu du brun-doré de base) ----- */

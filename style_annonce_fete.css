@@ -69,5 +69,5 @@
 }
 #fenetreFete[data-fete="musique"]{
   --ff-carte: linear-gradient(180deg, #6a3fe0, #240a6e); --ff-bord: #ffffff; --ff-halo: rgba(150, 110, 255, 0.55); --ff-ombre: #2a0e6e;
-  --ff-rond: url("musique/note_apercu.svg"), #5b2bd1; --ff-bouton: linear-gradient(180deg, #ff4fb0, #c01584); --ff-bouton-texte: #ffffff;
+  --ff-rond: url("musique/note_apercu.svg"), #5b2bd1; --ff-bouton: linear-gradient(180deg, #8dffa0, #1fc85a); --ff-bouton-texte: #1a0a5e;
 }
