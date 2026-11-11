@@ -618,4 +618,5 @@ html[data-theme="justrose"] #ecranTele .tele-joueur.tele-joueur-actif, html[data
 html[data-theme="justrose"] .Carte:not(.retournee):not([class*="_"]):not([class*="couleur"]),
 html.faces-fermees[data-theme="justrose"] #plateau .Carte.retournee.recachee,
 html[data-theme="justrose"] .tele-plateau .Carte.carte-recachee,
+html[data-theme="justrose"] .Carte.dos_dore:not(.retournee), /* le dos de la carte dorée = le même dos rose (avec son reflet doré par-dessus), sinon elle se reconnaîtrait */
 html[data-theme="justrose"] #ecranRegles .ligneRegle .Carte.retournee:not([class*="_"]):not([class*="couleur"]){ background-image: url("Cartes/dos_justrose.png") !important; }
