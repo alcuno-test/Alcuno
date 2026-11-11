@@ -383,25 +383,19 @@ html[data-theme="halloween"]{
   --hw-titre: #e8252c; --hw-texte: #ff6b6b; --hw-texte-doux: #ff9b9e;
   --fond-theme: #0a0204;
   --carte-halloween: rgba(22, 4, 7, 0.96); /* ton de TOUTES les cartes et panneaux : noir rougeâtre, quasi opaque pour cacher le motif derrière le texte */
-  --couleur-barre: #0a0204; /* fond de secours des écrans : il reste NOIR, il est de toute façon recouvert.
-     La couleur que l'iPhone peint sous l'heure est à part (la même couleur, dans couleursBarre de index.html et de
-     js/reglages.js) : ici seuls les 28 px du tout haut sont rouges, pas l'écran entier. */
+  --couleur-barre: #0a0204; /* = le fond du thème : plus de bande de sang en haut, donc la barre du téléphone est simplement noire comme l'écran */
   /* Fond de TOUS les écrans (sauf l'accueil, voir --deco-accueil juste après), de haut en bas des couches :
      1. la vignette qui ferme les bords, 2. le grain de pellicule, 3. les coulures de sang collées en haut,
      4. une lueur de citrouille qui monte du bas, 5. le motif d'éclaboussures et de griffures qui se répète. */
   --deco-theme:
-    linear-gradient(#560e11, #560e11) center top / 100% 28px no-repeat, /* bande unie tout en haut, AU-DESSUS de la vignette : c'est elle que la barre du téléphone prolonge.
-       Sa couleur est celle du sang qui coule TEL QU'IL S'AFFICHE, mesurée sur une capture (médiane (86,14,17) juste sous la bande
-       sous la vignette) : plus clair, la bande ferait une marche au-dessus des coulures. */
     radial-gradient(ellipse 95% 62% at 50% 42%, transparent 18%, rgba(0,0,0,.92) 100%) no-repeat,
     url("halloween/grain.svg") 0 0 / 140px 140px repeat,
-    url("halloween/coulures.svg") center top / 100% auto no-repeat,
+    url("halloween/taches_haut.svg") center top / 100% auto no-repeat,
     radial-gradient(ellipse 90% 34% at 50% 100%, rgba(163,21,26,.2), transparent 100%) no-repeat,
     url("halloween/deco_fond.svg") 0 0 / 340px 340px repeat;
   /* Accueil : les mêmes couches, avec des coulures plus épaisses, des flaques, des yeux qui brillent
      (halloween/accueil.svg) et trois citrouilles sculptées qui saignent, dans le vide sous les boutons. */
   --deco-accueil:
-    linear-gradient(#560e11, #560e11) center top / 100% 28px no-repeat, /* idem : la bande unie du tout haut */
     radial-gradient(ellipse 95% 62% at 50% 42%, transparent 18%, rgba(0,0,0,.92) 100%) no-repeat,
     url("halloween/grain.svg") 0 0 / 140px 140px repeat,
     url("halloween/accueil.svg") center top / 100% auto no-repeat,
