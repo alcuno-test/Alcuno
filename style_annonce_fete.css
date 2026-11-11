@@ -63,3 +63,7 @@
   --ff-carte: linear-gradient(180deg, #14804f, #043a24); --ff-bord: #8cf0b4; --ff-halo: rgba(93, 255, 149, 0.5); --ff-ombre: #06402a;
   --ff-rond: url("patrick/trefle_apercu.svg"), #0f6a44; --ff-bouton: linear-gradient(180deg, #f2fff6, #9be8b4); --ff-bouton-texte: #04361f;
 }
+#fenetreFete[data-fete="justrose"]{
+  --ff-carte: linear-gradient(180deg, #d9418b, #7d1448); --ff-bord: #ffffff; --ff-halo: rgba(255, 150, 200, 0.5); --ff-ombre: #6a1e43;
+  --ff-rond: url("justrose/verre_apercu.svg"), #cc3381; --ff-bouton: linear-gradient(180deg, #d4408a, #9a1052); --ff-bouton-texte: #ffffff;
+}
