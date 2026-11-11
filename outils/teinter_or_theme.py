@@ -53,6 +53,16 @@ THEMES = {
         "#e8a900": "#f06fa8", "#fff3a8": "#ffffff", "#fff0a8": "#ffffff", "#f2b400": "#f48fb1",
         "255,244,190": "255,240,247", "255,230,128": "255,255,255",
     },
+    "musique": {
+        "#ffd700": "#ffffff", "255,215,0": "255,255,255",
+        "120,70,0": "42,14,110",
+        "255,210,38": "232,222,255", "#ffcc00": "#d9c9ff", "#ffea70": "#ffffff", "#ffe680": "#ffffff",
+        "255,200,40": "215,200,255", "255,223,90": "240,234,255", "#e9d9a8": "#ece6ff", "#d9c38a": "#d6c9ff",
+        "#ffe27a": "#ffffff", "#c8880a": "#7a56f0", "255,220,90": "240,234,255", "255,216,77": "232,222,255",
+        "255,200,0": "200,180,255", "#ffe066": "#f3eeff", "#ffd54f": "#e6dcff", "#ffd23f": "#dcd0ff",
+        "#e8a900": "#8a6cf5", "#fff3a8": "#ffffff", "#fff0a8": "#ffffff", "#f2b400": "#a58bf7",
+        "255,244,190": "246,242,255", "255,230,128": "255,255,255",
+    },
 }
 
 # Sélecteurs laissés en doré (voir plus haut)
@@ -64,7 +74,7 @@ def couleur_cle(m):
 # Teinte cible de chaque thème (degrés, roue des couleurs) : TOUT jaune / doré / ambre que la table ci-dessus ne
 # connaît pas est reconnu à sa teinte (entre 36° et 64°, assez saturé) et tourné vers cette teinte, en gardant sa
 # clarté. Avant, seule la liste servait : un jaune oublié (ex. #FFE36B du nom dans la bannière « Tour de ») restait jaune.
-TEINTE = {"valentin": 336, "patrick": 140, "justrose": 330}
+TEINTE = {"valentin": 336, "patrick": 140, "justrose": 330, "musique": 265}
 
 def tourner(r, v, b, cible):
     import colorsys

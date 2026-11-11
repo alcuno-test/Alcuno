@@ -83,6 +83,7 @@ const ECRANS = [
   ["annonce de fête : Saint-Valentin", null, "afficherAnnonceFete('valentin')", 700],
   ["annonce de fête : Saint-Patrick", null, "afficherAnnonceFete('patrick')", 700],
   ["annonce de fête : Just Rosé", null, "afficherAnnonceFete('justrose')", 700],
+  ["annonce de fête : Fête de la musique", null, "afficherAnnonceFete('musique')", 700],
   ["poisson d'avril 1 : titre Uno + message", null, "afficherPoisson(1); ouvrirMessagePoissonUno()", 700],
   ["poisson d'avril 2 : fausse mise à jour", null, "afficherPoisson(2)", 700],
   ["poisson d'avril 3 : faux plantage", null, "afficherPoisson(3)", 700],
