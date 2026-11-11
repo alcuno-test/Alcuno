@@ -24,7 +24,7 @@ Un fichier MP3 par moment du jeu, avec exactement ces noms :
   sabre/sabre/*.mp3  sons de sabre de 0,6 s : un au hasard à la place du clic des boutons, dans le thème Star Wars seulement. Supprime ceux que tu n'aimes pas (fichier absent = ignoré).
   (lightsaber_sound.mp3 = le fichier d'origine de 45 s, plus utilisé par le jeu)
   bdsm_buttons/*.mp3  un au hasard à la place du clic des boutons, dans le thème BDSM seulement (liste SONS_BDSM dans js/reglages.js et dans sw.js).
-  saxo/*.mp3  sons de saxophone de 0,37 à 0,89 s (découpés dans un enregistrement) : un au hasard à la place du clic des boutons, dans le thème de fête « Fête de la musique » seulement (liste SONS_SAXO dans js/reglages.js et dans sw.js).
+  saxo/*.mp3  sons de saxophone de 0,39 à 0,89 s (découpés dans un enregistrement) : un au hasard à la place du clic des boutons, dans le thème de fête « Fête de la musique » seulement (liste SONS_SAXO dans js/reglages.js et dans sw.js).
 
 MUSIQUE D'AMBIANCE (en boucle, réglage « Musique d'ambiance ») :
   musique_ambiance.mp3  thèmes bordeaux, casino, nuit (et les autres si leur musique manque)

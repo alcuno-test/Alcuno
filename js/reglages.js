@@ -1625,9 +1625,10 @@ const SONS_SABRE = ["sabre/sabre_01", "sabre/sabre_02", "sabre/sabre_05", "sabre
 // Même chose dans le thème BDSM : Sons/bdsm_buttons/*.mp3 (0,5 à 1 s), un au hasard au clic des boutons (même liste dans sw.js).
 // bdsm_sound_effect est écrit deux fois : il tombe deux fois plus souvent que les autres.
 const SONS_BDSM = ["bdsm_buttons/bdsm_sound_effect", "bdsm_buttons/bdsm_sound_effect", "bdsm_buttons/bdsm_sound_effect1_01", "bdsm_buttons/bdsm_sound_effect1_07", "bdsm_buttons/bdsm_sound_effect1_12", "bdsm_buttons/bdsm_sound_effect1_17", "bdsm_buttons/bdsm_sound_effect1_23", "bdsm_buttons/bdsm_sound_effect1_25", "bdsm_buttons/bdsm_sound_effect1_27", "bdsm_buttons/bdsm_sound_effect1_30", "bdsm_buttons/bdsm_sound_effect1_37", "bdsm_buttons/bdsm_sound_effect1_46"];
-// Thème de fête « Fête de la musique » : Sons/saxo/saxo_01.mp3 à saxo_38.mp3 (0,37 à 0,89 s), découpés dans un
-// enregistrement de saxophone. Un au hasard au clic des boutons, comme les sabres (même liste dans sw.js).
-const SONS_SAXO = ["saxo/saxo_01", "saxo/saxo_02", "saxo/saxo_03", "saxo/saxo_04", "saxo/saxo_05", "saxo/saxo_06", "saxo/saxo_07", "saxo/saxo_08", "saxo/saxo_09", "saxo/saxo_10", "saxo/saxo_11", "saxo/saxo_12", "saxo/saxo_13", "saxo/saxo_14", "saxo/saxo_15", "saxo/saxo_16", "saxo/saxo_17", "saxo/saxo_18", "saxo/saxo_19", "saxo/saxo_20", "saxo/saxo_21", "saxo/saxo_22", "saxo/saxo_23", "saxo/saxo_24", "saxo/saxo_25", "saxo/saxo_26", "saxo/saxo_27", "saxo/saxo_28", "saxo/saxo_29", "saxo/saxo_30", "saxo/saxo_31", "saxo/saxo_32", "saxo/saxo_33", "saxo/saxo_34", "saxo/saxo_35", "saxo/saxo_36", "saxo/saxo_37", "saxo/saxo_38"];
+// Thème de fête « Fête de la musique » : Sons/saxo/*.mp3 (0,39 à 0,89 s), découpés dans un enregistrement de
+// saxophone. Un au hasard au clic des boutons, comme les sabres (même liste dans sw.js). Les numéros sautent :
+// ce sont ceux des 38 extraits de départ, dont seuls ces 8 ont été gardés. Un fichier supprimé est simplement ignoré (404).
+const SONS_SAXO = ["saxo/saxo_03", "saxo/saxo_07", "saxo/saxo_08", "saxo/saxo_15", "saxo/saxo_26", "saxo/saxo_32", "saxo/saxo_37", "saxo/saxo_38"];
 const SONS_CLIC_THEME = { galaxie: SONS_SABRE, donjon: SONS_BDSM, musique: SONS_SAXO };
 // Sons coupés au bout de N secondes (avec un petit fondu), même si le fichier est plus long
 const DUREE_MAX_SONS = { doree: 3, pigeon: 2, distribuer_gorgees: 0.8, bouton: 0.3 };
