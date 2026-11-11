@@ -23,6 +23,12 @@ Aucune période ne se chevauche (vérifié à la main sur ce tableau).
 
 ## Annonce d'un thème de fête
 
+Seules les fêtes qui sont de vrais **thèmes** ont une annonce. Les fêtes qui n'en sont pas — Nouvel An,
+Fête nationale, 1er avril — n'en ont aucune : elles sont actives d'office pendant leur période, sans rien
+à débloquer ni à accepter. Le Nouvel An et la Fête nationale partagent le réglage « Feux d'artifice », coché
+de base, qui permet de les couper ; le 1er avril n'a pas de réglage du tout.
+
+
 Au premier lancement du jeu pendant la période d'une fête (Noël, Chandeleur, Saint-Valentin, Saint-Patrick, Just Rosé, Fête de la musique pour l'instant), une fenêtre du
 même style que les « thème débloqué » annonce « Nouveau thème X disponible pour une durée limitée !! », aux couleurs de CETTE fête
 (style_annonce_fete.css, `FETES_ANNONCE` dans js/reglages.js). Une seule fois par période et par appareil. Boutons : Noël « Joyeux Noël »,
