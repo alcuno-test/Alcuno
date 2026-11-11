@@ -188,12 +188,3 @@ function poissonSiBesoin(){
   const minuteur = setInterval(() => { if (essayer()) clearInterval(minuteur); }, 2000);
 }
 setTimeout(poissonSiBesoin, 1500);
-
-// Bouton de test dans les Réglages : une blague différente à chaque appui (1, 2, 3, 1…)
-let poissonTest = 0;
-document.getElementById("btnTesterPoisson")?.addEventListener("click", () => {
-  poissonTest = poissonTest % NB_POISSONS + 1;
-  document.getElementById("fenetrePoisson")?.remove();
-  afficherPoisson(poissonTest);
-  if (poissonTest === 1) ouvrirMessagePoissonUno();
-});
