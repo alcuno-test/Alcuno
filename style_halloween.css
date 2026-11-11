@@ -383,11 +383,12 @@ html[data-theme="halloween"]{
   --hw-titre: #e8252c; --hw-texte: #ff6b6b; --hw-texte-doux: #ff9b9e;
   --fond-theme: #0a0204;
   --carte-halloween: rgba(22, 4, 7, 0.96); /* ton de TOUTES les cartes et panneaux : noir rougeâtre, quasi opaque pour cacher le motif derrière le texte */
-  --couleur-barre: #0a0204; /* = le fond du thème : plus de bande de sang en haut, donc la barre du téléphone est simplement noire comme l'écran */
+  --couleur-barre: #470a0c; /* = le haut du décor TEL QU'IL S'AFFICHE, lueur rouge comprise (mesuré (71,10,12)) : la barre du téléphone n'est plus noire et prolonge le fond */
   /* Fond de TOUS les écrans (sauf l'accueil, voir --deco-accueil juste après), de haut en bas des couches :
      1. la vignette qui ferme les bords, 2. le grain de pellicule, 3. les coulures de sang collées en haut,
      4. une lueur de citrouille qui monte du bas, 5. le motif d'éclaboussures et de griffures qui se répète. */
   --deco-theme:
+    radial-gradient(ellipse 130% 22% at 50% 0%, rgba(197,22,28,.42), transparent 100%) no-repeat, /* lueur rouge en haut : sans elle le haut de l'écran est noir, et la barre du téléphone avec */
     radial-gradient(ellipse 95% 62% at 50% 42%, transparent 18%, rgba(0,0,0,.92) 100%) no-repeat,
     url("halloween/grain.svg") 0 0 / 140px 140px repeat,
     url("halloween/taches_haut.svg") center top / 100% auto no-repeat,
@@ -396,6 +397,7 @@ html[data-theme="halloween"]{
   /* Accueil : les mêmes couches, avec des coulures plus épaisses, des flaques, des yeux qui brillent
      (halloween/accueil.svg) et trois citrouilles sculptées qui saignent, dans le vide sous les boutons. */
   --deco-accueil:
+    radial-gradient(ellipse 130% 22% at 50% 0%, rgba(197,22,28,.42), transparent 100%) no-repeat, /* lueur rouge en haut : sans elle le haut de l'écran est noir, et la barre du téléphone avec */
     radial-gradient(ellipse 95% 62% at 50% 42%, transparent 18%, rgba(0,0,0,.92) 100%) no-repeat,
     url("halloween/grain.svg") 0 0 / 140px 140px repeat,
     url("halloween/accueil.svg") center top / 100% auto no-repeat,
