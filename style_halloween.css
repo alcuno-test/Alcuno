@@ -653,12 +653,8 @@ html[data-theme="halloween"] body :is(#btnModeEnLigne, #btnModeClassique, #btnCo
   #btnConfirmerHoteOui, #btnConfirmerHoteNon, #btnConfirmerRetraitOui, #btnConfirmerRetraitNon, #termineSuppression,
   #btnInstallationInstaller, #btnFermerScanner, .btnRetour, .btnAccueilTexte, .btnInstaller, .btnDiagnostic,
   .btnFaqLien, .voletPause-ok, .bouton-pigeon, .bouton-annulation, #listeChoixPseudo button, #ecranReprise button,
-  #ecranCaster button, #menu #btnCaster, #compteurCartes, #listeSuppression, #listeJoueursEnLigne div){
-  color: var(--hw-texte) !important;
-}
-/* Les balises générales sont dans leur PROPRE règle, sans identifiant : une exception (les fenêtres du
-   poisson d'avril, plus bas) peut ainsi passer devant sans avoir à surenchérir en spécificité. */
-html[data-theme="halloween"] :is(li, b, strong, .detailRegle, .mainGauche, .volumeIcone, .messages, .regleBloc, .blocRegles){
+  #ecranCaster button, #menu #btnCaster, #compteurCartes, #listeSuppression, #listeJoueursEnLigne div,
+  li, b, strong, .detailRegle, .mainGauche, .volumeIcone, .messages, .regleBloc, .blocRegles){
   color: var(--hw-texte) !important;
 }
 /* Petits textes et liens */
@@ -680,11 +676,6 @@ html[data-theme="halloween"] #stickyJoueurActif.is-pigeon .sticky-nom{ color: va
    (chaque thème montrait son nom de SA couleur ; le rond coloré à gauche suffit à les reconnaître) */
 html[data-theme="halloween"] .pastilleTheme .nomTheme{ color: #ff9a3c !important; }
 
-/* Deux exceptions au « tout en rouge », vérifiées par le test d'affichage :
-   - la pastille « hors connexion » des Réglages est une pastille d'état (fond gris, vert ou ROUGE) :
-     son ✓ / ✗ doit rester blanc, sinon il disparaît sur le fond rouge ;
-   - les fenêtres du poisson d'avril sont volontairement neutres, sur une carte gris clair (le faux
-     plantage doit avoir l'air vrai) : leur texte reste gris foncé. */
+/* Une exception au « tout en rouge » : la pastille « hors connexion » des Réglages est une pastille d'état
+   (fond gris, vert ou ROUGE). Son ✓ / ✗ doit rester blanc, sinon il disparaît sur le fond rouge. */
 html[data-theme="halloween"] #ecranReglages .pastilleHorsLigne{ color: #ffffff !important; }
-html[data-theme="halloween"] .poisson-voile :is(b, strong, li, h2, .poisson-titre, .poisson-texte){ color: #1f2937 !important; }
-html[data-theme="halloween"] .poisson-voile .fenetrePoisson-bouton{ color: #ffffff !important; }

@@ -178,8 +178,15 @@ const ECRANS = [
     process.stdout.write(r.problemes.length ? "x" : ".");
   };
 
+  // Le poisson d'avril (1er avril) ne peut JAMAIS tomber pendant une fête : aucune période de FETES.md
+  // n'inclut le 1er avril. Ses trois fenêtres ne sont donc pas regardées dans les thèmes de fête — un thème
+  // de fête n'a pas à rendre lisibles des fenêtres que ses joueurs ne verront jamais. Elles restent vérifiées
+  // dans tous les autres thèmes (bordeaux, Sombre, Star Wars, Kawaii, BDSM…), où le 1er avril tombe bel et bien.
+  const THEMES_DE_FETE = ["noel", "chandeleur", "valentin", "patrick", "justrose", "musique", "halloween"];
+  const aRegarder = THEMES_DE_FETE.includes(theme) ? ECRANS.filter(([nom]) => !/^poisson d'avril/.test(nom)) : ECRANS;
+
   let n = 0;
-  for (const [nom, partie, prep, attente] of ECRANS) {
+  for (const [nom, partie, prep, attente] of aRegarder) {
     n++;
     await ouvrir();
     if (partie) { await page.evaluate(`${LANCER}(${JSON.stringify(partie)})`); await page.waitForTimeout(300); }
