@@ -32,6 +32,8 @@ for f in ["style_alcuno.css", "style_kawaii.css"]:
         sel = re.sub(r"\s+", " ", s[coupe:o]).strip()
         if sel == ".Carte":   # le dos par défaut : seulement les cartes de dos (les faces gardent leur image)
             sel = '.Carte:not(.retournee):not([class*="_"]):not([class*="couleur"])'
+        if sel.startswith('.Carte:not(.retournee)'):   # le dos de la carte dorée (classe dos_dore) doit suivre, sinon elle se reconnaît
+            sel += ',.Carte.dos_dore:not(.retournee)'
         sels = [prefixe(x) for x in sel.split(",")]
         regles.append(",\n".join(sels) + '{ background-image: url("Cartes/%s") !important; }' % REMPLACE[m.group(1)])
 bloc = DEBUT + "\n" + "\n".join(regles) + "\n" + FIN

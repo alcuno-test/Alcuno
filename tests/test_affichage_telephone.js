@@ -95,6 +95,7 @@ const ECRANS = [
   ["ajout des joueurs", ["__avantJouer"], "", 300],
   ["plateau (début de partie)", [], "", 300],
   ["plateau (en cours)", [], "document.querySelectorAll('#plateau .Carte').forEach((c, i) => { if (i < 5) c.classList.add('retournee', classes[i * 7 % classes.length]); }); indexPigeon = 1; afficherJoueurs(); afficherJoueurActif()", 500],
+  ["plateau : cartes dorées (dos)", [], "document.querySelectorAll('#plateau .Carte').forEach((c, i) => { if (i === 3 || i === 8) c.classList.add('dos_dore'); })", 900],
   ["volet dernières cartes", [], "ouvrirVoletHistorique()", 600],
   ["volet d'une carte", [], "ouvrirVoletCarte(classes.find(c => c.startsWith('plus')) || classes[0])", 600],
   ["volet pause d'un joueur", [], "ouvrirVoletPause(joueurs[1], document.querySelectorAll('.btnPauseJoueur')[1])", 600],

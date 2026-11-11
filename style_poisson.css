@@ -33,8 +33,10 @@
 @keyframes poissonEntree{ from{ opacity: 0; } to{ opacity: 1; } }
 
 /* Dos de cartes « UNO » (blague 1 : html.poisson-uno posé par js/poisson.js) */
+
 /* >>> généré par outils/poisson_dos.py : ne pas modifier à la main >>> */
-html.poisson-uno .Carte:not(.retournee):not([class*="_"]):not([class*="couleur"]){ background-image: url("Cartes/dos_uno.svg") !important; }
+html.poisson-uno .Carte:not(.retournee):not([class*="_"]):not([class*="couleur"]),
+html.poisson-uno .Carte.dos_dore:not(.retournee){ background-image: url("Cartes/dos_uno.svg") !important; }
 html.poisson-uno.faces-fermees #plateau .Carte.retournee.recachee,
 html.poisson-uno .tele-plateau .Carte.carte-recachee{ background-image: url("Cartes/dos_uno.svg") !important; }
 html.poisson-uno[data-theme="galaxie"] .Carte:not(.retournee):not([class*="_"]):not([class*="couleur"]),
