@@ -375,13 +375,8 @@ html[data-theme="justrose"]{
   --fond-theme: #cc3381;
   --carte-justrose: rgba(106, 30, 67, 0.95); /* ton de TOUTES les cartes et panneaux : prune franche (pas noir), quasi opaque pour cacher le motif derrière le texte */
   --couleur-barre: #cc3381; /* = la couleur du tout haut du décor ci-dessous (la barre du téléphone ne doit pas être plus sombre) */
-  /* Fond des menus et des réglages : lumière douce en haut, puis le motif de feux d'artifice, parapluies et verres de rosé (justrose/deco_fond_fete.svg) */
+  /* Fond des menus et des réglages : lumière douce en haut, puis le motif de verres de rosé et de bulles (justrose/deco_fond.svg) : QUE des verres, sur tous les écrans sauf l'accueil */
   --deco-theme:
-    radial-gradient(ellipse 120% 24% at 50% 24%, rgba(255,255,255,.22), transparent 100%) no-repeat,
-    linear-gradient(to top, rgba(90,0,50,.3), transparent 45%) no-repeat,
-    url("justrose/deco_fond_fete.svg") 0 0 / 300px 300px repeat;
-  /* Plateau de jeu (le fond derrière la partie) : QUE des verres de rosé, ni feux d'artifice ni parapluies (justrose/deco_fond.svg) */
-  --deco-plateau:
     radial-gradient(ellipse 120% 24% at 50% 24%, rgba(255,255,255,.22), transparent 100%) no-repeat,
     linear-gradient(to top, rgba(90,0,50,.3), transparent 45%) no-repeat,
     url("justrose/deco_fond.svg") 0 0 / 300px 300px repeat;
@@ -498,8 +493,6 @@ html[data-theme="justrose"] #ecranReglages .lienJeu{ color: #fff; }
 html[data-theme="justrose"] #enLigne .separateurOu, html[data-theme="justrose"] #ecranInstallation #btnInstallationPlusTard{ color: #fff; }
 html[data-theme="justrose"] #listeJoueursEnLigne div{ color: #ffffff; }
 html[data-theme="justrose"] #ecranTele .tele-tour.tele-pigeon .tele-tour-nom{ color: #ffffff; } /* « PIGEON (nom) » de la télé */
-
-html[data-theme="justrose"] body::before{ background: var(--deco-plateau), var(--fond-theme); } /* le plateau : motif de verres seulement */
 
 /* ----- Plateau : les panneaux (titre, boutons, joueurs, règles) cachent le motif de fond derrière leur texte ----- */
 html[data-theme="justrose"] :is(header, #menu, .messages, #ecranTele .tele-bloc, #ecranTele .tele-entete, #ecranTele .tele-prepa-joueur){ background-color: var(--carte-justrose); }
@@ -620,3 +613,6 @@ html.faces-fermees[data-theme="justrose"] #plateau .Carte.retournee.recachee,
 html[data-theme="justrose"] .tele-plateau .Carte.carte-recachee,
 html[data-theme="justrose"] .Carte.dos_dore:not(.retournee), /* le dos de la carte dorée = le même dos rose (avec son reflet doré par-dessus), sinon elle se reconnaîtrait */
 html[data-theme="justrose"] #ecranRegles .ligneRegle .Carte.retournee:not([class*="_"]):not([class*="couleur"]){ background-image: url("Cartes/dos_justrose.png") !important; }
+
+/* ----- Feuille « Signaler un bug » : fond uni (le motif passait derrière le texte et le rendait illisible) ----- */
+html[data-theme="justrose"] #ecranBug .bugFeuille{ background: radial-gradient(ellipse 120% 40% at 50% 0%, rgba(255,255,255,.2), transparent 100%), var(--fond-theme); }
