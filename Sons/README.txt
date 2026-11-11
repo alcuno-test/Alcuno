@@ -42,6 +42,7 @@ MUSIQUE D'AMBIANCE (en boucle, réglage « Musique d'ambiance ») :
   musique_ambiance_valentin.mp3  thème de fête Saint-Valentin (boucle exacte de 1 min 38, voir BOUCLES_EXACTES)
   musique_ambiance_noel.mp3      thème de fête Noël (boucle exacte, voir BOUCLES_EXACTES)
   musique_ambiance_patrick.mp3   thème de fête Saint-Patrick (boucle exacte de 1 min 04,9, voir BOUCLES_EXACTES)
+  musique_ambiance_justrose.mp3  thème de fête Just Rosé (boucle exacte de 1 min 50,2, voir BOUCLES_EXACTES)
   musique_ambiance_musique.mp3   thème de fête Fête de la musique (boucle exacte de 36,96 s, voir BOUCLES_EXACTES)
   Jusqu'à 3-4 minutes, 128 kbit/s (environ 1 Mo par minute) : elle se lance plus vite.
 
