@@ -5464,6 +5464,40 @@ html[data-theme] #ecranReglages .optionsPartie .optionReglage.optionsSuite.optio
   cursor: pointer;
 }
 
+/* ----- « Installer Alcuno » reste au look de base (bordeaux) dans TOUS les thèmes -----
+   C'est le tout premier écran, montré avant même d'avoir choisi un thème : il ne doit pas changer de
+   couleur. Les thèmes l'habillaient par les variables (--fond-theme, --deco-theme) et par une poignée de
+   règles sur ses éléments. On remet ici les valeurs de base, en !important.
+   Pourquoi des sélecteurs aussi longs : les thèmes habillent tous les boutons du jeu d'un coup, avec une
+   liste :is(...) qui contient « #menu #btnCaster », donc deux identifiants, et en !important. Pour passer
+   devant il faut trois identifiants : d'où #ecranInstallation #installationContenu avant chaque élément
+   (c'est à ça que sert l'id installationContenu dans index.html).
+   Un thème qui habillerait un NOUVEL élément de cet écran demandera une ligne de plus ici. */
+html #ecranInstallation, html #ecranInstallation button{
+  font-family: Arial, sans-serif !important;  /* Kawaii passe tout le jeu en Arial Rounded : pas ici */
+}
+html #ecranInstallation{
+  --fond-theme: rgb(43, 0, 29) !important;    /* le bordeaux du jeu de base */
+  --couleur-barre: rgb(43, 0, 29) !important; /* (c'est elle que l'iPhone peint sous l'heure) */
+  --deco-theme: none !important;              /* pas de motif de thème derrière */
+  color: #fff !important;
+}
+html #ecranInstallation #installationContenu h2{ color: #FFD700 !important; text-shadow: 2px 2px 5px #000 !important; }
+html #ecranInstallation #installationContenu .installationPourquoi{ color: rgba(255,255,255,0.82) !important; opacity: 1 !important; }
+html #ecranInstallation #installationContenu .etapeInstallation{ background: rgba(255,255,255,0.06) !important; border: 1px solid rgba(255,215,0,0.25) !important; color: #fff !important; }
+html #ecranInstallation #installationContenu .etapeInstallation b{ color: #FFD700 !important; }
+html #ecranInstallation #installationContenu .numeroEtape{ background: #FFD700 !important; color: #2b001d !important; }
+html #ecranInstallation #installationContenu #btnInstallationInstaller{
+  background: #ffcc00 !important; color: #fff !important;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.4) !important;
+  box-shadow: inset 0 -3px 0 rgba(0,0,0,0.18), 0 0 26px rgba(255,215,0,0.45) !important;
+}
+html #ecranInstallation #installationContenu #btnInstallationPlusTard{ background: none !important; box-shadow: none !important; color: rgba(255,255,255,0.75) !important; text-shadow: none !important; }
+/* Décors que les thèmes posent par-dessus TOUS les écrans : ils se taisent pendant « Installer Alcuno »
+   (classe posée par ouvrirPage / fermerPage, script.js). La bande blanche du sabre, en Star Wars, passait
+   au-dessus de tout (z-index maximum) et barrait le haut de l'écran d'installation. */
+html.installation-ouverte #haloSabre{ display: none !important; }
+
 /* Givre (thème clair) */
 html[data-theme="givre"] #ecranInstallation{ color: var(--givre-texte); }
 html[data-theme="givre"] #ecranInstallation h2{
@@ -7949,7 +7983,7 @@ html[data-theme="galaxie"] #choixMode .titreAccueilBarre, html[data-theme="galax
   box-shadow: 0 0 4px #fff, 0 0 10px #39a0ff, 0 0 22px #1f7bff, 0 0 40px rgba(31,123,255,.6) !important; animation:none !important;
 }
 /* Boutons : lame bleue, « Jouer » et le mode classique en rouge */
-html[data-theme="galaxie"] button:not(.pastilleTheme):not(#btnRemonter):not(#btnPause):not(#btnHistorique):not(#btnReglagesJeu):not(.btnPauseJoueur):not(.btnLivre):not(#btnReglages):not(.btnAccueilTexte):not(#btnSignalerBug):not(#btnFaq):not(.fenetrePrestige-essayer):not(.fenetreKawaii-essayer):not(.fenetreKawaii-plusTard):not(.fenetrePrestige-plusTard):not(.fenetreGalaxie-ok):not(.fenetreGalaxie-plusTard):not(.bloc-hot-btn):not(#overlayDuel .duel-boutons button:disabled){
+html[data-theme="galaxie"] button:not(#btnInstallationInstaller):not(#btnInstallationPlusTard):not(.pastilleTheme):not(#btnRemonter):not(#btnPause):not(#btnHistorique):not(#btnReglagesJeu):not(.btnPauseJoueur):not(.btnLivre):not(#btnReglages):not(.btnAccueilTexte):not(#btnSignalerBug):not(#btnFaq):not(.fenetrePrestige-essayer):not(.fenetreKawaii-essayer):not(.fenetreKawaii-plusTard):not(.fenetrePrestige-plusTard):not(.fenetreGalaxie-ok):not(.fenetreGalaxie-plusTard):not(.bloc-hot-btn):not(#overlayDuel .duel-boutons button:disabled){
   background: linear-gradient(180deg, rgba(14,22,44,.92), rgba(6,10,22,.92)) !important; color:#eaf3ff !important; text-shadow:none !important;
   border: 1.5px solid #8fd0ff !important; letter-spacing:.04em;
   box-shadow: 0 0 6px #4aa8ff, 0 0 16px rgba(40,140,255,.55), inset 0 0 10px rgba(80,170,255,.22) !important;
