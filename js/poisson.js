@@ -173,12 +173,13 @@ function poissonSiBesoin(){
   const d = new Date();
   if (!force && !(d.getMonth() === 3 && d.getDate() === 1)) return;
   const n = force || poissonDuJour();
+  // Blague 1 : tout de suite, sans attendre l'accueil (sinon, après un rechargement du jeu, par exemple au changement de thème
+  // sur iPhone, le titre et les textes redeviennent « Alcuno » pendant plusieurs secondes, voire toute la partie)
+  if (n === 1) { poissonTitreUno(); return; }
   const cleVue = "alcuno_poisson_vu_" + d.getFullYear();
-  let essais = 0;
   const essayer = () => {
     const accueil = document.getElementById("choixMode");
     const surAccueil = accueil && getComputedStyle(accueil).display !== "none";
-    if (n === 1) { if (surAccueil || ++essais > 20) { poissonTitreUno(); return true; } return false; }
     if (!surAccueil) return false; // en pleine partie : on attend le retour à l'accueil
     if (document.querySelector('[id^="fenetre"], [id^="overlay"][style*="flex"]')) return false;
     if (!force) { try { if (localStorage.getItem(cleVue)) return true; localStorage.setItem(cleVue, "1"); } catch (e) { return true; } }
@@ -187,4 +188,4 @@ function poissonSiBesoin(){
   };
   const minuteur = setInterval(() => { if (essayer()) clearInterval(minuteur); }, 2000);
 }
-setTimeout(poissonSiBesoin, 1500);
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", poissonSiBesoin); else poissonSiBesoin();
