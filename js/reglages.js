@@ -95,12 +95,12 @@ const CLE_THEME = "alcuno_theme";
 // Couleur de la barre du téléphone pour chaque thème (= --couleur-barre du CSS, le tout haut de la page).
 // Mêmes couleurs dans le script du <head> de index.html, qui la pose dès le premier affichage.
 const THEMES = { bordeaux: "#2b001d", noir: "#000000", vert: "#08301e", bleu: "#0a1634", soleil: "#1f3566",
-                 cerisier: "#5a1740", givre: "#e4f5fc", prestige: "#937810", galaxie: "#02030a", kawaii: "#ffd6ec", donjon: "#12040a", noel: "#b3121f", chandeleur: "#bd4f10", valentin: "#c2185b", patrick: "#0f6a44", justrose: "#cc3381", musique: "#5b2bd1" };
+                 cerisier: "#5a1740", givre: "#e4f5fc", prestige: "#937810", galaxie: "#02030a", kawaii: "#ffd6ec", donjon: "#12040a", noel: "#b3121f", chandeleur: "#bd4f10", valentin: "#c2185b", patrick: "#0f6a44", justrose: "#cc3381", musique: "#5b2bd1", halloween: "#0a0204" };
 
 // Thèmes de fête : pas de feux d'artifice dedans (ils ne tomberont jamais en même temps que le Nouvel An), et le
 // réglage « Feux d'artifice » n'apparaît pas dans les Réglages quand l'un d'eux est actif.
 // Y ajouter chaque nouveau thème de fête (Chandeleur, Saint-Valentin, Saint-Patrick, Halloween…).
-const THEMES_DE_FETE = ["noel", "chandeleur", "valentin", "patrick", "justrose", "musique"];
+const THEMES_DE_FETE = ["noel", "chandeleur", "valentin", "patrick", "justrose", "musique", "halloween"];
 // html.feux-actifs = les feux (et le chapeau de fête du titre) sont à l'écran. Il faut les trois à la fois :
 //   - on est un jour de fête à feux : html[data-fete] (Nouvel An ou Fête nationale, posé par le <head> de index.html)
 //   - le réglage « Feux d'artifice » est coché (il l'est de base)
@@ -191,7 +191,8 @@ const FETES_ANNONCE = {
   valentin:   { nom: "Saint-Valentin", debut: [1, 7],   fin: [1, 15],  essayer: "L'essayer maintenant", image: "valentin/coeur_o.svg" },
   patrick:    { nom: "Saint-Patrick",  debut: [2, 14],  fin: [2, 18],  essayer: "Sláinte is táinte !",  image: "patrick/trefle_apercu.svg" },
   justrose:   { nom: "Just Rosé",      debut: [4, 4],   fin: [4, 12],  essayer: "L'essayer maintenant", image: "justrose/verre_apercu.svg" },
-  musique:    { nom: "Fête de la musique", debut: [5, 18], fin: [5, 22], essayer: "L'essayer maintenant", image: "musique/note_apercu.svg" }
+  musique:    { nom: "Fête de la musique", debut: [5, 18], fin: [5, 22], essayer: "L'essayer maintenant", image: "musique/note_apercu.svg" },
+  halloween:  { nom: "Halloween",       debut: [9, 20],  fin: [10, 1], essayer: "L'essayer maintenant", image: "halloween/citrouille_apercu.svg" }
 };
 // Fête en cours à cette date (null si aucune) : du jour de début à 0 h au jour de fin à 23 h 59
 function feteEnCours(date = new Date()){

@@ -17,7 +17,7 @@ Dates incluses, heure du téléphone. « du X au Y » = du X à 0 h au Y à 23 h
 | Just Rosé | 4 mai | 12 mai | La fête du rosé de Sanary (affiche 2026 : « du 8 au 10 mai », à confirmer pour les dates). Fond magenta #cc3381, tout en blanc, boutons rose foncé, « Just » au-dessus du titre, verre de rosé entre deux parapluies et feux d'artifice sur l'accueil, motif de verres de rosé sur tous les écrans sauf l'accueil (style_justrose.css, justrose/) ; dos des cartes en rose (Cartes/dos_justrose.png) ; musique (boucle de 1 min 50,2 = 56 mesures, de 29,6 s à 2 min 19,8 du morceau ; la dernière mesure fond vers ce qui précédait le départ) | à valider |
 | Fête de la musique | 18 juin | 22 juin | Fond violet électrique, panneaux indigo, boutons violet foncé, notes de musique néon en fond, deux faisceaux de projecteur et un égaliseur sur l'accueil, un piano jouable à la place de la ligne sous le titre : de Fa 4 à Sol 5 (15 touches), un tap sur une touche joue sa note (style_musique.css, musique/, js/piano-accueil.js, Sons/piano/) ; 8 sons de saxophone au clic des boutons (Sons/saxo/, un au hasard, comme les sabres en Star Wars) ; musique (boucle de 36,96 s = 20 mesures : le morceau se répète de lui-même, la reprise n'est pas un raccord) | à valider |
 | Fête nationale | 13 juillet | 15 juillet | Pas un thème, comme le Nouvel An : exactement les mêmes feux d'artifice sur tous les écrans et dans tous les thèmes (style_feux.css), mais **sans** le chapeau de fête sur le titre. La couronne du thème Prestige reste donc visible. Se déclenche toute seule à la date du téléphone et partage le réglage « Feux d'artifice » du Nouvel An, les deux ne tombant jamais ensemble. Pour la voir hors période : `?fete=nationale` | à valider |
-| Halloween | 20 octobre | 1er novembre | | à faire |
+| Halloween | 20 octobre | 1er novembre | Noir presque total, grain de pellicule et vignette qui ferme les bords ; coulures de sang en haut de tous les écrans, éclaboussures et griffures en motif de fond ; sur l'accueil, trois citrouilles sculptées qui saignent et des yeux qui brillent dans le noir. Titre ALCUNO rouge sang, traînée qui dégouline à la place de la ligne sous le titre, boutons presque noirs cernés de sang (style_halloween.css, halloween/) ; doré du jeu teinté en orange citrouille ; pas de musique ni de son pour l'instant | à valider |
 | Noël | 18 décembre | 26 décembre | | fait |
 
 Aucune période ne se chevauche (vérifié à la main sur ce tableau).
@@ -35,7 +35,7 @@ script du `<head>` de index.html pour les feux, js/poisson.js pour le 1er avril)
 toujours le calendrier général.
 
 
-Au premier lancement du jeu pendant la période d'une fête (Noël, Chandeleur, Saint-Valentin, Saint-Patrick, Just Rosé, Fête de la musique pour l'instant), une fenêtre du
+Au premier lancement du jeu pendant la période d'une fête (Noël, Chandeleur, Saint-Valentin, Saint-Patrick, Just Rosé, Fête de la musique, Halloween pour l'instant), une fenêtre du
 même style que les « thème débloqué » annonce « Nouveau thème X disponible pour une durée limitée !! », aux couleurs de CETTE fête
 (style_annonce_fete.css, `FETES_ANNONCE` dans js/reglages.js). Une seule fois par période et par appareil. Boutons : Noël « Joyeux Noël »,
 Saint-Patrick « Sláinte is táinte ! », les autres « L'essayer maintenant » ; et « Plus tard » partout. Pour la voir hors période : ouvrir

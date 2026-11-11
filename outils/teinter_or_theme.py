@@ -53,6 +53,16 @@ THEMES = {
         "#e8a900": "#f06fa8", "#fff3a8": "#ffffff", "#fff0a8": "#ffffff", "#f2b400": "#f48fb1",
         "255,244,190": "255,240,247", "255,230,128": "255,255,255",
     },
+    "halloween": {
+        "#ffd700": "#ff9a3c", "255,215,0": "255,154,60",
+        "120,70,0": "90,30,4",
+        "255,210,38": "255,150,60", "#ffcc00": "#ff7a18", "#ffea70": "#ffc07a", "#ffe680": "#ffc98c",
+        "255,200,40": "255,140,50", "255,223,90": "255,180,100", "#e9d9a8": "#f0c49a", "#d9c38a": "#e0a86f",
+        "#ffe27a": "#ffc07a", "#c8880a": "#a8430a", "255,220,90": "255,180,100", "255,216,77": "255,168,85",
+        "255,200,0": "255,130,30", "#ffe066": "#ffb469", "#ffd54f": "#ff9f45", "#ffd23f": "#ff8f30",
+        "#e8a900": "#e06510", "#fff3a8": "#ffd9b0", "#fff0a8": "#ffd9b0", "#f2b400": "#f07418",
+        "255,244,190": "255,218,180", "255,230,128": "255,196,130",
+    },
     "musique": {
         "#ffd700": "#ffffff", "255,215,0": "255,255,255",
         "120,70,0": "42,14,110",
@@ -74,7 +84,7 @@ def couleur_cle(m):
 # Teinte cible de chaque thème (degrés, roue des couleurs) : TOUT jaune / doré / ambre que la table ci-dessus ne
 # connaît pas est reconnu à sa teinte (entre 36° et 64°, assez saturé) et tourné vers cette teinte, en gardant sa
 # clarté. Avant, seule la liste servait : un jaune oublié (ex. #FFE36B du nom dans la bannière « Tour de ») restait jaune.
-TEINTE = {"valentin": 336, "patrick": 140, "justrose": 330, "musique": 265}
+TEINTE = {"valentin": 336, "patrick": 140, "justrose": 330, "musique": 265, "halloween": 25}
 
 def tourner(r, v, b, cible):
     import colorsys

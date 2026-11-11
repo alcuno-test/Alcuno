@@ -71,3 +71,7 @@
   --ff-carte: linear-gradient(180deg, #8a62f4, #5b2bd1); --ff-bord: #ffffff; --ff-halo: rgba(150, 110, 255, 0.55); --ff-ombre: #2a0e6e;
   --ff-rond: url("musique/note_apercu.svg"), #5b2bd1; --ff-bouton: linear-gradient(180deg, #4a1fb4, #2a0e6e); --ff-bouton-texte: #ffffff;
 }
+#fenetreFete[data-fete="halloween"]{
+  --ff-carte: linear-gradient(180deg, #2a0609, #0a0204); --ff-bord: #c5161c; --ff-halo: rgba(197, 22, 28, 0.6); --ff-ombre: #140102;
+  --ff-rond: url("halloween/citrouille_apercu.svg"), #0a0204; --ff-bouton: linear-gradient(180deg, #2a0609, #120203); --ff-bouton-texte: #f0dcd8;
+}
