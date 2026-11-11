@@ -74,12 +74,21 @@
         // Thème choisi dans les réglages : appliqué tout de suite (pas de flash de bordeaux au chargement)
         // (ancien thème « violet » remplacé par « soleil »)
         try { var theme = localStorage.getItem("alcuno_theme"); if (theme === "violet") { theme = "soleil"; localStorage.setItem("alcuno_theme", theme); } if (theme) document.documentElement.dataset.theme = theme; } catch (e) {}
-        // Fête sans thème (voir FETES.md) : « nouvel-an » = feux d'artifice + chapeau de fête sur le titre ;
-        // « nationale » (13-15 juillet) = exactement les mêmes feux, mais SANS le chapeau. Posé ici, avant
-        // l'affichage, pour qu'aucun chapeau n'apparaisse une fraction de seconde. Le calendrier des fêtes
-        // le posera tout seul plus tard ; d'ici là, pour la voir : ouvrir le jeu avec ?fete=nationale.
-        try { var fete = (location.search.match(/[?&]fete=([a-z-]+)/) || [])[1];
-              if (fete === "nationale" || fete === "nouvel-an") document.documentElement.dataset.fete = fete; } catch (e) {}
+        // Fêtes qui ne sont pas des thèmes (voir FETES.md), à la date du téléphone : le Nouvel An (le 1er
+        // janvier) et la Fête nationale (du 13 au 15 juillet). Les deux posent les mêmes feux d'artifice ;
+        // seul le Nouvel An ajoute en plus un chapeau de fête sur le O du titre. Hors de ces dates, rien :
+        // ni feux, ni réglage dans les Réglages.
+        // Posé ici, avant l'affichage, pour qu'aucun chapeau n'apparaisse une fraction de seconde.
+        // Pour les voir hors période (tests) : ouvrir le jeu avec ?fete=nouvel-an ou ?fete=nationale.
+        try {
+            var fete = (location.search.match(/[?&]fete=([a-z-]+)/) || [])[1];
+            if (fete !== "nouvel-an" && fete !== "nationale") {
+                var dateDuJour = new Date(), moisFete = dateDuJour.getMonth() + 1, jourFete = dateDuJour.getDate();
+                fete = (moisFete === 1 && jourFete === 1) ? "nouvel-an"
+                     : (moisFete === 7 && jourFete >= 13 && jourFete <= 15) ? "nationale" : "";
+            }
+            if (fete) document.documentElement.dataset.fete = fete;
+        } catch (e) {}
         // Barre du téléphone à la couleur du thème dès le premier affichage (mêmes couleurs que THEMES dans script.js)
         var couleursBarre = { bordeaux: "#2b001d", noir: "#000000", vert: "#08301e", bleu: "#0a1634", soleil: "#1f3566",
                               cerisier: "#5a1740", givre: "#e4f5fc", prestige: "#937810", galaxie: "#02030a", kawaii: "#ffd6ec", donjon: "#12040a", noel: "#b3121f", chandeleur: "#bd4f10", valentin: "#c2185b", patrick: "#0f6a44", justrose: "#cc3381", musique: "#5b2bd1" };
@@ -283,24 +292,12 @@
                     <div class="optionReglage">
                         <span class="optionTexte">
                             <span class="optionTitre">Feux d'artifice 🎆</span>
-                            <span class="optionNote">Des feux d'artifice éclatent sur tous les écrans, comme au Nouvel An.</span>
+                            <span class="optionNote">Des feux d'artifice éclatent sur tous les écrans pendant la fête.</span>
                         </span>
                         <input type="checkbox" id="optionFeuxArtifice" aria-label="Feux d'artifice">
                         <label class="interrupteur" for="optionFeuxArtifice" aria-hidden="true"></label>
                     </div>
                 </div>
-                <!-- Case de TEST seulement : la Fête nationale réutilisera la case « Feux d'artifice » ci-dessus,
-                     puisque les deux fêtes ne tombent jamais en même temps. À retirer quand le calendrier des fêtes
-                     sera codé (voir FETES.md). -->
-                <div class="blocReglage" data-cle="fete-nationale">
-                    <div class="optionReglage">
-                        <span class="optionTexte">
-                            <span class="optionTitre">Fête nationale 🇫🇷</span>
-                            <span class="optionNote">Les mêmes feux, mais sans le chapeau de fête sur le titre. Il faut que les feux ci-dessus soient allumés.</span>
-                        </span>
-                        <input type="checkbox" id="optionFeteNationale" aria-label="Fête nationale">
-                        <label class="interrupteur" for="optionFeteNationale" aria-hidden="true"></label>
-                    </div>
                 </div>
 
                 <div class="blocReglage" data-cle="sons">

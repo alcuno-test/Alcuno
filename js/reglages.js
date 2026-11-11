@@ -101,15 +101,19 @@ const THEMES = { bordeaux: "#2b001d", noir: "#000000", vert: "#08301e", bleu: "#
 // réglage « Feux d'artifice » n'apparaît pas dans les Réglages quand l'un d'eux est actif.
 // Y ajouter chaque nouveau thème de fête (Chandeleur, Saint-Valentin, Saint-Patrick, Halloween…).
 const THEMES_DE_FETE = ["noel", "chandeleur", "valentin", "patrick", "justrose", "musique"];
-// html.feux-actifs = les feux (et le chapeau de fête du titre) sont à l'écran : réglage coché ET pas un thème de fête.
+// html.feux-actifs = les feux (et le chapeau de fête du titre) sont à l'écran. Il faut les trois à la fois :
+//   - on est un jour de fête à feux : html[data-fete] (Nouvel An ou Fête nationale, posé par le <head> de index.html)
+//   - le réglage « Feux d'artifice » est coché (il l'est de base)
+//   - on n'est pas dans un thème de fête
+// Hors période, le réglage n'apparaît même pas dans les Réglages : il n'y a rien à régler.
 function majReglageFeuxArtifice(){
+  const jourDeFete = !!document.documentElement.dataset.fete;
   const festif = THEMES_DE_FETE.includes(document.documentElement.dataset.theme);
+  const montrer = jourDeFete && !festif;
   const bloc = document.querySelector('#ecranReglages [data-cle="feux-artifice"]');
-  if (bloc) bloc.hidden = festif;
-  const blocNationale = document.querySelector('#ecranReglages [data-cle="fete-nationale"]'); // (case de test, voir plus bas)
-  if (blocNationale) blocNationale.hidden = festif;
-  document.documentElement.classList.toggle("feux-actifs", !festif && document.documentElement.classList.contains("feux-artifice"));
-  if (festif) { const zone = document.getElementById("feuxArtifice"); if (zone) zone.innerHTML = ""; } // (feux déjà partis : effacés tout de suite)
+  if (bloc) bloc.hidden = !montrer;
+  document.documentElement.classList.toggle("feux-actifs", montrer && document.documentElement.classList.contains("feux-artifice"));
+  if (!montrer) { const zone = document.getElementById("feuxArtifice"); if (zone) zone.innerHTML = ""; } // (feux déjà partis : effacés tout de suite)
 }
 
 // Thème secret « Prestige » : débloqué en découvrant l'écran des créateurs (4 taps sur le titre)
@@ -1786,10 +1790,11 @@ if (caseGaucher) {
 }
 
 // ===== Feux d'artifice du Nouvel An et de la Fête nationale : sur TOUS les écrans (téléphone et télé) et dans TOUS les thèmes =====
-// Les deux fêtes partagent exactement les mêmes feux. La seule différence : le Nouvel An pose aussi un chapeau
-// de fête sur le O du titre, pas la Fête nationale (html[data-fete="nationale"], voir le <head> de index.html
-// et style_feux.css).
-// Réglage de ce téléphone, activé de base (le calendrier des fêtes décidera plus tard QUAND il apparaît, voir FETES.md).
+// Les deux fêtes partagent exactement les mêmes feux et le même réglage, puisqu'elles ne tombent jamais en même
+// temps. La seule différence : le Nouvel An pose aussi un chapeau de fête sur le O du titre, pas la Fête
+// nationale (html[data-fete="nationale"], voir le <head> de index.html et style_feux.css).
+// Les dates sont dans le <head> de index.html (1er janvier ; 13 au 15 juillet) : hors de là, pas de feux du tout.
+// Réglage de ce téléphone, coché de base : il ne sert qu'à les couper pendant la fête.
 // Les feux sont dessinés dans la couche #feuxArtifice qui recouvre la page (style_feux.css), un toutes les
 // 0,5 à 1,5 s, à un endroit et dans des couleurs au hasard : un éclat, puis une gerbe d'étincelles qui retombent.
 // Rien quand l'appli n'est pas à l'écran, ni si le téléphone demande moins d'animations.
@@ -1808,26 +1813,6 @@ if (caseFeuxArtifice) {
 }
 majReglageFeuxArtifice(); // (la classe html.feux-artifice vient d'être posée ci-dessus)
 
-// Case de TEST « Fête nationale 🇫🇷 » : les mêmes feux, sans le chapeau de fête sur le titre
-// (html[data-fete="nationale"], voir style_feux.css). Plus tard, la Fête nationale réutilisera simplement la
-// case « Feux d'artifice » ci-dessus, puisque les deux fêtes ne tombent jamais en même temps : c'est le
-// calendrier des fêtes qui posera l'attribut aux bonnes dates. Cette case est alors à retirer (voir FETES.md).
-const CLE_FETE_NATIONALE = "alcuno_fete_nationale";
-const caseFeteNationale = document.getElementById("optionFeteNationale");
-function poserFeteNationale(actif){
-  if (actif) document.documentElement.dataset.fete = "nationale";
-  else if (document.documentElement.dataset.fete === "nationale") delete document.documentElement.dataset.fete;
-}
-if (caseFeteNationale) {
-  // ?fete=nationale dans l'adresse (posé par le <head> de index.html) : la case démarre cochée
-  caseFeteNationale.checked = document.documentElement.dataset.fete === "nationale" || lireReglage(CLE_FETE_NATIONALE, false);
-  poserFeteNationale(caseFeteNationale.checked);
-  caseFeteNationale.addEventListener("change", () => {
-    ecrireReglage(CLE_FETE_NATIONALE, caseFeteNationale.checked);
-    poserFeteNationale(caseFeteNationale.checked);
-    if (caseFeteNationale.checked) jouerSon("sons_on");
-  });
-}
 function feuArtifice(){
   const zone = document.getElementById("feuxArtifice");
   if (!zone) return;
@@ -1855,7 +1840,7 @@ function feuArtifice(){
 }
 function prochainFeuArtifice(){
   setTimeout(() => {
-    if (document.documentElement.classList.contains("feux-artifice") && !THEMES_DE_FETE.includes(document.documentElement.dataset.theme) &&
+    if (document.documentElement.classList.contains("feux-actifs") &&
         document.visibilityState === "visible" &&
         !matchMedia("(prefers-reduced-motion: reduce)").matches) feuArtifice();
     prochainFeuArtifice();
