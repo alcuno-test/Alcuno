@@ -1618,14 +1618,17 @@ document.addEventListener("visibilitychange", () => {
 //   tiens_gueule.mp3 : le cul sec de la carte dorée (« TIENS DANS TA GUEULE »)
 //   regles.mp3 : on ouvre les Règles du jeu (boutons « Règles du jeu » de l'accueil et de la partie)
 //   accessibilite_on.mp3 : on active « Accessibilité pour les gens bourrés » dans les réglages
-const SONS = ["cartes", "doree", "tiens_gueule", "bouton", "pigeon", "tour", "eau", "sons_on", "credits", "reglage_son", "no_wifi", "distribuer_gorgees", "annuler_gorgees", "annuler_0_gorgees", "regles", "accessibilite_on", "etoile"]; // (les sons de sabre et du thème BDSM ne se chargent que dans leur thème, voir morceauClicTheme)
+const SONS = ["cartes", "doree", "tiens_gueule", "bouton", "pigeon", "tour", "eau", "sons_on", "credits", "reglage_son", "no_wifi", "distribuer_gorgees", "annuler_gorgees", "annuler_0_gorgees", "regles", "accessibilite_on", "etoile"]; // (les sons de sabre, du thème BDSM et du saxophone ne se chargent que dans leur thème, voir morceauClicTheme)
 // Sons de sabre : Sons/sabre/sabre_01.mp3 à sabre_54.mp3 (0,8 s chacun). Le clic des boutons en joue un au
 // hasard (jouerSon("bouton")). Si tu en supprimes, retire aussi leur nom de cette liste (et de SONS_A_PRECHARGER dans sw.js) ; un nom sans fichier est simplement ignoré (404).
 const SONS_SABRE = ["sabre/sabre_01", "sabre/sabre_02", "sabre/sabre_05", "sabre/sabre_07", "sabre/sabre_09", "sabre/sabre_11", "sabre/sabre_14", "sabre/sabre_15", "sabre/sabre_18", "sabre/sabre_22", "sabre/sabre_26", "sabre/sabre_31", "sabre/sabre_33", "sabre/sabre_37", "sabre/sabre_40", "sabre/sabre_41", "sabre/sabre_48"];
 // Même chose dans le thème BDSM : Sons/bdsm_buttons/*.mp3 (0,5 à 1 s), un au hasard au clic des boutons (même liste dans sw.js).
 // bdsm_sound_effect est écrit deux fois : il tombe deux fois plus souvent que les autres.
 const SONS_BDSM = ["bdsm_buttons/bdsm_sound_effect", "bdsm_buttons/bdsm_sound_effect", "bdsm_buttons/bdsm_sound_effect1_01", "bdsm_buttons/bdsm_sound_effect1_07", "bdsm_buttons/bdsm_sound_effect1_12", "bdsm_buttons/bdsm_sound_effect1_17", "bdsm_buttons/bdsm_sound_effect1_23", "bdsm_buttons/bdsm_sound_effect1_25", "bdsm_buttons/bdsm_sound_effect1_27", "bdsm_buttons/bdsm_sound_effect1_30", "bdsm_buttons/bdsm_sound_effect1_37", "bdsm_buttons/bdsm_sound_effect1_46"];
-const SONS_CLIC_THEME = { galaxie: SONS_SABRE, donjon: SONS_BDSM };
+// Thème de fête « Fête de la musique » : Sons/saxo/saxo_01.mp3 à saxo_38.mp3 (0,37 à 0,89 s), découpés dans un
+// enregistrement de saxophone. Un au hasard au clic des boutons, comme les sabres (même liste dans sw.js).
+const SONS_SAXO = ["saxo/saxo_01", "saxo/saxo_02", "saxo/saxo_03", "saxo/saxo_04", "saxo/saxo_05", "saxo/saxo_06", "saxo/saxo_07", "saxo/saxo_08", "saxo/saxo_09", "saxo/saxo_10", "saxo/saxo_11", "saxo/saxo_12", "saxo/saxo_13", "saxo/saxo_14", "saxo/saxo_15", "saxo/saxo_16", "saxo/saxo_17", "saxo/saxo_18", "saxo/saxo_19", "saxo/saxo_20", "saxo/saxo_21", "saxo/saxo_22", "saxo/saxo_23", "saxo/saxo_24", "saxo/saxo_25", "saxo/saxo_26", "saxo/saxo_27", "saxo/saxo_28", "saxo/saxo_29", "saxo/saxo_30", "saxo/saxo_31", "saxo/saxo_32", "saxo/saxo_33", "saxo/saxo_34", "saxo/saxo_35", "saxo/saxo_36", "saxo/saxo_37", "saxo/saxo_38"];
+const SONS_CLIC_THEME = { galaxie: SONS_SABRE, donjon: SONS_BDSM, musique: SONS_SAXO };
 // Sons coupés au bout de N secondes (avec un petit fondu), même si le fichier est plus long
 const DUREE_MAX_SONS = { doree: 3, pigeon: 2, distribuer_gorgees: 0.8, bouton: 0.3 };
 const sonsCharges = {}; // nom -> son décodé (ou null si le fichier n'existe pas)
@@ -1676,11 +1679,11 @@ document.addEventListener("click", (e) => {
   if (Date.now() - sonBoutonJoueLe < 500) return; // déjà joué au doigt levé (activerMemePendantElan)
   const bouton = e.target && e.target.closest && e.target.closest("button, [role='button']");
   if (!bouton || bouton.disabled || bouton.matches(BOUTONS_AVEC_LEUR_SON)) return;
-  // (choix d'un thème : toujours le clic normal, même dans les thèmes Star Wars et BDSM)
+  // (choix d'un thème : toujours le clic normal, même dans les thèmes Star Wars, BDSM et Fête de la musique)
   jouerSon("bouton", bouton.classList.contains("pastilleTheme"));
 }, { capture: true, passive: true });
 
-// Thèmes Star Wars et BDSM seulement : un son de leur liste au hasard (sabre, ou son de Sons/bdsm_buttons/), parmi ceux
+// Thèmes Star Wars, BDSM et Fête de la musique seulement : un son de leur liste au hasard (sabre, son de Sons/bdsm_buttons/, ou saxophone), parmi ceux
 // qui existent encore (ou pas encore chargés). Dans les autres thèmes, le clic reste le son « bouton ».
 function morceauClicTheme(){
   const liste = SONS_CLIC_THEME[document.documentElement.dataset.theme];
@@ -1694,7 +1697,7 @@ function morceauClicTheme(){
 // clicNormal : le son « bouton » d'origine, jamais remplacé par un sabre ou un son du thème BDSM
 function jouerSon(nom, clicNormal = false){
   sonPourTele(nom);
-  if (nom === "bouton" && !clicNormal) nom = morceauClicTheme(); // le clic des boutons = un son de sabre (ou du thème BDSM) au hasard // mode télé : la télé le joue aussi (même si le son de ce téléphone est coupé)
+  if (nom === "bouton" && !clicNormal) nom = morceauClicTheme(); // le clic des boutons = un son de sabre (ou du thème BDSM, ou de saxophone) au hasard // mode télé : la télé le joue aussi (même si le son de ce téléphone est coupé)
   if (!caseSons.checked || volumeSons <= 0) return;
   if (rattrapageEnCours) return; // reconnexion : pas de sons pour les actions déjà passées
   const ctx = contexteAudio();
@@ -1740,7 +1743,7 @@ function lireSon(nom, son){
     lectureTraineau = { ctx, lecture, sortie };
     lecture.onended = () => { if (lectureTraineau && lectureTraineau.lecture === lecture) lectureTraineau = null; };
   }
-  if (nom === "bouton" || nom.startsWith("sabre/") || nom.startsWith("bdsm_buttons/")) dernierClicJoueA = Date.now();
+  if (nom === "bouton" || nom.startsWith("sabre/") || nom.startsWith("bdsm_buttons/") || nom.startsWith("saxo/")) dernierClicJoueA = Date.now();
 
   const dureeMax = DUREE_MAX_SONS[nom];
   if (SONS_QUI_BAISSENT_LA_MUSIQUE.includes(nom)) attenuerMusique(Math.min(son.duration, dureeMax || son.duration));
