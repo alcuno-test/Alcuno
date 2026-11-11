@@ -568,14 +568,15 @@ html[data-theme="musique"] :is(#ecranPause, #ecranTele .tele-pause){ background:
 /* Le clavier (les touches) est construit par js/piano-accueil.js. L'image de fond musique/piano.svg reste
    le dessin de secours : si ce fichier ne se charge pas, on voit toujours un piano, simplement muet. */
 html[data-theme="musique"] #choixMode .titreAccueilBarre{
-  height: 58px !important; width: min(92%, 364px) !important; border-radius: 8px; border: 3px solid #fff; box-sizing: border-box;
+  height: 58px !important; width: min(100%, 400px) !important; /* 9 touches blanches : toute la largeur dispo, pour les garder tapables (~43 px) */ border-radius: 8px; border: 3px solid #fff; box-sizing: border-box;
   background: url("musique/piano.svg") 0 0 / 140px 100% repeat-x !important;
   box-shadow: 0 4px 0 #2a0e6e, 0 8px 18px rgba(20, 0, 80, 0.45);
 }
 html[data-theme="musique"] #choixMode .titreAccueilBarre.titreAccueilPiano{
   position: relative; overflow: hidden; display: flex; padding: 0;
   background: #2a0e6e !important; /* le fond qu'on aperçoit sous les touches noires */
-  touch-action: manipulation;
+  touch-action: pan-y;            /* le glissé de côté joue les touches ; de haut en bas, la page défile */
+  -webkit-user-select: none; user-select: none;
 }
 /* Les touches sont des <button> de l'accueil : « #choixMode button » du style de base leur impose une
    largeur de 320 px, un gros padding, du jaune et une ombre. On préfixe donc par #choixMode pour passer
@@ -584,7 +585,8 @@ html[data-theme="musique"] #choixMode .titreAccueilPiano .pianoTouche{
   appearance: none; -webkit-appearance: none; border: 0; margin: 0; padding: 0;
   width: auto; min-width: 0; font-size: 0; color: transparent;
   box-shadow: none; text-shadow: none; transform: none; transition: background 0.08s linear;
-  cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+  cursor: pointer; touch-action: pan-y; -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none; user-select: none;
 }
 html[data-theme="musique"] #choixMode .titreAccueilPiano .pianoTouche:hover,
 html[data-theme="musique"] #choixMode .titreAccueilPiano .pianoTouche:active{ transform: none; }

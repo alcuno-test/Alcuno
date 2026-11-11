@@ -25,8 +25,8 @@ Un fichier MP3 par moment du jeu, avec exactement ces noms :
   (lightsaber_sound.mp3 = le fichier d'origine de 45 s, plus utilisé par le jeu)
   bdsm_buttons/*.mp3  un au hasard à la place du clic des boutons, dans le thème BDSM seulement (liste SONS_BDSM dans js/reglages.js et dans sw.js).
   saxo/*.mp3  sons de saxophone de 0,39 à 0,89 s (découpés dans un enregistrement) : un au hasard à la place du clic des boutons, dans le thème de fête « Fête de la musique » seulement (liste SONS_SAXO dans js/reglages.js et dans sw.js).
-  piano/piano_<touche>.mp3  les 13 notes du petit piano de l'accueil (thème Fête de la musique) : une octave de
-    Fa 4 à Fa 5, 0,9 s chacune. « d » = dièse (piano_la4d.mp3 = La dièse 4). Un tap sur une touche joue sa note
+  piano/piano_<touche>.mp3  les 15 notes du petit piano de l'accueil (thème Fête de la musique) : de
+    Fa 4 à Sol 5, 0,9 s chacune. « d » = dièse (piano_la4d.mp3 = La dièse 4). Un tap sur une touche joue sa note
     (js/piano-accueil.js). Ce ne sont pas des enregistrements : elles sont synthétisées, en tempérament égal.
 
 MUSIQUE D'AMBIANCE (en boucle, réglage « Musique d'ambiance ») :
