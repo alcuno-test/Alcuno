@@ -612,3 +612,10 @@ html[data-theme="justrose"] #ecranTele .tele-joueur.pigeon-flash{ animation-name
 html[data-theme="justrose"] #pastilleDonjon .nomTheme{ color: #ff9aa6; }
 /* Télé : le joueur dont c'est le tour est sur fond blanc : son nom reste foncé (la règle blanche ci-dessus le rendait invisible) */
 html[data-theme="justrose"] #ecranTele .tele-joueur.tele-joueur-actif, html[data-theme="justrose"] #ecranTele .tele-joueur.tele-joueur-actif > span{ color: var(--actif-texte); }
+
+/* ----- Dos des cartes « ALC UNO » en rose (Cartes/dos_justrose.png : le dessin d'origine, ovale rose bonbon et texte blanc sur fond noir) -----
+   Mêmes endroits que pour le dos de base : cartes face cachée, mode « faces fermées », télé, exemples des Règles. Les faces gardent leur image. */
+html[data-theme="justrose"] .Carte:not(.retournee):not([class*="_"]):not([class*="couleur"]),
+html.faces-fermees[data-theme="justrose"] #plateau .Carte.retournee.recachee,
+html[data-theme="justrose"] .tele-plateau .Carte.carte-recachee,
+html[data-theme="justrose"] #ecranRegles .ligneRegle .Carte.retournee:not([class*="_"]):not([class*="couleur"]){ background-image: url("Cartes/dos_justrose.png") !important; }
