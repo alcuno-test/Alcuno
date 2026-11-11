@@ -421,10 +421,12 @@ html[data-theme="justrose"] #ecranTele .tele-ecran{ background: radial-gradient(
 html[data-theme="justrose"] #ecranTele .tele-ecran-recap{ background: radial-gradient(ellipse 110% 60% at 50% 40%, rgba(255,120,185,.45), transparent 100%), #5e0f37 !important; }
 
 /* ----- Lisibilité sur l'orange (Réglages, écran des créateurs) ----- */
-/* Cartes : TOUTES au même ton (prune, quasi opaque, liseré blanc fin) : Réglages (blocs et lignes isolées), « Ta partie »,
+/* (« #ecranReglages > .optionReglage » : les lignes de réglage posées seules, hors d'un bloc — elles
+   gardaient le blanc translucide du jeu de base et tranchaient avec les autres.)
+   Cartes : TOUTES au même ton (prune, quasi opaque, liseré blanc fin) : Réglages (blocs et lignes isolées), « Ta partie »,
    règles / FAQ / album, créateurs, étapes d'installation, salle d'attente, retrait d'un joueur. Quasi opaque pour que le motif
    du fond ne passe jamais derrière un texte ; les noms de thèmes (chacun de sa couleur) restent lisibles. */
-html[data-theme="justrose"] :is(#ecranReglages .blocReglage, #ecranReglages .reglages-contenu > .optionReglage, .optionsPartie > .optionReglage:not(.optionsSuite),
+html[data-theme="justrose"] :is(#ecranReglages .blocReglage, #ecranReglages .reglages-contenu > .optionReglage, #ecranReglages > .optionReglage, .optionsPartie > .optionReglage:not(.optionsSuite),
   .blocRegles, #ecranCredits .credits-nom, #ecranInstallation .etapeInstallation, #listeJoueursEnLigne div, #listeSuppression){
   background: var(--carte-justrose); border: 1px solid rgba(255, 255, 255, 0.22);
 }

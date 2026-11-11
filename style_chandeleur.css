@@ -52,10 +52,12 @@ html[data-theme="chandeleur"] #ecranTele .tele-ecran{ background: radial-gradien
 html[data-theme="chandeleur"] #ecranTele .tele-ecran-recap{ background: radial-gradient(ellipse 110% 60% at 50% 40%, rgba(255,150,60,.5), transparent 100%), #5a2206 !important; }
 
 /* ----- Lisibilité sur l'orange (Réglages, écran des créateurs) ----- */
-/* Cartes : TOUTES au même ton (brun roux, quasi opaque, liseré blanc fin) : Réglages (blocs et lignes isolées), « Ta partie »,
+/* (« #ecranReglages > .optionReglage » : les lignes de réglage posées seules, hors d'un bloc — elles
+   gardaient le blanc translucide du jeu de base et tranchaient avec les autres.)
+   Cartes : TOUTES au même ton (brun roux, quasi opaque, liseré blanc fin) : Réglages (blocs et lignes isolées), « Ta partie »,
    règles / FAQ / album, créateurs, étapes d'installation, salle d'attente, retrait d'un joueur. Quasi opaque pour que le motif
    du fond ne passe jamais derrière un texte ; les noms de thèmes (chacun de sa couleur) restent lisibles. */
-html[data-theme="chandeleur"] :is(#ecranReglages .blocReglage, #ecranReglages .reglages-contenu > .optionReglage, .optionsPartie > .optionReglage:not(.optionsSuite),
+html[data-theme="chandeleur"] :is(#ecranReglages .blocReglage, #ecranReglages .reglages-contenu > .optionReglage, #ecranReglages > .optionReglage, .optionsPartie > .optionReglage:not(.optionsSuite),
   .blocRegles, #ecranCredits .credits-nom, #ecranInstallation .etapeInstallation, #listeJoueursEnLigne div, #listeSuppression){
   background: var(--carte-chandeleur); border: 1px solid rgba(255, 255, 255, 0.22);
 }
