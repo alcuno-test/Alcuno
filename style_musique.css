@@ -437,7 +437,7 @@ html[data-theme="musique"] #ecranCredits .credits-honneur-titre{ color: #ffffff;
 /* Télé : code de la télé, en bas de l'écran */
 html[data-theme="musique"] #ecranTele .tele-pied{ color: rgba(255,255,255,.85); }
 
-/* ----- Boutons : or avec un anneau blanc (comme une étiquette de cadeau) et texte brun foncé, sur tous les écrans -----
+/* ----- Boutons : vert fluo, sans contour blanc, texte indigo, sur tous les écrans -----
    (mêmes boutons que les autres thèmes habillés, Soleil couchant par exemple : tous les boutons du jeu doivent être aux couleurs du thème) */
 html[data-theme="musique"][data-theme] body :is(#btnModeEnLigne, #btnModeClassique, #btnContinuerOptions, .btnRetour, #btnPartagerJeu, #ajouterJoueur, #jouer, #supprimerJoueur,
   #nouvellePartie, #btnRejouerMemes, #btnModifierJoueurs, #btnReprendrePause,
@@ -458,7 +458,7 @@ html[data-theme="musique"][data-theme] body :is(#btnModeEnLigne, #btnModeClassiq
   background: linear-gradient(180deg, #8dffa0, #1fc85a) !important;
   color: #1a0a5e !important;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45) !important;
-  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.95), 0 6px 14px rgba(20,0,80,.4) !important;
+  box-shadow: 0 6px 14px rgba(20,0,80,.4) !important;
 }
 @media (hover: hover){
   html[data-theme="musique"][data-theme] body :is(#btnModeEnLigne, #btnModeClassique, #choixMode .btnInstaller):hover{ background: linear-gradient(180deg, #b0ffbf, #3ddc78) !important; }
@@ -467,14 +467,14 @@ html[data-theme="musique"][data-theme] body :is(#btnModeEnLigne, #btnModeClassiq
 /* ----- Volet « Mettre … en pause » et bandeaux du bas (« Mauvais joueur ? Annuler », « Nouvelle version ») ----- */
 html[data-theme="musique"] .voletPause-ok{
   background: linear-gradient(180deg, #8dffa0, #1fc85a); color: #1a0a5e;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.95);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45); box-shadow: none;
 }
 html[data-theme="musique"] :is(#annulerChoix, #bandeauMiseAJour){
   --bandeau-fond: #240a6e; --bandeau-bord: rgba(255, 255, 255, 0.5); --bandeau-texte: #fff;
   --bandeau-bouton: linear-gradient(180deg, #8dffa0, #1fc85a); --bandeau-bouton-texte: #1a0a5e;
 }
 html[data-theme="musique"] :is(#annulerChoix .annulerChoix-bouton, #bandeauMiseAJour .maj){
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.95);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45); box-shadow: none;
 }
 
 /* ----- Pari de fin et choix de fin : cadres brun-orangé avec un liseré blanc (au lieu du brun-doré de base) ----- */
