@@ -22,7 +22,7 @@
   const THEMES_CONNUS = ["bordeaux", "noir", "vert", "bleu", "soleil", "cerisier", "givre", "prestige", "galaxie", "kawaii", "donjon", "noel", "chandeleur", "valentin", "patrick", "justrose", "musique", "halloween"];
   const NOMS_THEMES = {
     bordeaux: "Bordeaux", noir: "Sombre", vert: "Casino", bleu: "Nuit", soleil: "Soleil couchant",
-    cerisier: "Cerisier", givre: "Givre", prestige: "Prestige", galaxie: "Star Wars", kawaii: "Kawaii", donjon: "BDSM", noel: "Noël", chandeleur: "Chandeleur", valentin: "Saint-Valentin", patrick: "Saint-Patrick", justrose: "Just Rosé", musique: "Fête de la musique", halloween: "Halloween"
+    cerisier: "Cerisier", givre: "Givre", prestige: "Prestige", galaxie: "Star Wars", kawaii: "Kawaii", donjon: "BDSM", noel: "Noël", chandeleur: "Chandeleur", valentin: "Saint-Valentin", patrick: "Saint-Patrick", justrose: "Just Rosé", musique: "Musique", halloween: "Halloween"
   };
   const COUPURES_CONNUES = ["voix", "musique", "enligne"];
   const NOMS_COUPURES = { voix: "les annonces à voix haute", musique: "la musique", enligne: "le mode en ligne" };

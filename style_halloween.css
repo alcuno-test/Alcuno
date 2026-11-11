@@ -383,7 +383,7 @@ html[data-theme="halloween"]{
   --hw-titre: #e8252c; --hw-texte: #ff6b6b; --hw-texte-doux: #ff9b9e;
   --fond-theme: #0a0204;
   --carte-halloween: rgba(22, 4, 7, 0.96); /* ton de TOUTES les cartes et panneaux : noir rougeâtre, quasi opaque pour cacher le motif derrière le texte */
-  --couleur-barre: #0a0204; /* = la couleur du tout haut du décor ci-dessous (la barre du téléphone ne doit pas être plus sombre) */
+  --couleur-barre: #4d1012; /* = la bande de sang du tout haut des écrans, TELLE QU'ELLE S'AFFICHE (la vignette du thème l'assombrit) : la barre du téléphone la prolonge sans raccord visible */
   /* Fond de TOUS les écrans (sauf l'accueil, voir --deco-accueil juste après), de haut en bas des couches :
      1. la vignette qui ferme les bords, 2. le grain de pellicule, 3. les coulures de sang collées en haut,
      4. une lueur de citrouille qui monte du bas, 5. le motif d'éclaboussures et de griffures qui se répète. */
@@ -641,7 +641,7 @@ html[data-theme="halloween"]{ --hw-titre: #e8252c; --hw-texte: #ff6b6b; --hw-tex
 
 /* Titres : écrans, blocs, règles */
 html[data-theme="halloween"] :is(h2, #titreReglages, .titreBloc, .aProposTitre, .nomRegle, .regleBloc-titre,
-  .recap-titre, .annonce-titre, .regle-titre, .credits-titre, .optionTitre, .tele-titre, .tele-ecran-titre,
+  .recap-titre, .annonce-titre, .regle-titre, .credits-titre, .tele-titre, .tele-ecran-titre,
   .tele-pause-titre, .tele-prepa-titre, .titre-couleur, .titre-pigeon){
   color: var(--hw-titre) !important;
 }
@@ -654,7 +654,8 @@ html[data-theme="halloween"] body :is(#btnModeEnLigne, #btnModeClassique, #btnCo
   #btnInstallationInstaller, #btnFermerScanner, .btnRetour, .btnAccueilTexte, .btnInstaller, .btnDiagnostic,
   .btnFaqLien, .voletPause-ok, .bouton-pigeon, .bouton-annulation, #listeChoixPseudo button, #ecranReprise button,
   #ecranCaster button, #menu #btnCaster, #compteurCartes, #listeSuppression, #listeJoueursEnLigne div,
-  li, b, strong, .detailRegle, .mainGauche, .volumeIcone, .messages, .regleBloc, .blocRegles){
+  li, b, strong, .detailRegle, .mainGauche, .volumeIcone, .messages, .regleBloc, .blocRegles,
+  .optionTitre){ /* les titres des blocs de Réglages : rouge clair et pas rouge sang, ils étaient tout juste au seuil de lisibilité */
   color: var(--hw-texte) !important;
 }
 /* Petits textes et liens */

@@ -95,7 +95,7 @@ const CLE_THEME = "alcuno_theme";
 // Couleur de la barre du téléphone pour chaque thème (= --couleur-barre du CSS, le tout haut de la page).
 // Mêmes couleurs dans le script du <head> de index.html, qui la pose dès le premier affichage.
 const THEMES = { bordeaux: "#2b001d", noir: "#000000", vert: "#08301e", bleu: "#0a1634", soleil: "#1f3566",
-                 cerisier: "#5a1740", givre: "#e4f5fc", prestige: "#937810", galaxie: "#02030a", kawaii: "#ffd6ec", donjon: "#12040a", noel: "#b3121f", chandeleur: "#bd4f10", valentin: "#c2185b", patrick: "#0f6a44", justrose: "#cc3381", musique: "#5b2bd1", halloween: "#0a0204" };
+                 cerisier: "#5a1740", givre: "#e4f5fc", prestige: "#937810", galaxie: "#02030a", kawaii: "#ffd6ec", donjon: "#12040a", noel: "#b3121f", chandeleur: "#bd4f10", valentin: "#c2185b", patrick: "#0f6a44", justrose: "#cc3381", musique: "#5b2bd1", halloween: "#4d1012" };
 
 // Thèmes de fête : pas de feux d'artifice dedans (ils ne tomberont jamais en même temps que le Nouvel An), et le
 // réglage « Feux d'artifice » n'apparaît pas dans les Réglages quand l'un d'eux est actif.
@@ -185,6 +185,8 @@ function afficherFenetrePrestige(){
 // « L'essayer » met le thème (comme un clic sur sa pastille dans les Réglages), « Plus tard » ferme.
 // Pour la voir hors période (tests) : ouvrir le jeu avec ?annonce_fete=<thème>, ou appeler afficherAnnonceFete("<thème>").
 // mois : 0 = janvier ; Noël est à cheval sur aucune année (18 au 26 décembre).
+// « nom » est celui écrit dans l'annonce (« Nouveau thème … disponible ») : c'est le nom complet de la fête,
+// même quand la pastille des Réglages en montre un plus court (Fête de la musique -> Musique, faute de place).
 const FETES_ANNONCE = {
   noel:       { nom: "Noël",           debut: [11, 18], fin: [11, 26], essayer: "Joyeux Noël",           image: "noel/boule_neige.svg" },
   chandeleur: { nom: "Chandeleur",     debut: [0, 28],  fin: [1, 3],   essayer: "L'essayer maintenant", image: "chandeleur/crepe.svg" },
