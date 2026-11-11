@@ -68,6 +68,6 @@
   --ff-rond: url("justrose/verre_apercu.svg"), #cc3381; --ff-bouton: linear-gradient(180deg, #d4408a, #9a1052); --ff-bouton-texte: #ffffff;
 }
 #fenetreFete[data-fete="musique"]{
-  --ff-carte: linear-gradient(180deg, #6a3fe0, #240a6e); --ff-bord: #ffffff; --ff-halo: rgba(150, 110, 255, 0.55); --ff-ombre: #2a0e6e;
-  --ff-rond: url("musique/note_apercu.svg"), #5b2bd1; --ff-bouton: linear-gradient(180deg, #8dffa0, #1fc85a); --ff-bouton-texte: #1a0a5e;
+  --ff-carte: linear-gradient(180deg, #8a62f4, #5b2bd1); --ff-bord: #ffffff; --ff-halo: rgba(150, 110, 255, 0.55); --ff-ombre: #2a0e6e;
+  --ff-rond: url("musique/note_apercu.svg"), #5b2bd1; --ff-bouton: linear-gradient(180deg, #4a1fb4, #2a0e6e); --ff-bouton-texte: #ffffff;
 }
