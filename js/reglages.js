@@ -792,6 +792,7 @@ function appliquerTheme(nom, sansMusique = false){
   // Musique du nouveau thème, tout de suite (dans le tap : sinon l'iPhone refuse de la lancer). Pas si la
   // page va se recharger juste après (voir rafraichirBarreIphone) : on entendait son début, puis plus rien
   if (!sansMusique) { try { majMusique(); } catch (e) {} } // (pas encore prête pendant le chargement de la page)
+  try { majPianoAccueil(); } catch (e) {} // petit piano jouable de l'accueil (thème Fête de la musique, js/piano-accueil.js)
 }
 
 // iPhone, barre du haut (sous l'heure) : quand le jeu ne passe pas dessous (appli ajoutée à l'écran
@@ -1673,9 +1674,9 @@ function chargerSons(){
 // carte | doree | culsec | pigeon | tour | eau
 // Petit son de clic (Sons/bouton.mp3) sur les boutons, sauf ceux qui ont déjà leur propre son
 // (annuler des gorgées, distribuer au +4, choisir le pigeon ou la victime de la carte dorée), et sauf
-// « Signaler un bug » et « Copier le diagnostic » (silencieux)
+// « Signaler un bug » et « Copier le diagnostic » (silencieux), et sauf les touches du petit piano de l'accueil (elles jouent leur note)
 const BOUTONS_AVEC_LEUR_SON = ".bouton-annulation, .plus4-joueur-btn, #overlayPigeon .bouton-pigeon, .bouton-doree, " +
-  "#btnSignalerBug, #btnDiagnostic, #btnRegles, #btnReglesJeu, #btnFaq, #btnFaqDepuisRegles, #bandeauMiseAJour .maj, .fenetreGalaxie-ok, .etoileFilante";
+  "#btnSignalerBug, #btnDiagnostic, #btnRegles, #btnReglesJeu, #btnFaq, #btnFaqDepuisRegles, #bandeauMiseAJour .maj, .fenetreGalaxie-ok, .etoileFilante, .pianoTouche";
 document.addEventListener("click", (e) => {
   if (!e.isTrusted || document.documentElement.classList.contains("mode-tele")) return;
   if (Date.now() - sonBoutonJoueLe < 500) return; // déjà joué au doigt levé (activerMemePendantElan)

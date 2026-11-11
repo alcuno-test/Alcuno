@@ -564,12 +564,45 @@ html[data-theme="musique"] #stickyJoueurActif::before{ background: radial-gradie
 /* ----- Écran de pause : voile prune (au lieu du bordeaux presque noir du jeu de base) ----- */
 html[data-theme="musique"] :is(#ecranPause, #ecranTele .tele-pause){ background: rgba(40, 14, 108, 0.84); }
 
-/* ----- Accueil : un piano à la place de la ligne colorée sous le titre (musique/piano.svg, une octave qui se répète) ----- */
+/* ----- Accueil : un piano à la place de la ligne colorée sous le titre, et on peut vraiment en jouer ----- */
+/* Le clavier (les touches) est construit par js/piano-accueil.js. L'image de fond musique/piano.svg reste
+   le dessin de secours : si ce fichier ne se charge pas, on voit toujours un piano, simplement muet. */
 html[data-theme="musique"] #choixMode .titreAccueilBarre{
-  height: 44px !important; width: min(86%, 330px) !important; border-radius: 8px; border: 3px solid #fff; box-sizing: border-box;
+  height: 58px !important; width: min(92%, 364px) !important; border-radius: 8px; border: 3px solid #fff; box-sizing: border-box;
   background: url("musique/piano.svg") 0 0 / 140px 100% repeat-x !important;
   box-shadow: 0 4px 0 #2a0e6e, 0 8px 18px rgba(20, 0, 80, 0.45);
 }
+html[data-theme="musique"] #choixMode .titreAccueilBarre.titreAccueilPiano{
+  position: relative; overflow: hidden; display: flex; padding: 0;
+  background: #2a0e6e !important; /* le fond qu'on aperçoit sous les touches noires */
+  touch-action: manipulation;
+}
+/* Les touches sont des <button> de l'accueil : « #choixMode button » du style de base leur impose une
+   largeur de 320 px, un gros padding, du jaune et une ombre. On préfixe donc par #choixMode pour passer
+   devant (même méthode que la croix de l'annonce de l'accueil). */
+html[data-theme="musique"] #choixMode .titreAccueilPiano .pianoTouche{
+  appearance: none; -webkit-appearance: none; border: 0; margin: 0; padding: 0;
+  width: auto; min-width: 0; font-size: 0; color: transparent;
+  box-shadow: none; text-shadow: none; transform: none; transition: background 0.08s linear;
+  cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+}
+html[data-theme="musique"] #choixMode .titreAccueilPiano .pianoTouche:hover,
+html[data-theme="musique"] #choixMode .titreAccueilPiano .pianoTouche:active{ transform: none; }
+html[data-theme="musique"] #choixMode .titreAccueilPiano .pianoTouche-blanche{
+  flex: 1 1 0; align-self: stretch; height: auto;
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 70%, #e6ddff 100%);
+  border-right: 1.5px solid #8a6cf5; border-radius: 0 0 3px 3px;
+}
+html[data-theme="musique"] #choixMode .titreAccueilPiano .pianoTouche-blanche.pianoTouche-fin{ border-right: 0; }
+html[data-theme="musique"] #choixMode .titreAccueilPiano .pianoTouche-noire{
+  position: absolute; top: 0; width: 26px; height: 34px; margin-left: -13px; /* centrée sur le trait entre deux blanches */
+  background: linear-gradient(180deg, #4a1fb4 0%, #2a0e6e 68%, #1b0848 100%);
+  border-radius: 0 0 4px 4px; box-shadow: 0 2px 5px rgba(10, 0, 40, 0.55); z-index: 2;
+}
+/* Touche enfoncée (150 ms, posée par js/piano-accueil.js) */
+html[data-theme="musique"] #choixMode .titreAccueilPiano .pianoTouche-blanche.pianoTouche-enfoncee{ background: linear-gradient(180deg, #d9c9ff, #ab8aff); }
+html[data-theme="musique"] #choixMode .titreAccueilPiano .pianoTouche-noire.pianoTouche-enfoncee{ background: linear-gradient(180deg, #8b5cff, #5b2bd1); }
+html[data-theme="musique"] #choixMode .titreAccueilPiano .pianoTouche:focus-visible{ outline: 2px solid #ffe14a; outline-offset: -3px; }
 
 /* ----- Feuille « Signaler un bug » : fond uni (le motif passait derrière le texte et le rendait illisible) ----- */
 html[data-theme="musique"] #ecranBug .bugFeuille{ background: radial-gradient(ellipse 120% 40% at 50% 0%, rgba(255,255,255,.18), transparent 100%), var(--fond-theme); }
