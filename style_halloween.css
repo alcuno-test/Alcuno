@@ -555,8 +555,8 @@ html[data-theme="halloween"] :is(#choixMode #titreAccueil, header h1){
   text-shadow: 0 3px 0 #140102, 0 2px 10px #000, 0 0 30px rgba(232, 37, 44, 0.75);
 }
 html[data-theme="halloween"] #choixMode #titreAccueil{ animation: fadeIn 0.25s ease forwards; } /* (sans la lueur dorée qui pulse) */
-html[data-theme="halloween"] :is(#choixMode #btnReglages, #choixMode #btnRegles, header #btnReglesJeu) path:not(.couverture){ stroke: #fff; }
-html[data-theme="halloween"] :is(#choixMode #btnReglages circle, #choixMode #btnRegles path.couverture, header #btnReglesJeu path.couverture){ stroke: #fff; }
+html[data-theme="halloween"] :is(#choixMode #btnReglages, #choixMode #btnRegles, header #btnReglesJeu) path:not(.couverture){ stroke: #e8252c; }
+html[data-theme="halloween"] :is(#choixMode #btnReglages circle, #choixMode #btnRegles path.couverture, header #btnReglesJeu path.couverture){ stroke: #e8252c; }
 html[data-theme="halloween"] :is(#choixMode #btnReglages svg, #choixMode #btnRegles svg, header #btnReglesJeu svg){
   filter: drop-shadow(0 2px 0 #1a0204) drop-shadow(0 3px 6px rgba(0, 0, 0, 0.7));
 }
