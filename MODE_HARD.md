@@ -34,7 +34,7 @@ Statut : codé dans l'appli test (jeu 9.90.0, cache `alcuno-test-v95`). Dernièr
 - Débloqué en **finissant une partie hard** (récap de fin), hôte ou pas, avec ou sans PJ / express. Clé `alcuno_zizi_coptere`.
 - Fenêtre « 🚁 Zizi-coptère débloqué ! » sur le récap (style « Thème BDSM débloqué »), une seule fois par téléphone ;
   hors thème BDSM, bouton « Mettre le thème BDSM ».
-- Seulement avec le **thème Donjon**, à côté du titre de l'accueil.
+- Seulement avec le **thème Donjon**, sur l'accueil : au départ debout sur le O d'ALCUNO, pointe vers le bas.
 - 140 px. Touché : il tourne (de plus en plus vite tant qu'on le tient) et suit le doigt. Lâché : on peut le lancer ;
   gravité, rebonds sur les 4 bords de l'écran, frottement au sol, rotation qui ralentit peu à peu.
 - Chaînes des côtés du thème Donjon retirées (on le confondait avec le décor).

@@ -87,15 +87,19 @@ function dessinerZizi(){
   ziziCoptere.style.top = ziziY + "px";
   ziziCoptere.style.transform = `rotate(${ziziAngle}deg)`;
 }
-function placerZiziPresDuTitre(){
+function placerZiziPresDuTitre(){ // (sur le O du titre)
   if (!ziziPose || ziziCoptere.hidden) return;
-  const titre = document.getElementById("titreAccueil");
-  if (!titre) return;
-  const r = titre.getBoundingClientRect();
+  // Au départ : debout sur le O d'ALCUNO, pointe vers le bas (le dessin est horizontal, gland à droite : 90°)
+  const o = document.querySelector("#titreAccueil .lettreO") || document.getElementById("titreAccueil");
+  if (!o) return;
+  const r = o.getBoundingClientRect();
   if (!r.width) return; // (accueil caché)
   const taille = tailleZizi();
-  ziziX = Math.min(largeurEcranZizi() - taille - 20, r.right - taille * 0.95);
-  ziziY = Math.max(4, r.top - taille * 0.75);
+  ziziAngle = 90;
+  // le bout touche le haut de la lettre (le haut du dessin de la lettre : ~18 % sous le haut de sa boîte)
+  const pointe = taille * (52 / 120); // (du centre du dessin au bout du gland)
+  ziziX = Math.max(0, Math.min(largeurEcranZizi() - taille, r.left + r.width / 2 - taille / 2));
+  ziziY = Math.max(0, r.top + r.height * 0.18 - pointe - taille / 2);
   dessinerZizi();
 }
 function majZiziCoptere(){
