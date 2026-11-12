@@ -122,7 +122,7 @@ bandeau, Jojo dans les crédits, `js/zizi-coptere.js` dans `FICHIERS_JEU`), `js/
 
 ### 8. Musiques hors connexion gardées d'une version à l'autre (test 9.90.32)
 
-**Pas encore porté.** `sw.js` : cache à part `CACHE_MUSIQUES` (dans le vrai jeu : `alcuno-musiques-v1`, pas le nom du test), migration dans
+**PORTÉ dans le vrai jeu (9.88.4, cache v29).** `sw.js` : cache à part `CACHE_MUSIQUES` (dans le vrai jeu : `alcuno-musiques-v1`, pas le nom du test), migration dans
 « activate », musiques mises dans ce cache par le « fetch » ; `tests/empreinte_cache.js`, `tests/test_cache.js`,
 `outils/maj_empreinte_cache.js` (empreinte des musiques à part). Le défaut touche le vrai jeu : à chaque mise en ligne,
 l'ancien cache était supprimé avec les musiques téléchargées.
