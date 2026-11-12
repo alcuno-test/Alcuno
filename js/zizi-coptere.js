@@ -329,7 +329,7 @@ majZiziCoptere();
 const bulleZizi = document.createElement("div");
 bulleZizi.id = "bulleZizi";
 bulleZizi.setAttribute("aria-hidden", "true");
-bulleZizi.textContent = "👆 Tapote-moi";
+bulleZizi.textContent = "tapote-moi…";
 bulleZizi.hidden = true;
 document.getElementById("choixMode").appendChild(bulleZizi);
 function majBulleZizi(){
