@@ -37,7 +37,9 @@ Statut : codé dans l'appli test (jeu 9.90.0, cache `alcuno-test-v95`). Dernièr
 - Seulement avec le **thème Donjon**, sur l'accueil : au départ devant le A d'ALCUNO (par-dessus la lettre), pointe vers le bas.
 - 140 px. Touché : il tourne (de plus en plus vite tant qu'on le tient) et suit le doigt. Lâché : on peut le lancer ;
   gravité, rebonds sur les 4 bords de l'écran, frottement au sol, rotation qui ralentit peu à peu.
-- Chaînes des côtés du thème Donjon retirées (on le confondait avec le décor).
+- Chaînes des côtés du thème Donjon retirées, et 4 objets qui tombent au lieu de 8 (sans les vibros ni le « 18 ») :
+  on le confondait avec le décor.
+- Dessin : peau en dégradé brillant, anneau de cuir noir clouté à la base, halo rouge néon.
 
 ## Pilotage et stats (stats.html)
 - Compteur `modes/hard` ; niveaux de défis ajoutés « HA » / « HB » ; défis du jeu HA1… masquables.

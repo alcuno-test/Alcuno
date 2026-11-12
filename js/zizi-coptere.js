@@ -43,15 +43,27 @@ const ziziCoptere = (() => {
   el.id = "ziziCoptere";
   el.setAttribute("aria-label", "Zizi-coptère");
   // Dessiné à l'horizontale, centré : il tourne autour de son milieu, comme une pale d'hélice
+  // Style BDSM : peau en dégradé brillant, anneau de cuir noir clouté à la base, contour bordeaux, halo rouge (CSS)
   el.innerHTML = `<svg viewBox="0 0 120 60" aria-hidden="true">
-    <g stroke="#5a1020" stroke-width="3" stroke-linejoin="round">
-      <circle cx="22" cy="20" r="15" fill="#f2a7a0"/>
-      <circle cx="22" cy="40" r="15" fill="#eb9a93"/>
-      <rect x="30" y="18" width="62" height="24" rx="12" fill="#f6b8b0"/>
-      <path d="M86 16 Q112 14 112 30 Q112 46 86 44 Q80 30 86 16z" fill="#e8737d"/>
+    <defs>
+      <radialGradient id="ziziBoule" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#ffd9d2"/><stop offset=".55" stop-color="#f19c95"/><stop offset="1" stop-color="#c8636a"/></radialGradient>
+      <linearGradient id="ziziTige" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd6cf"/><stop offset=".35" stop-color="#f7b5ad"/><stop offset="1" stop-color="#d97d7f"/></linearGradient>
+      <radialGradient id="ziziGland" cx="40%" cy="30%" r="80%"><stop offset="0" stop-color="#ffb3bd"/><stop offset=".5" stop-color="#ec5f78"/><stop offset="1" stop-color="#a8243f"/></radialGradient>
+      <linearGradient id="ziziCuir" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3a42"/><stop offset=".5" stop-color="#0c0c10"/><stop offset="1" stop-color="#26262c"/></linearGradient>
+    </defs>
+    <g stroke="#4a0a18" stroke-width="2.4" stroke-linejoin="round">
+      <circle cx="21" cy="19" r="14.5" fill="url(#ziziBoule)"/>
+      <circle cx="21" cy="41" r="14.5" fill="url(#ziziBoule)"/>
+      <path d="M30 18 H88 Q94 30 88 42 H30 Q26 30 30 18z" fill="url(#ziziTige)"/>
+      <path d="M85 15.5 Q114 13 114 30 Q114 47 85 44.5 Q79 30 85 15.5z" fill="url(#ziziGland)"/>
     </g>
-    <path d="M104 30 h6" stroke="#5a1020" stroke-width="3" stroke-linecap="round"/>
-    <path d="M40 24 Q60 21 80 24" stroke="#fff" stroke-width="3" stroke-linecap="round" fill="none" opacity=".55"/>
+    <path d="M46 37 Q58 33 66 38 T84 36" stroke="#c96b75" stroke-width="1.6" fill="none" stroke-linecap="round" opacity=".7"/>
+    <path d="M106 30 h6" stroke="#4a0a18" stroke-width="2.4" stroke-linecap="round"/>
+    <ellipse cx="62" cy="23" rx="20" ry="2.6" fill="#fff" opacity=".6"/>
+    <ellipse cx="96" cy="21" rx="6" ry="2.6" fill="#fff" opacity=".65"/>
+    <circle cx="15" cy="13" r="3" fill="#fff" opacity=".55"/>
+    <rect x="31" y="15" width="9" height="30" rx="2.5" fill="url(#ziziCuir)" stroke="#000" stroke-width="1.4"/>
+    <g fill="#e6e6ef" stroke="#7a7a86" stroke-width=".8"><circle cx="35.5" cy="20" r="1.9"/><circle cx="35.5" cy="27" r="1.9"/><circle cx="35.5" cy="34" r="1.9"/><circle cx="35.5" cy="41" r="1.9"/></g>
   </svg>`;
   return el;
 })();
@@ -98,7 +110,9 @@ function placerZiziPresDuTitre(){ // (sur le A du titre)
     const plage = document.createRange();
     plage.setStart(texte, 0); plage.setEnd(texte, 1); // la lettre A
     const rA = plage.getBoundingClientRect();
-    if (rA.width) r = rA;
+    // (la boîte du A comprend l'espacement des lettres, à droite : on le retire pour viser le milieu de la lettre)
+    const espace = parseFloat(getComputedStyle(titre).letterSpacing) || 0;
+    if (rA.width) r = { left: rA.left, top: rA.top, width: Math.max(1, rA.width - espace), height: rA.height };
   }
   if (!r.width) return; // (accueil caché)
   const taille = tailleZizi();

@@ -1010,14 +1010,16 @@ for (let i = 0; i < 46; i++) {
 
 // Donjon : objets qui tombent sur l'écran d'accueil, du haut vers le bas
 const zoneDonjon = document.getElementById("donjonFlotteurs");
-const OBJETS_DONJON = ["dixhuit", "vibro1", "levres", "menottes", "vibro3", "baillon", "fouet", "bandeau"];
+// (4 objets seulement, sans les vibros ni le « 18 » : on les confondait avec le zizi-coptère, js/zizi-coptere.js)
+const OBJETS_DONJON = ["menottes", "levres", "fouet", "baillon"];
+const PLACES_DONJON = [6, 30, 54, 74]; // (% depuis la gauche : répartis sur la largeur)
 const TAILLES_DONJON = { dixhuit: 72, vibro1: 84, levres: 92, menottes: 96, vibro3: 76, baillon: 92, fouet: 84, bandeau: 96 };
 OBJETS_DONJON.forEach((nom, i) => {
   const objet = document.createElement("span");
   const taille = TAILLES_DONJON[nom] || 80;
   const duree = 9 + (i % 5) * 1.2; // ni trop vite ni trop lentement : 9 à 14 s pour traverser l'écran
   objet.style.width = objet.style.height = `${taille}px`;
-  objet.style.left = `${(i * 29 + 7) % 84 + 3}%`;
+  objet.style.left = `${PLACES_DONJON[i]}%`;
   objet.style.backgroundImage = `url("donjon/${nom}.svg")`;
   objet.style.setProperty("--dx", `${(i % 2 ? 1 : -1) * (18 + i * 3)}px`);
   objet.style.setProperty("--r0", `${(i * 37) % 50 - 25}deg`);
