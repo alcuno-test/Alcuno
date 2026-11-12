@@ -15,9 +15,14 @@ function ziziCoptereDebloque(){
   try { return localStorage.getItem(CLE_ZIZI_COPTERE) === "1"; } catch (e) { return false; }
 }
 function debloquerZiziCoptere(){
-  if (ziziCoptereDebloque()) return;
+  // (la clé, et pas ziziCoptereDebloque : dans l'appli test il est débloqué de base, la notif doit quand même sortir)
+  let deja = false;
+  try { deja = localStorage.getItem(CLE_ZIZI_COPTERE) === "1"; } catch (e) {}
+  if (deja) return;
   try { localStorage.setItem(CLE_ZIZI_COPTERE, "1"); } catch (e) {}
   majZiziCoptere();
+  // Notif par-dessus le récap de fin (une seule fois par téléphone)
+  try { afficherToast("🚁 Zizi-coptère débloqué ! Sur l'accueil, thème BDSM", 5000); } catch (e) {}
 }
 
 const ziziCoptere = (() => {

@@ -31,7 +31,8 @@ Statut : codé dans l'appli test (jeu 9.90.0, cache `alcuno-test-v95`). Dernièr
 - Lancer une partie hard débloque aussi le thème Donjon (BDSM), comme le hot.
 
 ## Zizi-coptère (`js/zizi-coptere.js`)
-- Débloqué en **finissant une partie hard** (récap de fin), hôte ou pas. Clé `alcuno_zizi_coptere`.
+- Débloqué en **finissant une partie hard** (récap de fin), hôte ou pas, avec ou sans PJ / express. Clé `alcuno_zizi_coptere`.
+- Notif « 🚁 Zizi-coptère débloqué ! Sur l'accueil, thème BDSM » sur le récap, une seule fois par téléphone.
 - Seulement avec le **thème Donjon**, à côté du titre de l'accueil.
 - Toucher : il tourne quelques tours. Doigt maintenu : on le déplace partout, et il tourne pendant ce temps.
 
