@@ -42,6 +42,8 @@ Statut : codé dans l'appli test (jeu 9.90.0, cache `alcuno-test-v95`). Dernièr
   on le confondait avec le décor.
 - Son : Sons/zizicoptere.mp3 en boucle tant qu'il tourne, plus fort et plus aigu quand il tourne vite, s'éteint en
   2 s quand on le lâche (FONDU_SON_ZIZI) ; téléchargé dès qu'il s'affiche, et dans le cache hors connexion ; suit le réglage des sons du jeu.
+- iPhone : le tout premier appui LONG depuis l'ouverture de l'appli reste muet (iOS ne débloque le son qu'après un appui
+  court, vérifié avec un diagnostic) ; après un premier tap n'importe où, le bruit marche tout de suite.
 - Dessin : peau en dégradé brillant, anneau de cuir noir clouté à la base, halo rouge néon.
 
 ## Pilotage et stats (stats.html)
