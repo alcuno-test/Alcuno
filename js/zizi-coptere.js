@@ -329,7 +329,7 @@ majZiziCoptere();
 const bulleZizi = document.createElement("div");
 bulleZizi.id = "bulleZizi";
 bulleZizi.setAttribute("aria-hidden", "true");
-bulleZizi.textContent = "tapote-moi…";
+bulleZizi.textContent = "tapote-moi";
 bulleZizi.hidden = true;
 document.getElementById("choixMode").appendChild(bulleZizi);
 function majBulleZizi(){
@@ -339,7 +339,7 @@ function majBulleZizi(){
   if (!visible) return;
   const taille = tailleZizi();
   bulleZizi.style.left = (ziziX + taille / 2) + "px";
-  bulleZizi.style.top = Math.max(4, ziziY + taille * 0.12) + "px"; // (tout près du haut du dessin)
+  bulleZizi.style.top = Math.max(4, ziziY - taille * 0.08) + "px"; // (au-dessus du dessin, avec un peu d'air)
 }
 setInterval(majBulleZizi, 250);
 // #endregion
