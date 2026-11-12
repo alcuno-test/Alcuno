@@ -5397,16 +5397,14 @@ html #ecranReglages #ligneModeHard .badgeOrangeHard{
 #bulleZizi{
   position: fixed; z-index: 51; transform: translate(-50%, -100%); pointer-events: none; white-space: nowrap;
   /* discret : juste un petit texte en italique, sans cadre, qui flotte doucement */
-  font: italic 400 12px Arial, sans-serif; letter-spacing: 0.04em; color: rgba(255, 200, 208, 0.75); text-shadow: 0 0 6px rgba(255, 42, 61, 0.9);
-  animation: bulleZiziSautille 1.4s ease-in-out infinite;
+  font: italic 400 11px Arial, sans-serif; letter-spacing: 0.04em; color: rgba(255, 200, 208, 0.5); text-shadow: 0 0 5px rgba(255, 42, 61, 0.55);
+  animation: bulleZiziSautille 1.8s infinite;
 }
 #bulleZizi[hidden]{ display: none !important; }
-/* (deux petits sauts, puis une pause) */
+/* (un petit rebond doux, puis une pause) */
 @keyframes bulleZiziSautille{
-  0%, 50%, 100%{ transform: translate(-50%, -100%); }
-  15%{ transform: translate(-50%, calc(-100% - 7px)); }
-  30%{ transform: translate(-50%, -100%); }
-  40%{ transform: translate(-50%, calc(-100% - 3px)); }
+  0%, 40%, 100%{ transform: translate(-50%, -100%); animation-timing-function: ease-out; }
+  20%{ transform: translate(-50%, calc(-100% - 4px)); animation-timing-function: ease-in; }
 }
 @media (prefers-reduced-motion: reduce){ #bulleZizi{ animation: none; } }
 /* (l'animation d'entrée des éléments de l'accueil, « pageEntree », figeait sa rotation : transform repris par l'animation) */

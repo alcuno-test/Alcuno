@@ -339,7 +339,7 @@ function majBulleZizi(){
   if (!visible) return;
   const taille = tailleZizi();
   bulleZizi.style.left = (ziziX + taille / 2) + "px";
-  bulleZizi.style.top = Math.max(4, ziziY - taille * 0.08) + "px"; // (au-dessus du dessin, avec un peu d'air)
+  bulleZizi.style.top = Math.max(4, ziziY + 3) + "px"; // (juste au-dessus du dessin : les boules commencent ~7 px sous le haut de la boîte)
 }
 setInterval(majBulleZizi, 250);
 // #endregion
