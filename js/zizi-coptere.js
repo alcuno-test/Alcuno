@@ -173,7 +173,9 @@ function majSonZizi(){
     gain.gain.value = 0;
     source.connect(gain).connect(ctx.destination);
     source.start();
-    ziziSon = { ctx, source, gain };
+    // enMarche : le contexte jouait déjà au démarrage. Sinon (tout premier toucher : le son du jeu n'est pas encore
+    // débloqué, le téléphone ne l'autorise qu'au doigt relevé), on le relance au doigt relevé (relancerSonZiziAuGeste)
+    ziziSon = { ctx, source, gain, enMarche: ctx.state === "running" };
   }
   const t = ziziSon.ctx.currentTime;
   // plus il tourne vite, plus c'est fort et aigu (au volume des sons du jeu)
@@ -282,6 +284,20 @@ function pasZizi(maintenant){
     demarrerBoucleZizi();
   };
   ziziCoptere.addEventListener("pointerup", lacher);
+  // Premier toucher depuis l'ouverture du jeu : le son n'est débloqué qu'au doigt relevé (iPhone, Android) ;
+  // le bruit, lancé quand le son était encore bloqué, restait muet. Au doigt relevé (geste autorisé), on
+  // débloque le son (debloquerSon, js/reglages.js, déjà appelé par le document) et on relance le bruit.
+  const relancerSonZiziAuGeste = () => {
+    if (!ziziSon || ziziSon.enMarche) return;
+    const ancien = ziziSon;
+    ziziSon = null;
+    try { ancien.source.stop(); } catch (e) {}
+    try { const ctx = contexteAudio(); if (ctx && ctx.state !== "running") ctx.resume().catch(() => {}); } catch (e) {}
+    majSonZizi(); // (recréé dans le geste ; il s'éteint ensuite en FONDU_SON_ZIZI comme d'habitude)
+  };
+  ziziCoptere.addEventListener("touchend", relancerSonZiziAuGeste);
+  ziziCoptere.addEventListener("pointerup", relancerSonZiziAuGeste);
+  ziziCoptere.addEventListener("click", relancerSonZiziAuGeste);
   ziziCoptere.addEventListener("pointercancel", lacher);
   ziziCoptere.addEventListener("contextmenu", (e) => e.preventDefault()); // (pas de menu au doigt maintenu)
 })();
