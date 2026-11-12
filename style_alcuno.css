@@ -5332,9 +5332,34 @@ html #ecranReglages #ligneModeHard .optionNote{
   background: none !important;
   font-family: inherit;
 }
-/* (interrupteur éteint : sombre dans certains thèmes, invisible sur le noir sans ce liseré) */
+/* Interrupteur du mode hard : le même dans tous les thèmes (ne suit pas le thème) : noir éteint, orange allumé */
 html #ecranReglages #ligneModeHard .interrupteur{
-  box-shadow: 0 0 0 1.5px rgba(255, 154, 31, 0.75) !important;
+  width: 46px !important;
+  height: 26px !important;
+  border: none !important;
+  border-radius: 999px !important;
+  background: #000 !important;
+  background-image: none !important;
+  box-shadow: 0 0 0 1.5px rgba(255, 154, 31, 0.8) !important;
+}
+html #ecranReglages #ligneModeHard .interrupteur::after{
+  top: 4px !important;
+  left: 4px !important;
+  width: 18px !important;
+  height: 18px !important;
+  border: none !important;
+  box-shadow: none !important;
+  background: #fff !important;
+  background-image: none !important;
+  transform: none !important;
+}
+html #ecranReglages #ligneModeHard input:checked + .interrupteur{
+  background: #ff9a1f !important;
+  box-shadow: 0 0 0 1.5px #ff9a1f, 0 0 10px rgba(255, 154, 31, 0.85) !important;
+}
+html #ecranReglages #ligneModeHard input:checked + .interrupteur::after{
+  background: #000 !important;
+  transform: translateX(20px) !important;
 }
 html #ecranReglages #ligneModeHard .badgeOrangeHard{
   display: inline-block;
