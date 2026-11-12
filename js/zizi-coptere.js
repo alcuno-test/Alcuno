@@ -127,6 +127,56 @@ function majZiziCoptere(){
   placerZiziPresDuTitre();
 }
 
+// ----- Son (Sons/zizicoptere.mp3) : en boucle tant qu'il tourne ; volume et hauteur suivent la vitesse de rotation,
+// il s'éteint avec la rotation. Suit le réglage des sons du jeu (interrupteur et volume).
+const SON_ZIZI = { nom: "zizicoptere", debutBoucle: 0.6, finBoucle: 8.2 }; // (boucle dans la partie régulière du son)
+let ziziSonBuffer = null, ziziSonCharge = null, ziziSon = null; // ziziSon : { source, gain }
+function chargerSonZizi(ctx){
+  if (ziziSonBuffer || ziziSonCharge) return;
+  ziziSonCharge = fetch(`Sons/${SON_ZIZI.nom}.mp3`)
+    .then((r) => { if (!r.ok) throw new Error("son"); return r.arrayBuffer(); })
+    .then((d) => new Promise((ok, ko) => ctx.decodeAudioData(d, ok, ko)))
+    .then((b) => { ziziSonBuffer = b; })
+    .catch(() => {})
+    .finally(() => { ziziSonCharge = null; });
+}
+function sonZiziPermis(){
+  return typeof caseSons !== "undefined" && caseSons.checked && volumeSons > 0;
+}
+function majSonZizi(){
+  const vitesse = Math.min(1, Math.abs(ziziRotation) / ZIZI.rotationMax);
+  if (!sonZiziPermis() || vitesse < 0.02) { arreterSonZizi(); return; }
+  const ctx = contexteAudio();
+  if (!ctx) return;
+  if (!ziziSonBuffer) { chargerSonZizi(ctx); return; }
+  if (!ziziSon || ziziSon.ctx !== ctx) {
+    arreterSonZizi();
+    const source = ctx.createBufferSource();
+    source.buffer = ziziSonBuffer;
+    source.loop = true;
+    source.loopStart = SON_ZIZI.debutBoucle;
+    source.loopEnd = Math.min(SON_ZIZI.finBoucle, ziziSonBuffer.duration);
+    const gain = ctx.createGain();
+    gain.gain.value = 0;
+    source.connect(gain).connect(ctx.destination);
+    source.start();
+    ziziSon = { ctx, source, gain };
+  }
+  const t = ziziSon.ctx.currentTime;
+  // plus il tourne vite, plus c'est fort et aigu (au volume des sons du jeu)
+  ziziSon.gain.gain.setTargetAtTime(Math.pow(volumeSons / 100, 2) * (0.25 + 0.75 * vitesse), t, 0.05);
+  ziziSon.source.playbackRate.setTargetAtTime(0.75 + 0.5 * vitesse, t, 0.05);
+}
+function arreterSonZizi(){
+  if (!ziziSon) return;
+  const { ctx, source, gain } = ziziSon;
+  ziziSon = null;
+  try {
+    gain.gain.setTargetAtTime(0, ctx.currentTime, 0.08);
+    source.stop(ctx.currentTime + 0.4);
+  } catch (e) {}
+}
+
 function demarrerBoucleZizi(){
   if (ziziBoucle) return;
   ziziBoucle = true;
@@ -165,7 +215,8 @@ function pasZizi(maintenant){
 
   const fini = !ziziTenu && Math.abs(ziziRotation) < 6 && (ziziPose || auRepos);
   const cache = ziziCoptere.hidden || !ziziCoptere.getClientRects().length; // (accueil fermé : on arrête de calculer ; offsetParent est toujours vide en position fixe)
-  if (fini || cache) { ziziBoucle = false; if (fini) ziziRotation = 0; return; }
+  if (fini || cache) { ziziBoucle = false; if (fini) ziziRotation = 0; arreterSonZizi(); return; }
+  majSonZizi();
   requestAnimationFrame(pasZizi);
 }
 
@@ -186,6 +237,7 @@ function pasZizi(maintenant){
     ziziPose = false;
     ziziVx = ziziVy = 0;
     ziziRotation = Math.max(ziziRotation, 500); // il tourne dès qu'on le touche
+    try { const ctx = contexteAudio(); if (ctx && sonZiziPermis()) chargerSonZizi(ctx); } catch (err) {} // (son : chargé au premier toucher)
     ziziCoptere.classList.add("zizi-tenu");
     try { navigator.vibrate && navigator.vibrate(12); } catch (err) {}
     demarrerBoucleZizi();
