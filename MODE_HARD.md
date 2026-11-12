@@ -21,6 +21,7 @@ Statut : codé dans l'appli test (jeu 9.90.0, cache `alcuno-test-v95`). Dernièr
   avec un contour orange néon dans tous les thèmes. Texte : « On est pas là pour se titiller la bite avec des gants de boxe. »
 - Bandeau : **18 barré dessiné** après ALCUNO (`SVG_18_BARRE`, js/plateau.js ; pas l'emoji 🔞 qui affiche
   « UNDER 18 » sur Android). Aussi sur la télé, dans le bloc du défi (« MODE HARD ») et la fenêtre Coup de foudre.
+- Son à l'activation de l'option : Sons/mode_hard.mp3 (les autres modes jouent sons_on).
 - Crédits : Jojo dans « Mention honorable » (idée du mode hard).
 
 ## Déblocage
