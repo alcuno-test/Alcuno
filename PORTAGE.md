@@ -120,6 +120,13 @@ bandeau, Jojo dans les crédits, `js/zizi-coptere.js` dans `FICHIERS_JEU`), `js/
 `js/stats.js`, `js/config-lib.js`, nouveau `js/zizi-coptere.js`, `style_alcuno.css`, `stats.html`,
 `database.rules.json` (**à republier dans la console Firebase du vrai jeu aussi**), `sw.js`, `tests/`.
 
+### 8. Musiques hors connexion gardées d'une version à l'autre (test 9.90.32)
+
+**Pas encore porté.** `sw.js` : cache à part `CACHE_MUSIQUES` (dans le vrai jeu : `alcuno-musiques-v1`, pas le nom du test), migration dans
+« activate », musiques mises dans ce cache par le « fetch » ; `tests/empreinte_cache.js`, `tests/test_cache.js`,
+`outils/maj_empreinte_cache.js` (empreinte des musiques à part). Le défaut touche le vrai jeu : à chaque mise en ligne,
+l'ancien cache était supprimé avec les musiques téléchargées.
+
 ## À NE PAS copier (propre à l'appli test)
 
 0. **`js/zizi-coptere.js`, `ZIZI_TEST_DEBLOQUE = true`.** Dans le test, le zizi-coptère est débloqué de base
