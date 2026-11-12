@@ -106,6 +106,10 @@ Les sons de boutons par thème sont dans `SONS_CLIC_THEME` (`js/reglages.js`) :
 
 ### 7. Mode hard (test 9.90.0, cache `alcuno-test-v95`)
 
+**PORTÉ dans le vrai jeu le 12 novembre (9.88.0, cache `alcuno-v25`, commit 953538f).** Seul le diff du mode hard a été
+appliqué (les deux dépôts ont chacun des changements propres). Dans le vrai jeu : zizi-coptère non débloqué d'office,
+pas de diagnostic du son.
+
 Voir **`MODE_HARD.md`**. Fichiers touchés : `index.html` (ligne « Mode hard » de « Ta partie », badge 18 barré du
 bandeau, Jojo dans les crédits, `js/zizi-coptere.js` dans `FICHIERS_JEU`), `js/mode-hot.js` (défis HA / HB),
 `js/reglages.js`, `js/regles.js`, `js/plateau.js`, `js/en-ligne.js`, `js/synchro-en-ligne.js`, `js/tele.js`,
