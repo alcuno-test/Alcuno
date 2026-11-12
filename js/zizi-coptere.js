@@ -181,6 +181,7 @@ function majSonZizi(){
     // enMarche : le contexte jouait déjà au démarrage. Sinon (tout premier toucher : le son du jeu n'est pas encore
     // débloqué, le téléphone ne l'autorise qu'au doigt relevé), on le relance au doigt relevé (relancerSonZiziAuGeste)
     ziziSon = { ctx, source, gain, enMarche: ctx.state === "running" };
+    noterDiagZizi("bruit lancé (son " + ctx.state + ")");
   }
   const t = ziziSon.ctx.currentTime;
   // plus il tourne vite, plus c'est fort et aigu (au volume des sons du jeu)
@@ -296,6 +297,7 @@ function pasZizi(maintenant){
   // débloque le son (debloquerSon, js/reglages.js, déjà appelé par le document) et on relance le bruit.
   const relancerSonZiziAuGeste = () => {
     if (!ziziSon || ziziSon.enMarche) return;
+    noterDiagZizi("relance au geste");
     const ancien = ziziSon;
     ziziSon = null;
     try { ancien.source.stop(); } catch (e) {}
@@ -322,4 +324,39 @@ window.addEventListener("resize", () => {
 try { new ResizeObserver(() => { placerZiziPresDuTitre(); if (!ziziPose) demarrerBoucleZizi(); }).observe(document.getElementById("titreAccueil")); } catch (e) {}
 window.addEventListener("load", () => setTimeout(majZiziCoptere, 200));
 majZiziCoptere();
+// ----- APPLI TEST : diagnostic du son sur iPhone (provisoire, à retirer une fois le problème trouvé) -----
+// Petit cadre en bas de l'accueil (thème BDSM, zizi visible) : état du son du jeu, du bruit, et derniers événements
+// du doigt. Pas dans le vrai jeu (MODE_TEST), ni pendant les tests automatiques (navigator.webdriver).
+const DIAG_ZIZI = typeof MODE_TEST !== "undefined" && MODE_TEST && !navigator.webdriver;
+const journalDiagZizi = [];
+let debutDiagZizi = 0;
+function noterDiagZizi(texte){
+  if (!DIAG_ZIZI) return;
+  const t = performance.now();
+  if (!debutDiagZizi || t - debutDiagZizi > 8000) { journalDiagZizi.length = 0; debutDiagZizi = t; } // (un geste = une série)
+  journalDiagZizi.push(`${((t - debutDiagZizi) / 1000).toFixed(2)} ${texte}`);
+  if (journalDiagZizi.length > 14) journalDiagZizi.shift();
+}
+if (DIAG_ZIZI) {
+  ["pointerdown", "pointerup", "pointercancel", "touchstart", "touchend", "touchcancel", "click"].forEach((type) => {
+    document.addEventListener(type, (e) => {
+      const sur = e.target && e.target.closest && e.target.closest("#ziziCoptere") ? "zizi" : "ailleurs";
+      noterDiagZizi(`${type} (${sur}) son=${contexteSon ? contexteSon.state : "aucun"}`);
+    }, { capture: true, passive: true });
+  });
+  const cadre = document.createElement("pre");
+  cadre.id = "diagZizi";
+  cadre.style.cssText = "position:fixed;left:6px;right:6px;bottom:6px;z-index:60;margin:0;padding:6px 8px;max-height:46vh;overflow:hidden;"
+    + "font:11px/1.3 ui-monospace,Menlo,monospace;color:#9f9;background:rgba(0,0,0,.82);border:1px solid #3a3;border-radius:8px;"
+    + "pointer-events:none;white-space:pre-wrap;";
+  document.getElementById("choixMode").appendChild(cadre);
+  setInterval(() => {
+    cadre.hidden = ziziCoptere.hidden || !ziziCoptere.getClientRects().length;
+    if (cadre.hidden) return;
+    cadre.textContent = `DIAG SON (test) v${typeof VERSION_AFFICHEE !== "undefined" ? VERSION_AFFICHEE : "?"}\n`
+      + `son du jeu : ${contexteSon ? contexteSon.state : "pas créé"} · sons ${caseSons.checked ? "on" : "off"} ${volumeSons} %\n`
+      + `fichier : ${ziziSonBuffer ? "chargé" : "pas chargé"} · bruit : ${ziziSon ? (ziziSon.enMarche ? "joue" : "en attente") : "non"}\n`
+      + journalDiagZizi.join("\n");
+  }, 200);
+}
 // #endregion

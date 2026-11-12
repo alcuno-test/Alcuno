@@ -114,7 +114,8 @@ bandeau, Jojo dans les crédits, `js/zizi-coptere.js` dans `FICHIERS_JEU`), `js/
 
 ## À NE PAS copier (propre à l'appli test)
 
-0. **`js/zizi-coptere.js`, `ZIZI_TEST_DEBLOQUE = true`.** Dans le test, le zizi-coptère est débloqué de base
+0. **`js/zizi-coptere.js`, cadre « DIAG SON » (`DIAG_ZIZI`)** : diagnostic provisoire du son sur iPhone, à supprimer.
+   **`js/zizi-coptere.js`, `ZIZI_TEST_DEBLOQUE = true`.** Dans le test, le zizi-coptère est débloqué de base
    pour l'essayer. Dans le vrai jeu : mettre `false` (il se débloque en finissant une partie hard).
 
 1. **`sw.js`, nom du cache.** Le test utilise `alcuno-test-vXX`. Le vrai jeu utilise
