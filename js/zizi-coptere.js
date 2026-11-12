@@ -143,9 +143,13 @@ function chargerSonZizi(ctx){
 function sonZiziPermis(){
   return typeof caseSons !== "undefined" && caseSons.checked && volumeSons > 0;
 }
+// Lâché : le bruit s'éteint en ~0,8 s (la rotation, elle, continue de ralentir plus longtemps)
+const FONDU_SON_ZIZI = 0.8; // secondes
+let ziziLacheA = 0; // moment où on l'a lâché (performance.now), 0 tant qu'on le tient
 function majSonZizi(){
   const vitesse = Math.min(1, Math.abs(ziziRotation) / ZIZI.rotationMax);
-  if (!sonZiziPermis() || vitesse < 0.02) { arreterSonZizi(); return; }
+  const reste = ziziTenu || !ziziLacheA ? 1 : Math.max(0, 1 - (performance.now() - ziziLacheA) / (FONDU_SON_ZIZI * 1000));
+  if (!sonZiziPermis() || vitesse < 0.02 || reste <= 0) { arreterSonZizi(); return; }
   const ctx = contexteAudio();
   if (!ctx) return;
   if (!ziziSonBuffer) { chargerSonZizi(ctx); return; }
@@ -164,7 +168,7 @@ function majSonZizi(){
   }
   const t = ziziSon.ctx.currentTime;
   // plus il tourne vite, plus c'est fort et aigu (au volume des sons du jeu)
-  ziziSon.gain.gain.setTargetAtTime(Math.pow(volumeSons / 100, 2) * (0.25 + 0.75 * vitesse), t, 0.05);
+  ziziSon.gain.gain.setTargetAtTime(Math.pow(volumeSons / 100, 2) * (0.25 + 0.75 * vitesse) * reste, t, 0.05);
   ziziSon.source.playbackRate.setTargetAtTime(0.75 + 0.5 * vitesse, t, 0.05);
 }
 function arreterSonZizi(){
@@ -234,6 +238,7 @@ function pasZizi(maintenant){
     ziziTraces = [];
     noter(e);
     ziziTenu = true;
+    ziziLacheA = 0;
     ziziPose = false;
     ziziVx = ziziVy = 0;
     ziziRotation = Math.max(ziziRotation, 500); // il tourne dès qu'on le touche
@@ -262,6 +267,7 @@ function pasZizi(maintenant){
       ziziVy = borne((b.y - a.y) / duree);
     }
     ziziTenu = false;
+    ziziLacheA = performance.now(); // (le bruit s'éteint en FONDU_SON_ZIZI)
     ziziCoptere.classList.remove("zizi-tenu");
     appui = null;
     demarrerBoucleZizi();
