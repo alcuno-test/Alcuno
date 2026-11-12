@@ -110,6 +110,8 @@ Les sons de boutons par thème sont dans `SONS_CLIC_THEME` (`js/reglages.js`) :
 appliqué (les deux dépôts ont chacun des changements propres). Dans le vrai jeu : zizi-coptère non débloqué d'office,
 pas de diagnostic du son.
 
+**Pas encore porté (test 9.90.28)** : couronne argentée pour Jojo (`estJojo` dans `script.js`, comme Li-Mèi).
+
 Voir **`MODE_HARD.md`**. Fichiers touchés : `index.html` (ligne « Mode hard » de « Ta partie », badge 18 barré du
 bandeau, Jojo dans les crédits, `js/zizi-coptere.js` dans `FICHIERS_JEU`), `js/mode-hot.js` (défis HA / HB),
 `js/reglages.js`, `js/regles.js`, `js/plateau.js`, `js/en-ligne.js`, `js/synchro-en-ligne.js`, `js/tele.js`,
