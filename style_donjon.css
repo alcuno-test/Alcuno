@@ -23,8 +23,7 @@ html[data-theme="donjon"] #choixMode{ background: transparent !important; }
 html[data-theme="donjon"] body:has(#choixMode:not([style*="none"])) :is(header, #menu, #messages, #jeu){ visibility: hidden; }
 html[data-theme="donjon"]::before{
   content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  background: url("donjon/chaine.svg") 6px 0 / 44px 112px repeat-y, url("donjon/chaine.svg") calc(100% - 6px) 0 / 44px 112px repeat-y;
-  opacity: 0.9;
+  background: none; /* (chaînes des côtés retirées : on confondait le zizi-coptère avec le décor ; donjon/chaine.svg n'est plus utilisé) */
 }
 html[data-theme="donjon"]::after{
   content: ""; position: fixed; left: 0; right: 0; bottom: 0; height: 150px; /* (pas plus large que l'écran : sinon on pouvait faire glisser la page sur le côté) */ z-index: -1; pointer-events: none;

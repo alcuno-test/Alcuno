@@ -5,7 +5,7 @@
 // #region Zizi-coptère
 // Débloqué en finissant une partie en mode hard (récap de fin, js/regles.js ; hôte ou pas, en ligne aussi).
 // Visible seulement avec le thème Donjon (BDSM), sur l'écran d'accueil (#choixMode : caché avec lui).
-// Toucher : il fait quelques tours. Doigt maintenu : on le déplace partout sur l'écran, et il tourne pendant ce temps.
+// Touché : il tourne et suit le doigt ; lâché, on peut le lancer : gravité, rebonds sur les bords, rotation qui ralentit.
 // Sa place n'est pas gardée : à chaque ouverture du jeu, il revient à côté du titre.
 const CLE_ZIZI_COPTERE = "alcuno_zizi_coptere";
 // APPLI TEST : débloqué de base pour l'essayer (ZIZI_TEST_DEBLOQUE). NE PAS PORTER dans le vrai jeu (voir PORTAGE.md).
@@ -46,83 +46,156 @@ const ziziCoptere = (() => {
 })();
 document.getElementById("choixMode").appendChild(ziziCoptere);
 
-let ziziDeplace = false;   // déplacé au doigt : il ne revient plus à côté du titre (jusqu'à la prochaine ouverture)
-let ziziAngle = 0, ziziVitesse = 0, ziziTourne = false, ziziMaintenu = false;
+// ----- Physique -----
+// Au départ il est posé à côté du titre, sans gravité. Dès qu'on l'a touché puis lâché, il vit sa vie :
+// gravité, rebonds sur les 4 bords de l'écran, frottement au sol, et sa rotation ralentit peu à peu.
+// Touché : il se met à tourner (de plus en plus vite tant qu'on le tient) et suit le doigt ; lâché en
+// glissant, il part avec la vitesse du doigt (on peut le lancer).
+const ZIZI = {
+  gravite: 2600,        // px/s²
+  rebond: 0.72,         // vitesse gardée à chaque rebond
+  frottementSol: 3.5,   // ralentissement au sol (par seconde)
+  vitesseMax: 4500,     // px/s (un lancer trop violent)
+  rotationMax: 1800,    // degrés/s quand on le tient
+  rotationTenu: 1400,   // degrés/s² gagnés tant qu'on le tient
+  freinRotation: 0.55   // la rotation perd ~42 % par seconde une fois lâché
+};
+let ziziPose = true;      // posé à côté du titre (pas encore lancé)
+let ziziTenu = false;
+let ziziX = 0, ziziY = 0, ziziVx = 0, ziziVy = 0;
+let ziziAngle = 0, ziziRotation = 0;
+let ziziBoucle = false, ziziDernier = 0;
+let ziziTraces = [];      // dernières positions du doigt (vitesse du lancer)
 
+// (largeur utile : sans la barre de défilement, sinon il passait derrière le bord droit)
+function largeurEcranZizi(){ return document.documentElement.clientWidth || window.innerWidth; }
+function hauteurEcranZizi(){ return document.documentElement.clientHeight || window.innerHeight; }
+function tailleZizi(){ return ziziCoptere.offsetWidth || 140; }
+function dessinerZizi(){
+  ziziCoptere.style.left = ziziX + "px";
+  ziziCoptere.style.top = ziziY + "px";
+  ziziCoptere.style.transform = `rotate(${ziziAngle}deg)`;
+}
 function placerZiziPresDuTitre(){
-  if (ziziDeplace || ziziCoptere.hidden) return;
+  if (!ziziPose || ziziCoptere.hidden) return;
   const titre = document.getElementById("titreAccueil");
   if (!titre) return;
   const r = titre.getBoundingClientRect();
-  const taille = ziziCoptere.offsetWidth || 70;
-  const x = Math.min(window.innerWidth - taille - 14, r.right - taille * 0.6);
-  const y = Math.max(4, r.top - taille * 0.55);
-  ziziCoptere.style.left = x + "px";
-  ziziCoptere.style.top = y + "px";
+  if (!r.width) return; // (accueil caché)
+  const taille = tailleZizi();
+  ziziX = Math.min(largeurEcranZizi() - taille - 20, r.right - taille * 0.95);
+  ziziY = Math.max(4, r.top - taille * 0.75);
+  dessinerZizi();
 }
 function majZiziCoptere(){
   ziziCoptere.hidden = !(ziziCoptereDebloque() && document.documentElement.dataset.theme === "donjon");
   placerZiziPresDuTitre();
 }
 
-// Rotation : vitesse en degrés par image ; maintenu au doigt, elle monte jusqu'à un plafond ; lâché, elle ralentit
-function animerZizi(){
-  if (ziziMaintenu) ziziVitesse = Math.min(32, ziziVitesse + 1.2);
-  else ziziVitesse *= 0.965;
-  ziziAngle = (ziziAngle + ziziVitesse) % 360;
-  ziziCoptere.style.transform = `rotate(${ziziAngle}deg)`;
-  if (ziziMaintenu || ziziVitesse > 0.3) requestAnimationFrame(animerZizi);
-  else { ziziTourne = false; ziziVitesse = 0; }
+function demarrerBoucleZizi(){
+  if (ziziBoucle) return;
+  ziziBoucle = true;
+  ziziDernier = performance.now();
+  requestAnimationFrame(pasZizi);
 }
-function lancerRotationZizi(elan){
-  ziziVitesse = Math.max(ziziVitesse, elan);
-  if (!ziziTourne) { ziziTourne = true; requestAnimationFrame(animerZizi); }
+function pasZizi(maintenant){
+  const dt = Math.min(0.034, Math.max(0, (maintenant - ziziDernier) / 1000)); // (onglet en arrière-plan : pas de saut)
+  ziziDernier = maintenant;
+  const taille = tailleZizi();
+  const largeur = largeurEcranZizi(), hauteur = hauteurEcranZizi();
+
+  // Rotation : accélère tant qu'on le tient, ralentit progressivement une fois lâché
+  if (ziziTenu) ziziRotation = Math.min(ZIZI.rotationMax, ziziRotation + ZIZI.rotationTenu * dt);
+  else ziziRotation *= Math.pow(ZIZI.freinRotation, dt);
+  ziziAngle = (ziziAngle + ziziRotation * dt) % 360;
+
+  let auRepos = false;
+  if (!ziziTenu && !ziziPose) {
+    ziziVy += ZIZI.gravite * dt;
+    ziziX += ziziVx * dt;
+    ziziY += ziziVy * dt;
+    if (ziziX < 0) { ziziX = 0; ziziVx = Math.abs(ziziVx) * ZIZI.rebond; }
+    if (ziziX > largeur - taille) { ziziX = largeur - taille; ziziVx = -Math.abs(ziziVx) * ZIZI.rebond; }
+    if (ziziY < 0) { ziziY = 0; ziziVy = Math.abs(ziziVy) * ZIZI.rebond; }
+    if (ziziY > hauteur - taille) {
+      ziziY = hauteur - taille;
+      ziziVy = -Math.abs(ziziVy) * ZIZI.rebond;
+      if (Math.abs(ziziVy) < 120) ziziVy = 0; // (il ne sautille pas à l'infini)
+      ziziVx *= Math.pow(Math.exp(-ZIZI.frottementSol), dt);
+      if (Math.abs(ziziVx) < 8) ziziVx = 0;
+    }
+    auRepos = ziziVy === 0 && ziziVx === 0 && ziziY >= hauteur - taille - 0.5;
+  }
+  dessinerZizi();
+
+  const fini = !ziziTenu && Math.abs(ziziRotation) < 6 && (ziziPose || auRepos);
+  const cache = ziziCoptere.hidden || !ziziCoptere.getClientRects().length; // (accueil fermé : on arrête de calculer ; offsetParent est toujours vide en position fixe)
+  if (fini || cache) { ziziBoucle = false; if (fini) ziziRotation = 0; return; }
+  requestAnimationFrame(pasZizi);
 }
 
-// Toucher court : quelques tours. Maintenu ~0,35 s : il se déplace avec le doigt et tourne.
 (() => {
-  let appui = null, minuterie = null;
+  let appui = null;
+  const noter = (e) => {
+    const t = performance.now();
+    ziziTraces.push({ x: e.clientX, y: e.clientY, t });
+    ziziTraces = ziziTraces.filter((p) => t - p.t < 100);
+  };
   ziziCoptere.addEventListener("pointerdown", (e) => {
     e.preventDefault();
     try { ziziCoptere.setPointerCapture(e.pointerId); } catch (err) {}
-    const r = ziziCoptere.getBoundingClientRect();
-    appui = { id: e.pointerId, dx: e.clientX - r.left, dy: e.clientY - r.top, x: e.clientX, y: e.clientY };
-    minuterie = setTimeout(() => {
-      if (!appui) return;
-      ziziMaintenu = true;
-      ziziDeplace = true;
-      ziziCoptere.classList.add("zizi-tenu");
-      try { navigator.vibrate && navigator.vibrate(15); } catch (err) {}
-      lancerRotationZizi(4);
-    }, 350);
+    appui = { id: e.pointerId, dx: e.clientX - ziziX, dy: e.clientY - ziziY };
+    ziziTraces = [];
+    noter(e);
+    ziziTenu = true;
+    ziziPose = false;
+    ziziVx = ziziVy = 0;
+    ziziRotation = Math.max(ziziRotation, 500); // il tourne dès qu'on le touche
+    ziziCoptere.classList.add("zizi-tenu");
+    try { navigator.vibrate && navigator.vibrate(12); } catch (err) {}
+    demarrerBoucleZizi();
   });
   ziziCoptere.addEventListener("pointermove", (e) => {
     if (!appui || e.pointerId !== appui.id) return;
-    if (!ziziMaintenu) return;
-    const taille = ziziCoptere.offsetWidth;
-    const x = Math.max(-taille / 2, Math.min(window.innerWidth - taille / 2, e.clientX - appui.dx));
-    const y = Math.max(-taille / 2, Math.min(window.innerHeight - taille / 2, e.clientY - appui.dy));
-    ziziCoptere.style.left = x + "px";
-    ziziCoptere.style.top = y + "px";
+    const taille = tailleZizi();
+    ziziX = Math.max(0, Math.min(largeurEcranZizi() - taille, e.clientX - appui.dx));
+    ziziY = Math.max(0, Math.min(hauteurEcranZizi() - taille, e.clientY - appui.dy));
+    noter(e);
   });
-  const fin = (e) => {
+  const lacher = (e) => {
     if (!appui || (e && e.pointerId !== appui.id)) return;
-    clearTimeout(minuterie);
-    if (!ziziMaintenu) lancerRotationZizi(28); // toucher court : un bon élan, puis il ralentit
-    ziziMaintenu = false;
+    // Vitesse du lancer : déplacement du doigt sur ses ~100 dernières millisecondes
+    const t = performance.now();
+    const recents = ziziTraces.filter((p) => t - p.t < 100);
+    if (recents.length >= 2) {
+      const a = recents[0], b = recents[recents.length - 1];
+      const duree = Math.max(0.016, (b.t - a.t) / 1000);
+      const borne = (v) => Math.max(-ZIZI.vitesseMax, Math.min(ZIZI.vitesseMax, v));
+      ziziVx = borne((b.x - a.x) / duree);
+      ziziVy = borne((b.y - a.y) / duree);
+    }
+    ziziTenu = false;
     ziziCoptere.classList.remove("zizi-tenu");
     appui = null;
+    demarrerBoucleZizi();
   };
-  ziziCoptere.addEventListener("pointerup", fin);
-  ziziCoptere.addEventListener("pointercancel", fin);
+  ziziCoptere.addEventListener("pointerup", lacher);
+  ziziCoptere.addEventListener("pointercancel", lacher);
   ziziCoptere.addEventListener("contextmenu", (e) => e.preventDefault()); // (pas de menu au doigt maintenu)
 })();
 
-// Thème changé (Réglages) : html[data-theme] bouge ; fenêtre redimensionnée : il suit le titre
+// Thème changé (Réglages) : html[data-theme] bouge ; fenêtre redimensionnée : il reste dans l'écran
 new MutationObserver(majZiziCoptere).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-window.addEventListener("resize", placerZiziPresDuTitre);
-// (retour à l'accueil, polices chargées : le titre change de taille ou réapparaît)
-try { new ResizeObserver(placerZiziPresDuTitre).observe(document.getElementById("titreAccueil")); } catch (e) {}
+window.addEventListener("resize", () => {
+  if (ziziPose) { placerZiziPresDuTitre(); return; }
+  const taille = tailleZizi();
+  ziziX = Math.min(ziziX, largeurEcranZizi() - taille);
+  ziziY = Math.min(ziziY, hauteurEcranZizi() - taille);
+  dessinerZizi();
+  demarrerBoucleZizi(); // (il retombe si le bas de l'écran a bougé)
+});
+// (retour à l'accueil, polices chargées : le titre change de taille ou réapparaît ; lancé en l'air : il reprend sa chute)
+try { new ResizeObserver(() => { placerZiziPresDuTitre(); if (!ziziPose) demarrerBoucleZizi(); }).observe(document.getElementById("titreAccueil")); } catch (e) {}
 window.addEventListener("load", () => setTimeout(majZiziCoptere, 200));
 majZiziCoptere();
 // #endregion
