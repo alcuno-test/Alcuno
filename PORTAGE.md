@@ -104,6 +104,14 @@ Les sons de boutons par thème sont dans `SONS_CLIC_THEME` (`js/reglages.js`) :
 
 ---
 
+### 7. Mode hard (test 9.90.0, cache `alcuno-test-v95`)
+
+Voir **`MODE_HARD.md`**. Fichiers touchés : `index.html` (ligne « Mode hard » de « Ta partie », badge 18 barré du
+bandeau, Jojo dans les crédits, `js/zizi-coptere.js` dans `FICHIERS_JEU`), `js/mode-hot.js` (défis HA / HB),
+`js/reglages.js`, `js/regles.js`, `js/plateau.js`, `js/en-ligne.js`, `js/synchro-en-ligne.js`, `js/tele.js`,
+`js/stats.js`, `js/config-lib.js`, nouveau `js/zizi-coptere.js`, `style_alcuno.css`, `stats.html`,
+`database.rules.json` (**à republier dans la console Firebase du vrai jeu aussi**), `sw.js`, `tests/`.
+
 ## À NE PAS copier (propre à l'appli test)
 
 1. **`sw.js`, nom du cache.** Le test utilise `alcuno-test-vXX`. Le vrai jeu utilise

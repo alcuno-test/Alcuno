@@ -42,7 +42,8 @@ function ouvrirOptionsPartie(suite){
   suiteOptionsPartie = suite;
   // Chaque nouvelle partie repart sans option : rien n'est gardé d'une partie à l'autre (la revanche et la reprise
   // d'une partie interrompue gardent, elles, le mode de la partie en cours)
-  [caseModeSoft, casePartieExpress, caseModeHot].forEach((c) => { c.checked = false; });
+  [caseModeSoft, casePartieExpress, caseModeHot, caseModeHard].forEach((c) => { c.checked = false; });
+  majOptionHard(); // (ligne « Mode hard » : seulement une fois débloqué)
   majTitrePJ();
   ecranReglages.classList.add("vue-options");
   document.getElementById("titreReglages").textContent = "Ta partie";
@@ -316,8 +317,10 @@ function vuNouveauDonjon(){
   document.documentElement.classList.remove("donjon-nouveau");
 }
 // Appelé au lancement d'une partie en mode hot : la première fois, le thème se débloque et la fenêtre « débloqué » s'ouvre aussitôt.
-function debloquerDonjon(){
+let donjonDebloqueParHard = false; // (fenêtre : « Partie hard lancée ! » au lieu de « Partie hot »)
+function debloquerDonjon(parHard = false){
   if (donjonDebloque()) return;
+  donjonDebloqueParHard = !!parHard;
   try { localStorage.setItem(CLE_DONJON, "1"); localStorage.setItem(CLE_DONJON_NOUVEAU, "1"); } catch (e) {}
   majPastilleDonjon();
   document.documentElement.classList.add("donjon-nouveau");
@@ -333,7 +336,7 @@ function afficherFenetreBdsm(){
   voile.setAttribute("aria-label", "Thème BDSM débloqué");
   voile.innerHTML = `
     <div class="fenetreBdsm-carte">
-      <div class="fenetreBdsm-secret">🔥 Partie hot lancée !</div>
+      <div class="fenetreBdsm-secret">${donjonDebloqueParHard ? SVG_18_BARRE + " Partie hard lancée !" : "🔥 Partie hot lancée !"}</div>
       <div class="fenetreBdsm-titre">Thème BDSM<br>débloqué !</div>
       <div class="fenetreBdsm-texte">Il est maintenant dans<br>Réglages › Thèmes</div>
       <button type="button" class="fenetreBdsm-essayer">L'essayer maintenant</button>
@@ -1052,6 +1055,47 @@ function estModeHot(){
   return codePartieActuel ? hotPartieEnLigne : caseModeHot.checked;
 }
 
+// ===== Mode hard : la mécanique du mode hot, avec des défis sexuels, à 2 joueurs (voir MODE_HARD.md) =====
+// Caché tant qu'il n'est pas débloqué sur ce téléphone : en entrant « Jojo » comme nom de joueur (ou comme pseudo
+// en ligne). Jamais avec le mode hot : cocher l'un décoche l'autre. En ligne : réglage de celui qui lance la partie
+// (bit 2^36 de la graine, voir graineHard).
+const CLE_HARD_DEBLOQUE = "alcuno_hard_debloque";
+const caseModeHard = document.getElementById("optionModeHard");
+caseModeHard.checked = false;
+function hardDebloque(){
+  try { return localStorage.getItem(CLE_HARD_DEBLOQUE) === "1"; } catch (e) { return false; }
+}
+function majOptionHard(){
+  document.getElementById("ligneModeHard").hidden = !hardDebloque();
+}
+// « Jojo » (majuscules et accents ignorés) : le nom reste un joueur normal
+function estCodeHard(nom){
+  return String(nom).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z]/g, "") === "jojo";
+}
+function debloquerHard(){
+  if (hardDebloque()) return;
+  try { localStorage.setItem(CLE_HARD_DEBLOQUE, "1"); } catch (e) {}
+  majOptionHard();
+  try { afficherToast("🔞 Mode hard débloqué ! Il est dans « Ta partie »", 3200); } catch (e) {}
+}
+majOptionHard();
+caseModeHard.addEventListener("change", () => {
+  if (caseModeHard.checked && caseModeHot.checked) caseModeHot.checked = false;
+  majTitrePJ();
+  if (caseModeHard.checked) jouerSon("sons_on");
+});
+caseModeHot.addEventListener("change", () => {
+  if (caseModeHot.checked && caseModeHard.checked) { caseModeHard.checked = false; majTitrePJ(); }
+});
+let hardPartieEnLigne = false;
+function estModeHard(){
+  return codePartieActuel ? hardPartieEnLigne : caseModeHard.checked;
+}
+function choisirModeHardEnLigne(hard){
+  hardPartieEnLigne = !!hard;
+  majTitrePJ();
+}
+
 let softPartieEnLigne = false;
 
 function estModeSoft(){
@@ -1063,6 +1107,7 @@ function estModeSoft(){
 function majTitrePJ(){
   document.body.classList.toggle("partie-soft", estModeSoft());
   document.body.classList.toggle("partie-hot", estModeHot());
+  document.body.classList.toggle("partie-hard", estModeHard());
 }
 
 // Gorgées selon le mode (normal | soft)
@@ -1108,7 +1153,7 @@ caseFacesFermees.addEventListener("change", () => {
 });
 majFacesFermees();
 
-function choisirModeHotEnLigne(hot){
+function choisirModeHotEnLigne(hot){ // (mode hard : choisirModeHardEnLigne, plus haut)
   hotPartieEnLigne = !!hot;
   majTitrePJ();
 }
@@ -2929,7 +2974,8 @@ const ecranRegles = document.getElementById("ecranRegles");
 // écrit ici (rien qui vient d'un joueur) : <b> le mot important, <em> les gorgées (en doré).
 function reglesDuJeu(){
   const pj = estModeSoft();
-  const hot = estModeHot(); // mode hot : pas de « 1 » (annulation), une carte Cupidon, des défis
+  const hard = estModeHard(); // mode hard : comme le hot, sans Cupidon (2 joueurs), défis sexuels
+  const hot = estModeHot() || hard; // mode hot : pas de « 1 » (annulation), une carte Cupidon, des défis
   const g = (n) => `<em>${texteGorgees(n)}</em>`;
   const parties = [
     { titre: "Comment on joue", regles: [
@@ -2941,14 +2987,14 @@ function reglesDuJeu(){
     ]},
     { titre: "Les cartes", regles: [
       { carte: "zero_bleu", nom: "0", texte: `Tout le monde boit ${g(1)}, sauf toi.` },
-      hot
+      hard ? null : hot
         ? { carte: "cupidon_a", nom: "Cupidon", texte: [
             "Tu lies <b>2 joueurs</b> : quand l'un boit, l'autre aussi (💘)",
             "À la carte Cupidon suivante : lier 2 autres joueurs, ou briser un lien"
           ]}
         : { carte: "un_rouge", nom: "1 : annulation", texte: `Tu gardes la carte : quand tu dois boire, tu peux t'en servir pour annuler ${g(1)}.` },
       ...(hot && saintValentinEnCours() ? [{ carte: "coup_de_foudre", nom: "Coup de foudre (Saint-Valentin)", texte: [
-            "Choisis quelqu'un : <b>un bisou sur la bouche</b>…",
+            `Choisis quelqu'un : <b>${hard ? "un doigt dans le cul" : "un bisou sur la bouche"}</b>…`,
             `… ou tu prends ${pj ? g(4) : "<em>un CUL SEC</em>"}`
           ]}] : []),
       { carte: "plus_2_jaune", nom: "+2", texte: `Tu bois ${g(gorgeesPlus2())}.` },
@@ -2978,7 +3024,13 @@ function reglesDuJeu(){
   ];
   if(hot){
     // Mode hot : le défi à la place des gorgées (décisions : MODE_HOT.md)
-    parties.splice(2, 0, { titre: "Mode hot 🔥", regles: [
+    parties.splice(2, 0, hard ? { titre: "Mode hard", regles: [
+      { carte: "", nom: "Le défi", texte: [
+        "Partie <b>à 2 joueurs</b>",
+        "Quand tu dois boire, tu peux relever un défi avec l'autre joueur à la place",
+        "<b>Je le fais</b> : rien à boire. <b>Je bois</b> : les gorgées prévues"
+      ]}
+    ]} : { titre: "Mode hot 🔥", regles: [
       { carte: "", nom: "Le défi", texte: [
         "Quand <b>une seule personne</b> doit boire, elle peut relever un défi à la place",
         "<b>Je le fais</b> : rien à boire. <b>Je bois</b> : les gorgées prévues",
@@ -2986,6 +3038,7 @@ function reglesDuJeu(){
       ]}
     ]});
   }
+  parties.forEach((p) => { p.regles = p.regles.filter(Boolean); }); // (cartes absentes de ce mode)
   return parties;
 }
 

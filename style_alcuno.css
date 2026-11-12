@@ -5295,6 +5295,81 @@ body.partie-hot header h1 .badgeHot{
   display: inline;
 }
 
+/* ===== Mode hard (MODE_HARD.md) : « 18 barré » dessiné (SVG_18_BARRE, js/plateau.js) après ALCUNO dans le bandeau,
+   comme la flamme du hot ; même dessin dans le bloc du défi, la fenêtre Coup de foudre et la télé ===== */
+.svg18{
+  display: inline-block;
+  width: 0.9em;
+  height: 0.9em;
+  vertical-align: -0.1em;
+  flex: none;
+}
+header h1 .badgeHard{
+  display: none;
+  margin-left: 0.15em;
+  font-size: 0.85em;
+}
+body.partie-hard header h1 .badgeHard{
+  display: inline;
+}
+/* Ligne « Mode hard » de « Ta partie » : cadre noir, textes blancs, « hard » noir sur orange, dans TOUS les thèmes
+   (la même chose partout, voulu). Cachée tant que le mode n'est pas débloqué (js/reglages.js, majOptionHard). */
+#ecranReglages #ligneModeHard[hidden]{
+  display: none !important;
+}
+html #ecranReglages #ligneModeHard{
+  background: #000 !important;
+  background-image: none !important;
+  border-color: #000 !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
+}
+html #ecranReglages #ligneModeHard .optionTitre,
+html #ecranReglages #ligneModeHard .optionNote{
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  text-shadow: none !important;
+  background: none !important;
+  font-family: inherit;
+}
+html #ecranReglages #ligneModeHard .badgeOrangeHard{
+  display: inline-block;
+  padding: 0 0.28em 0.06em;
+  border-radius: 0.2em;
+  background: #ff9000;
+  color: #000 !important;
+  -webkit-text-fill-color: #000 !important;
+  font-weight: 800;
+  line-height: 1.25;
+}
+/* Zizi-coptère (js/zizi-coptere.js) : thème Donjon seulement, sur l'accueil ; tourne au toucher, se déplace au doigt maintenu */
+#ziziCoptere{
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 50;
+  width: 84px;
+  height: 84px;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: none !important;
+  box-shadow: none !important;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  cursor: grab;
+  filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.5));
+}
+#ziziCoptere[hidden]{ display: none !important; }
+#ziziCoptere svg{ width: 100%; height: 100%; display: block; pointer-events: none; }
+#ziziCoptere.zizi-tenu{ cursor: grabbing; filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.6)); }
+/* Thème Sombre : le cadre noir disparaissait dans le fond noir */
+html[data-theme="noir"] #ecranReglages #ligneModeHard{
+  border: 2px solid #ff9000 !important;
+}
+
 /* ===== « Ta partie » : l'écran des Réglages avec seulement Mode PJ, Partie express, Mode hot et « Continuer »
    (voir ouvrirOptionsPartie dans js/reglages.js). En vue normale, ces lignes ne sont pas dans les Réglages. ===== */
 #ecranReglages .optionsPartie{
