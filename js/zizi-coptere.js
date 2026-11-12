@@ -8,7 +8,10 @@
 // Toucher : il fait quelques tours. Doigt maintenu : on le déplace partout sur l'écran, et il tourne pendant ce temps.
 // Sa place n'est pas gardée : à chaque ouverture du jeu, il revient à côté du titre.
 const CLE_ZIZI_COPTERE = "alcuno_zizi_coptere";
+// APPLI TEST : débloqué de base pour l'essayer (ZIZI_TEST_DEBLOQUE). NE PAS PORTER dans le vrai jeu (voir PORTAGE.md).
+const ZIZI_TEST_DEBLOQUE = true;
 function ziziCoptereDebloque(){
+  if (ZIZI_TEST_DEBLOQUE) return true;
   try { return localStorage.getItem(CLE_ZIZI_COPTERE) === "1"; } catch (e) { return false; }
 }
 function debloquerZiziCoptere(){

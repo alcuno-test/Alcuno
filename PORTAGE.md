@@ -114,6 +114,9 @@ bandeau, Jojo dans les crédits, `js/zizi-coptere.js` dans `FICHIERS_JEU`), `js/
 
 ## À NE PAS copier (propre à l'appli test)
 
+0. **`js/zizi-coptere.js`, `ZIZI_TEST_DEBLOQUE = true`.** Dans le test, le zizi-coptère est débloqué de base
+   pour l'essayer. Dans le vrai jeu : mettre `false` (il se débloque en finissant une partie hard).
+
 1. **`sw.js`, nom du cache.** Le test utilise `alcuno-test-vXX`. Le vrai jeu utilise
    `alcuno-vXX` : repartir de SON numéro (v22 d'après l'historique) et l'incrémenter.
    Ne pas copier le commentaire d'historique du test, qui fait plusieurs milliers de caractères.
