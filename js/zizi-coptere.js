@@ -124,6 +124,15 @@ function placerZiziPresDuTitre(){ // (sur le A du titre)
 }
 function majZiziCoptere(){
   ziziCoptere.hidden = !(ziziCoptereDebloque() && document.documentElement.dataset.theme === "donjon");
+  // Son téléchargé et décodé dès qu'il est visible (pas au premier toucher) : prêt tout de suite, et gardé
+  // dans le cache du jeu pour le hors connexion (il est aussi dans SONS_A_PRECHARGER de sw.js)
+  // (décodé dans un contexte hors ligne : on ne crée pas le contexte audio du jeu avant le premier tap, iPhone)
+  if (!ziziCoptere.hidden) {
+    try {
+      const Hors = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+      if (Hors) chargerSonZizi(new Hors(2, 44100, 44100));
+    } catch (e) {}
+  }
   placerZiziPresDuTitre();
 }
 
@@ -143,12 +152,12 @@ function chargerSonZizi(ctx){
 function sonZiziPermis(){
   return typeof caseSons !== "undefined" && caseSons.checked && volumeSons > 0;
 }
-// Lâché : le bruit s'éteint en ~0,8 s (la rotation, elle, continue de ralentir plus longtemps)
-const FONDU_SON_ZIZI = 0.8; // secondes
+// Lâché : le bruit s'éteint en ~2 s (la rotation, elle, continue de ralentir plus longtemps ; 0,8 s : coupé trop tôt)
+const FONDU_SON_ZIZI = 2; // secondes
 let ziziLacheA = 0; // moment où on l'a lâché (performance.now), 0 tant qu'on le tient
 function majSonZizi(){
   const vitesse = Math.min(1, Math.abs(ziziRotation) / ZIZI.rotationMax);
-  const reste = ziziTenu || !ziziLacheA ? 1 : Math.max(0, 1 - (performance.now() - ziziLacheA) / (FONDU_SON_ZIZI * 1000));
+  const reste = ziziTenu || !ziziLacheA ? 1 : Math.max(0, 1 - Math.pow((performance.now() - ziziLacheA) / (FONDU_SON_ZIZI * 1000), 2)); // (reste fort au début, puis s'éteint)
   if (!sonZiziPermis() || vitesse < 0.02 || reste <= 0) { arreterSonZizi(); return; }
   const ctx = contexteAudio();
   if (!ctx) return;

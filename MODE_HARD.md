@@ -41,7 +41,7 @@ Statut : codé dans l'appli test (jeu 9.90.0, cache `alcuno-test-v95`). Dernièr
 - Chaînes des côtés du thème Donjon retirées, et 4 objets qui tombent au lieu de 8 (sans les vibros ni le « 18 ») :
   on le confondait avec le décor.
 - Son : Sons/zizicoptere.mp3 en boucle tant qu'il tourne, plus fort et plus aigu quand il tourne vite, s'éteint en
-  0,8 s quand on le lâche (FONDU_SON_ZIZI) ; suit le réglage des sons du jeu.
+  2 s quand on le lâche (FONDU_SON_ZIZI) ; téléchargé dès qu'il s'affiche, et dans le cache hors connexion ; suit le réglage des sons du jeu.
 - Dessin : peau en dégradé brillant, anneau de cuir noir clouté à la base, halo rouge néon.
 
 ## Pilotage et stats (stats.html)
