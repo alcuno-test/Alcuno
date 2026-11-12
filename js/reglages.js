@@ -355,6 +355,32 @@ function afficherFenetreBdsm(){
   vibrer([60, 40, 60]);
   document.body.appendChild(voile);
 }
+// Fenêtre « … débloqué ! » du même style que celle du thème BDSM (style_donjon.css, dans tous les thèmes) :
+// mode hard (« Jojo ») et zizi-coptère (js/zizi-coptere.js). boutons : [{ libelle, principal, action }]
+function afficherFenetreDeblocage(id, { secret, titre, texte, boutons }){
+  if (document.getElementById(id)) return;
+  const voile = document.createElement("div");
+  voile.id = id;
+  voile.className = "fenetreDeblocage";
+  voile.setAttribute("role", "dialog");
+  voile.setAttribute("aria-label", titre.replace(/<br>/g, " "));
+  voile.innerHTML = `<div class="fenetreBdsm-carte"><div class="fenetreBdsm-secret">${secret}</div>`
+    + `<div class="fenetreBdsm-titre">${titre}</div><div class="fenetreBdsm-texte">${texte}</div></div>`;
+  const fermer = () => {
+    voile.classList.add("fenetreBdsm-sortie");
+    setTimeout(() => voile.remove(), 250);
+  };
+  boutons.forEach(({ libelle, principal, action }) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = principal ? "fenetreBdsm-essayer" : "fenetreBdsm-plusTard";
+    btn.textContent = libelle;
+    btn.addEventListener("click", () => { fermer(); if (action) action(); });
+    voile.querySelector(".fenetreBdsm-carte").appendChild(btn);
+  });
+  vibrer([60, 40, 60]);
+  document.body.appendChild(voile);
+}
 // ===== Thème secret « Kawaii » : débloqué avec les 11 stickers de l'album (js/stickers.js) =====
 const CLE_KAWAII = "alcuno_theme_kawaii";
 const CLE_KAWAII_NOUVEAU = "alcuno_kawaii_nouveau";
@@ -1076,7 +1102,13 @@ function debloquerHard(){
   if (hardDebloque()) return;
   try { localStorage.setItem(CLE_HARD_DEBLOQUE, "1"); } catch (e) {}
   majOptionHard();
-  try { afficherToast("🔞 Mode hard débloqué ! Il est dans « Ta partie »", 3200); } catch (e) {}
+  if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); // (le clavier se ferme)
+  afficherFenetreDeblocage("fenetreHard", {
+    secret: "🤡 Mot secret trouvé !",
+    titre: "Mode hard<br>débloqué !",
+    texte: "Il est maintenant dans « Ta partie »,<br>au début de chaque partie<br>(à 2 joueurs seulement)",
+    boutons: [{ libelle: "OK", principal: true }]
+  });
 }
 majOptionHard();
 caseModeHard.addEventListener("change", () => {

@@ -5317,11 +5317,12 @@ body.partie-hard header h1 .badgeHard{
 #ecranReglages #ligneModeHard[hidden]{
   display: none !important;
 }
+/* Contour orange néon dans tous les thèmes (ils ont tous un contour sur ces lignes) */
 html #ecranReglages #ligneModeHard{
   background: #000 !important;
   background-image: none !important;
-  border-color: #000 !important;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
+  border: 2px solid #ff9a1f !important;
+  box-shadow: 0 0 6px rgba(255, 154, 31, 0.95), 0 0 16px rgba(255, 140, 0, 0.6), inset 0 0 8px rgba(255, 140, 0, 0.25) !important;
 }
 html #ecranReglages #ligneModeHard .optionTitre,
 html #ecranReglages #ligneModeHard .optionNote{
@@ -5330,6 +5331,10 @@ html #ecranReglages #ligneModeHard .optionNote{
   text-shadow: none !important;
   background: none !important;
   font-family: inherit;
+}
+/* (interrupteur éteint : sombre dans certains thèmes, invisible sur le noir sans ce liseré) */
+html #ecranReglages #ligneModeHard .interrupteur{
+  box-shadow: 0 0 0 1.5px rgba(255, 154, 31, 0.75) !important;
 }
 html #ecranReglages #ligneModeHard .badgeOrangeHard{
   display: inline-block;
@@ -5367,10 +5372,6 @@ html #ecranReglages #ligneModeHard .badgeOrangeHard{
 #ziziCoptere.zizi-tenu{ cursor: grabbing; filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.6)); }
 /* (au-dessus de tout l'accueil, et bien visible devant les objets qui tombent derrière) */
 #ziziCoptere{ will-change: transform, left, top; }
-/* Thème Sombre : le cadre noir disparaissait dans le fond noir */
-html[data-theme="noir"] #ecranReglages #ligneModeHard{
-  border: 2px solid #ff9000 !important;
-}
 
 /* ===== « Ta partie » : l'écran des Réglages avec seulement Mode PJ, Partie express, Mode hot et « Continuer »
    (voir ouvrirOptionsPartie dans js/reglages.js). En vue normale, ces lignes ne sont pas dans les Réglages. ===== */

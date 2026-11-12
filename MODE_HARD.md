@@ -18,8 +18,7 @@ Statut : codé dans l'appli test (jeu 9.90.0, cache `alcuno-test-v95`). Dernièr
 
 ## Affichage
 - « Ta partie » : cadre noir, textes blancs, « hard » noir sur orange (idée 3), le même dans tous les thèmes
-  (bordure orange en thème Sombre). Texte : « On est pas là pour se titiller la bite avec des gants de boxe. »
-  + « Idée de Jojo mon clown préféré. »
+  avec un contour orange néon dans tous les thèmes. Texte : « On est pas là pour se titiller la bite avec des gants de boxe. »
 - Bandeau : **18 barré dessiné** après ALCUNO (`SVG_18_BARRE`, js/plateau.js ; pas l'emoji 🔞 qui affiche
   « UNDER 18 » sur Android). Aussi sur la télé, dans le bloc du défi (« MODE HARD ») et la fenêtre Coup de foudre.
 - Crédits : Jojo dans « Mention honorable » (idée du mode hard).
@@ -27,12 +26,14 @@ Statut : codé dans l'appli test (jeu 9.90.0, cache `alcuno-test-v95`). Dernièr
 ## Déblocage
 - Caché tant qu'il n'est pas débloqué sur le téléphone : entrer **« Jojo »** comme nom de joueur (ou pseudo en ligne),
   majuscules et accents ignorés. Jojo reste un joueur normal. Clé `alcuno_hard_debloque`.
+  Fenêtre « Mode hard débloqué ! » (même style que « Thème BDSM débloqué », `afficherFenetreDeblocage`).
 - En ligne : seul celui qui lance la partie a besoin de l'avoir débloqué (bit 2^36 de la graine, `graineHard`).
 - Lancer une partie hard débloque aussi le thème Donjon (BDSM), comme le hot.
 
 ## Zizi-coptère (`js/zizi-coptere.js`)
 - Débloqué en **finissant une partie hard** (récap de fin), hôte ou pas, avec ou sans PJ / express. Clé `alcuno_zizi_coptere`.
-- Notif « 🚁 Zizi-coptère débloqué ! Sur l'accueil, thème BDSM » sur le récap, une seule fois par téléphone.
+- Fenêtre « 🚁 Zizi-coptère débloqué ! » sur le récap (style « Thème BDSM débloqué »), une seule fois par téléphone ;
+  hors thème BDSM, bouton « Mettre le thème BDSM ».
 - Seulement avec le **thème Donjon**, à côté du titre de l'accueil.
 - 140 px. Touché : il tourne (de plus en plus vite tant qu'on le tient) et suit le doigt. Lâché : on peut le lancer ;
   gravité, rebonds sur les 4 bords de l'écran, frottement au sol, rotation qui ralentit peu à peu.

@@ -21,8 +21,19 @@ function debloquerZiziCoptere(){
   if (deja) return;
   try { localStorage.setItem(CLE_ZIZI_COPTERE, "1"); } catch (e) {}
   majZiziCoptere();
-  // Notif par-dessus le récap de fin (une seule fois par téléphone)
-  try { afficherToast("🚁 Zizi-coptère débloqué ! Sur l'accueil, thème BDSM", 5000); } catch (e) {}
+  // Fenêtre par-dessus le récap de fin (une seule fois par téléphone), même style que « Thème BDSM débloqué »
+  const enDonjon = document.documentElement.dataset.theme === "donjon";
+  try {
+    afficherFenetreDeblocage("fenetreZiziCoptere", {
+      secret: "Partie hard terminée !",
+      titre: "🚁 Zizi-coptère<br>débloqué !",
+      texte: enDonjon ? "Il t'attend sur l'accueil.<br>Touche-le, lance-le !" : "Il t'attend sur l'accueil,<br>avec le thème BDSM",
+      boutons: enDonjon ? [{ libelle: "OK", principal: true }] : [
+        { libelle: "Mettre le thème BDSM", principal: true, action: () => { const p = document.getElementById("pastilleDonjon"); if (p) p.click(); } },
+        { libelle: "Plus tard" }
+      ]
+    });
+  } catch (e) {}
 }
 
 const ziziCoptere = (() => {
