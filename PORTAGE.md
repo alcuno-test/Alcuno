@@ -111,7 +111,7 @@ appliqué (les deux dépôts ont chacun des changements propres). Dans le vrai j
 pas de diagnostic du son.
 
 Couronne argentée pour Jojo : portée (vrai jeu 9.88.1, cache v26).
-**Pas encore porté (test 9.90.29)** : crédits, mentions honorables côte à côte (`.credits-honneur` dans `style_alcuno.css`).
+Crédits, mentions honorables côte à côte : portés (vrai jeu 9.88.2, cache v27).
 
 Voir **`MODE_HARD.md`**. Fichiers touchés : `index.html` (ligne « Mode hard » de « Ta partie », badge 18 barré du
 bandeau, Jojo dans les crédits, `js/zizi-coptere.js` dans `FICHIERS_JEU`), `js/mode-hot.js` (défis HA / HB),
