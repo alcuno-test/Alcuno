@@ -324,4 +324,22 @@ window.addEventListener("resize", () => {
 try { new ResizeObserver(() => { placerZiziPresDuTitre(); if (!ziziPose) demarrerBoucleZizi(); }).observe(document.getElementById("titreAccueil")); } catch (e) {}
 window.addEventListener("load", () => setTimeout(majZiziCoptere, 200));
 majZiziCoptere();
+// ----- Bulle « Tapote-moi » : tant que le son du jeu est encore bloqué (aucun tap court depuis l'ouverture, voir
+// plus haut : sur iPhone un appui long ne débloque pas le son), au-dessus du zizi. Disparaît dès que le son marche.
+const bulleZizi = document.createElement("div");
+bulleZizi.id = "bulleZizi";
+bulleZizi.setAttribute("aria-hidden", "true");
+bulleZizi.textContent = "👆 Tapote-moi";
+bulleZizi.hidden = true;
+document.getElementById("choixMode").appendChild(bulleZizi);
+function majBulleZizi(){
+  const sonBloque = sonZiziPermis() && !(contexteSon && contexteSon.state === "running");
+  const visible = sonBloque && !ziziCoptere.hidden && !!ziziCoptere.getClientRects().length && !ziziTenu;
+  bulleZizi.hidden = !visible;
+  if (!visible) return;
+  const taille = tailleZizi();
+  bulleZizi.style.left = (ziziX + taille / 2) + "px";
+  bulleZizi.style.top = Math.max(4, ziziY - 6) + "px";
+}
+setInterval(majBulleZizi, 250);
 // #endregion

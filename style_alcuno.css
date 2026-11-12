@@ -5393,6 +5393,16 @@ html #ecranReglages #ligneModeHard .badgeOrangeHard{
   filter: drop-shadow(0 0 6px rgba(255, 42, 61, 0.85)) drop-shadow(0 4px 6px rgba(0, 0, 0, 0.6));
 }
 #ziziCoptere[hidden]{ display: none !important; }
+/* Bulle « Tapote-moi » au-dessus du zizi-coptère, tant que le son du jeu est bloqué (js/zizi-coptere.js) */
+#bulleZizi{
+  position: fixed; z-index: 51; transform: translate(-50%, -100%); pointer-events: none; white-space: nowrap;
+  padding: 6px 12px; border-radius: 999px; font: 800 14px Arial, sans-serif; color: #fff;
+  background: #0a0a0c; border: 2px solid #ff2a3d; box-shadow: 0 0 10px rgba(255, 42, 61, 0.8);
+  animation: bulleZiziSautille 1.1s ease-in-out infinite alternate;
+}
+#bulleZizi[hidden]{ display: none !important; }
+@keyframes bulleZiziSautille{ from{ transform: translate(-50%, -100%); } to{ transform: translate(-50%, calc(-100% - 6px)); } }
+@media (prefers-reduced-motion: reduce){ #bulleZizi{ animation: none; } }
 /* (l'animation d'entrée des éléments de l'accueil, « pageEntree », figeait sa rotation : transform repris par l'animation) */
 #ziziCoptere{ animation: none !important; transition: none !important; }
 #ziziCoptere svg{ width: 100%; height: 100%; display: block; pointer-events: none; }
