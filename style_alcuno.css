@@ -5397,8 +5397,8 @@ html #ecranReglages #ligneModeHard .badgeOrangeHard{
 #bulleZizi{
   position: fixed; z-index: 51; transform: translate(-50%, -100%); pointer-events: none; white-space: nowrap;
   /* discret : juste un petit texte en italique, sans cadre, qui flotte doucement */
-  font: italic 400 13px Arial, sans-serif; color: rgba(255, 208, 214, 0.7); text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
-  animation: bulleZiziSautille 1.6s ease-in-out infinite alternate;
+  font: italic 400 11px Arial, sans-serif; letter-spacing: 0.04em; color: rgba(255, 90, 110, 0.38); text-shadow: none;
+  animation: bulleZiziSautille 2.4s ease-in-out infinite alternate;
 }
 #bulleZizi[hidden]{ display: none !important; }
 @keyframes bulleZiziSautille{ from{ transform: translate(-50%, -100%); } to{ transform: translate(-50%, calc(-100% - 6px)); } }

@@ -339,7 +339,7 @@ function majBulleZizi(){
   if (!visible) return;
   const taille = tailleZizi();
   bulleZizi.style.left = (ziziX + taille / 2) + "px";
-  bulleZizi.style.top = Math.max(4, ziziY - 6) + "px";
+  bulleZizi.style.top = Math.max(4, ziziY + taille * 0.12) + "px"; // (tout près du haut du dessin)
 }
 setInterval(majBulleZizi, 250);
 // #endregion
