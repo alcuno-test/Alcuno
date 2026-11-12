@@ -117,8 +117,7 @@ const DEFIS_HOT = {
     { id: "HB16", t: "Mets de la chantilly (ou autre chose, pourvu que ce soit comestible) sur la poitrine de {nom}, et lèche tout." },
     { id: "HB17", t: "Fais un cunni ou une fellation à {nom} avec un glaçon dans la bouche." },
     { id: "HB18", t: "Faites une position de votre choix en silence total : le premier qui fait un bruit boit les gorgées de ce défi." },
-    { id: "HB19", t: "Fais l'amour à {nom} pendant qu'il ou elle récite l'alphabet à l'envers. S'il ou elle se trompe, il ou elle boit les gorgées de ce défi." },
-    { id: "HB20", t: "Faites l'amour pendant que {nom} finit son verre sans en renverser une goutte. Une goutte renversée : il ou elle boit les gorgées de ce défi." }
+    { id: "HB19", t: "Fais l'amour à {nom} pendant qu'il ou elle récite l'alphabet à l'envers. S'il ou elle se trompe, il ou elle boit les gorgées de ce défi." }
   ]
 };
 

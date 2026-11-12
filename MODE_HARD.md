@@ -10,7 +10,7 @@ Statut : codé dans l'appli test (jeu 9.90.0, cache `alcuno-test-v95`). Dernièr
   « Je le fais » / « Je bois N ». Refuser = boire les gorgées prévues.
 - Paquet : celui du hot à 2 joueurs, donc **sans Cupidon** ; carte **Coup de foudre** à la Saint-Valentin :
   « un doigt dans le cul… ou un CUL SEC » (4 gorgées en mode PJ).
-- Défis (`DEFIS_HOT.HA` / `DEFIS_HOT.HB` dans `js/mode-hot.js`, 20 chacun, validés par l'utilisateur) :
+- Défis (`DEFIS_HOT.HA` / `DEFIS_HOT.HB` dans `js/mode-hot.js`, 20 en HA et 19 en HB, validés par l'utilisateur ; HB20 retiré, pas remplacé) :
   - **HA** (embrasser, préliminaires) : jusqu'à 4 gorgées (jusqu'à 2 en mode PJ)
   - **HB** (actes sexuels) : 5 gorgées et plus (3 et plus en mode PJ)
   - Le défi vise toujours l'autre joueur ({nom}). Les défis à {nom1} / {nom2} ne sortent pas (il faut 3 joueurs).
