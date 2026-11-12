@@ -162,8 +162,13 @@ function majSonZizi(){
   const ctx = contexteAudio();
   if (!ctx) return;
   if (!ziziSonBuffer) { chargerSonZizi(ctx); return; }
-  if (!ziziSon || ziziSon.ctx !== ctx) {
-    arreterSonZizi();
+  // Bruit lancé quand le son était encore bloqué (premier toucher) ou sur un ancien contexte : dès que le son
+  // du jeu marche (débloqué par n'importe quel tap), on le relance pour de bon
+  if (ziziSon && (ziziSon.ctx !== ctx || (!ziziSon.enMarche && ctx.state === "running"))) {
+    try { ziziSon.source.stop(); } catch (e) {}
+    ziziSon = null;
+  }
+  if (!ziziSon) {
     const source = ctx.createBufferSource();
     source.buffer = ziziSonBuffer;
     source.loop = true;
@@ -243,7 +248,9 @@ function pasZizi(maintenant){
     ziziTraces = ziziTraces.filter((p) => t - p.t < 100);
   };
   ziziCoptere.addEventListener("pointerdown", (e) => {
-    e.preventDefault();
+    // (souris seulement : au doigt, empêcher le pointerdown pouvait supprimer le « touchend » / « click » qui
+    // débloquent le son du téléphone ; le défilement est déjà bloqué par touch-action: none)
+    if (e.pointerType === "mouse") e.preventDefault();
     try { ziziCoptere.setPointerCapture(e.pointerId); } catch (err) {}
     appui = { id: e.pointerId, dx: e.clientX - ziziX, dy: e.clientY - ziziY };
     ziziTraces = [];
@@ -295,9 +302,8 @@ function pasZizi(maintenant){
     try { const ctx = contexteAudio(); if (ctx && ctx.state !== "running") ctx.resume().catch(() => {}); } catch (e) {}
     majSonZizi(); // (recréé dans le geste ; il s'éteint ensuite en FONDU_SON_ZIZI comme d'habitude)
   };
-  ziziCoptere.addEventListener("touchend", relancerSonZiziAuGeste);
-  ziziCoptere.addEventListener("pointerup", relancerSonZiziAuGeste);
-  ziziCoptere.addEventListener("click", relancerSonZiziAuGeste);
+  // (sur tout le document, après debloquerSon : le doigt peut être relevé ailleurs que sur le zizi)
+  ["touchend", "pointerup", "click"].forEach((type) => document.addEventListener(type, relancerSonZiziAuGeste, { capture: true, passive: true }));
   ziziCoptere.addEventListener("pointercancel", lacher);
   ziziCoptere.addEventListener("contextmenu", (e) => e.preventDefault()); // (pas de menu au doigt maintenu)
 })();
