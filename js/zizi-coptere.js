@@ -89,7 +89,7 @@ function dessinerZizi(){
 }
 function placerZiziPresDuTitre(){ // (sur le A du titre)
   if (!ziziPose || ziziCoptere.hidden) return;
-  // Au départ : debout sur le A d'ALCUNO, pointe vers le bas (le dessin est horizontal, gland à droite : 90°)
+  // Au départ : devant le A d'ALCUNO (par-dessus), pointe vers le bas (le dessin est horizontal, gland à droite : 90°)
   const titre = document.getElementById("titreAccueil");
   if (!titre) return;
   let r = titre.getBoundingClientRect();
@@ -103,10 +103,9 @@ function placerZiziPresDuTitre(){ // (sur le A du titre)
   if (!r.width) return; // (accueil caché)
   const taille = tailleZizi();
   ziziAngle = 90;
-  // le bout touche le haut de la lettre (le haut du dessin de la lettre : ~18 % sous le haut de sa boîte)
-  const pointe = taille * (52 / 120); // (du centre du dessin au bout du gland)
+  // devant la lettre : centré sur le A (par-dessus)
   ziziX = Math.max(0, Math.min(largeurEcranZizi() - taille, r.left + r.width / 2 - taille / 2));
-  ziziY = Math.max(0, r.top + r.height * 0.18 - pointe - taille / 2);
+  ziziY = Math.max(0, r.top + r.height / 2 - taille / 2);
   dessinerZizi();
 }
 function majZiziCoptere(){
