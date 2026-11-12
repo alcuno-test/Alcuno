@@ -112,6 +112,7 @@ pas de diagnostic du son.
 
 Couronne argentée pour Jojo : portée (vrai jeu 9.88.1, cache v26).
 Crédits, mentions honorables côte à côte : portés (vrai jeu 9.88.2, cache v27).
+**Pas encore porté (test 9.90.31)** : accueil sans sélection de texte à l'appui long (bloc « Écran d'accueil : jamais de sélection » de `style_alcuno.css`) ; le défaut touche aussi le vrai jeu.
 **Pas encore porté (test 9.90.30)** : thème BDSM, plus de carré autour des noms au +4 / Cupidon / Coup de foudre (fin de `style_donjon.css`). Ce défaut existe aussi dans le vrai jeu.
 
 Voir **`MODE_HARD.md`**. Fichiers touchés : `index.html` (ligne « Mode hard » de « Ta partie », badge 18 barré du
