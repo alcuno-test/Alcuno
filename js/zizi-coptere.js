@@ -87,12 +87,19 @@ function dessinerZizi(){
   ziziCoptere.style.top = ziziY + "px";
   ziziCoptere.style.transform = `rotate(${ziziAngle}deg)`;
 }
-function placerZiziPresDuTitre(){ // (sur le O du titre)
+function placerZiziPresDuTitre(){ // (sur le A du titre)
   if (!ziziPose || ziziCoptere.hidden) return;
-  // Au départ : debout sur le O d'ALCUNO, pointe vers le bas (le dessin est horizontal, gland à droite : 90°)
-  const o = document.querySelector("#titreAccueil .lettreO") || document.getElementById("titreAccueil");
-  if (!o) return;
-  const r = o.getBoundingClientRect();
+  // Au départ : debout sur le A d'ALCUNO, pointe vers le bas (le dessin est horizontal, gland à droite : 90°)
+  const titre = document.getElementById("titreAccueil");
+  if (!titre) return;
+  let r = titre.getBoundingClientRect();
+  const texte = titre.firstChild; // « ALCUN » (le O est à part : span.lettreO)
+  if (texte && texte.nodeType === 3 && texte.length) {
+    const plage = document.createRange();
+    plage.setStart(texte, 0); plage.setEnd(texte, 1); // la lettre A
+    const rA = plage.getBoundingClientRect();
+    if (rA.width) r = rA;
+  }
   if (!r.width) return; // (accueil caché)
   const taille = tailleZizi();
   ziziAngle = 90;
