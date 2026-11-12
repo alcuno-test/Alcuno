@@ -112,6 +112,7 @@ pas de diagnostic du son.
 
 Couronne argentée pour Jojo : portée (vrai jeu 9.88.1, cache v26).
 Crédits, mentions honorables côte à côte : portés (vrai jeu 9.88.2, cache v27).
+**Pas encore porté (test 9.90.30)** : thème BDSM, plus de carré autour des noms au +4 / Cupidon / Coup de foudre (fin de `style_donjon.css`). Ce défaut existe aussi dans le vrai jeu.
 
 Voir **`MODE_HARD.md`**. Fichiers touchés : `index.html` (ligne « Mode hard » de « Ta partie », badge 18 barré du
 bandeau, Jojo dans les crédits, `js/zizi-coptere.js` dans `FICHIERS_JEU`), `js/mode-hot.js` (défis HA / HB),
