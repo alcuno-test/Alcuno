@@ -308,6 +308,10 @@ function pasZizi(maintenant){
   ["touchend", "pointerup", "click"].forEach((type) => document.addEventListener(type, relancerSonZiziAuGeste, { capture: true, passive: true }));
   ziziCoptere.addEventListener("pointercancel", lacher);
   ziziCoptere.addEventListener("contextmenu", (e) => e.preventDefault()); // (pas de menu au doigt maintenu)
+  // iPhone (vu avec le diagnostic, 9.90.19) : après un appui LONG, le doigt relevé ne débloque pas le son (l'iPhone y
+  // voit un « appui long » et pas un geste) ; seul un appui court le débloque. Empêcher le touchstart coupe la
+  // reconnaissance de l'appui long par l'iPhone : on espère que le doigt relevé compte alors comme un geste.
+  ziziCoptere.addEventListener("touchstart", (e) => { if (e.cancelable) e.preventDefault(); }, { passive: false });
 })();
 
 // Thème changé (Réglages) : html[data-theme] bouge ; fenêtre redimensionnée : il reste dans l'écran
