@@ -5368,6 +5368,8 @@ html #ecranReglages #ligneModeHard .badgeOrangeHard{
   filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.5));
 }
 #ziziCoptere[hidden]{ display: none !important; }
+/* (l'animation d'entrée des éléments de l'accueil, « pageEntree », figeait sa rotation : transform repris par l'animation) */
+#ziziCoptere{ animation: none !important; transition: none !important; }
 #ziziCoptere svg{ width: 100%; height: 100%; display: block; pointer-events: none; }
 #ziziCoptere.zizi-tenu{ cursor: grabbing; filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.6)); }
 /* (au-dessus de tout l'accueil, et bien visible devant les objets qui tombent derrière) */
