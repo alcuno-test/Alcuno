@@ -30,25 +30,57 @@
   const h2 = document.getElementById("titreReglages");
   const el = (balise, classe, texte) => { const e = document.createElement(balise); if (classe) e.className = classe; if (texte != null) e.textContent = texte; return e; };
 
-  // Sélecteur de vue (en haut)
+  // Sélecteur de vue (en haut) : une pastille à trois cases, la case choisie glisse en douceur
+  const ICONES_VUE = {
+    liste: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>',
+    sections: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="6" rx="2"/><path d="M4 15h16M4 19h16"/></svg>',
+    tuiles: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/></svg>'
+  };
+  const VUES = [["liste", "Liste"], ["sections", "Sections"], ["tuiles", "Tuiles"]];
   const choix = el("div", "vueReglagesChoix");
   choix.id = "vueReglagesChoix";
-  const labelVue = el("span", "vueReglagesLabel", "Affichage des réglages");
-  choix.append(labelVue);
-  const boutonsVue = [["liste", "Liste"], ["sections", "Sections"], ["tuiles", "Tuiles"]].map(([id, nom]) => {
-    const b = el("button", "vueReglagesBtn", nom); b.type = "button"; b.dataset.vue = id;
-    b.addEventListener("click", () => { vue = id; actif = ""; try { localStorage.setItem(CLE_VUE, id); } catch (e) {} majVue(); });
-    return b;
+  const seg = el("div", "vueSeg"); seg.setAttribute("role", "group"); seg.setAttribute("aria-label", "Affichage des réglages");
+  const pastille = el("span", "vueSegPastille"); seg.append(pastille);
+  const boutonsVue = VUES.map(([id, nom]) => {
+    const b = el("button", "vueSegBtn"); b.type = "button"; b.dataset.vue = id;
+    b.innerHTML = ICONES_VUE[id] + "<span></span>"; b.lastChild.textContent = nom;
+    b.addEventListener("click", () => {
+      if (vue === id) return;
+      vue = id; actif = ""; try { localStorage.setItem(CLE_VUE, id); } catch (e) {}
+      majVue(); entrer(Array.from(contenu.querySelectorAll(":scope > [data-groupe]")).filter((e) => e.offsetHeight > 0));
+    });
+    seg.append(b); return b;
   });
-  const rangee = el("div", "vueReglagesRangee"); rangee.append(...boutonsVue); choix.append(rangee);
+  choix.append(seg);
   h2.after(choix);
+
+  // Animations : un bloc qui apparaît glisse et se fond (en cascade) ; un bloc qui disparaît se fond d'abord. Pas d'animation si le
+  // téléphone demande moins de mouvement.
+  const calme = () => { try { return matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) { return false; } };
+  function entrer(liste){
+    if (calme()) return;
+    liste.forEach((e, i) => { if (e.animate) e.animate([{ opacity: 0, transform: "translateY(-10px)" }, { opacity: 1, transform: "none" }], { duration: 260, delay: Math.min(i, 8) * 40, easing: "cubic-bezier(.2,.8,.2,1)", fill: "backwards" }); });
+  }
+  function sortir(liste, apres){
+    if (calme() || !liste.length || !liste[0].animate) { apres(); return; }
+    const anims = liste.map((e) => e.animate([{ opacity: 1, transform: "none" }, { opacity: 0, transform: "translateY(-6px)" }], { duration: 140, easing: "ease-in", fill: "forwards" }));
+    Promise.all(anims.map((a) => a.finished)).then(() => { apres(); anims.forEach((a) => a.cancel()); }, apres);
+  }
+  const blocsDe = (id) => Array.from(contenu.querySelectorAll(`:scope > [data-groupe="${id}"]:not(.enteteGroupe)`)).filter((e) => e.offsetHeight > 0 || !e.classList.contains("groupe-ouvert"));
+  const blocsVisiblesDe = (id) => Array.from(contenu.querySelectorAll(`:scope > [data-groupe="${id}"]:not(.enteteGroupe)`)).filter((e) => e.offsetHeight > 0);
 
   // Tuiles
   const tuiles = el("div", "tuilesReglages"); tuiles.id = "tuilesReglages";
   GROUPES.forEach((g) => {
     const t = el("button", "tuileReglage"); t.type = "button"; t.dataset.groupe = g.id;
     t.append(el("span", "tuileIcone", g.icone), el("span", "tuileNom", g.nom));
-    t.addEventListener("click", () => { actif = g.id; majVue(); ecran.scrollTop = 0; });
+    t.addEventListener("click", () => {
+      const ancien = actif;
+      const ouvrir = (id) => { actif = id; majVue(); const bl = blocsVisiblesDe(id); entrer(bl); if (bl[0]) setTimeout(() => { try { bl[0].scrollIntoView({ behavior: calme() ? "auto" : "smooth", block: "nearest" }); } catch (e) {} }, 60); };
+      if (ancien === g.id) sortir(blocsVisiblesDe(ancien), () => { actif = ""; majVue(); }); // (retap : la page se referme)
+      else if (ancien) sortir(blocsVisiblesDe(ancien), () => ouvrir(g.id));
+      else ouvrir(g.id);
+    });
     tuiles.append(t);
   });
   choix.after(tuiles);
@@ -58,9 +90,8 @@
     const e = el("button", "enteteGroupe"); e.type = "button"; e.dataset.groupe = g.id; e.dataset.rang = String(i);
     e.append(el("span", "enteteIcone", g.icone), el("span", "enteteNom", g.nom), el("span", "enteteFleche", ""));
     e.addEventListener("click", () => {
-      if (vue === "tuiles") { actif = ""; ecran.scrollTop = 0; }
-      else if (ouverts.has(g.id)) ouverts.delete(g.id); else ouverts.add(g.id);
-      majVue();
+      if (ouverts.has(g.id)) { sortir(blocsVisiblesDe(g.id), () => { ouverts.delete(g.id); majVue(); }); return; }
+      ouverts.add(g.id); majVue(); entrer(blocsVisiblesDe(g.id));
     });
     return e;
   });
@@ -70,8 +101,9 @@
     ecran.classList.toggle("vue-sections", vue === "sections");
     ecran.classList.toggle("vue-tuiles", vue === "tuiles");
     ecran.dataset.groupeActif = vue === "tuiles" ? actif : "";
-    boutonsVue.forEach((b) => b.classList.toggle("actif", b.dataset.vue === vue));
-    boutonsVue.forEach((b) => b.setAttribute("aria-pressed", b.dataset.vue === vue ? "true" : "false"));
+    boutonsVue.forEach((b) => { b.classList.toggle("actif", b.dataset.vue === vue); b.setAttribute("aria-pressed", b.dataset.vue === vue ? "true" : "false"); });
+    seg.style.setProperty("--rang", String(VUES.findIndex(([id]) => id === vue)));
+    tuiles.querySelectorAll(".tuileReglage").forEach((t) => t.classList.toggle("choisie", vue === "tuiles" && t.dataset.groupe === actif));
     // Ordre d'affichage (CSS « order ») : un groupe après l'autre ; chaque bloc garde son rang d'origine dans son groupe
     GROUPES.forEach((g, i) => {
       const ouvert = vue === "sections" ? ouverts.has(g.id) : vue === "tuiles" ? actif === g.id : true;
@@ -88,6 +120,11 @@
     });
   }
   majVue();
+  // Les tuiles et les titres de section prennent la couleur des titres des réglages du thème en cours (jaune en Bordeaux, bleu en Givre…)
+  const majCouleurTitre = () => { try { const t = contenu.querySelector(".optionTitre"); if (t) ecran.style.setProperty("--titreReglage", getComputedStyle(t).color); } catch (e) {} };
+  majCouleurTitre();
+  try { new MutationObserver(() => setTimeout(majCouleurTitre, 50)).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme", "class"] }); } catch (e) {}
+  ["btnReglages", "btnReglagesJeu"].forEach((id) => { const b = document.getElementById(id); if (b) b.addEventListener("click", () => setTimeout(majCouleurTitre, 0)); });
   // À chaque ouverture des Réglages, les tuiles reviennent à la page d'accueil
   const retour = () => { if (actif) { actif = ""; majVue(); } };
   ["btnReglages", "btnReglagesJeu"].forEach((id) => { const b = document.getElementById(id); if (b) b.addEventListener("click", retour); });

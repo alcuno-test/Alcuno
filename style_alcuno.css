@@ -9093,42 +9093,51 @@ html[data-theme="soleil"] body :is(#ecranCaster button:not(.btnRetour), #btnFerm
 html[data-theme="soleil"] body #overlayRegleUnique .regle-detail:is(.regle-boit, .regle-note){ color: #5a1f45 !important; text-shadow: none !important; }
 
 /* ===== Vues des Réglages : Liste (d'origine) / Sections / Tuiles (js/reglages-vue.js). Rien n'est déplacé : le CSS « order » les range. ===== */
-#vueReglagesChoix{ display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; order: -10; }
-#ecranReglages .vueReglagesLabel{ font-size: 13px; opacity: .8; }
-#ecranReglages .vueReglagesRangee{ display: flex; gap: 6px; }
-#ecranReglages .vueReglagesBtn{
-  padding: 7px 12px; border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer;
-  background: rgba(255,255,255,.08); color: inherit; border: 1px solid rgba(255,255,255,.22); box-shadow: none;
+#vueReglagesChoix{ display: flex; justify-content: center; order: -10; }
+#ecranReglages .vueSeg{
+  --rang: 0; position: relative; display: grid; grid-template-columns: repeat(3, 1fr); padding: 4px; border-radius: 999px;
+  background: rgba(0,0,0,.28); border: 1px solid rgba(255,215,0,.2); width: min(100%, 330px);
 }
-#ecranReglages .vueReglagesBtn.actif{ background: #FFD700; color: #3a2a00; border-color: #FFD700; }
+#ecranReglages .vueSegPastille{
+  position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc((100% - 8px) / 3); border-radius: 999px; background: #FFD700;
+  box-shadow: 0 2px 6px rgba(0,0,0,.35); transform: translateX(calc(var(--rang) * 100%)); transition: transform .28s cubic-bezier(.3,.9,.3,1);
+}
+#ecranReglages .vueSegBtn{
+  position: relative; z-index: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 4px; border: 0; border-radius: 999px;
+  background: none; box-shadow: none; color: inherit; font-size: 13px; font-weight: 700; cursor: pointer; transition: color .2s;
+}
+#ecranReglages .vueSegBtn svg{ width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+#ecranReglages .vueSegBtn.actif{ color: #3a2a00; }
 #ecranReglages h2{ order: -30; }
 #ecranReglages .annonceRelais{ order: -20; }
 #tuilesReglages{ display: none; order: -5; }
 .enteteGroupe{ display: none; }
-#ecranReglages.vue-tuiles:not([data-groupe-actif=""]) #vueReglagesChoix,
-#ecranReglages.vue-tuiles:not([data-groupe-actif=""]) #tuilesReglages{ display: none; }
-#ecranReglages.vue-tuiles[data-groupe-actif=""] #tuilesReglages{ display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+#ecranReglages.vue-tuiles #tuilesReglages{ display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 #ecranReglages .tuileReglage{
-  display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 22px 10px; cursor: pointer;
-  border-radius: 16px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,215,0,0.18); color: #FFD700; box-shadow: none;
+  display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 16px 10px; cursor: pointer;
+  border-radius: 16px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,215,0,0.18); color: var(--titreReglage, #FFD700); box-shadow: none;
+  transition: transform .15s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
 }
-#ecranReglages .tuileIcone{ font-size: 34px; line-height: 1; }
-#ecranReglages .tuileNom{ font-size: 16px; font-weight: 800; }
-/* en-têtes : sections (titre qui s'ouvre) et tuiles (« ← Groupe » au-dessus de la page ouverte) */
-#ecranReglages.vue-sections .enteteGroupe, #ecranReglages.vue-tuiles .enteteGroupe.groupe-ouvert{
-  display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px 16px; cursor: pointer; text-align: left;
-  border-radius: 16px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,215,0,0.18); color: #FFD700; box-shadow: none;
+#ecranReglages .tuileReglage:active{ transform: scale(.96); }
+#ecranReglages .tuileReglage.choisie{ background: rgba(255,215,0,0.14); border-color: #FFD700; box-shadow: 0 0 0 1px #FFD700 inset; }
+#ecranReglages .tuileIcone{ font-size: 28px; line-height: 1; }
+#ecranReglages .tuileNom{ font-size: 15px; font-weight: 800; }
+/* sections : titres qui s'ouvrent */
+#ecranReglages.vue-sections .enteteGroupe{
+  display: flex; align-items: center; gap: 12px; width: 100%; margin: 0; padding: 14px 16px; cursor: pointer; text-align: left;
+  border-radius: 16px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,215,0,0.18); color: var(--titreReglage, #FFD700); box-shadow: none;
+  transition: background .2s ease, transform .15s ease;
 }
+#ecranReglages.vue-sections .enteteGroupe:active{ transform: scale(.98); }
 #ecranReglages .enteteIcone{ font-size: 22px; }
 #ecranReglages .enteteNom{ font-size: 17px; font-weight: 800; flex: 1 1 auto; }
-#ecranReglages.vue-sections .enteteFleche::before{ content: "⌄"; font-size: 20px; display: inline-block; transition: transform .2s; }
+#ecranReglages .enteteFleche{ line-height: 1; display: flex; align-items: center; }
+#ecranReglages.vue-sections .enteteFleche::before{ content: "⌄"; font-size: 20px; display: inline-block; transition: transform .25s ease; }
 #ecranReglages.vue-sections .enteteGroupe.groupe-ouvert .enteteFleche::before{ transform: rotate(180deg); }
-#ecranReglages.vue-tuiles .enteteFleche::before{ content: "←"; font-size: 20px; }
-/* blocs : cachés quand leur groupe est fermé (sections) ou pas ouvert (tuiles) */
+/* blocs : cachés quand leur groupe est fermé (sections) ou pas choisi (tuiles) */
 #ecranReglages.vue-sections .reglages-contenu > [data-groupe]:not(.enteteGroupe):not(.groupe-ouvert),
 #ecranReglages.vue-tuiles .reglages-contenu > [data-groupe]:not(.enteteGroupe):not(.groupe-ouvert){ display: none !important; }
-#ecranReglages.vue-tuiles .enteteGroupe:not(.groupe-ouvert){ display: none; }
-#ecranReglages.vue-sections .enteteGroupe, #ecranReglages.vue-tuiles .enteteGroupe{ margin: 0; }
+#ecranReglages.vue-tuiles .reglages-contenu > [data-groupe]{ scroll-margin-top: 12px; }
 /* « Modifier » (réorganiser) n'a de sens qu'en Liste */
 #ecranReglages.vue-sections #btnModifierReglages, #ecranReglages.vue-sections #btnParDefautReglages,
 #ecranReglages.vue-tuiles #btnModifierReglages, #ecranReglages.vue-tuiles #btnParDefautReglages{ display: none !important; }
@@ -9143,6 +9152,4 @@ html[data-theme="soleil"] body #overlayRegleUnique .regle-detail:is(.regle-boit,
 #ecranReglages .chipLangue.actif{ background: #FFD700; color: #3a2a00; border-color: #FFD700; }
 #ecranReglages .chipLangue:disabled{ opacity: .55; cursor: default; }
 #ecranReglages .chipLangue small{ display: block; font-size: 10px; font-weight: 400; }
-#ecranReglages.vue-tuiles .enteteFleche{ order: -1; line-height: 1; }
-#ecranReglages.vue-tuiles .enteteIcone{ order: 0; }
-#ecranReglages .enteteFleche{ line-height: 1; display: flex; align-items: center; }
+@media (prefers-reduced-motion: reduce){ #ecranReglages .vueSegPastille, #ecranReglages .tuileReglage, #ecranReglages .enteteGroupe, #ecranReglages .enteteFleche::before{ transition: none; } }
