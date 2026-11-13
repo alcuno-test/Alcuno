@@ -26,6 +26,17 @@
   let vue = lire();
   let actif = ""; // tuiles : le groupe ouvert ("" = la page des tuiles)
   const ouverts = new Set(["affichage"]); // sections : les groupes ouverts
+  // Changer de thème recharge la page (js/reglages.js) et rouvre les Réglages : on garde donc la tuile / les sections ouvertes (sessionStorage)
+  const CLE_ETAT = "alcuno_reglages_etat";
+  const idsOK = GROUPES.map((g) => g.id);
+  try {
+    const e = JSON.parse(sessionStorage.getItem(CLE_ETAT) || "null");
+    if (e && typeof e === "object") {
+      if (idsOK.includes(e.actif)) actif = e.actif;
+      if (Array.isArray(e.ouverts)) { ouverts.clear(); e.ouverts.filter((i) => idsOK.includes(i)).forEach((i) => ouverts.add(i)); }
+    }
+  } catch (e) {}
+  const sauverEtat = () => { try { sessionStorage.setItem(CLE_ETAT, JSON.stringify({ actif, ouverts: Array.from(ouverts) })); } catch (e) {} };
 
   const h2 = document.getElementById("titreReglages");
   const el = (balise, classe, texte) => { const e = document.createElement(balise); if (classe) e.className = classe; if (texte != null) e.textContent = texte; return e; };
@@ -104,6 +115,7 @@
     boutonsVue.forEach((b) => { b.classList.toggle("actif", b.dataset.vue === vue); b.setAttribute("aria-pressed", b.dataset.vue === vue ? "true" : "false"); });
     seg.style.setProperty("--rang", String(VUES.findIndex(([id]) => id === vue)));
     tuiles.querySelectorAll(".tuileReglage").forEach((t) => t.classList.toggle("choisie", vue === "tuiles" && t.dataset.groupe === actif));
+    sauverEtat();
     // Ordre d'affichage (CSS « order ») : un groupe après l'autre ; chaque bloc garde son rang d'origine dans son groupe
     GROUPES.forEach((g, i) => {
       const ouvert = vue === "sections" ? ouverts.has(g.id) : vue === "tuiles" ? actif === g.id : true;
