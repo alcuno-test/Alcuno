@@ -96,6 +96,13 @@
         // iPhone : page rechargée après un changement de thème (voir rafraichirBarreIphone dans script.js) :
         // on rouvre les Réglages dès le premier affichage
         try { if (sessionStorage.getItem("alcuno_rouvrir_reglages") !== null) document.documentElement.classList.add("rouvrir-reglages"); } catch (e) {}
+        // Les Réglages rouverts restent invisibles jusqu'à ce que leur mise en page (js/reglages-vue.js) soit prête, puis apparaissent en
+        // fondu : sans ça, on voyait la liste brute un instant, puis un saut vers les tuiles. Filet de sécurité : au bout de 2,5 s, on les montre quoi qu'il arrive.
+        if (document.documentElement.classList.contains("rouvrir-reglages")) {
+            document.documentElement.classList.add("rouvrir-vue", "rouvrir-fond");
+            setTimeout(function () { document.documentElement.classList.remove("rouvrir-vue"); }, 2500);
+            setTimeout(function () { document.documentElement.classList.remove("rouvrir-fond"); }, 3000);
+        }
         document.write('<link rel="stylesheet" href="style_alcuno.css?t=' + window.ANTI_CACHE + '" />');
         document.write('<link rel="stylesheet" href="style_kawaii.css?t=' + window.ANTI_CACHE + '" />'); // thème Kawaii (généré : outils/generer_kawaii.py)
         document.write('<link rel="stylesheet" href="style_donjon.css?t=' + window.ANTI_CACHE + '" />'); // thème secret Donjon (débloqué par une partie en mode hot)

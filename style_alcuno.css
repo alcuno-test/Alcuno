@@ -9153,3 +9153,10 @@ html[data-theme="soleil"] body #overlayRegleUnique .regle-detail:is(.regle-boit,
 #ecranReglages .chipLangue:disabled{ opacity: .55; cursor: default; }
 #ecranReglages .chipLangue small{ display: block; font-size: 10px; font-weight: 400; }
 @media (prefers-reduced-motion: reduce){ #ecranReglages .vueSegPastille, #ecranReglages .tuileReglage, #ecranReglages .enteteGroupe, #ecranReglages .enteteFleche::before{ transition: none; } }
+
+/* Réglages rouverts après un changement de thème : cachés le temps que js/reglages-vue.js range les blocs, puis fondu (voir le <head> de index.html) */
+html.rouvrir-vue #ecranReglages{ opacity: 0 !important; }
+#ecranReglages.apparition-reglages{ animation: reglagesApparait .3s ease-out both !important; }
+@keyframes reglagesApparait{ from{ opacity: 0; transform: translateY(8px); } to{ opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce){ #ecranReglages.apparition-reglages{ animation: none !important; } }
+html.rouvrir-fond #choixMode{ visibility: hidden !important; }

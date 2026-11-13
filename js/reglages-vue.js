@@ -137,6 +137,18 @@
   majCouleurTitre();
   try { new MutationObserver(() => setTimeout(majCouleurTitre, 50)).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme", "class"] }); } catch (e) {}
   ["btnReglages", "btnReglagesJeu"].forEach((id) => { const b = document.getElementById(id); if (b) b.addEventListener("click", () => setTimeout(majCouleurTitre, 0)); });
+  // Réglages rouverts après un changement de thème (rechargement) : ils étaient cachés (voir le <head> de index.html) ; on les montre une
+  // fois la mise en page prête et le défilement remis (js/reglages.js, à DOMContentLoaded), avec un fondu
+  const montrerApresRechargement = () => {
+    if (!document.documentElement.classList.contains("rouvrir-vue")) return;
+    requestAnimationFrame(() => {
+      ecran.classList.add("apparition-reglages");
+      document.documentElement.classList.remove("rouvrir-vue");
+      setTimeout(() => { ecran.classList.remove("apparition-reglages"); document.documentElement.classList.remove("rouvrir-fond"); }, 400); // (l'accueil, dessous, reste caché pendant le fondu)
+    });
+  };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", montrerApresRechargement);
+  else montrerApresRechargement();
   // À chaque ouverture des Réglages, les tuiles reviennent à la page d'accueil
   const retour = () => { if (actif) { actif = ""; majVue(); } };
   ["btnReglages", "btnReglagesJeu"].forEach((id) => { const b = document.getElementById(id); if (b) b.addEventListener("click", retour); });
