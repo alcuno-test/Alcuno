@@ -193,3 +193,4 @@ l'ancien cache était supprimé avec les musiques téléchargées.
 
 - PORTÉ dans le vrai jeu (9.88.5, cache v30) : contrôle des doublons de défis dans le pilotage, {nom1}/{nom2} refusés en hard, suppression de Sons/lightsaber_sound.mp3.
 - PORTÉ dans le vrai jeu (9.88.6, cache v31) : défis du jeu « souvent refusés » repérés dans le pilotage, garde-fou test_cache (empreinte du code). NON porté volontairement : tests/test_en_ligne_hard.js (il écrit dans la base Firebase de TEST).
+- PORTÉ dans le vrai jeu (9.88.7, cache v32) : Réglages en 3 vues (js/reglages-vue.js, CSS « Vues des Réglages »), bouton Mise en page + menu, Modifier en symbole, réglage Langue (anglais grisé), plus de saut au rechargement après changement de thème. Vue par défaut : Liste.
