@@ -9116,9 +9116,8 @@ html[data-theme="soleil"] body #overlayRegleUnique .regle-detail:is(.regle-boit,
 #ecranReglages .menuMEPItem.actif{ background: rgba(255,215,0,.16); color: #FFD700; }
 #ecranReglages .menuMEPCoche{ margin-left: auto; visibility: hidden; }
 #ecranReglages .menuMEPItem.actif .menuMEPCoche{ visibility: visible; }
-/* Modifier (et Par défaut) sous « Mise en page », vue Liste seulement ; le titre descend pour leur laisser la place */
-#ecranReglages .btnModifierReglages{ top: 68px !important; }
-#ecranReglages:not(.vue-sections):not(.vue-tuiles):not(.vue-options) .reglages-contenu > h2{ margin-top: 40px; }
+/* Modifier (et Par défaut) sous « Mise en page », à la hauteur du titre « Réglages », vue Liste seulement */
+#ecranReglages .btnModifierReglages{ top: 75px !important; }
 .reglages-edition #btnMiseEnPage, .reglages-edition #menuMiseEnPage{ display: none !important; }
 #ecranReglages.vue-options #btnMiseEnPage, #ecranReglages.vue-options #menuMiseEnPage{ display: none !important; }
 #ecranReglages h2{ order: -30; }
@@ -9173,3 +9172,5 @@ html.rouvrir-vue #ecranReglages{ opacity: 0 !important; }
 @keyframes reglagesApparait{ from{ opacity: 0; transform: translateY(8px); } to{ opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce){ #ecranReglages.apparition-reglages{ animation: none !important; } }
 html.rouvrir-fond #choixMode{ visibility: hidden !important; }
+/* pendant la modification : « Par défaut » prend la place de « Mise en page » (en haut à droite), « OK » reste à la hauteur du titre */
+.reglages-edition #btnParDefautReglages{ top: 24px !important; right: 20px !important; }
