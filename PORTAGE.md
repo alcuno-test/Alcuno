@@ -198,3 +198,4 @@ l'ancien cache était supprimé avec les musiques téléchargées.
 - PORTÉ dans le vrai jeu (9.88.9, cache v34) : Kawaii (tuiles, sections, Mise en page visibles), Star Wars (menu aux couleurs de Retour).
 - PORTÉ dans le vrai jeu (9.88.10, cache v35) : flèches des sections refaites (fait directement dans le vrai jeu, puis recopié ici en 9.90.57).
 - PORTÉ dans le vrai jeu (9.88.11, cache v36) : Sections, tout fermé au lancement (fait dans le vrai jeu puis recopié ici en 9.90.58).
+- PORTÉ dans le vrai jeu (9.88.12, cache v37) : chevrons des sections sans rond (recopié ici en 9.90.59).
