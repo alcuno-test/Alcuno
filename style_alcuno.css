@@ -9105,15 +9105,15 @@ html[data-theme="soleil"] body #overlayRegleUnique .regle-detail:is(.regle-boit,
 #ecranReglages .btnMiseEnPage:active{ transform: scale(.96); }
 #ecranReglages .menuMiseEnPage{
   position: absolute; right: 20px; top: 64px; z-index: 7; width: 232px; padding: 8px; border-radius: 16px;
-  background: #4a1535; border: 1px solid rgba(255,215,0,.35); box-shadow: 0 10px 24px rgba(0,0,0,.5);
+  background: var(--menuFond, #4a1535); border: 1px solid var(--menuBord, rgba(255,215,0,.35)); box-shadow: 0 10px 24px rgba(0,0,0,.5);
 }
 #ecranReglages .menuMiseEnPage[hidden]{ display: none; }
-#ecranReglages .menuMEPTitre{ font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: #ff8fb3; padding: 6px 8px; }
+#ecranReglages .menuMEPTitre{ font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--menuSousTitre, #ff8fb3); padding: 6px 8px; }
 #ecranReglages .menuMEPItem{
   display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 8px; border: 0; border-radius: 10px; background: none; box-shadow: none;
-  color: #e8d5e0; font-size: 15px; font-weight: 700; text-align: left; cursor: pointer; text-shadow: none;
+  color: var(--titreReglage, #e8d5e0); font-size: 15px; font-weight: 700; text-align: left; cursor: pointer; text-shadow: none;
 }
-#ecranReglages .menuMEPItem.actif{ background: rgba(255,215,0,.16); color: #FFD700; }
+#ecranReglages .menuMEPItem.actif{ background: var(--menuActif, rgba(255,215,0,.16)); }
 #ecranReglages .menuMEPCoche{ margin-left: auto; visibility: hidden; }
 #ecranReglages .menuMEPItem.actif .menuMEPCoche{ visibility: visible; }
 /* Modifier (et Par défaut) sous « Mise en page », à la hauteur du titre « Réglages », vue Liste seulement */

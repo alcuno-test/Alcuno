@@ -146,7 +146,29 @@
   }
   majVue();
   // Les tuiles et les titres de section prennent la couleur des titres des réglages du thème en cours (jaune en Bordeaux, bleu en Givre…)
-  const majCouleurTitre = () => { try { const t = contenu.querySelector(".optionTitre"); if (t) ecran.style.setProperty("--titreReglage", getComputedStyle(t).color); } catch (e) {} };
+  // Le menu « Mise en page » prend lui aussi les couleurs du thème (fond de page éclairci, couleur des titres) : calculées ici, sans color-mix (iPhone anciens)
+  const lireRGB = (c) => { const m = String(c).match(/rgba?\(([^)]+)\)/); if (!m) return null; const v = m[1].split(/[ ,\/]+/).filter(Boolean).map(Number); return v.length >= 3 ? v.slice(0, 3) : null; };
+  const melanger = (a, b, t) => a.map((x, i) => Math.round(x * (1 - t) + b[i] * t));
+  const css = (v, alpha) => alpha == null ? `rgb(${v.join(",")})` : `rgba(${v.join(",")},${alpha})`;
+  const majCouleurTitre = () => {
+    try {
+      const t = contenu.querySelector(".optionTitre"); if (!t) return;
+      const couleurTitre = getComputedStyle(t).color;
+      ecran.style.setProperty("--titreReglage", couleurTitre);
+      const titre = lireRGB(couleurTitre), fond = lireRGB(getComputedStyle(ecran).backgroundColor);
+      if (!titre || !fond) return;
+      const clair = (0.299 * fond[0] + 0.587 * fond[1] + 0.114 * fond[2]) > 140; // (thème clair : Givre, Kawaii…)
+      const lum = (v) => { const f = v.map((x) => { x /= 255; return x <= 0.03928 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4); }); return 0.2126 * f[0] + 0.7152 * f[1] + 0.0722 * f[2]; };
+      const contraste = (a, b) => { const [h, l] = lum(a) > lum(b) ? [lum(a), lum(b)] : [lum(b), lum(a)]; return (h + 0.05) / (l + 0.05); };
+      let menu = melanger(fond, [255, 255, 255], clair ? 0.6 : 0.12);
+      // Texte trop proche du fond (doré sur Prestige, sur Chandeleur…) : le menu s'assombrit (ou s'éclaircit si le texte est foncé) jusqu'à être lisible
+      if (contraste(titre, menu) < 4) menu = melanger(fond, lum(titre) > 0.3 ? [0, 0, 0] : [255, 255, 255], 0.7);
+      ecran.style.setProperty("--menuFond", css(menu));
+      ecran.style.setProperty("--menuBord", css(titre, 0.4));
+      ecran.style.setProperty("--menuActif", css(titre, 0.18));
+      ecran.style.setProperty("--menuSousTitre", css(titre, 0.75));
+    } catch (e) {}
+  };
   majCouleurTitre();
   try { new MutationObserver(() => setTimeout(majCouleurTitre, 50)).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme", "class"] }); } catch (e) {}
   ["btnReglages", "btnReglagesJeu"].forEach((id) => { const b = document.getElementById(id); if (b) b.addEventListener("click", () => setTimeout(majCouleurTitre, 0)); });
