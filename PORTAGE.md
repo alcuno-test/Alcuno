@@ -196,3 +196,4 @@ l'ancien cache était supprimé avec les musiques téléchargées.
 - PORTÉ dans le vrai jeu (9.88.7, cache v32) : Réglages en 3 vues (js/reglages-vue.js, CSS « Vues des Réglages »), bouton Mise en page + menu, Modifier en symbole, réglage Langue (anglais grisé), plus de saut au rechargement après changement de thème. Vue par défaut : Liste.
 - PORTÉ dans le vrai jeu (9.88.8, cache v33) : menu Mise en page, néon autour du menu entier en Star Wars et BDSM.
 - PORTÉ dans le vrai jeu (9.88.9, cache v34) : Kawaii (tuiles, sections, Mise en page visibles), Star Wars (menu aux couleurs de Retour).
+- PORTÉ dans le vrai jeu (9.88.10, cache v35) : flèches des sections refaites (fait directement dans le vrai jeu, puis recopié ici en 9.90.57).
