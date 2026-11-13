@@ -9184,3 +9184,15 @@ html.rouvrir-vue #ecranReglages{ opacity: 0 !important; }
 html.rouvrir-fond #choixMode{ visibility: hidden !important; }
 /* pendant la modification : « Par défaut » prend la place de « Mise en page » (en haut à droite), « OK » reste à la hauteur du titre */
 .reglages-edition #btnParDefautReglages{ top: 22px !important; right: 20px !important; }
+/* Kawaii : son thème impose un gros bouton rose à tous les .btnRetour ; ici les deux petits ronds restent discrets, comme « Mise en page » */
+html[data-theme="kawaii"][data-theme][data-theme] body #ecranReglages #btnModifierReglages,
+html[data-theme="kawaii"][data-theme][data-theme] body #ecranReglages #btnParDefautReglages,
+html[data-theme="kawaii"][data-theme][data-theme] body #ecranReglages #btnModifierReglages:hover,
+html[data-theme="kawaii"][data-theme][data-theme] body #ecranReglages #btnParDefautReglages:hover{
+  background: rgba(255,255,255,.55) !important; background-image: none !important; background-color: rgba(255,255,255,.55) !important;
+  border: 1px solid rgba(160,40,120,.35) !important; border-width: 1px !important; border-color: rgba(160,40,120,.35) !important;
+  box-shadow: none !important; text-shadow: none !important; color: var(--titreReglage, #6b1450) !important;
+}
+html[data-theme="kawaii"][data-theme][data-theme] body .reglages-edition #btnModifierReglages{
+  background: #ffffff !important; border-color: #a60f5b !important; border-width: 2px !important; color: #a60f5b !important;
+}
