@@ -190,3 +190,5 @@ l'ancien cache était supprimé avec les musiques téléchargées.
 - Deux défauts de contraste **antérieurs** à ce travail, laissés tels quels à la demande :
   le bouton « Album de stickers » en Kawaii (texte blanc sur rose clair) et cinq textes du
   thème Star Wars (dont la plupart sont des angles morts du test, voir plus haut).
+
+- PORTÉ dans le vrai jeu (9.88.5, cache v30) : contrôle des doublons de défis dans le pilotage, {nom1}/{nom2} refusés en hard, suppression de Sons/lightsaber_sound.mp3.
