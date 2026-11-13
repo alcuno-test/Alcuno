@@ -197,3 +197,4 @@ l'ancien cache était supprimé avec les musiques téléchargées.
 - PORTÉ dans le vrai jeu (9.88.8, cache v33) : menu Mise en page, néon autour du menu entier en Star Wars et BDSM.
 - PORTÉ dans le vrai jeu (9.88.9, cache v34) : Kawaii (tuiles, sections, Mise en page visibles), Star Wars (menu aux couleurs de Retour).
 - PORTÉ dans le vrai jeu (9.88.10, cache v35) : flèches des sections refaites (fait directement dans le vrai jeu, puis recopié ici en 9.90.57).
+- PORTÉ dans le vrai jeu (9.88.11, cache v36) : Sections, tout fermé au lancement (fait dans le vrai jeu puis recopié ici en 9.90.58).
