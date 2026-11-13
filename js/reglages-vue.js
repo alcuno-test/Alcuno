@@ -41,29 +41,42 @@
   const h2 = document.getElementById("titreReglages");
   const el = (balise, classe, texte) => { const e = document.createElement(balise); if (classe) e.className = classe; if (texte != null) e.textContent = texte; return e; };
 
-  // Sélecteur de vue (en haut) : une pastille à trois cases, la case choisie glisse en douceur
+  // « Mise en page » : un bouton en haut à droite (à la place d'où était « Modifier », qui passe dessous) ouvre un petit menu à trois choix
   const ICONES_VUE = {
     liste: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>',
     sections: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="6" rx="2"/><path d="M4 15h16M4 19h16"/></svg>',
     tuiles: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/></svg>'
   };
   const VUES = [["liste", "Liste"], ["sections", "Sections"], ["tuiles", "Tuiles"]];
-  const choix = el("div", "vueReglagesChoix");
-  choix.id = "vueReglagesChoix";
-  const seg = el("div", "vueSeg"); seg.setAttribute("role", "group"); seg.setAttribute("aria-label", "Affichage des réglages");
-  const pastille = el("span", "vueSegPastille"); seg.append(pastille);
-  const boutonsVue = VUES.map(([id, nom]) => {
-    const b = el("button", "vueSegBtn"); b.type = "button"; b.dataset.vue = id;
-    b.innerHTML = ICONES_VUE[id] + "<span></span>"; b.lastChild.textContent = nom;
+  const btnMEP = el("button", "btnMiseEnPage"); btnMEP.type = "button"; btnMEP.id = "btnMiseEnPage";
+  btnMEP.setAttribute("aria-haspopup", "menu"); btnMEP.setAttribute("aria-expanded", "false");
+  btnMEP.innerHTML = '<span class="mepIcone"></span><span class="mepTexte">Mise en page</span><span class="mepFleche" aria-hidden="true"></span>';
+  const menuMEP = el("div", "menuMiseEnPage"); menuMEP.id = "menuMiseEnPage"; menuMEP.setAttribute("role", "menu"); menuMEP.hidden = true;
+  const titreMenu = el("div", "menuMEPTitre", "Présenter en"); menuMEP.append(titreMenu);
+  const itemsMEP = VUES.map(([id, nom]) => {
+    const b = el("button", "menuMEPItem"); b.type = "button"; b.dataset.vue = id; b.setAttribute("role", "menuitemradio");
+    b.innerHTML = ICONES_VUE[id] + "<span></span><span class=\"menuMEPCoche\" aria-hidden=\"true\">✓</span>"; b.children[1].textContent = nom;
     b.addEventListener("click", () => {
+      fermerMenuMEP();
       if (vue === id) return;
       vue = id; actif = ""; try { localStorage.setItem(CLE_VUE, id); } catch (e) {}
       majVue(); entrer(Array.from(contenu.querySelectorAll(":scope > [data-groupe]")).filter((e) => e.offsetHeight > 0));
     });
-    seg.append(b); return b;
+    menuMEP.append(b); return b;
   });
-  choix.append(seg);
-  h2.after(choix);
+  function fermerMenuMEP(){ menuMEP.hidden = true; btnMEP.setAttribute("aria-expanded", "false"); }
+  btnMEP.addEventListener("click", (ev) => {
+    ev.stopPropagation();
+    const ouvrir = menuMEP.hidden;
+    menuMEP.hidden = !ouvrir; btnMEP.setAttribute("aria-expanded", ouvrir ? "true" : "false");
+    if (ouvrir && !calme() && menuMEP.animate) menuMEP.animate([{ opacity: 0, transform: "translateY(-6px)" }, { opacity: 1, transform: "none" }], { duration: 160, easing: "ease-out" });
+  });
+  document.addEventListener("pointerdown", (ev) => { if (!menuMEP.hidden && !menuMEP.contains(ev.target) && !btnMEP.contains(ev.target)) fermerMenuMEP(); }, true);
+  document.addEventListener("keydown", (ev) => { if (ev.key === "Escape" && !menuMEP.hidden) { fermerMenuMEP(); btnMEP.focus(); } });
+  ecran.append(btnMEP, menuMEP);
+  const boutonRetour = document.getElementById("btnFermerReglages");
+  if (boutonRetour) boutonRetour.addEventListener("click", fermerMenuMEP, true);
+  const choix = h2; // (les tuiles se placent juste après le titre)
 
   // Animations : un bloc qui apparaît glisse et se fond (en cascade) ; un bloc qui disparaît se fond d'abord. Pas d'animation si le
   // téléphone demande moins de mouvement.
@@ -112,8 +125,8 @@
     ecran.classList.toggle("vue-sections", vue === "sections");
     ecran.classList.toggle("vue-tuiles", vue === "tuiles");
     ecran.dataset.groupeActif = vue === "tuiles" ? actif : "";
-    boutonsVue.forEach((b) => { b.classList.toggle("actif", b.dataset.vue === vue); b.setAttribute("aria-pressed", b.dataset.vue === vue ? "true" : "false"); });
-    seg.style.setProperty("--rang", String(VUES.findIndex(([id]) => id === vue)));
+    itemsMEP.forEach((b) => { const sel = b.dataset.vue === vue; b.classList.toggle("actif", sel); b.setAttribute("aria-checked", sel ? "true" : "false"); });
+    btnMEP.querySelector(".mepIcone").innerHTML = ICONES_VUE[vue];
     tuiles.querySelectorAll(".tuileReglage").forEach((t) => t.classList.toggle("choisie", vue === "tuiles" && t.dataset.groupe === actif));
     sauverEtat();
     // Ordre d'affichage (CSS « order ») : un groupe après l'autre ; chaque bloc garde son rang d'origine dans son groupe

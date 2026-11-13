@@ -9093,21 +9093,34 @@ html[data-theme="soleil"] body :is(#ecranCaster button:not(.btnRetour), #btnFerm
 html[data-theme="soleil"] body #overlayRegleUnique .regle-detail:is(.regle-boit, .regle-note){ color: #5a1f45 !important; text-shadow: none !important; }
 
 /* ===== Vues des Réglages : Liste (d'origine) / Sections / Tuiles (js/reglages-vue.js). Rien n'est déplacé : le CSS « order » les range. ===== */
-#vueReglagesChoix{ display: flex; justify-content: center; order: -10; }
-#ecranReglages .vueSeg{
-  --rang: 0; position: relative; display: grid; grid-template-columns: repeat(3, 1fr); padding: 4px; border-radius: 999px;
-  background: rgba(0,0,0,.28); border: 1px solid rgba(255,215,0,.2); width: min(100%, 330px);
+/* « Mise en page » : bouton en haut à droite (en face de « Retour »), « Modifier » passe juste dessous */
+#ecranReglages .btnMiseEnPage{
+  position: absolute; right: 20px; top: 20px; z-index: 6; display: inline-flex; align-items: center; gap: 7px; padding: 8px 12px; border-radius: 999px;
+  font-size: 13px; font-weight: 800; cursor: pointer; white-space: nowrap; color: var(--titreReglage, #FFD700);
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,215,0,.35); box-shadow: none; text-shadow: none;
 }
-#ecranReglages .vueSegPastille{
-  position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc((100% - 8px) / 3); border-radius: 999px; background: #FFD700;
-  box-shadow: 0 2px 6px rgba(0,0,0,.35); transform: translateX(calc(var(--rang) * 100%)); transition: transform .28s cubic-bezier(.3,.9,.3,1);
+#ecranReglages .mepIcone svg, #ecranReglages .menuMEPItem svg{ width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; display: block; }
+#ecranReglages .mepFleche::before{ content: "⌄"; font-size: 17px; line-height: 1; display: inline-block; transition: transform .2s; }
+#ecranReglages .btnMiseEnPage[aria-expanded="true"] .mepFleche::before{ transform: rotate(180deg); }
+#ecranReglages .btnMiseEnPage:active{ transform: scale(.96); }
+#ecranReglages .menuMiseEnPage{
+  position: absolute; right: 20px; top: 64px; z-index: 7; width: 232px; padding: 8px; border-radius: 16px;
+  background: #4a1535; border: 1px solid rgba(255,215,0,.35); box-shadow: 0 10px 24px rgba(0,0,0,.5);
 }
-#ecranReglages .vueSegBtn{
-  position: relative; z-index: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 4px; border: 0; border-radius: 999px;
-  background: none; box-shadow: none; color: inherit; font-size: 13px; font-weight: 700; cursor: pointer; transition: color .2s;
+#ecranReglages .menuMiseEnPage[hidden]{ display: none; }
+#ecranReglages .menuMEPTitre{ font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: #ff8fb3; padding: 6px 8px; }
+#ecranReglages .menuMEPItem{
+  display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 8px; border: 0; border-radius: 10px; background: none; box-shadow: none;
+  color: #e8d5e0; font-size: 15px; font-weight: 700; text-align: left; cursor: pointer; text-shadow: none;
 }
-#ecranReglages .vueSegBtn svg{ width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
-#ecranReglages .vueSegBtn.actif{ color: #3a2a00; }
+#ecranReglages .menuMEPItem.actif{ background: rgba(255,215,0,.16); color: #FFD700; }
+#ecranReglages .menuMEPCoche{ margin-left: auto; visibility: hidden; }
+#ecranReglages .menuMEPItem.actif .menuMEPCoche{ visibility: visible; }
+/* Modifier (et Par défaut) sous « Mise en page », vue Liste seulement ; le titre descend pour leur laisser la place */
+#ecranReglages .btnModifierReglages{ top: 68px !important; }
+#ecranReglages:not(.vue-sections):not(.vue-tuiles):not(.vue-options) .reglages-contenu > h2{ margin-top: 40px; }
+.reglages-edition #btnMiseEnPage, .reglages-edition #menuMiseEnPage{ display: none !important; }
+#ecranReglages.vue-options #btnMiseEnPage, #ecranReglages.vue-options #menuMiseEnPage{ display: none !important; }
 #ecranReglages h2{ order: -30; }
 #ecranReglages .annonceRelais{ order: -20; }
 #tuilesReglages{ display: none; order: -5; }
@@ -9142,7 +9155,7 @@ html[data-theme="soleil"] body #overlayRegleUnique .regle-detail:is(.regle-boit,
 #ecranReglages.vue-sections #btnModifierReglages, #ecranReglages.vue-sections #btnParDefautReglages,
 #ecranReglages.vue-tuiles #btnModifierReglages, #ecranReglages.vue-tuiles #btnParDefautReglages{ display: none !important; }
 /* « Ta partie » : ni sélecteur de vue ni tuiles */
-#ecranReglages.vue-options #vueReglagesChoix, #ecranReglages.vue-options #tuilesReglages{ display: none !important; }
+#ecranReglages.vue-options #tuilesReglages{ display: none !important; }
 /* Langue */
 #ecranReglages .choixLangue{ display: flex; gap: 8px; flex: none; }
 #ecranReglages .chipLangue{
@@ -9152,7 +9165,7 @@ html[data-theme="soleil"] body #overlayRegleUnique .regle-detail:is(.regle-boit,
 #ecranReglages .chipLangue.actif{ background: #FFD700; color: #3a2a00; border-color: #FFD700; }
 #ecranReglages .chipLangue:disabled{ opacity: .55; cursor: default; }
 #ecranReglages .chipLangue small{ display: block; font-size: 10px; font-weight: 400; }
-@media (prefers-reduced-motion: reduce){ #ecranReglages .vueSegPastille, #ecranReglages .tuileReglage, #ecranReglages .enteteGroupe, #ecranReglages .enteteFleche::before{ transition: none; } }
+@media (prefers-reduced-motion: reduce){ #ecranReglages .tuileReglage, #ecranReglages .enteteGroupe, #ecranReglages .enteteFleche::before{ transition: none; } }
 
 /* Réglages rouverts après un changement de thème : cachés le temps que js/reglages-vue.js range les blocs, puis fondu (voir le <head> de index.html) */
 html.rouvrir-vue #ecranReglages{ opacity: 0 !important; }
