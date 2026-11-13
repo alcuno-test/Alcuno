@@ -150,3 +150,5 @@ Cache du service worker et images (tests/test_cache.js)
   Tourne aussi sur GitHub à chaque push.
 
 À regarder sur un vrai iPhone après une mise à jour : voir tests/VERIFICATION_IPHONE.md
+
+test_en_ligne_hard.js  mode hard EN LIGNE à deux "téléphones" (Playwright) : crée, rejoint, lance, joue 12 cartes, compare les deux états. Écrit une partie de test dans la base Firebase de l'appli TEST. 1 à 3 min.
