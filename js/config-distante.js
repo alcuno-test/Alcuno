@@ -17,7 +17,13 @@ try { configDistante = ConfigLib.valider(JSON.parse(localStorage.getItem(CLE_CON
 // Navigateur piloté par un programme (tests automatiques : navigator.webdriver) : les thèmes de fête sont disponibles toute
 // l'année quand le pilotage ne leur a pas donné de dates, sinon les tests d'un thème de fête ne marcheraient qu'à sa date.
 // « ?calendrier » enlève ce passe-droit (le test qui vérifie justement le calendrier). Jamais le cas chez un joueur.
+// APPLI TEST : tous les thèmes de fête sont disponibles toute l'année, même avec des dates données depuis le pilotage
+// (seul « caché » depuis le pilotage les retire). Le vrai jeu garde ses dates : ne pas reporter ces lignes-là.
+const APPLI_TEST_THEMES_DE_FETE_TOUTE_L_ANNEE = true;
 function themeBloqueADistance(nom){
+  if (APPLI_TEST_THEMES_DE_FETE_TOUTE_L_ANNEE && !/[?&]calendrier(=|&|$)/.test(location.search) && ConfigLib.PERIODES_FETES[nom]) {
+    const t = configDistante.themes && configDistante.themes[nom]; return !!(t && t.actif === false);
+  }
   const passeDroit = navigator.webdriver === true && !/[?&]calendrier(=|&|$)/.test(location.search) && !!ConfigLib.PERIODES_FETES[nom];
   if (passeDroit) { const t = configDistante.themes && configDistante.themes[nom]; if (!t || !t.debut) return !!(t && t.actif === false); }
   return !ConfigLib.themeDisponible(configDistante, nom, new Date());
