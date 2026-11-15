@@ -3406,6 +3406,23 @@ body.rattrapage [id^="overlay"] *{
   background: rgba(0, 0, 0, 0.45);
 }
 
+/* Coupure qui dure : bouton « Quitter la partie » sous le logo (js/en-ligne.js) */
+#coupureReseau{
+  flex-direction: column;
+  gap: 28px;
+}
+
+#coupureReseau .coupureQuitter{
+  padding: 14px 26px;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.72);
+  color: #fff;
+  font: 900 18px Arial, sans-serif;
+  touch-action: manipulation;
+  cursor: pointer;
+}
+
 #coupureReseau svg{
   width: min(48vw, 240px);
   height: auto;
@@ -3656,6 +3673,71 @@ html.accessibilite #overlayCoupDeFoudre .plus4-joueur-btn{
   cursor: pointer;
   touch-action: manipulation;
 }
+
+/* ===== Réglages : « Profil joueur » (js/profil.js) : petit lien discret « Supprimer mon profil » sous la ligne, une fois connecté ===== */
+#ecranReglages .profilSupprimer{
+  margin: 8px 0 0;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 700;
+}
+#ecranReglages .profilSupprimer[hidden]{ display: none; }
+#ecranReglages #btnProfilSupprimer{
+  padding: 8px 6px;
+  font: inherit;
+  color: rgba(255,255,255,0.6);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+#ecranReglages #btnProfilConnexion:disabled{ opacity: 0.55; cursor: default; }
+/* Déconnecté : le bouton « Se connecter avec Google » (blanc, G en couleurs, comme partout ailleurs), sur toute la largeur sous le texte */
+#ecranReglages [data-cle="compte"] .optionAction{ flex-wrap: wrap; }
+#ecranReglages #btnProfilConnexion .logoGoogle{ display: none; }
+#ecranReglages #btnProfilConnexion.btnGoogle{
+  flex: 1 0 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 4px;
+  padding: 11px 16px;
+  font-family: Roboto, Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #1f1f1f;
+  text-shadow: none;
+  background: #fff;
+  border: 1px solid #747775;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+#ecranReglages #btnProfilConnexion.btnGoogle .logoGoogle{ display: block; flex: 0 0 auto; width: 20px; height: 20px; }
+/* Connecté : « Se déconnecter » est le même bouton Google que « Se connecter avec Google » (G en couleurs compris) */
+/* « Supprimer mon profil » : sous « Se déconnecter », même taille, en rouge, même rendu dans tous les thèmes
+   (les thèmes y mettaient un cadre néon ou un trait dessous) */
+#ecranReglages [data-cle="compte"] .profilSupprimer{ flex: 1 0 100%; margin: 10px 0 0; text-align: center; }
+html[data-theme][data-theme][data-theme] body #ecranReglages #btnProfilSupprimer{
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; min-width: 0; min-height: 0; height: auto; box-sizing: border-box;
+  margin: 0; padding: 11px 16px;
+  font-family: Roboto, Arial, sans-serif; font-size: 15px; font-weight: 700; letter-spacing: 0;
+  text-transform: none; text-decoration: none !important; text-shadow: none;
+  color: #fff;
+  background: #d93025;
+  border: 1px solid #b3261e; border-radius: 999px; outline: none;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3); filter: none; clip-path: none;
+  cursor: pointer; touch-action: manipulation;
+}
+html[data-theme][data-theme][data-theme] body #ecranReglages #btnProfilSupprimer::before,
+html[data-theme][data-theme][data-theme] body #ecranReglages #btnProfilSupprimer::after{ content: none; display: none; }
+html[data-theme][data-theme][data-theme] body #ecranReglages #btnProfilSupprimer:active{ background: #b3261e; transform: scale(0.98); }
+/* même arrondi pour « Se connecter / Se déconnecter » (les deux boutons alignés) */
+#ecranReglages #btnProfilConnexion.btnGoogle{ border-radius: 999px; }
+/* Confirmation « Supprimer ton profil ? » : l'écran de confirmation du jeu passe au-dessus des Réglages (js/profil.js) */
+#ecranConfirmerRetrait.confirmationReglages{ z-index: 10060; }
 
 /* ===== Réglages : Partager le jeu (QR code + bouton « Partager ») ===== */
 #ecranReglages .blocPartage{
@@ -5670,7 +5752,7 @@ html.accessibilite #ecranInstallation #btnInstallationPlusTard{ font-size: 19px;
    Léger dégradé doré (le jaune du haut reste celui d'avant) et ombre du texte plus marquée.
    Mêmes boutons dans les overlays des règles (règle suivante). */
 html:not([data-theme="givre"]):where(:not([data-theme="kawaii"])) :is(#btnModeEnLigne, #btnModeClassique, #btnContinuerOptions, .btnRetour, #btnPartagerJeu,
-  #btnCreerPartie, #btnRejoindrePartie, #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #btnScannerQR,
+  #btnCreerPartie, #btnRejoindrePartie, #btnRegarderPartie, #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #validerRegarder, #btnScannerQR,
   #lancerPartieEnLigne, #btnRejouerMemes, #btnModifierJoueurs, #btnChoixPseudoAnnuler, #listeChoixPseudo button,
   #btnConfirmerAccueilOui, #btnConfirmerAccueilNon, #btnConfirmerHoteOui, #btnConfirmerHoteNon,
   #btnConfirmerRetraitOui, #btnConfirmerRetraitNon, #ajouterJoueur, #jouer, #supprimerJoueur, #nouvellePartie,
@@ -5857,16 +5939,16 @@ html:not([data-theme="givre"]):where(:not([data-theme="kawaii"])) :is(#overlayPi
    Luminosité plutôt que couleur : marche sur le jaune comme sur le cyan de Givre.
    Au doigt : plus sombre et un peu plus petit pendant l'appui. À la souris : un peu plus clair au survol
    (seulement si l'appareil a une souris, sinon l'effet reste « collé » après un tap). */
-:is(#btnModeEnLigne, #btnModeClassique, #btnContinuerOptions, .btnRetour, #btnPartagerJeu, #btnCreerPartie, #btnRejoindrePartie,
-  #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #btnScannerQR, #lancerPartieEnLigne, #btnRejouerMemes,
+:is(#btnModeEnLigne, #btnModeClassique, #btnContinuerOptions, .btnRetour, #btnPartagerJeu, #btnCreerPartie, #btnRejoindrePartie, #btnRegarderPartie,
+  #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #validerRegarder, #btnScannerQR, #lancerPartieEnLigne, #btnRejouerMemes,
   #btnModifierJoueurs, #btnChoixPseudoAnnuler, #listeChoixPseudo button, #btnConfirmerAccueilOui,
   #btnConfirmerAccueilNon, #btnConfirmerHoteOui, #btnConfirmerHoteNon, #btnConfirmerRetraitOui,
   #btnConfirmerRetraitNon, #ajouterJoueur, #jouer, #supprimerJoueur, #nouvellePartie, #termineSuppression,
   #btnInstallationInstaller, #overlayPigeon .bouton-pigeon, #overlayPlus4 .bouton-pigeon, #overlayCupidon .bouton-pigeon, #overlayDuel button,
   #overlayFinUnRestants .bouton-pigeon, #overlayPredictionFin .bouton-pigeon, #overlayRegleUnique .bouton-annulation,
   #overlayAnnulation button),
-:is(#btnModeEnLigne, #btnModeClassique, #btnContinuerOptions, .btnRetour, #btnPartagerJeu, #btnCreerPartie, #btnRejoindrePartie,
-  #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #btnScannerQR, #lancerPartieEnLigne, #btnRejouerMemes,
+:is(#btnModeEnLigne, #btnModeClassique, #btnContinuerOptions, .btnRetour, #btnPartagerJeu, #btnCreerPartie, #btnRejoindrePartie, #btnRegarderPartie,
+  #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #validerRegarder, #btnScannerQR, #lancerPartieEnLigne, #btnRejouerMemes,
   #btnModifierJoueurs, #btnChoixPseudoAnnuler, #listeChoixPseudo button, #btnConfirmerAccueilOui,
   #btnConfirmerAccueilNon, #btnConfirmerHoteOui, #btnConfirmerHoteNon, #btnConfirmerRetraitOui,
   #btnConfirmerRetraitNon, #ajouterJoueur, #jouer, #supprimerJoueur, #nouvellePartie, #termineSuppression,
@@ -5876,16 +5958,16 @@ html:not([data-theme="givre"]):where(:not([data-theme="kawaii"])) :is(#overlayPi
   transition: transform 0.12s ease, filter 0.12s ease, translate 0.12s ease, box-shadow 0.12s ease;
 }
 @media (hover: hover){
-  html body :is(#btnModeEnLigne, #btnModeClassique, #btnContinuerOptions, .btnRetour, #btnPartagerJeu, #btnCreerPartie, #btnRejoindrePartie,
-    #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #btnScannerQR, #lancerPartieEnLigne, #btnRejouerMemes,
+  html body :is(#btnModeEnLigne, #btnModeClassique, #btnContinuerOptions, .btnRetour, #btnPartagerJeu, #btnCreerPartie, #btnRejoindrePartie, #btnRegarderPartie,
+    #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #validerRegarder, #btnScannerQR, #lancerPartieEnLigne, #btnRejouerMemes,
     #btnModifierJoueurs, #btnChoixPseudoAnnuler, #listeChoixPseudo button, #btnConfirmerAccueilOui,
     #btnConfirmerAccueilNon, #btnConfirmerHoteOui, #btnConfirmerHoteNon, #btnConfirmerRetraitOui,
     #btnConfirmerRetraitNon, #ajouterJoueur, #jouer, #supprimerJoueur, #nouvellePartie, #termineSuppression,
     #btnInstallationInstaller, #overlayPigeon .bouton-pigeon, #overlayPlus4 .bouton-pigeon, #overlayCupidon .bouton-pigeon, #overlayDuel button,
     #overlayFinUnRestants .bouton-pigeon, #overlayPredictionFin .bouton-pigeon, #overlayRegleUnique .bouton-annulation,
     #overlayAnnulation button):hover:not(:disabled),
-  html body :is(#btnModeEnLigne, #btnModeClassique, #btnContinuerOptions, .btnRetour, #btnPartagerJeu, #btnCreerPartie, #btnRejoindrePartie,
-    #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #btnScannerQR, #lancerPartieEnLigne, #btnRejouerMemes,
+  html body :is(#btnModeEnLigne, #btnModeClassique, #btnContinuerOptions, .btnRetour, #btnPartagerJeu, #btnCreerPartie, #btnRejoindrePartie, #btnRegarderPartie,
+    #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #validerRegarder, #btnScannerQR, #lancerPartieEnLigne, #btnRejouerMemes,
     #btnModifierJoueurs, #btnChoixPseudoAnnuler, #listeChoixPseudo button, #btnConfirmerAccueilOui,
     #btnConfirmerAccueilNon, #btnConfirmerHoteOui, #btnConfirmerHoteNon, #btnConfirmerRetraitOui,
     #btnConfirmerRetraitNon, #ajouterJoueur, #jouer, #supprimerJoueur, #nouvellePartie, #termineSuppression,
@@ -5900,8 +5982,8 @@ html:not([data-theme="givre"]):where(:not([data-theme="kawaii"])) :is(#overlayPi
 
 /* Sombre : au survol à la souris, anneau doré fin au lieu du gros anneau blanc éclatant */
 @media (hover: hover){
-  html[data-theme="noir"] body :is(#btnModeEnLigne, #btnModeClassique, #btnContinuerOptions, .btnRetour, #btnPartagerJeu, #btnCreerPartie, #btnRejoindrePartie,
-  #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #btnScannerQR, #lancerPartieEnLigne, #btnRejouerMemes,
+  html[data-theme="noir"] body :is(#btnModeEnLigne, #btnModeClassique, #btnContinuerOptions, .btnRetour, #btnPartagerJeu, #btnCreerPartie, #btnRejoindrePartie, #btnRegarderPartie,
+  #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #validerRegarder, #btnScannerQR, #lancerPartieEnLigne, #btnRejouerMemes,
   #btnModifierJoueurs, #btnChoixPseudoAnnuler, #listeChoixPseudo button, #btnConfirmerAccueilOui,
   #btnConfirmerAccueilNon, #btnConfirmerHoteOui, #btnConfirmerHoteNon, #btnConfirmerRetraitOui,
   #btnConfirmerRetraitNon, #ajouterJoueur, #jouer, #supprimerJoueur, #nouvellePartie, #termineSuppression,
@@ -5913,16 +5995,16 @@ html:not([data-theme="givre"]):where(:not([data-theme="kawaii"])) :is(#overlayPi
 
 /* Givre : anneau et lueur bleus (le blanc et le jaune ne se voient pas sur le fond clair) */
 @media (hover: hover){
-  html[data-theme="givre"] body :is(#btnModeEnLigne, #btnModeClassique, #btnContinuerOptions, .btnRetour, #btnPartagerJeu, #btnCreerPartie, #btnRejoindrePartie,
-  #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #btnScannerQR, #lancerPartieEnLigne, #btnRejouerMemes,
+  html[data-theme="givre"] body :is(#btnModeEnLigne, #btnModeClassique, #btnContinuerOptions, .btnRetour, #btnPartagerJeu, #btnCreerPartie, #btnRejoindrePartie, #btnRegarderPartie,
+  #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #validerRegarder, #btnScannerQR, #lancerPartieEnLigne, #btnRejouerMemes,
   #btnModifierJoueurs, #btnChoixPseudoAnnuler, #listeChoixPseudo button, #btnConfirmerAccueilOui,
   #btnConfirmerAccueilNon, #btnConfirmerHoteOui, #btnConfirmerHoteNon, #btnConfirmerRetraitOui,
   #btnConfirmerRetraitNon, #ajouterJoueur, #jouer, #supprimerJoueur, #nouvellePartie, #termineSuppression,
   #btnInstallationInstaller, #overlayPigeon .bouton-pigeon, #overlayPlus4 .bouton-pigeon, #overlayCupidon .bouton-pigeon, #overlayDuel button,
   #overlayFinUnRestants .bouton-pigeon, #overlayPredictionFin .bouton-pigeon, #overlayRegleUnique .bouton-annulation,
   #overlayAnnulation button):hover:not(:disabled),
-  html[data-theme="givre"] body :is(#btnModeEnLigne, #btnModeClassique, #btnContinuerOptions, .btnRetour, #btnPartagerJeu, #btnCreerPartie, #btnRejoindrePartie,
-  #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #btnScannerQR, #lancerPartieEnLigne, #btnRejouerMemes,
+  html[data-theme="givre"] body :is(#btnModeEnLigne, #btnModeClassique, #btnContinuerOptions, .btnRetour, #btnPartagerJeu, #btnCreerPartie, #btnRejoindrePartie, #btnRegarderPartie,
+  #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #validerRegarder, #btnScannerQR, #lancerPartieEnLigne, #btnRejouerMemes,
   #btnModifierJoueurs, #btnChoixPseudoAnnuler, #listeChoixPseudo button, #btnConfirmerAccueilOui,
   #btnConfirmerAccueilNon, #btnConfirmerHoteOui, #btnConfirmerHoteNon, #btnConfirmerRetraitOui,
   #btnConfirmerRetraitNon, #ajouterJoueur, #jouer, #supprimerJoueur, #nouvellePartie, #termineSuppression,
@@ -7014,7 +7096,7 @@ html[data-theme="soleil"] header::after{
 /* Boutons : dégradé soleil, texte blanc */
 html[data-theme="soleil"][data-theme] body :is(#btnModeEnLigne, #btnModeClassique, #btnContinuerOptions, .btnRetour, #btnPartagerJeu, #ajouterJoueur, #jouer, #supprimerJoueur,
   #nouvellePartie, #btnRejouerMemes, #btnModifierJoueurs, #btnReprendrePause,
-  #btnCreerPartie, #btnRejoindrePartie, #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #btnScannerQR,
+  #btnCreerPartie, #btnRejoindrePartie, #btnRegarderPartie, #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #validerRegarder, #btnScannerQR,
   #lancerPartieEnLigne, #btnChoixPseudoAnnuler, #listeChoixPseudo button, #btnConfirmerAccueilOui, #btnConfirmerAccueilNon,
   #btnConfirmerHoteOui, #btnConfirmerHoteNon, #btnConfirmerRetraitOui, #btnConfirmerRetraitNon, #termineSuppression,
   #btnInstallationInstaller){
@@ -7348,7 +7430,7 @@ html[data-theme="noir"] #ecranReglages .blocReglage .optionReglage{ background: 
    éteint donnait l'impression que la luminosité de l'écran était basse)
    Les boutons de partie des overlays (pigeon, duel, +4…) ne changent pas : ils restent bien lisibles en jeu. ===== */
 html[data-theme="noir"] :is(#btnModeEnLigne, #btnModeClassique, #btnContinuerOptions, .btnRetour, #btnPartagerJeu,
-  #btnCreerPartie, #btnRejoindrePartie, #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #btnScannerQR,
+  #btnCreerPartie, #btnRejoindrePartie, #btnRegarderPartie, #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #validerRegarder, #btnScannerQR,
   #lancerPartieEnLigne, #btnRejouerMemes, #btnModifierJoueurs, #btnChoixPseudoAnnuler, #listeChoixPseudo button,
   #btnConfirmerAccueilOui, #btnConfirmerAccueilNon, #btnConfirmerHoteOui, #btnConfirmerHoteNon,
   #btnConfirmerRetraitOui, #btnConfirmerRetraitNon, #ajouterJoueur, #jouer, #supprimerJoueur, #nouvellePartie,
@@ -7903,7 +7985,7 @@ html[data-theme="soleil"] :is(.detailRegle, #voletCarte .voletPause-texte) em{ c
 
 
 /* Partie : remonter tout en haut (js/plateau.js) — rond translucide discret, en bas à gauche */
-#btnRemonter{
+#btnRemonter, #btnRemonterRegles{
   position: fixed;
   left: 16px;
   bottom: calc(20px + env(safe-area-inset-bottom));
@@ -7928,16 +8010,18 @@ html[data-theme="soleil"] :is(.detailRegle, #voletCarte .voletPause-texte) em{ c
   -webkit-tap-highlight-color: transparent;
   touch-action: none; /* le doigt sur la flèche ne fait jamais défiler la page */
 }
-#btnRemonter.visible{
+#btnRemonter.visible, #btnRemonterRegles.visible{
   opacity: 1;
   visibility: visible;
   transform: none;
   transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s;
 }
-#btnRemonter:active{ transform: scale(0.92); }
-#btnRemonter svg{ width: 22px; height: 22px; fill: none; stroke: rgba(255, 255, 255, 0.85); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-html[data-theme="givre"] #btnRemonter{ background: rgba(255, 255, 255, 0.45); border-color: rgba(13, 53, 80, 0.2); }
-html[data-theme="givre"] #btnRemonter svg{ stroke: rgba(13, 53, 80, 0.8); }
+#btnRemonter:active, #btnRemonterRegles:active{ transform: scale(0.92); }
+/* (la flèche de l'écran des Règles, js/extras.js : par-dessus cet écran) */
+#btnRemonterRegles{ z-index: 10003; }
+#btnRemonter svg, #btnRemonterRegles svg{ width: 22px; height: 22px; fill: none; stroke: rgba(255, 255, 255, 0.85); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+html[data-theme="givre"] :is(#btnRemonter, #btnRemonterRegles){ background: rgba(255, 255, 255, 0.45); border-color: rgba(13, 53, 80, 0.2); }
+html[data-theme="givre"] :is(#btnRemonter, #btnRemonterRegles) svg{ stroke: rgba(13, 53, 80, 0.8); }
 
 /* Bloc Règles en partie (et télé) : titre doré, puces, gorgées en doré (afficherRegleBloc, js/plateau.js) */
 .regleBloc{ white-space: normal; }
@@ -7962,7 +8046,7 @@ html[data-theme="soleil"] #ecranTele .tele-regles.regleBloc{ color: #fff1df; }
 
 /* Mode gaucher (Réglages, js/reglages.js) : ce qui se touche au pouce passe de l'autre côté */
 .mainGauche{ display: inline-block; transform: scaleX(-1); } /* (l'emoji 🤚 est une main droite) */
-html.gaucher #btnRemonter{ left: auto; right: 16px; }
+html.gaucher :is(#btnRemonter, #btnRemonterRegles){ left: auto; right: 16px; }
 /* la clé suit la flèche, et son texte « Code : … » s'ouvre vers la gauche */
 html.gaucher #btnCodePartie{ left: auto; right: 17px; flex-direction: row-reverse; }
 html.gaucher #annulerChoix{ flex-direction: row-reverse; }
@@ -8127,7 +8211,7 @@ html[data-theme="galaxie"] #choixMode .titreAccueilBarre, html[data-theme="galax
   box-shadow: 0 0 4px #fff, 0 0 10px #39a0ff, 0 0 22px #1f7bff, 0 0 40px rgba(31,123,255,.6) !important; animation:none !important;
 }
 /* Boutons : lame bleue, « Jouer » et le mode classique en rouge */
-html[data-theme="galaxie"] button:not(#btnInstallationInstaller):not(#btnInstallationPlusTard):not(.pastilleTheme):not(#btnRemonter):not(#btnPause):not(#btnHistorique):not(#btnReglagesJeu):not(.btnPauseJoueur):not(.btnLivre):not(#btnReglages):not(.btnAccueilTexte):not(#btnSignalerBug):not(#btnFaq):not(.fenetrePrestige-essayer):not(.fenetreKawaii-essayer):not(.fenetreKawaii-plusTard):not(.fenetrePrestige-plusTard):not(.fenetreGalaxie-ok):not(.fenetreGalaxie-plusTard):not(.bloc-hot-btn):not(#overlayDuel .duel-boutons button:disabled){
+html[data-theme="galaxie"] button:not(#btnProfilSupprimer):not(#btnProfilConnexion):not(#btnInstallationInstaller):not(#btnInstallationPlusTard):not(.pastilleTheme):not(#btnRemonter):not(#btnPause):not(#btnHistorique):not(#btnReglagesJeu):not(.btnPauseJoueur):not(.btnLivre):not(#btnReglages):not(.btnAccueilTexte):not(#btnSignalerBug):not(#btnFaq):not(.fenetrePrestige-essayer):not(.fenetreKawaii-essayer):not(.fenetreKawaii-plusTard):not(.fenetrePrestige-plusTard):not(.fenetreGalaxie-ok):not(.fenetreGalaxie-plusTard):not(.bloc-hot-btn):not(#overlayDuel .duel-boutons button:disabled){
   background: linear-gradient(180deg, rgba(14,22,44,.92), rgba(6,10,22,.92)) !important; color:#eaf3ff !important; text-shadow:none !important;
   border: 1.5px solid #8fd0ff !important; letter-spacing:.04em;
   box-shadow: 0 0 6px #4aa8ff, 0 0 16px rgba(40,140,255,.55), inset 0 0 10px rgba(80,170,255,.22) !important;
@@ -9107,7 +9191,7 @@ html[data-theme="soleil"] body #overlayRegleUnique .regle-detail:is(.regle-boit,
 #ecranReglages .btnMiseEnPage{
   position: absolute; right: 20px; top: 20px; z-index: 6; display: inline-flex; align-items: center; gap: 7px; padding: 8px 12px; border-radius: 999px;
   font-size: 13px; font-weight: 800; cursor: pointer; white-space: nowrap; color: var(--titreReglage, #FFD700);
-  background: rgba(255,255,255,.1); border: 1px solid rgba(255,215,0,.35); box-shadow: none; text-shadow: none;
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,215,0,.35); border-color: color-mix(in srgb, var(--accent-reglage, #FFD700) 40%, transparent); box-shadow: none; text-shadow: none;
 }
 #ecranReglages .mepIcone svg, #ecranReglages .menuMEPItem svg{ width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; display: block; }
 #ecranReglages .mepFleche::before{ content: "⌄"; font-size: 17px; line-height: 1; display: inline-block; transition: transform .2s; }
@@ -9123,7 +9207,7 @@ html[data-theme="soleil"] body #overlayRegleUnique .regle-detail:is(.regle-boit,
   display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 8px; border: 0; border-radius: 10px; background: none; box-shadow: none;
   color: var(--titreReglage, #e8d5e0); font-size: 15px; font-weight: 700; text-align: left; cursor: pointer; text-shadow: none;
 }
-#ecranReglages .menuMEPItem.actif{ background: var(--menuActif, rgba(255,215,0,.16)); }
+#ecranReglages .menuMEPItem.actif{ background: var(--menuActif, rgba(255,215,0,.16)); background: var(--menuActif, color-mix(in srgb, var(--accent-reglage, #FFD700) 18%, transparent)); }
 #ecranReglages .menuMEPCoche{ margin-left: auto; visibility: hidden; }
 #ecranReglages .menuMEPItem.actif .menuMEPCoche{ visibility: visible; }
 /* Modifier (et Par défaut) sous « Mise en page », à la hauteur du titre « Réglages », vue Liste seulement */
@@ -9137,7 +9221,7 @@ html[data-theme="soleil"] body #overlayRegleUnique .regle-detail:is(.regle-boit,
 }
 #ecranReglages #btnModifierReglages[hidden], #ecranReglages #btnParDefautReglages[hidden]{ display: none !important; }
 #ecranReglages #btnModifierReglages svg, #ecranReglages #btnParDefautReglages svg{ width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-#ecranReglages.reglages-edition #btnModifierReglages{ background: #FFD700 !important; color: #3a2a00 !important; border-color: #FFD700 !important; opacity: 1; }
+#ecranReglages.reglages-edition #btnModifierReglages{ background: var(--accent-reglage, #FFD700) !important; color: var(--accent-encre, #3a2a00) !important; border-color: var(--accent-reglage, #FFD700) !important; opacity: 1; }
 .reglages-edition #btnMiseEnPage, .reglages-edition #menuMiseEnPage{ display: none !important; }
 #ecranReglages.vue-options #btnMiseEnPage, #ecranReglages.vue-options #menuMiseEnPage{ display: none !important; }
 #ecranReglages h2{ order: -30; }
@@ -9147,17 +9231,18 @@ html[data-theme="soleil"] body #overlayRegleUnique .regle-detail:is(.regle-boit,
 #ecranReglages.vue-tuiles #tuilesReglages{ display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 #ecranReglages .tuileReglage{
   display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 16px 10px; cursor: pointer;
-  border-radius: 16px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,215,0,0.18); color: var(--titreReglage, #FFD700); box-shadow: none;
+  border-radius: 16px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,215,0,0.18); border-color: color-mix(in srgb, var(--accent-reglage, #FFD700) 22%, transparent); color: var(--titreReglage, #FFD700); box-shadow: none;
   transition: transform .15s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
 }
 #ecranReglages .tuileReglage:active{ transform: scale(.96); }
-#ecranReglages .tuileReglage.choisie{ background: rgba(255,215,0,0.14); border-color: #FFD700; box-shadow: 0 0 0 1px #FFD700 inset; }
+#ecranReglages .tuileReglage.choisie{ background: rgba(255,215,0,0.14); border-color: #FFD700; box-shadow: 0 0 0 1px #FFD700 inset;
+  background: color-mix(in srgb, var(--accent-reglage, #FFD700) 16%, transparent); border-color: var(--accent-reglage, #FFD700); box-shadow: 0 0 0 1px var(--accent-reglage, #FFD700) inset; }
 #ecranReglages .tuileIcone{ font-size: 28px; line-height: 1; }
 #ecranReglages .tuileNom{ font-size: 15px; font-weight: 800; }
 /* sections : titres qui s'ouvrent */
 #ecranReglages.vue-sections .enteteGroupe{
   display: flex; align-items: center; gap: 12px; width: 100%; margin: 0; padding: 14px 16px; cursor: pointer; text-align: left;
-  border-radius: 16px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,215,0,0.18); color: var(--titreReglage, #FFD700); box-shadow: none;
+  border-radius: 16px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,215,0,0.18); border-color: color-mix(in srgb, var(--accent-reglage, #FFD700) 22%, transparent); color: var(--titreReglage, #FFD700); box-shadow: none;
   transition: background .2s ease, transform .15s ease;
 }
 #ecranReglages.vue-sections .enteteGroupe:active{ transform: scale(.98); }
@@ -9184,7 +9269,7 @@ html[data-theme="soleil"] body #overlayRegleUnique .regle-detail:is(.regle-boit,
   padding: 8px 12px; border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: none;
   background: rgba(255,255,255,.08); color: inherit; border: 1px solid rgba(255,255,255,.25);
 }
-#ecranReglages .chipLangue.actif{ background: #FFD700; color: #3a2a00; border-color: #FFD700; }
+#ecranReglages .chipLangue.actif{ background: var(--accent-reglage, #FFD700); color: var(--accent-encre, #3a2a00); border-color: var(--accent-reglage, #FFD700); }
 #ecranReglages .chipLangue:disabled{ opacity: .55; cursor: default; }
 #ecranReglages .chipLangue small{ display: block; font-size: 10px; font-weight: 400; }
 @media (prefers-reduced-motion: reduce){ #ecranReglages .tuileReglage, #ecranReglages .enteteGroupe, #ecranReglages .enteteFleche, #ecranReglages .enteteFleche svg{ transition: none; } }
@@ -9211,9 +9296,10 @@ html[data-theme="kawaii"][data-theme][data-theme] body #ecranReglages #btnParDef
 html[data-theme="kawaii"][data-theme][data-theme] body .reglages-edition #btnModifierReglages{
   background: #ffffff !important; border-color: #a60f5b !important; border-width: 2px !important; color: #a60f5b !important;
 }
+
 /* Menu « Mise en page » : choix sans cadre propre ; thèmes à néon (Star Wars, BDSM) : le néon entoure le menu entier, pas chaque choix */
 #ecranReglages .menuMEPItem{ font: inherit; font-size: 15px; font-weight: 700; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; outline: none; }
-#ecranReglages .menuMEPItem:focus-visible{ box-shadow: 0 0 0 2px var(--titreReglage, #FFD700) inset; }
+#ecranReglages .menuMEPItem:focus-visible{ box-shadow: 0 0 0 2px var(--accent-reglage, #FFD700) inset; }
 html[data-theme="galaxie"] #ecranReglages .menuMiseEnPage{
   background: linear-gradient(rgba(14,22,44,.97), rgba(6,10,22,.97)); border: 1px solid #8fd0ff;
   box-shadow: 0 0 6px #4aa8ff, 0 0 16px rgba(40,140,255,.55), 0 0 10px rgba(80,170,255,.22) inset;
@@ -9224,21 +9310,685 @@ html[data-theme="donjon"] #ecranReglages .menuMiseEnPage{
   box-shadow: 0 0 16px rgba(255,42,61,.75), 0 2px 0 rgba(255,255,255,.2) inset;
 }
 html[data-theme="donjon"] #ecranReglages .menuMEPItem.actif{ background: rgba(255,42,61,.22); }
-/* Kawaii : tuiles, titres de section et bouton « Mise en page » dans le style des panneaux du thème (verre blanc, contour blanc épais, ombre rose),
-   la tuile choisie cerclée de rose bonbon : le fin liseré doré d'avant ne se voyait presque pas */
-html[data-theme="kawaii"] #ecranReglages :is(.tuileReglage, .enteteGroupe, #btnMiseEnPage){
-  background: var(--givre-panneau, rgba(255,255,255,.78)) !important; border: 2px solid rgba(255,255,255,.95) !important;
-  box-shadow: 0 8px 20px rgba(150,90,200,.3), inset 0 0 0 1px rgba(255,255,255,.8), inset 0 8px 14px rgba(255,255,255,.85), inset 0 -6px 12px rgba(190,150,255,.25) !important;
+
+/* Couleur d'accent des Réglages (tuile choisie, langue choisie, liserés, bouton Modifier) : l'or par défaut (Bordeaux, Casino, Nuit,
+   Sombre, Cerisier, Prestige, Noël, Soleil couchant : le thème est déjà jaune et doré), une couleur du thème pour les autres.
+   --accent-encre : la couleur de l'écriture posée sur l'accent. */
+html[data-theme="chandeleur"]{ --accent-reglage: #ffe3a3; --accent-encre: #6b3a00; }
+html[data-theme="valentin"]{ --accent-reglage: #ffffff; --accent-encre: #c2185b; }
+html[data-theme="patrick"]{ --accent-reglage: #d9ffe6; --accent-encre: #0f5b33; }
+html[data-theme="justrose"]{ --accent-reglage: #ffffff; --accent-encre: #9c1560; }
+html[data-theme="musique"]{ --accent-reglage: #8ae8ff; --accent-encre: #1b0a5c; }
+html[data-theme="halloween"]{ --accent-reglage: #d62828; --accent-encre: #ffffff; }
+html[data-theme="kawaii"]{ --accent-reglage: #ee70a9; --accent-encre: #ffffff; }
+html[data-theme="givre"]{ --accent-reglage: #1479b8; --accent-encre: #ffffff; }
+html[data-theme="galaxie"]{ --accent-reglage: #8fd0ff; --accent-encre: #02030a; }
+html[data-theme="donjon"]{ --accent-reglage: #ff2a3d; --accent-encre: #ffffff; }
+
+/* Les boutons des Réglages (tuiles, sections, « Mise en page », crayon, langue choisie) ont le look des boutons de l'accueil de chaque
+   thème (« Mode en ligne » : dégradé, bord, ombre, écriture), relevé thème par thème. Star Wars et Donjon n'ont pas de bloc ici : leur règle
+   générale des boutons néon s'applique déjà. La tuile ou la langue choisie est cerclée de la couleur d'écriture du bouton. */
+html[data-theme="bordeaux"] body #ecranReglages :is(.btnMiseEnPage, .enteteGroupe, .tuileReglage, #btnModifierReglages, #btnParDefautReglages, .chipLangue.actif){
+  background: linear-gradient(rgb(255, 212, 38), rgb(246, 184, 0)) !important; border: 0 !important; color: rgb(255, 255, 255) !important; box-shadow: rgba(0, 0, 0, 0.18) 0px -2px 0px 0px inset, rgba(0, 0, 0, 0.25) 0px 8px 18px 0px !important; text-shadow: rgba(122, 74, 0, 0.85) 0px 1px 0px, rgba(0, 0, 0, 0.4) 0px 2px 4px !important; opacity: 1;
 }
-html[data-theme="kawaii"] #ecranReglages :is(.tuileReglage, .enteteGroupe){ border-radius: 26px !important; }
-html[data-theme="kawaii"] #ecranReglages #btnMiseEnPage{ border-radius: 999px !important; color: #a60f5b !important; }
-html[data-theme="kawaii"] #ecranReglages #tuilesReglages .tuileReglage.choisie{
-  background: rgba(255,222,240,.97) !important; border-color: #ee70a9 !important;
-  box-shadow: 0 0 0 3px rgba(238,112,169,.6), 0 8px 20px rgba(150,90,200,.3), inset 0 8px 14px rgba(255,255,255,.85) !important;
+html[data-theme="bordeaux"] body #ecranReglages :is(.enteteGroupe, .tuileReglage){ border-radius: 14px !important; }
+html[data-theme="bordeaux"] body #ecranReglages :is(.btnMiseEnPage, #btnModifierReglages, #btnParDefautReglages, .chipLangue){ border-radius: 999px !important; }
+html[data-theme="bordeaux"] body #ecranReglages .tuileReglage.choisie{ outline: 3px solid rgb(255, 255, 255); outline-offset: -7px; }
+html[data-theme="bordeaux"] body #ecranReglages.reglages-edition #btnModifierReglages{ outline: 3px solid rgb(255, 255, 255); outline-offset: -4px; }
+html[data-theme="noir"] body #ecranReglages :is(.btnMiseEnPage, .enteteGroupe, .tuileReglage, #btnModifierReglages, #btnParDefautReglages, .chipLangue.actif){
+  background: var(--noir-btn-fond) !important; border: 1px solid var(--noir-btn-bord) !important; color: var(--noir-btn-texte) !important; box-shadow: none !important; text-shadow: none !important; opacity: 1;
 }
+html[data-theme="noir"] body #ecranReglages :is(.enteteGroupe, .tuileReglage){ border-radius: 14px !important; }
+html[data-theme="noir"] body #ecranReglages :is(.btnMiseEnPage, #btnModifierReglages, #btnParDefautReglages, .chipLangue){ border-radius: 999px !important; }
+html[data-theme="noir"] body #ecranReglages .tuileReglage.choisie{ outline: 3px solid rgb(255, 212, 38); outline-offset: -7px; }
+html[data-theme="noir"] body #ecranReglages.reglages-edition #btnModifierReglages{ outline: 3px solid rgb(255, 212, 38); outline-offset: -4px; }
+html[data-theme="vert"] body #ecranReglages :is(.btnMiseEnPage, .enteteGroupe, .tuileReglage, #btnModifierReglages, #btnParDefautReglages, .chipLangue.actif){
+  background: linear-gradient(rgb(255, 212, 38), rgb(246, 184, 0)) !important; border: 0 !important; color: rgb(255, 255, 255) !important; box-shadow: rgba(0, 0, 0, 0.18) 0px -2px 0px 0px inset, rgba(0, 0, 0, 0.25) 0px 8px 18px 0px !important; text-shadow: rgba(122, 74, 0, 0.85) 0px 1px 0px, rgba(0, 0, 0, 0.4) 0px 2px 4px !important; opacity: 1;
+}
+html[data-theme="vert"] body #ecranReglages :is(.enteteGroupe, .tuileReglage){ border-radius: 14px !important; }
+html[data-theme="vert"] body #ecranReglages :is(.btnMiseEnPage, #btnModifierReglages, #btnParDefautReglages, .chipLangue){ border-radius: 999px !important; }
+html[data-theme="vert"] body #ecranReglages .tuileReglage.choisie{ outline: 3px solid rgb(255, 255, 255); outline-offset: -7px; }
+html[data-theme="vert"] body #ecranReglages.reglages-edition #btnModifierReglages{ outline: 3px solid rgb(255, 255, 255); outline-offset: -4px; }
+html[data-theme="bleu"] body #ecranReglages :is(.btnMiseEnPage, .enteteGroupe, .tuileReglage, #btnModifierReglages, #btnParDefautReglages, .chipLangue.actif){
+  background: linear-gradient(rgb(255, 212, 38), rgb(246, 184, 0)) !important; border: 0 !important; color: rgb(255, 255, 255) !important; box-shadow: rgba(0, 0, 0, 0.18) 0px -2px 0px 0px inset, rgba(0, 0, 0, 0.25) 0px 8px 18px 0px !important; text-shadow: rgba(122, 74, 0, 0.85) 0px 1px 0px, rgba(0, 0, 0, 0.4) 0px 2px 4px !important; opacity: 1;
+}
+html[data-theme="bleu"] body #ecranReglages :is(.enteteGroupe, .tuileReglage){ border-radius: 14px !important; }
+html[data-theme="bleu"] body #ecranReglages :is(.btnMiseEnPage, #btnModifierReglages, #btnParDefautReglages, .chipLangue){ border-radius: 999px !important; }
+html[data-theme="bleu"] body #ecranReglages .tuileReglage.choisie{ outline: 3px solid rgb(255, 255, 255); outline-offset: -7px; }
+html[data-theme="bleu"] body #ecranReglages.reglages-edition #btnModifierReglages{ outline: 3px solid rgb(255, 255, 255); outline-offset: -4px; }
+html[data-theme="soleil"] body #ecranReglages :is(.btnMiseEnPage, .enteteGroupe, .tuileReglage, #btnModifierReglages, #btnParDefautReglages, .chipLangue.actif){
+  background: linear-gradient(rgb(255, 179, 92), rgb(242, 119, 92)) !important; border: 0 !important; color: rgb(255, 255, 255) !important; box-shadow: rgba(120, 30, 40, 0.25) 0px -2px 0px 0px inset, rgba(60, 20, 60, 0.3) 0px 8px 18px 0px !important; text-shadow: rgba(150, 50, 40, 0.8) 0px 1px 0px, rgba(60, 20, 40, 0.35) 0px 2px 4px !important; opacity: 1;
+}
+html[data-theme="soleil"] body #ecranReglages :is(.enteteGroupe, .tuileReglage){ border-radius: 14px !important; }
+html[data-theme="soleil"] body #ecranReglages :is(.btnMiseEnPage, #btnModifierReglages, #btnParDefautReglages, .chipLangue){ border-radius: 999px !important; }
+html[data-theme="soleil"] body #ecranReglages .tuileReglage.choisie{ outline: 3px solid rgb(255, 255, 255); outline-offset: -7px; }
+html[data-theme="soleil"] body #ecranReglages.reglages-edition #btnModifierReglages{ outline: 3px solid rgb(255, 255, 255); outline-offset: -4px; }
+html[data-theme="cerisier"] body #ecranReglages :is(.btnMiseEnPage, .enteteGroupe, .tuileReglage, #btnModifierReglages, #btnParDefautReglages, .chipLangue.actif){
+  background: linear-gradient(rgb(255, 212, 38), rgb(246, 184, 0)) !important; border: 0 !important; color: rgb(255, 255, 255) !important; box-shadow: rgba(0, 0, 0, 0.18) 0px -2px 0px 0px inset, rgba(0, 0, 0, 0.25) 0px 8px 18px 0px !important; text-shadow: rgba(122, 74, 0, 0.85) 0px 1px 0px, rgba(0, 0, 0, 0.4) 0px 2px 4px !important; opacity: 1;
+}
+html[data-theme="cerisier"] body #ecranReglages :is(.enteteGroupe, .tuileReglage){ border-radius: 14px !important; }
+html[data-theme="cerisier"] body #ecranReglages :is(.btnMiseEnPage, #btnModifierReglages, #btnParDefautReglages, .chipLangue){ border-radius: 999px !important; }
+html[data-theme="cerisier"] body #ecranReglages .tuileReglage.choisie{ outline: 3px solid rgb(255, 255, 255); outline-offset: -7px; }
+html[data-theme="cerisier"] body #ecranReglages.reglages-edition #btnModifierReglages{ outline: 3px solid rgb(255, 255, 255); outline-offset: -4px; }
+html[data-theme="givre"] body #ecranReglages :is(.btnMiseEnPage, .enteteGroupe, .tuileReglage, #btnModifierReglages, #btnParDefautReglages, .chipLangue.actif){
+  background: linear-gradient(rgb(39, 174, 232), rgb(20, 116, 184)) !important; border: 0 !important; color: rgb(255, 255, 255) !important; box-shadow: rgba(8, 60, 100, 0.25) 0px -2px 0px 0px inset, rgba(26, 146, 214, 0.28) 0px 6px 14px 0px !important; text-shadow: rgba(8, 60, 100, 0.55) 0px 1px 2px !important; opacity: 1;
+}
+html[data-theme="givre"] body #ecranReglages :is(.enteteGroupe, .tuileReglage){ border-radius: 14px !important; }
+html[data-theme="givre"] body #ecranReglages :is(.btnMiseEnPage, #btnModifierReglages, #btnParDefautReglages, .chipLangue){ border-radius: 999px !important; }
+html[data-theme="givre"] body #ecranReglages .tuileReglage.choisie{ outline: 3px solid rgb(255, 255, 255); outline-offset: -7px; }
+html[data-theme="givre"] body #ecranReglages.reglages-edition #btnModifierReglages{ outline: 3px solid rgb(255, 255, 255); outline-offset: -4px; }
+html[data-theme="prestige"] body #ecranReglages :is(.btnMiseEnPage, .enteteGroupe, .tuileReglage, #btnModifierReglages, #btnParDefautReglages, .chipLangue.actif){
+  background: linear-gradient(rgb(255, 212, 38), rgb(246, 184, 0)) !important; border: 0 !important; color: rgb(255, 255, 255) !important; box-shadow: rgba(0, 0, 0, 0.18) 0px -2px 0px 0px inset, rgba(0, 0, 0, 0.25) 0px 8px 18px 0px !important; text-shadow: rgba(122, 74, 0, 0.85) 0px 1px 0px, rgba(0, 0, 0, 0.4) 0px 2px 4px !important; opacity: 1;
+}
+html[data-theme="prestige"] body #ecranReglages :is(.enteteGroupe, .tuileReglage){ border-radius: 14px !important; }
+html[data-theme="prestige"] body #ecranReglages :is(.btnMiseEnPage, #btnModifierReglages, #btnParDefautReglages, .chipLangue){ border-radius: 999px !important; }
+html[data-theme="prestige"] body #ecranReglages .tuileReglage.choisie{ outline: 3px solid rgb(255, 255, 255); outline-offset: -7px; }
+html[data-theme="prestige"] body #ecranReglages.reglages-edition #btnModifierReglages{ outline: 3px solid rgb(255, 255, 255); outline-offset: -4px; }
+html[data-theme="kawaii"] body #ecranReglages :is(.btnMiseEnPage, .enteteGroupe, .tuileReglage, #btnModifierReglages, #btnParDefautReglages, .chipLangue.actif){
+  background: linear-gradient(rgb(249, 166, 203), rgb(238, 112, 169)) !important; border: 3px solid rgb(255, 255, 255) !important; color: rgb(107, 20, 80) !important; box-shadow: rgb(201, 87, 138) 0px 6px 0px 0px, rgba(150, 30, 90, 0.3) 0px 10px 14px 0px, rgba(255, 255, 255, 0.55) 0px 3px 0px 0px inset !important; text-shadow: rgba(255, 255, 255, 0.6) 0px 1px 0px !important; opacity: 1;
+}
+html[data-theme="kawaii"] body #ecranReglages :is(.enteteGroupe, .tuileReglage){ border-radius: 26px !important; }
+html[data-theme="kawaii"] body #ecranReglages :is(.btnMiseEnPage, #btnModifierReglages, #btnParDefautReglages, .chipLangue){ border-radius: 999px !important; }
+html[data-theme="kawaii"] body #ecranReglages .tuileReglage.choisie{ outline: 3px solid rgb(107, 20, 80); outline-offset: -7px; }
+html[data-theme="kawaii"] body #ecranReglages.reglages-edition #btnModifierReglages{ outline: 3px solid rgb(107, 20, 80); outline-offset: -4px; }
+html[data-theme="noel"] body #ecranReglages :is(.btnMiseEnPage, .enteteGroupe, .tuileReglage, #btnModifierReglages, #btnParDefautReglages, .chipLangue.actif){
+  background: linear-gradient(rgb(255, 226, 122), rgb(232, 169, 0)) !important; border: 0 !important; color: rgb(110, 10, 20) !important; box-shadow: rgba(255, 255, 255, 0.95) 0px 0px 0px 2px inset, rgba(60, 0, 8, 0.4) 0px 6px 14px 0px !important; text-shadow: rgba(255, 244, 190, 0.7) 0px 1px 0px !important; opacity: 1;
+}
+html[data-theme="noel"] body #ecranReglages :is(.enteteGroupe, .tuileReglage){ border-radius: 14px !important; }
+html[data-theme="noel"] body #ecranReglages :is(.btnMiseEnPage, #btnModifierReglages, #btnParDefautReglages, .chipLangue){ border-radius: 999px !important; }
+html[data-theme="noel"] body #ecranReglages .tuileReglage.choisie{ outline: 3px solid rgb(110, 10, 20); outline-offset: -7px; }
+html[data-theme="noel"] body #ecranReglages.reglages-edition #btnModifierReglages{ outline: 3px solid rgb(110, 10, 20); outline-offset: -4px; }
+html[data-theme="chandeleur"] body #ecranReglages :is(.btnMiseEnPage, .enteteGroupe, .tuileReglage, #btnModifierReglages, #btnParDefautReglages, .chipLangue.actif){
+  background: linear-gradient(rgb(255, 246, 214), rgb(255, 215, 122)) !important; border: 0 !important; color: rgb(90, 34, 5) !important; box-shadow: rgba(255, 255, 255, 0.95) 0px 0px 0px 2px inset, rgba(90, 30, 0, 0.4) 0px 6px 14px 0px !important; text-shadow: rgba(255, 244, 190, 0.7) 0px 1px 0px !important; opacity: 1;
+}
+html[data-theme="chandeleur"] body #ecranReglages :is(.enteteGroupe, .tuileReglage){ border-radius: 14px !important; }
+html[data-theme="chandeleur"] body #ecranReglages :is(.btnMiseEnPage, #btnModifierReglages, #btnParDefautReglages, .chipLangue){ border-radius: 999px !important; }
+html[data-theme="chandeleur"] body #ecranReglages .tuileReglage.choisie{ outline: 3px solid rgb(90, 34, 5); outline-offset: -7px; }
+html[data-theme="chandeleur"] body #ecranReglages.reglages-edition #btnModifierReglages{ outline: 3px solid rgb(90, 34, 5); outline-offset: -4px; }
+html[data-theme="valentin"] body #ecranReglages :is(.btnMiseEnPage, .enteteGroupe, .tuileReglage, #btnModifierReglages, #btnParDefautReglages, .chipLangue.actif){
+  background: linear-gradient(rgb(255, 246, 250), rgb(255, 201, 222)) !important; border: 0 !important; color: rgb(106, 10, 52) !important; box-shadow: rgba(255, 255, 255, 0.95) 0px 0px 0px 2px inset, rgba(60, 0, 30, 0.4) 0px 6px 14px 0px !important; text-shadow: rgba(255, 236, 244, 0.7) 0px 1px 0px !important; opacity: 1;
+}
+html[data-theme="valentin"] body #ecranReglages :is(.enteteGroupe, .tuileReglage){ border-radius: 14px !important; }
+html[data-theme="valentin"] body #ecranReglages :is(.btnMiseEnPage, #btnModifierReglages, #btnParDefautReglages, .chipLangue){ border-radius: 999px !important; }
+html[data-theme="valentin"] body #ecranReglages .tuileReglage.choisie{ outline: 3px solid rgb(106, 10, 52); outline-offset: -7px; }
+html[data-theme="valentin"] body #ecranReglages.reglages-edition #btnModifierReglages{ outline: 3px solid rgb(106, 10, 52); outline-offset: -4px; }
+html[data-theme="patrick"] body #ecranReglages :is(.btnMiseEnPage, .enteteGroupe, .tuileReglage, #btnModifierReglages, #btnParDefautReglages, .chipLangue.actif){
+  background: linear-gradient(rgb(242, 255, 246), rgb(155, 232, 180)) !important; border: 0 !important; color: rgb(4, 54, 31) !important; box-shadow: rgba(255, 255, 255, 0.95) 0px 0px 0px 2px inset, rgba(0, 50, 25, 0.4) 0px 6px 14px 0px !important; text-shadow: rgba(240, 255, 245, 0.7) 0px 1px 0px !important; opacity: 1;
+}
+html[data-theme="patrick"] body #ecranReglages :is(.enteteGroupe, .tuileReglage){ border-radius: 14px !important; }
+html[data-theme="patrick"] body #ecranReglages :is(.btnMiseEnPage, #btnModifierReglages, #btnParDefautReglages, .chipLangue){ border-radius: 999px !important; }
+html[data-theme="patrick"] body #ecranReglages .tuileReglage.choisie{ outline: 3px solid rgb(4, 54, 31); outline-offset: -7px; }
+html[data-theme="patrick"] body #ecranReglages.reglages-edition #btnModifierReglages{ outline: 3px solid rgb(4, 54, 31); outline-offset: -4px; }
+html[data-theme="justrose"] body #ecranReglages :is(.btnMiseEnPage, .enteteGroupe, .tuileReglage, #btnModifierReglages, #btnParDefautReglages, .chipLangue.actif){
+  background: linear-gradient(rgb(212, 64, 138), rgb(154, 16, 82)) !important; border: 0 !important; color: rgb(255, 255, 255) !important; box-shadow: rgba(255, 255, 255, 0.95) 0px 0px 0px 2px inset, rgba(60, 0, 35, 0.4) 0px 6px 14px 0px !important; text-shadow: rgba(90, 10, 50, 0.6) 0px 1px 0px !important; opacity: 1;
+}
+html[data-theme="justrose"] body #ecranReglages :is(.enteteGroupe, .tuileReglage){ border-radius: 14px !important; }
+html[data-theme="justrose"] body #ecranReglages :is(.btnMiseEnPage, #btnModifierReglages, #btnParDefautReglages, .chipLangue){ border-radius: 999px !important; }
+html[data-theme="justrose"] body #ecranReglages .tuileReglage.choisie{ outline: 3px solid rgb(255, 255, 255); outline-offset: -7px; }
+html[data-theme="justrose"] body #ecranReglages.reglages-edition #btnModifierReglages{ outline: 3px solid rgb(255, 255, 255); outline-offset: -4px; }
+html[data-theme="musique"] body #ecranReglages :is(.btnMiseEnPage, .enteteGroupe, .tuileReglage, #btnModifierReglages, #btnParDefautReglages, .chipLangue.actif){
+  background: linear-gradient(rgb(74, 31, 180), rgb(42, 14, 110)) !important; border: 0 !important; color: rgb(255, 255, 255) !important; box-shadow: rgba(20, 0, 80, 0.4) 0px 6px 14px 0px !important; text-shadow: rgba(20, 0, 80, 0.6) 0px 1px 0px !important; opacity: 1;
+}
+html[data-theme="musique"] body #ecranReglages :is(.enteteGroupe, .tuileReglage){ border-radius: 14px !important; }
+html[data-theme="musique"] body #ecranReglages :is(.btnMiseEnPage, #btnModifierReglages, #btnParDefautReglages, .chipLangue){ border-radius: 999px !important; }
+html[data-theme="musique"] body #ecranReglages .tuileReglage.choisie{ outline: 3px solid rgb(255, 255, 255); outline-offset: -7px; }
+html[data-theme="musique"] body #ecranReglages.reglages-edition #btnModifierReglages{ outline: 3px solid rgb(255, 255, 255); outline-offset: -4px; }
+html[data-theme="halloween"] body #ecranReglages :is(.btnMiseEnPage, .enteteGroupe, .tuileReglage, #btnModifierReglages, #btnParDefautReglages, .chipLangue.actif){
+  background: linear-gradient(rgb(42, 6, 9), rgb(18, 2, 3)) !important; border: 1px solid rgba(163, 21, 26, 0.9) !important; color: rgb(255, 107, 107) !important; box-shadow: rgba(0, 0, 0, 0.75) 0px 0px 22px 0px inset, rgba(163, 21, 26, 0.55) 0px 0px 16px 0px, rgba(0, 0, 0, 0.6) 0px 6px 16px 0px !important; text-shadow: rgb(0, 0, 0) 0px 1px 3px !important; opacity: 1;
+}
+html[data-theme="halloween"] body #ecranReglages :is(.enteteGroupe, .tuileReglage){ border-radius: 14px !important; }
+html[data-theme="halloween"] body #ecranReglages :is(.btnMiseEnPage, #btnModifierReglages, #btnParDefautReglages, .chipLangue){ border-radius: 999px !important; }
+html[data-theme="halloween"] body #ecranReglages .tuileReglage.choisie{ outline: 3px solid rgb(255, 107, 107); outline-offset: -7px; }
+html[data-theme="halloween"] body #ecranReglages.reglages-edition #btnModifierReglages{ outline: 3px solid rgb(255, 107, 107); outline-offset: -4px; }
+/* Star Wars et Donjon : la tuile choisie se voit (leur règle générale des boutons néon dessine déjà le cadre et l'ombre de chaque tuile) */
+html[data-theme="galaxie"] #ecranReglages #tuilesReglages .tuileReglage.choisie{ outline: 2px solid #fff; outline-offset: -5px; filter: brightness(1.5) saturate(1.2); }
+html[data-theme="donjon"] #ecranReglages #tuilesReglages .tuileReglage.choisie{ outline: 2px solid #ffb3bb; outline-offset: -5px; filter: brightness(1.6) saturate(1.2); }
+html[data-theme="givre"] #ecranReglages .menuMiseEnPage{
+  background: #fff; border: 1px solid var(--givre-bord); box-shadow: 0 10px 24px rgba(13, 53, 80, 0.2);
+}
+html[data-theme="givre"] #ecranReglages .menuMEPTitre{ color: var(--givre-doux); }
+html[data-theme="givre"] #ecranReglages .menuMEPItem{ color: var(--givre-texte); }
+html[data-theme="givre"] #ecranReglages .menuMEPItem.actif{ background: rgba(20, 121, 184, 0.14); color: var(--givre-accent); }
+html[data-theme="givre"] #ecranReglages .menuMEPItem:focus-visible{ box-shadow: 0 0 0 2px var(--givre-accent) inset; }
 /* Star Wars : écritures du menu « Mise en page » de la couleur de celles du bouton « Retour » */
 html[data-theme="galaxie"] #ecranReglages .menuMEPItem{ color: #eaf3ff; }
 html[data-theme="galaxie"] #ecranReglages .menuMEPTitre{ color: rgba(234,243,255,.7); }
+
+/* =====================================================================================================
+   Cartes de l'accueil (Bar, Album, Éthylo) et leurs écrans (js/extras.js)
+   ===================================================================================================== */
+/* Une main de cartes sous les boutons de l'accueil : les cartes sont empilées au même endroit et pivotent autour d'un point
+   situé loin sous elles (comme tenues entre les doigts), donc elles se chevauchent en éventail. Deux cartes tant que l'album
+   n'est pas découvert, trois ensuite (classe « troisCartes », posée par js/extras.js).
+   Chaque carte se règle par des variables : --fond, --bord, --encre (dessin et texte), --ovale, --ombre ; les thèmes plus bas
+   ne changent que ces variables. Hauteur selon l'écran : petites sur un petit téléphone. */
+#choixMode .cartesAccueil{
+  --h-carte: clamp(64px, 15vh, 122px);
+  --l-carte: calc(var(--h-carte) * 50 / 78);
+  /* (une boîte de la taille d'une carte, centrée, où les cartes sont posées l'une sur l'autre : tailles écrites en toutes
+     lettres, sans grille ni « aspect-ratio », que Safari sur iPhone ne plaçait pas comme Chrome : main décalée à gauche et coupée) */
+  position: relative;
+  flex: none;
+  align-self: center;
+  box-sizing: content-box;
+  width: var(--l-carte);
+  height: var(--h-carte);
+  margin: 18px auto 0;
+  padding: 0;
+  perspective: 700px; /* (les cartes s'inclinent sous le doigt) */
+}
+/* Écran très bas (téléphone couché) : cartes plus petites, serrées sous les boutons, pour tenir à l'écran */
+@media (max-height: 430px){
+  #choixMode .cartesAccueil{ --h-carte: 50px; margin-top: -8px; }
+}
+#choixMode #albumAccueil{ display: contents; }
+#choixMode .carteAccueil{
+  --angle: 0deg;   /* place dans l'éventail */
+  --ecart: 0deg;   /* les voisines s'écartent de la carte qu'on tient */
+  --leve: 0%;      /* sortie de la main */
+  --tire: 0px;     /* suit le doigt vers le haut */
+  --rx: 0deg;      /* inclinaison sous le doigt */
+  --ry: 0deg;
+  --zoom: 1;
+  --fond: #d9302c;
+  --bord: #fff;
+  --encre: #fff;
+  --ovale: rgba(255, 255, 255, 0.16);
+  --ombre: 0 8px 18px rgba(0, 0, 0, 0.4);
+  --ombre-texte: 0 1px 2px rgba(0, 0, 0, 0.45);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--l-carte);
+  height: var(--h-carte);
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--h-carte) * 0.06);
+  border: calc(var(--h-carte) * 0.028) solid var(--bord);
+  border-radius: calc(var(--h-carte) * 0.1);
+  background: var(--fond);
+  color: var(--encre);
+  font-family: Arial, sans-serif;
+  font-size: calc(var(--h-carte) * 0.115);
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  text-shadow: var(--ombre-texte);
+  box-shadow: var(--ombre);
+  cursor: pointer;
+  overflow: hidden;
+  touch-action: none; /* (le doigt tire la carte : géré par js/extras.js) */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  /* Pivot loin sous la carte (la main qui tient l'éventail) ; l'inclinaison et le zoom, eux, se font autour du centre de
+     la carte (2 hauteurs de carte plus haut que le pivot) */
+  transform-origin: 50% 250%;
+  transform: translateY(var(--tire)) rotate(calc(var(--angle) + var(--ecart))) translateY(var(--leve))
+    translateY(calc(var(--h-carte) * -2)) rotateX(var(--rx)) rotateY(var(--ry)) scale(var(--zoom)) translateY(calc(var(--h-carte) * 2));
+  transition: transform 0.38s cubic-bezier(0.2, 0.9, 0.3, 1.25), opacity 0.3s ease, filter 0.2s ease, box-shadow 0.2s ease;
+}
+/* À l'arrivée sur l'accueil (et au retour d'une page), la main est distribuée : les cartes montent du bas de l'écran, l'une
+   après l'autre, et s'ouvrent en éventail (classe « distribution », posée par js/extras.js) */
+#choixMode .cartesAccueil.distribution .carteAccueil{ animation: carteDistribuee 0.8s cubic-bezier(0.18, 0.9, 0.28, 1.15) backwards; }
+@keyframes carteDistribuee{
+  0%{ transform: translateY(160%) rotate(0deg) scale(0.7); opacity: 0; }
+  35%{ opacity: 1; }
+}
+#choixMode .cartesAccueil.distribution .carteBar{ animation-delay: 0.12s; }
+#choixMode .cartesAccueil.distribution .carteAlbum{ animation-delay: 0.26s; }
+#choixMode .cartesAccueil.distribution .carteEthylo{ animation-delay: 0.4s; }
+/* Carte tenue sous le doigt : elle sort à moitié de la main, grossit, suit le doigt et s'incline ; les autres s'écartent */
+#choixMode .cartesAccueil .carteAccueil.tenue{
+  --leve: -16%;
+  --zoom: 1.08;
+  z-index: 4;
+  filter: brightness(1.08);
+  transition: transform 0.1s ease-out, filter 0.2s ease, box-shadow 0.2s ease;
+}
+#choixMode .cartesAccueil.tient .carteAccueil:not(.tenue){ --leve: 5%; filter: brightness(0.8); }
+/* Carte jouée : elle se redresse, monte et grandit en s'effaçant pendant que sa page arrive ; les autres retombent */
+#choixMode .cartesAccueil .carteAccueil.jouee{
+  --angle: 0deg;
+  --ecart: 0deg;
+  --rx: 0deg;
+  --ry: 0deg;
+  --leve: -70%;
+  --zoom: 1.35;
+  z-index: 5;
+  opacity: 0;
+  filter: brightness(1.15);
+  transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.22s ease 0.3s, filter 0.2s ease;
+}
+#choixMode .cartesAccueil.enJeu .carteAccueil:not(.jouee){
+  --leve: 45%;
+  opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.5, 0, 0.75, 0), opacity 0.3s ease 0.1s;
+}
+/* (l'ovale clair en travers, comme sur les cartes du jeu) */
+#choixMode .carteAccueil::before{
+  content: "";
+  position: absolute;
+  inset: 12% -6%;
+  border-radius: 50%;
+  background: var(--ovale);
+  transform: rotate(-32deg);
+  pointer-events: none;
+}
+/* (un reflet qui traverse la carte quand on la touche) */
+#choixMode .carteAccueil::after{
+  content: "";
+  position: absolute;
+  inset: -20% auto -20% -60%;
+  width: 45%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  transform: skewX(-18deg);
+  opacity: 0;
+  pointer-events: none;
+}
+#choixMode .carteAccueil.jouee::after{ animation: carteReflet 0.45s ease; }
+@keyframes carteReflet{
+  from{ left: -60%; opacity: 1; }
+  to{ left: 130%; opacity: 1; }
+}
+#choixMode .carteAccueil svg{
+  position: relative;
+  flex: none;
+  width: calc(var(--l-carte) * 0.46);
+  height: calc(var(--l-carte) * 0.46);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(var(--ombre-texte));
+}
+#choixMode .carteAccueil svg .plein{ fill: currentColor; stroke: none; }
+#choixMode .carteAccueil span{ position: relative; }
+/* Deux cartes : la droite recouvre un peu la gauche */
+#choixMode .carteBar{ --angle: -8deg; --fond: linear-gradient(170deg, #ef4a3c, #c4201f); }
+#choixMode .carteEthylo{ --angle: 8deg; --fond: linear-gradient(170deg, #2f8fe8, #1259b0); z-index: 1; }
+#choixMode .carteAlbum{
+  --fond: linear-gradient(170deg, #ffd83a, #eeb000);
+  --encre: #4a3200;
+  --ombre-texte: none;
+  z-index: 2;
+}
+/* Trois cartes : l'album au milieu, par-dessus les deux autres, dont le dessin se décale vers le bord libre */
+#choixMode .troisCartes .carteBar{ --angle: -18deg; }
+#choixMode .troisCartes .carteEthylo{ --angle: 18deg; }
+@media (hover: hover){
+  #choixMode .carteAccueil:hover{ --leve: -10%; }
+}
+#choixMode .carteAccueil:focus-visible{ --leve: -10%; outline: 3px solid #fff; outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce){
+  #choixMode .carteAccueil, #choixMode .cartesAccueil .carteAccueil.tenue, #choixMode .cartesAccueil .carteAccueil.jouee,
+  #choixMode .cartesAccueil.enJeu .carteAccueil:not(.jouee){ transition: none; }
+  #choixMode .cartesAccueil.distribution .carteAccueil{ animation: none; }
+  #choixMode .carteAccueil.jouee::after{ animation: none; }
+}
+
+/* ----- La main aux couleurs des thèmes (sans règle ici : les couleurs des cartes du jeu, rouge, jaune, bleu) ----- */
+/* Star Wars : des cartes sombres au liseré néon bleu, comme les boutons de l'accueil */
+html[data-theme="galaxie"] #choixMode .carteAccueil{
+  --fond: linear-gradient(180deg, #0f1c3c, #050a18);
+  --bord: #8fd0ff;
+  --encre: #eaf3ff;
+  --ovale: rgba(80, 170, 255, 0.1);
+  --ombre: 0 0 6px #4aa8ff, 0 0 16px rgba(40, 140, 255, 0.55), inset 0 0 10px rgba(80, 170, 255, 0.22);
+  --ombre-texte: 0 0 6px rgba(120, 190, 255, 0.9);
+  border-width: 1.5px;
+}
+/* Donjon : noir et néon rouge */
+html[data-theme="donjon"] #choixMode .carteAccueil{
+  --fond: linear-gradient(180deg, #2a0610, #0a0a0c);
+  --bord: #ff2a3d;
+  --encre: #ffd9dd;
+  --ovale: rgba(255, 42, 61, 0.1);
+  --ombre: 0 0 14px rgba(255, 42, 61, 0.7), inset 0 2px 0 rgba(255, 255, 255, 0.12);
+  --ombre-texte: 0 0 6px rgba(255, 42, 61, 0.9);
+  border-width: 2px;
+}
+html[data-theme="halloween"] #choixMode .carteAccueil{
+  --fond: linear-gradient(180deg, #1c0808, #070303);
+  --bord: #b01818;
+  --encre: #ff5a4d;
+  --ovale: rgba(200, 30, 30, 0.12);
+  --ombre: 0 0 12px rgba(200, 30, 30, 0.5);
+  --ombre-texte: 0 0 6px rgba(200, 30, 30, 0.8);
+  border-width: 1.5px;
+}
+html[data-theme="noir"] #choixMode .carteAccueil{
+  --fond: linear-gradient(180deg, #161206, #050505);
+  --bord: #b8962a;
+  --encre: #ffd700;
+  --ovale: rgba(255, 215, 0, 0.07);
+  --ombre: 0 8px 18px rgba(0, 0, 0, 0.6);
+  --ombre-texte: none;
+  border-width: 1.5px;
+}
+html[data-theme="prestige"] #choixMode .carteAccueil{
+  --fond: linear-gradient(160deg, #fff3b0, #f5c518 45%, #b8860b);
+  --bord: #fff8d6;
+  --encre: #4a3200;
+  --ovale: rgba(255, 255, 255, 0.28);
+  --ombre-texte: none;
+}
+/* Kawaii : pastels, gros bord blanc, coins très ronds */
+html[data-theme="kawaii"] #choixMode .carteAccueil{
+  --encre: #a60f5b;
+  --ovale: rgba(255, 255, 255, 0.45);
+  --ombre: 0 8px 18px rgba(150, 90, 200, 0.38), inset 0 6px 10px rgba(255, 255, 255, 0.7);
+  --ombre-texte: none;
+  border-radius: calc(var(--h-carte) * 0.17);
+}
+html[data-theme="kawaii"] #choixMode .carteBar{ --fond: linear-gradient(180deg, #ffe0ef, #ff9fcc); }
+html[data-theme="kawaii"] #choixMode .carteAlbum{ --fond: linear-gradient(180deg, #fffbe0, #ffe27a); }
+html[data-theme="kawaii"] #choixMode .carteEthylo{ --fond: linear-gradient(180deg, #ece6ff, #bba8ff); }
+html[data-theme="givre"] #choixMode .carteBar{ --fond: linear-gradient(180deg, #5cc3f0, #1787cf); }
+html[data-theme="givre"] #choixMode .carteAlbum{ --fond: linear-gradient(180deg, #ffffff, #cfeaff); --encre: #0f6fb8; }
+html[data-theme="givre"] #choixMode .carteEthylo{ --fond: linear-gradient(180deg, #2a9be0, #0b5fa8); }
+html[data-theme="givre"] #choixMode .carteAccueil{ --ombre: 0 8px 18px rgba(20, 90, 150, 0.35); }
+/* Musique : violet de la scène, un néon par carte (les couleurs de l'égaliseur) */
+html[data-theme="musique"] #choixMode .carteAccueil{
+  --fond: linear-gradient(180deg, #3d1cae, #230b6e);
+  --ovale: rgba(255, 255, 255, 0.07);
+  --ombre-texte: none;
+  border-width: 2px;
+}
+html[data-theme="musique"] #choixMode .carteBar{ --bord: #ff5fae; --encre: #ff8cc6; --ombre: 0 0 12px rgba(255, 95, 174, 0.6); }
+html[data-theme="musique"] #choixMode .carteAlbum{ --bord: #ffd23f; --encre: #ffe07a; --ombre: 0 0 12px rgba(255, 210, 63, 0.6); }
+html[data-theme="musique"] #choixMode .carteEthylo{ --bord: #3fd8ff; --encre: #8ae8ff; --ombre: 0 0 12px rgba(63, 216, 255, 0.6); }
+html[data-theme="justrose"] #choixMode .carteAccueil{
+  --fond: linear-gradient(180deg, #d63a8e, #9c1560);
+  --encre: #fff;
+  --ombre-texte: 0 1px 2px rgba(90, 0, 50, 0.5);
+  border-width: 2px;
+}
+html[data-theme="valentin"] #choixMode .carteAccueil{
+  --fond: linear-gradient(180deg, #ffffff, #ffd0e0);
+  --encre: #c2185b;
+  --ovale: rgba(255, 120, 170, 0.14);
+  --ombre-texte: none;
+}
+html[data-theme="patrick"] #choixMode .carteAccueil{
+  --fond: linear-gradient(180deg, #f3fff6, #b9eac7);
+  --encre: #0f5b33;
+  --ovale: rgba(30, 150, 80, 0.12);
+  --ombre-texte: none;
+}
+html[data-theme="chandeleur"] #choixMode .carteAccueil{
+  --fond: linear-gradient(180deg, #fff8dc, #ffdc91);
+  --encre: #6b3a00;
+  --ovale: rgba(230, 150, 30, 0.14);
+  --ombre-texte: none;
+}
+html[data-theme="noel"] #choixMode .carteBar{ --fond: linear-gradient(180deg, #23a058, #0d5e30); }
+html[data-theme="noel"] #choixMode .carteAlbum{ --fond: linear-gradient(180deg, #fff0b3, #e9b92c); --encre: #7a1010; }
+html[data-theme="noel"] #choixMode .carteEthylo{ --fond: linear-gradient(180deg, #ffffff, #e4ebf3); --encre: #b3141c; --ombre-texte: none; --ovale: rgba(180, 20, 28, 0.08); }
+html[data-theme="soleil"] #choixMode .carteBar{ --fond: linear-gradient(180deg, #ff9a5a, #ec5a3a); }
+html[data-theme="soleil"] #choixMode .carteAlbum{ --fond: linear-gradient(180deg, #ffe08a, #ffab40); --encre: #5a2a00; }
+html[data-theme="soleil"] #choixMode .carteEthylo{ --fond: linear-gradient(180deg, #8f74d6, #4b3f9e); }
+
+/* ----- Écrans Bar et Éthylotest : dans l'écran des Règles (ses blocs prennent les couleurs de chaque thème) ----- */
+#ecranRegles.bar #btnFaqDepuisRegles, #ecranRegles.ethylo #btnFaqDepuisRegles{ display: none; }
+/* Les blocs arrivent l'un après l'autre */
+@keyframes extrasEntree{
+  from{ opacity: 0; transform: translateY(16px) scale(0.98); }
+}
+#ecranRegles:is(.bar, .ethylo) #listeRegles > *,
+#ecranRegles .barListe > *{ animation: extrasEntree 0.4s cubic-bezier(0.2, 0.8, 0.3, 1) backwards; }
+#ecranRegles:is(.bar, .ethylo) #listeRegles > :nth-child(2),
+#ecranRegles .barListe > :nth-child(2){ animation-delay: 0.05s; }
+#ecranRegles:is(.bar, .ethylo) #listeRegles > :nth-child(3),
+#ecranRegles .barListe > :nth-child(3){ animation-delay: 0.1s; }
+#ecranRegles:is(.bar, .ethylo) #listeRegles > :nth-child(4),
+#ecranRegles .barListe > :nth-child(4){ animation-delay: 0.15s; }
+#ecranRegles:is(.bar, .ethylo) #listeRegles > :nth-child(5),
+#ecranRegles .barListe > :nth-child(5){ animation-delay: 0.2s; }
+#ecranRegles:is(.bar, .ethylo) #listeRegles > :nth-child(n+6),
+#ecranRegles .barListe > :nth-child(n+6){ animation-delay: 0.25s; }
+#ecranRegles .extrasSousTitre{ margin: -4px 10px 2px; text-align: center; font-size: 14.5px; line-height: 1.35; font-weight: 700; opacity: 0.85; }
+#ecranRegles .extrasChamp{
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1.5px solid currentColor;
+  background: rgba(255, 255, 255, 0.08);
+  color: inherit;
+  font: inherit;
+  font-size: 16px; /* (16 px : sinon l'iPhone zoome sur le champ) */
+  font-weight: 700;
+  transition: box-shadow 0.2s ease, background 0.2s ease;
+}
+#ecranRegles .extrasChamp:focus{ outline: none; background: rgba(255, 255, 255, 0.14); box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.22); }
+#ecranRegles .extrasChamp::placeholder{ color: inherit; opacity: 0.6; }
+#ecranRegles .extrasPuces{ display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+#ecranRegles .extrasPuce{
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1.5px solid currentColor;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  white-space: nowrap;
+  opacity: 0.7;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.18s cubic-bezier(0.2, 0.9, 0.3, 1.6), opacity 0.18s ease, background 0.18s ease;
+}
+#ecranRegles .extrasPuce:active{ transform: scale(0.9); }
+#ecranRegles .extrasPuce[aria-pressed="true"]{
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.22);
+  background: color-mix(in srgb, currentColor 24%, transparent);
+  box-shadow: inset 0 0 0 1.5px currentColor;
+  transform: scale(1.05);
+}
+#ecranRegles .extrasNote{ margin: 4px 6px 0; text-align: center; font-size: 12.5px; line-height: 1.4; opacity: 0.78; }
+#ecranRegles .extrasVide{ display: block; padding: 6px 0 10px; text-align: center; }
+
+/* ----- Bar ----- */
+#ecranRegles .barListe{ display: flex; flex-direction: column; gap: 14px; }
+#ecranRegles .barCompte{ margin: -6px 0 0; text-align: center; font-size: 12.5px; font-weight: 700; opacity: 0.65; }
+#ecranRegles .barSous{ display: block; margin-top: 2px; font-size: 12.5px; font-weight: 600; opacity: 0.7; }
+#ecranRegles.bar .faqItem{ transition: background 0.25s ease; border-radius: 12px; }
+#ecranRegles.bar .faqItem[open]{ background: rgba(255, 255, 255, 0.07); margin: 4px -8px; padding: 2px 8px; }
+#ecranRegles .barRecette{ padding: 0 0 12px; }
+#ecranRegles .faqItem[open] > .barRecette{ animation: barDeroule 0.3s cubic-bezier(0.2, 0.8, 0.3, 1); }
+@keyframes barDeroule{
+  from{ opacity: 0; transform: translateY(-8px); }
+}
+#ecranRegles .barRecette ul{ margin: 2px 0 8px; padding: 0; list-style: none; }
+#ecranRegles .barRecette li{ position: relative; margin: 0; padding: 5px 0 5px 18px; border-bottom: 1px dashed rgba(255, 255, 255, 0.14); }
+#ecranRegles .barRecette li::before{ content: ""; position: absolute; left: 3px; top: 0.85em; width: 7px; height: 7px; border-radius: 50%; background: currentColor; opacity: 0.6; }
+#ecranRegles .barRecette p{ margin: 8px 0 0; }
+#ecranRegles .barRecette .barVerre{
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  font-size: 12.5px;
+  font-weight: 700;
+  opacity: 0.85;
+}
+
+/* ----- Éthylotest ----- */
+/* Le résultat reste en haut de l'écran pendant qu'on règle le reste (rien tant qu'aucun verre n'est compté) */
+#ecranRegles .ethyloResultat{
+  position: sticky;
+  top: 4px;
+  z-index: 2;
+  padding: 12px 14px;
+  text-align: center;
+  background: linear-gradient(rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.07)), var(--couleur-barre, #2b001d) !important;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3);
+  transition: border-color 0.3s ease;
+}
+#ecranRegles .ethyloResultat[hidden]{ display: none; }
+/* (fond plein dans tous les thèmes : collé en haut, il passe par-dessus le reste de la page, qui ne doit pas se lire au travers) */
+html[data-theme] #ecranRegles .blocRegles.ethyloResultat{
+  background: linear-gradient(rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.07)), var(--couleur-barre, #2b001d) !important;
+}
+/* (Kawaii impose un autre placement à ses blocs : le résultat doit quand même rester collé en haut) */
+@media (min-height: 521px){
+  html[data-theme] #ecranRegles .blocRegles.ethyloResultat{ position: sticky !important; top: 4px !important; z-index: 2 !important; }
+}
+/* (place pour la flèche « remonter », en bas de l'écran : elle ne recouvre pas la dernière ligne) */
+#ecranRegles #listeRegles{ padding-bottom: 56px; }
+@media (max-height: 520px){ #ecranRegles .ethyloResultat{ position: static; } }
+#ecranRegles .ethyloResultat[data-etat="rouge"]{ border-color: #ff5252 !important; }
+#ecranRegles .ethyloResultat[data-etat="orange"]{ border-color: #ffb300 !important; }
+#ecranRegles .ethyloChiffre{ display: inline-block; font-size: 46px; line-height: 1; font-weight: 900; transition: color 0.3s ease; }
+#ecranRegles .ethyloChiffre.pop, #ecranRegles .ethyloNombre.pop{ animation: ethyloPop 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.6); }
+@keyframes ethyloPop{
+  40%{ transform: scale(1.22); }
+}
+#ecranRegles .ethyloResultat[data-etat="rouge"] .ethyloChiffre{ color: #ff5252; }
+#ecranRegles .ethyloResultat[data-etat="orange"] .ethyloChiffre{ color: #ffb300; }
+#ecranRegles .ethyloUnite{ display: block; margin-top: 4px; font-size: 13px; font-weight: 700; opacity: 0.8; }
+/* Jauge : le taux par rapport à la limite (le trait) */
+#ecranRegles .ethyloJauge{ position: relative; height: 10px; margin: 10px 4px 4px; border-radius: 999px; background: rgba(128, 128, 128, 0.3); }
+#ecranRegles .ethyloJaugePlein{
+  height: 100%;
+  width: 0;
+  border-radius: 999px;
+  background: #ffb300;
+  transition: width 0.45s cubic-bezier(0.2, 0.8, 0.3, 1), background 0.3s ease;
+}
+#ecranRegles .ethyloResultat[data-etat="rouge"] .ethyloJaugePlein{ background: #ff5252; }
+#ecranRegles .ethyloJaugeLimite{ position: absolute; top: -4px; bottom: -4px; width: 3px; margin-left: -1.5px; border-radius: 2px; background: currentColor; transition: left 0.45s cubic-bezier(0.2, 0.8, 0.3, 1); }
+#ecranRegles .ethyloVerdict{ margin: 8px 0 2px; font-size: 18px; font-weight: 900; }
+#ecranRegles .ethyloLigne{ margin: 4px 0 0; font-size: 14px; line-height: 1.35; opacity: 0.92; }
+#ecranRegles .ethyloBloc{ padding-bottom: 10px; }
+#ecranRegles .ethyloBloc .extrasPuces{ justify-content: flex-start; padding: 6px 0; }
+#ecranRegles .ethyloLigneChamp{ display: flex; align-items: center; gap: 10px; padding: 8px 0; }
+#ecranRegles .ethyloLigneChamp .nomRegle{ flex: none; }
+#ecranRegles .ethyloLigneChamp input[type="checkbox"]{ flex: none; width: 22px; height: 22px; margin: 0; accent-color: #ffcc00; }
+#ecranRegles .ethyloAide{ display: block; padding: 2px 0 4px; }
+/* Un réglage à glisser : son nom à gauche, sa valeur à droite, le curseur dessous */
+#ecranRegles .ethyloGlisse{ padding: 8px 0 4px; }
+#ecranRegles .ethyloGlisseTete{ display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+#ecranRegles .ethyloGlisseValeur{ font-size: 17px; font-weight: 900; white-space: nowrap; }
+#ecranRegles .ethyloGlissePrecision{ display: block; margin-top: -2px; text-align: right; font-size: 12.5px; font-weight: 700; opacity: 0.7; }
+#ecranRegles .ethyloGlissePrecision[hidden]{ display: none; }
+/* Graduations sous le curseur (placées par js/extras.js) */
+#ecranRegles .ethyloGraduations{ position: relative; height: 10px; margin: -6px 0 2px; pointer-events: none; }
+#ecranRegles .ethyloGraduations.avecTextes{ height: 24px; }
+#ecranRegles .ethyloTrait{ position: absolute; top: 0; width: 1.5px; height: 5px; margin-left: -0.75px; border-radius: 1px; background: currentColor; opacity: 0.4; }
+#ecranRegles .ethyloTrait.grand{ height: 9px; opacity: 0.75; }
+#ecranRegles .ethyloTraitTexte{ position: absolute; top: 10px; transform: translateX(-50%); font-size: 10.5px; font-weight: 700; line-height: 1.3; white-space: nowrap; opacity: 0.7; }
+#ecranRegles .extrasGlisse{
+  --p: 50%;
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 36px; /* (zone de toucher large ; la piste est dessinée plus fine) */
+  margin: 2px 0 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  touch-action: pan-y;
+}
+#ecranRegles .extrasGlisse:focus{ outline: none; }
+#ecranRegles .extrasGlisse::-webkit-slider-runnable-track{
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, currentColor var(--p), rgba(128, 128, 128, 0.35) var(--p));
+}
+#ecranRegles .extrasGlisse::-moz-range-track{ height: 8px; border-radius: 999px; background: rgba(128, 128, 128, 0.35); }
+#ecranRegles .extrasGlisse::-moz-range-progress{ height: 8px; border-radius: 999px; background: currentColor; }
+#ecranRegles .extrasGlisse::-webkit-slider-thumb{
+  -webkit-appearance: none;
+  appearance: none;
+  width: 28px;
+  height: 28px;
+  margin-top: -10px;
+  border-radius: 50%;
+  border: 3px solid currentColor;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  transition: transform 0.15s ease;
+}
+#ecranRegles .extrasGlisse::-moz-range-thumb{ width: 22px; height: 22px; border-radius: 50%; border: 3px solid currentColor; background: #fff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4); }
+#ecranRegles .extrasGlisse:active::-webkit-slider-thumb{ transform: scale(1.18); }
+#ecranRegles .extrasGlisse:focus-visible::-webkit-slider-thumb{ box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.35); }
+#ecranRegles .ethyloVerre{ justify-content: space-between; }
+#ecranRegles .ethyloSousTitre{ margin: 10px 0 0; font-size: 13px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.65; }
+#ecranRegles .ethyloCompteur{ flex: none; display: flex; align-items: center; gap: 10px; }
+#ecranRegles .ethyloPas{
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s cubic-bezier(0.2, 0.9, 0.3, 1.6), background 0.15s ease;
+}
+#ecranRegles .ethyloPas:active{ transform: scale(0.84); background: rgba(128, 128, 128, 0.35); }
+#ecranRegles .ethyloNombre{ display: inline-block; min-width: 24px; text-align: center; font-size: 19px; font-weight: 900; opacity: 0.45; }
+#ecranRegles .ethyloChoisi .ethyloNombre{ opacity: 1; }
+/* Les bières déjà comptées (tous degrés) : toucher une étiquette en retire une */
+#ecranRegles .ethyloBieres{ display: flex; flex-wrap: wrap; gap: 8px; padding: 8px 0 2px; }
+#ecranRegles .ethyloBieres:empty{ display: none; }
+#ecranRegles .ethyloBieres .extrasPuce{ opacity: 1; font-size: 13px; padding: 6px 12px; animation: ethyloPop 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.6); }
+#ecranRegles .ethyloRemise{ display: block; margin: 12px auto 2px; }
+/* Numéros utiles : un appui lance l'appel */
+#ecranRegles .ethyloNumero{ display: flex; align-items: center; gap: 12px; padding: 9px 0; color: inherit; text-decoration: none; -webkit-tap-highlight-color: transparent; transition: transform 0.15s ease; }
+#ecranRegles .ethyloNumero + .ethyloNumero{ border-top: 1px solid rgba(128, 128, 128, 0.25); }
+#ecranRegles .ethyloNumero:active{ transform: scale(0.97); }
+#ecranRegles .ethyloNumeroChiffre{
+  flex: none;
+  min-width: 58px;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1.5px solid currentColor;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 900;
+}
+#ecranRegles .ethyloNumero .texteRegle{ flex: 1; min-width: 0; }
+#ecranRegles .ethyloNumero::after{ content: "📞"; flex: none; font-size: 18px; }
+@media (prefers-reduced-motion: reduce){
+  #ecranRegles:is(.bar, .ethylo) #listeRegles > *, #ecranRegles .barListe > *, #ecranRegles .faqItem[open] > .barRecette,
+  #ecranRegles .ethyloChiffre.pop, #ecranRegles .ethyloNombre.pop, #ecranRegles .ethyloBieres .extrasPuce{ animation: none; }
+  #ecranRegles .ethyloJaugePlein, #ecranRegles .ethyloJaugeLimite{ transition: none; }
+}
+#ecranRegles .ethyloResultat.machine .ethyloChiffre{ font-size: 32px; }
+#ecranRegles .ethyloResultat.machine .ethyloUnite, #ecranRegles .ethyloResultat.machine .ethyloJauge{ display: none; }
+#ecranRegles .ethyloSexe{ flex-wrap: nowrap; }
+#ecranRegles .ethyloSexe .extrasPuce{ flex: 1 1 auto; white-space: nowrap; padding-left: 8px; padding-right: 8px; }
+
+/* Langue : on voit laquelle est choisie dans TOUS les thèmes (Star Wars et Donjon dessinaient les deux boutons pareil ; Noir et Halloween
+   ne différaient que par un fin liseré) : coche devant la langue choisie, l'autre est atténuée. */
+html body #ecranReglages .chipLangue.actif::before{ content: "\2713\00a0"; }
+html body #ecranReglages .chipLangue:not(.actif){ opacity: .6 !important; }
+
+/* « Regarder une partie » (js/en-ligne.js) : l'écran « Rejoindre » sans le pseudo ; en partie, pas de menu « Nouvelle partie » */
+#enLigneRejoindre.regarder #pseudoRejoindre,
+#enLigneRejoindre.regarder #validerRejoindre,
+#enLigneRejoindre:not(.regarder) #validerRegarder{ display: none; }
+body.mode-spectateur #nouvellePartie{ display: none !important; }
 
 /* ===== Thème Sombre « Obsidienne » : plus aucun contour jaune. Tout ce qui était cerclé de doré (cadre de la partie,
    boutons ronds, pastille du thème choisi, sections des Réglages, blocs des Règles, QR code, boutons pause des joueurs…)
@@ -9288,3 +10038,6 @@ html[data-theme="noir"] body :is(.titreBloc, .btnRetour, .btnMiseEnPage, #btnMis
   color: var(--noir-btn-texte) !important;
 }
 html[data-theme="noir"] body :is(#menu button, .btnRetour, .btnMiseEnPage, .btnModifierReglages, #stickyJoueurActif button) svg{ stroke: var(--noir-btn-texte); }
+/* Sombre : cartes Bar / Éthylo de l'accueil, contour gris comme les boutons */
+html[data-theme="noir"] body :is(#btnBarAccueil, #btnEthyloAccueil){ border-color: var(--noir-btn-bord) !important; }
+html[data-theme="noir"] body :is(#btnBarAccueil, #btnEthyloAccueil)::before{ border-color: var(--noir-btn-bord) !important; }

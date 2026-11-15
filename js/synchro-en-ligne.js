@@ -60,13 +60,14 @@ function proprietaireAction(el){
 }
 
 function envoyerAction(el){
+  if(estSpectateur){ afficherToast(tr("Tu regardes la partie sans y jouer")); return; }
   const net = el._net;
   if(net.valide && !net.valide()) return;
   if(!actionPrete(el)) return;
 
   const owner = proprietaireAction(el);
   if(owner && owner !== pseudoActuel){
-    afficherToast(`En attente de ${owner}`);
+    afficherToast(tr`En attente de ${owner}`);
     return;
   }
 
@@ -77,72 +78,72 @@ function envoyerAction(el){
 
   ecrireAction(el.dataset.netId).catch(() => {
     delete el.dataset.netEnvoye;
-    afficherToast("Connexion perdue, réessaie");
+    afficherToast(tr("Connexion perdue, réessaie"));
   });
 }
 
 // Ajoute une action numérotée à la manche (partie, manche et pseudo lus tout de suite :
 // on peut quitter la partie juste après l'appel)
+//
+// L'action prend la première place libre (actions/1, actions/2…) en UNE seule écriture : une transaction sur cette place,
+// qui n'écrit que si elle est vide. Le numéro et l'action arrivent donc ensemble sur le serveur, ou pas du tout.
+// (Avant : un numéro réservé, PUIS l'action écrite. Si le réseau coupait entre les deux, le numéro restait vide ; les autres
+// téléphones le sautaient au bout de 5 s, alors que l'expéditeur avait déjà joué son action chez lui, et elle finissait par
+// arriver sur le serveur, trop tard pour tout le monde => téléphones décalés pour le reste de la manche, sans que rien ne le dise.)
+// « applyLocally: false » : ce téléphone ne voit pas son action avant l'accord du serveur ; il la reçoit ensuite comme les
+// autres, dans l'ordre. Une action refusée (réseau, règles) n'est donc jamais jouée nulle part.
+const ESSAIS_MAX_PLACE = 12;
+
+// Première place sans doute libre : après la dernière action reçue ici
+function prochainePlaceAction(){
+  let max = prochainSeq - 1;
+  toutesActionsManche.forEach((_, seq) => { if(seq > max) max = seq; });
+  return max + 1;
+}
+
 function ecrireAction(id){
+  if(estSpectateur) return Promise.reject(new Error("spectateur")); // (un spectateur n'écrit jamais dans la partie)
   const db = window.firebaseDB;
   const code = codePartieActuel;
   const manche = mancheCourante;
   const par = pseudoActuel;
   const vu = prochainSeq - 1;
-  const refSeq = window.fbRef(db, `parties/${code}/manches/${manche}/seq`);
+  // « @vu » : dernière action que ce téléphone avait jouée au moment du tap (voir estUnDoublon)
+  const action = { id: `${id}@${vu}`, par };
+  const refActions = window.fbRef(db, `parties/${code}/manches/${manche}/actions`);
+  const toujoursLa = () => code === codePartieActuel && manche === mancheCourante;
 
-  // Deux téléphones qui envoient au même instant : Firebase refuse le 2e (« permission_denied »)
-  // au lieu de le faire réessayer. On réessaie nous-mêmes, un peu plus tard (3 fois au plus).
-  const reserverNumero = (essai) => window.fbRunTransaction(refSeq, n => (n || 0) + 1).catch((erreur) => {
-    noterJournal(`numéro refusé pour ${id} (essai ${essai}) : ${erreur && erreur.message}`);
-    if(essai >= 3 || code !== codePartieActuel || manche !== mancheCourante) throw erreur;
-    return new Promise(r => setTimeout(r, 60 + Math.random() * 180)).then(() => reserverNumero(essai + 1));
+  const tenter = (seq, essai) => window.fbRunTransaction(
+    window.fbRef(db, `parties/${code}/manches/${manche}/actions/${seq}`),
+    (deja) => (deja === null ? action : undefined), // place prise : on n'y touche pas
+    { applyLocally: false }
+  ).then((resultat) => {
+    if(resultat.committed){
+      noterJournal(`envoi ${id} => numéro ${seq}`);
+      marquerActiviteAction(code); // (js/en-ligne.js)
+      return;
+    }
+    // Place prise par un autre téléphone au même instant : la suivante
+    noterJournal(`numéro ${seq} déjà pris pour ${id} (essai ${essai})`);
+    if(essai >= ESSAIS_MAX_PLACE || !toujoursLa()) throw new Error("aucune place libre pour l'action");
+    // Plusieurs places prises d'affilée (ce téléphone est en retard sur la partie) : on demande au serveur où en est la manche
+    if(essai % 3 !== 0) return tenter(seq + 1, essai + 1);
+    return window.fbGet(refActions).then((snapshot) => {
+      const dernier = Object.keys(snapshot.val() || {}).reduce((max, k) => Math.max(max, Number(k) || 0), 0);
+      return tenter(Math.max(seq, dernier) + 1, essai + 1);
+    });
   });
 
-  return reserverNumero(1)
-    .then((res) => {
-      const seq = res.snapshot.val();
-      noterJournal(`envoi ${id} => numéro ${seq}`);
-      // Une seule écriture : l'action + la date de dernière activité.
-      // « @vu » : dernière action que ce téléphone avait jouée au moment du tap (voir estUnDoublon)
-      return window.fbUpdate(window.fbRef(db, `parties/${code}`), {
-        [`manches/${manche}/actions/${seq}`]: { id: `${id}@${vu}`, par },
-        activite: window.fbServerTimestamp()
-      }).catch((erreur) => {
-        actionRefusee(code, manche, seq);
-        throw erreur;
-      });
-    });
+  return tenter(prochainePlaceAction(), 1);
 }
 
-// Firebase montre tout de suite à ce téléphone sa propre action (avant l'accord du serveur) : le
-// jeu réagit sans attendre. Si le serveur la refuse ensuite (réseau, serveur), les autres
-// téléphones ne l'ont jamais reçue : ce téléphone ne doit pas la garder.
-// - pas encore appliquée ici => on la retire de la file (elle est sautée partout pareil) ;
-// - déjà appliquée ici => on rejoue toute la manche depuis le serveur (comme une reconnexion).
 let dernierEtatManche = null; // état de la manche en cours (pour la rejouer)
 
-function actionRefusee(code, manche, seq){
-  noterJournal(`refus du serveur pour mon action ${seq}`);
-  if(!enLigneActif || code !== codePartieActuel || manche !== mancheCourante) return;
-
-  const action = fileActions.get(seq);
-  if(seq > prochainSeq || (seq === prochainSeq && action && !traitementEnCours)){
-    fileActions.delete(seq);
-    traiterFile();
-    return;
-  }
-  if(seq === prochainSeq && action){
-    action.refusee = true; // en cours d'essai (« attendre ») : elle sera sautée
-    return;
-  }
-  resynchroniserManche();
-}
-
+// La manche est rejouée depuis le serveur (comme une reconnexion). retourArriere : sans le choix qu'on vient d'annuler
 function resynchroniserManche(retourArriere = false){
   if(!dernierEtatManche || !enLigneActif) return;
   noterJournal(retourArriere ? "choix annulé : manche rejouée sans lui" : "remise à jour de la manche depuis le serveur");
-  if(!retourArriere) afficherToast("Connexion instable : remise à jour de la partie…", 3000);
+  if(!retourArriere) afficherToast(tr("Connexion instable : remise à jour de la partie…"), 3000);
   repriseEnCours = true;
   mancheCourante = null; // la même manche est redémarrée, puis rejouée depuis le serveur
   demarrerMancheEnLigne(dernierEtatManche, { resynchro: true, retourArriere });
@@ -162,7 +163,7 @@ function appliquerRetraitEnLigne(action){
   if(!joueurs.includes(nom) || joueurs.length <= 2) return "ignorer";
   if(cartesRestantes() !== Number(restantes)){
     if(action.par === pseudoActuel && !rattrapageEnCours){
-      afficherToast("Retrait annulé : une carte venait d'être tirée, réessaie");
+      afficherToast(tr("Retrait annulé : une carte venait d'être tirée, réessaie"));
     }
     return "ignorer";
   }
@@ -191,7 +192,7 @@ function appliquerRetraitEnLigne(action){
       else alerteRetire(code, nom);
     }, 0);
   } else if(!rattrapageEnCours){
-    afficherToast(action.par === nom ? `${nom} a quitté la partie` : `${nom} a été retiré de la partie`, 3000);
+    afficherToast(action.par === nom ? tr`${nom} a quitté la partie` : tr`${nom} a été retiré de la partie`, 3000);
   }
   return "ok";
 }
@@ -238,7 +239,7 @@ function verifierRetourDansManche(){
   if(!id){
     if(!retourAnnonce){
       retourAnnonce = true;
-      afficherToast("Tu reviens dans la partie à la fin de l'action en cours…", 3000);
+      afficherToast(tr("Tu reviens dans la partie à la fin de l'action en cours…"), 3000);
     }
     timerRetour = setTimeout(verifierRetourDansManche, 500);
     return;
@@ -282,7 +283,7 @@ function appliquerRetourEnLigne(action){
         retourAnnonce = false;
         clearTimeout(timerRetour);
         timerRetour = null;
-        afficherToast("Te revoilà dans la partie !", 3000);
+        afficherToast(tr("Te revoilà dans la partie !"), 3000);
         // Fiche effacée entre-temps par le nettoyage du retrait : on la remet
         const code = codePartieActuel;
         window.fbGet(window.fbRef(window.firebaseDB, `parties/${code}/joueurs/${nom}`)).then((snapshot) => {
@@ -293,7 +294,7 @@ function appliquerRetourEnLigne(action){
       }
     }
   } else if(resultat === "ok" && !rattrapageEnCours){
-    afficherToast(`${nom} est revenu(e) dans la partie`, 3000);
+    afficherToast(tr`${nom} est revenu(e) dans la partie`, 3000);
   }
   return resultat;
 }
@@ -368,9 +369,9 @@ function traiterFile(){
 
   const action = fileActions.get(prochainSeq);
   if(!action){
-    // Trou dans la numérotation (envoi interrompu ou refusé par le serveur) : on le saute au
-    // bout de 5 s, dès qu'une action plus loin existe. Pendant un rattrapage, les numéros
-    // jusqu'à la fin du rattrapage ont tous été réservés : un trou est sauté même s'il est le dernier.
+    // Trou dans la numérotation : le jeu n'en fait plus (voir ecrireAction : numéro et action écrits ensemble). Filet de
+    // sécurité si une place restait vide quand même : sautée au bout de 5 s, dès qu'une action plus loin existe (et pendant
+    // un rattrapage, jusqu'à sa dernière action), pour ne pas bloquer la partie.
     const plusLoin = Array.from(fileActions.keys()).some(k => k > prochainSeq) ||
       (rattrapageEnCours && prochainSeq <= seqFinRattrapage);
     if(plusLoin && !timerTrou){
@@ -401,10 +402,9 @@ function traiterFile(){
   const essayer = () => {
     if(manche !== mancheCourante || generation !== generationFile) return;
 
-    // Action refusée par le serveur pendant qu'on attendait de pouvoir l'appliquer : sautée
-    // (et sautée aussi : action retirée par un « Annuler » du choix, voir appliquerDefaireEnLigne)
+    // (sautée : action retirée par un « Annuler » du choix, voir appliquerDefaireEnLigne)
     seqEnCours = prochainSeq;
-    const resultat = (action.refusee || seqsAnnulees.has(prochainSeq) || estUnDoublon(action)) ? "ignorer" : tenterAction(action);
+    const resultat = (seqsAnnulees.has(prochainSeq) || estUnDoublon(action)) ? "ignorer" : tenterAction(action);
     if(resultat === "ok"){
       actionsAppliquees.set(`${action.par}|${action.id}`, prochainSeq);
       actionAppliquee(prochainSeq);
@@ -488,7 +488,7 @@ function reinitialiserFileActions(){
 // ===== Rattrapage (reconnexion en pleine manche) =====
 // Le téléphone rejoue toutes les actions déjà faites, délais quasi nuls (delai()) ;
 // un écran « Retour dans la partie… » cache les overlays qui défilent en accéléré.
-function commencerRattrapage(cible, texte = "Retour dans la partie…"){
+function commencerRattrapage(cible, texte = tr("Retour dans la partie…")){
   rattrapageEnCours = true;
   texteRattrapage = texte;
   seqFinRattrapage = cible;
@@ -506,6 +506,8 @@ function commencerRattrapage(cible, texte = "Retour dans la partie…"){
 function majRattrapage(){
   const ecran = document.getElementById("ecranRattrapage");
   if(!ecran) return;
+  // (nombre d'actions pas encore connu : la manche est en cours de lecture, voir demarrerMancheEnLigne)
+  if(seqFinRattrapage <= 0){ ecran.innerText = texteRattrapage; return; }
   const fait = Math.min(prochainSeq - 1, seqFinRattrapage);
   ecran.innerText = `${texteRattrapage}\n${fait} / ${seqFinRattrapage}`;
 }
@@ -612,29 +614,39 @@ function demarrerMancheEnLigne(etat, options = {}){
     return;
   }
 
-  // Reconnexion en pleine manche : on regarde combien d'actions ont déjà été jouées,
-  // puis on les rejoue toutes en accéléré avant de reprendre normalement
+  // Reconnexion en pleine manche : on lit les actions déjà jouées, puis on les rejoue toutes en accéléré avant de
+  // reprendre normalement. L'écran d'attente est là dès maintenant : le plateau tout neuf, pas encore à jour, ne se
+  // touche pas. Lecture ratée (réseau) : on réessaie jusqu'à ce qu'elle passe. (Avant : au premier échec, toute la manche
+  // était rejouée à vitesse normale, annonces et sons compris, sur un plateau qu'on pouvait toucher.)
   repriseEnCours = false;
   const code = codePartieActuel;
   const manche = etat.manche;
-  // (+ les actions déjà là : celles retirées par un « Annuler » du choix sont sautées dès le rejeu)
-  Promise.all([
-    window.fbGet(window.fbRef(window.firebaseDB, `parties/${code}/manches/${manche}/seq`)),
-    window.fbGet(window.fbRef(window.firebaseDB, `parties/${code}/manches/${manche}/actions`))
-  ])
-    .then(([snapshot, snapActions]) => {
-      if(manche !== mancheCourante) return;
-      calculerAnnulations(snapActions.val());
-      const cible = Number(snapshot.val() || 0);
-      if(cible > 0) commencerRattrapage(cible, options.retourArriere ? "Retour en arrière…" : undefined);
+  const generation = generationFile; // (manche relancée ou quittée entre-temps : cette lecture ne compte plus)
+  const texte = options.retourArriere ? tr("Retour en arrière…") : undefined;
+  const refActions = window.fbRef(window.firebaseDB, `parties/${code}/manches/${manche}/actions`);
+  commencerRattrapage(0, texte);
+
+  const lire = (essai) => {
+    window.fbGet(refActions).then((snapActions) => {
+      if(generation !== generationFile || manche !== mancheCourante) return;
+      const brutes = snapActions.val();
+      // (les actions retirées par un « Annuler » du choix sont sautées dès le rejeu)
+      calculerAnnulations(brutes);
+      // Dernière action à rattraper : le plus grand numéro écrit
+      const cible = Object.keys(brutes || {}).reduce((max, k) => Math.max(max, Number(k) || 0), 0);
+      if(cible > 0) commencerRattrapage(cible, texte);
+      else finirRattrapage();
       ecouterActions();
       if(cible === 0) verifierRetourDansManche();
-    })
-    .catch(() => {
-      if(manche !== mancheCourante) return;
-      ecouterActions();
-      verifierRetourDansManche();
+    }, (erreur) => {
+      if(generation !== generationFile || manche !== mancheCourante) return;
+      noterJournal(`lecture de la manche ratée (essai ${essai}) : ${erreur && erreur.message}`);
+      setTimeout(() => {
+        if(generation === generationFile && manche === mancheCourante) lire(essai + 1);
+      }, Math.min(4000, 1000 * essai));
     });
+  };
+  lire(1);
 }
 
 // Code de la partie, discret : petit bouton 🔑 en bas à gauche, accessible par-dessus les overlays
@@ -646,7 +658,7 @@ function afficherBadgeCode(){
     bouton = document.createElement("button");
     bouton.type = "button";
     bouton.id = "btnCodePartie";
-    bouton.setAttribute("aria-label", "Voir le code de la partie");
+    bouton.setAttribute("aria-label", tr("Voir le code de la partie"));
     bouton.innerHTML = '<span class="cle" aria-hidden="true">🔑</span><span class="texte"></span>';
     bouton.addEventListener("click", () => {
       bouton.classList.toggle("ouvert");
@@ -657,7 +669,7 @@ function afficherBadgeCode(){
     });
     document.body.appendChild(bouton);
   }
-  bouton.querySelector(".texte").innerText = "Code : " + codePartieActuel;
+  bouton.querySelector(".texte").innerText = (estSpectateur ? "👁 " : "") + tr("Code : ") + codePartieActuel;
   bouton.classList.remove("ouvert");
 }
 
@@ -780,8 +792,8 @@ function proposerRepriseClassique(){
   const s = lirePartieClassique();
   if(!s) return;
   const noms = s.joueurs.map(avecCouronne);
-  const liste = noms.length > 1 ? `${noms.slice(0, -1).join(", ")} et ${noms[noms.length - 1]}` : noms[0];
-  document.getElementById("texteReprise").innerText = `Avec ${liste}.`;
+  const liste = noms.length > 1 ? tr`${noms.slice(0, -1).join(", ")} et ${noms[noms.length - 1]}` : noms[0];
+  document.getElementById("texteReprise").innerText = tr`Avec ${liste}.`;
   ecranReprise.style.display = "";
 }
 
@@ -809,8 +821,8 @@ function reprendrePartieClassique(s){
   joueurs = s.joueurs.slice();
   annulations = {};
   afficherJoueurs();
-  rejouerActionsClassiques(s.actions.slice(), "Reprise de la partie…",
-    () => afficherNotificationHaut("", "Partie reprise !", true));
+  rejouerActionsClassiques(s.actions.slice(), tr("Reprise de la partie…"),
+    () => afficherNotificationHaut("", tr("Partie reprise !"), true));
 }
 
 // Relance la partie (même graine) et rejoue ces taps en accéléré, derrière un écran d'attente
@@ -889,7 +901,7 @@ let choixAnnulable = null;      // { debut, fin, timer } : positions des actions
 let seqEnCours = 0;             // en ligne : numéro de l'action en train d'être appliquée
 let toutesActionsManche = new Map(); // en ligne : seq -> action, toute la manche (pour valider un « defaire »)
 let seqsAnnulees = new Set();   // en ligne : actions retirées par un « Annuler » (sautées au rejeu)
-let texteRattrapage = "Retour dans la partie…";
+let texteRattrapage = tr("Retour dans la partie…");
 
 // Position de l'action en train d'être appliquée : son numéro en ligne, son rang dans la sauvegarde
 // en classique (pas encore notée pendant son handler : c'est la longueur de la liste)
@@ -900,10 +912,10 @@ function positionActionCourante(){
 
 // À appeler dans le handler du choix. debut : 1re action du choix (le 1er joueur du duel), sinon celle-ci.
 // texte : la question de la barre (« Mauvais joueur ? », « Mauvais bouton ? »…)
-function proposerAnnulerChoix(choisisseur, debut = positionActionCourante(), texte = "Mauvais joueur ?"){
+function proposerAnnulerChoix(choisisseur, debut = positionActionCourante(), texte = tr("Mauvais joueur ?")){
   masquerAnnulerChoix();
   if(rattrapageEnCours || repriseClassiqueEnCours) return;
-  if(enLigneActif && choisisseur !== pseudoActuel) return;
+  if(enLigneActif && (estSpectateur || choisisseur !== pseudoActuel)) return;
   const fin = positionActionCourante();
   if(debut < 0 || fin < debut) return;
 
@@ -912,7 +924,7 @@ function proposerAnnulerChoix(choisisseur, debut = positionActionCourante(), tex
   barre.innerHTML = '<span class="annulerChoix-poignee" aria-hidden="true"></span>' + // (on peut la glisser vers le bas)
     '<span class="annulerChoix-texte"></span>' +
     '<button type="button" class="annulerChoix-bouton"><svg viewBox="0 0 24 24" aria-hidden="true">' +
-    '<path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>Annuler</button>' +
+    '<path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>' + tr("Annuler") + '</button>' +
     '<span class="annulerChoix-temps" aria-hidden="true"></span>';
   barre.querySelector(".annulerChoix-texte").textContent = texte;
   barre.querySelector(".annulerChoix-temps").style.animationDuration = `${DUREE_ANNULER_CHOIX}ms`;
@@ -1005,8 +1017,9 @@ function avancerJusquAEcran(id, fin){
 }
 
 function defaireChoix(choix){
+  if(estSpectateur) return;
   if(enLigneActif){
-    ecrireAction(`defaire:${choix.debut}`).catch(() => afficherToast("Connexion perdue, réessaie"));
+    ecrireAction(`defaire:${choix.debut}`).catch(() => afficherToast(tr("Connexion perdue, réessaie")));
     return;
   }
   if(!sauvegardeClassique || sauvegardeClassique.actions.length - 1 !== choix.fin) return;
@@ -1016,7 +1029,7 @@ function defaireChoix(choix){
   retourMenu();
   joueurs = s.joueurs.slice();
   annulations = {};
-  rejouerActionsClassiques(s.actions.slice(0, choix.debut), "Retour en arrière…", null, ecranDuChoix(s.actions[choix.debut]));
+  rejouerActionsClassiques(s.actions.slice(0, choix.debut), tr("Retour en arrière…"), null, ecranDuChoix(s.actions[choix.debut]));
 }
 
 // Valable si le choix a été fait par le même joueur et que rien d'autre n'a été joué entre-temps
@@ -1036,7 +1049,7 @@ function appliquerDefaireEnLigne(action){
   const debut = Number(action.id.slice("defaire:".length));
   const fin = seqEnCours;
   if(!annulationValide(debut, fin, action.par, toutesActionsManche)){
-    if(action.par === pseudoActuel) afficherToast("Trop tard pour annuler");
+    if(action.par === pseudoActuel) afficherToast(tr("Trop tard pour annuler"));
     return "ignorer";
   }
   for(let s = debut; s <= fin; s++) seqsAnnulees.add(s);

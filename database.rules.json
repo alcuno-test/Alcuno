@@ -46,6 +46,16 @@
           "confV": { ".validate": "newData.isNumber()" },
           "installe": { ".validate": "newData.val() === true" },
           "joue": { ".validate": "newData.val() === true" },
+          "type": { ".validate": "newData.isString() && newData.val().matches(/^(telephone|tablette|ordi)$/)" },
+          "nav": { ".validate": "newData.isString() && newData.val().length <= 30" },
+          "osv": { ".validate": "newData.isString() && newData.val().length <= 30" },
+          "ecran": { ".validate": "newData.isString() && newData.val().matches(/^[0-9]{2,5}x[0-9]{2,5}@[0-9]([.][0-9]{1,2})?$/)" },
+          "langue": { ".validate": "newData.isString() && newData.val().length <= 16" },
+          "fuseau": { ".validate": "newData.isString() && newData.val().length <= 40" },
+          "pays": { ".validate": "newData.isString() && newData.val().matches(/^[A-Z]{2}$/)" },
+          "region": { ".validate": "newData.isString() && newData.val().length <= 60" },
+          "ville": { ".validate": "newData.isString() && newData.val().length <= 60" },
+          "fai": { ".validate": "newData.isString() && newData.val().length <= 80" },
           "$autre": { ".validate": false }
         }
       }
@@ -76,7 +86,7 @@
       },
       "themes": {
         "$theme": {
-          ".validate": "$theme.matches(/^(bordeaux|noir|vert|bleu|soleil|cerisier|givre|prestige|galaxie|kawaii|donjon)$/)",
+          ".validate": "$theme.matches(/^(bordeaux|noir|vert|bleu|soleil|cerisier|givre|prestige|galaxie|kawaii|donjon|noel|chandeleur|valentin|patrick|justrose|musique|halloween)$/)",
           "actif": { ".validate": "newData.isBoolean()" },
           "debut": { ".validate": "newData.isString() && newData.val().matches(/^[01][0-9]-[0-3][0-9]$/)" },
           "fin": { ".validate": "newData.isString() && newData.val().matches(/^[01][0-9]-[0-3][0-9]$/)" },
@@ -95,7 +105,54 @@
           "$autre": { ".validate": false }
         }
       },
+      "bar": {
+        "$id": {
+          ".validate": "$id.matches(/^[a-z0-9-]{1,40}$/) && (newData.hasChildren(['n', 'g', 'v', 'i', 'p']) || newData.child('x').val() === true)",
+          "n": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 50" },
+          "g": { ".validate": "newData.isString() && newData.val().matches(/^(rhum|vodka|gin|tequila|whisky|bulles|shooter|sans)$/)" },
+          "v": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 60" },
+          "i": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 1000" },
+          "p": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 1000" },
+          "x": { ".validate": "newData.val() === true" },
+          "en": {
+            "n": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 50" },
+            "v": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 60" },
+            "i": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 1000" },
+            "p": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 1000" },
+            "$autre": { ".validate": false }
+          },
+          "$autre": { ".validate": false }
+        }
+      },
       "$autre": { ".validate": false }
+    },
+    "profils": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid",
+        "v": { ".validate": "newData.isNumber()" },
+        "debloque": {
+          "$id": { ".validate": "$id.matches(/^(prestige|galaxie|donjon|kawaii|hard|album|zizi)$/) && newData.val() === true" }
+        },
+        "stickers": {
+          "gagnes": {
+            "$id": { ".validate": "$id.matches(/^(cupcake|chat|lapin|poussin|etoile|licorne|fraise|sushi|macaron|chou|nuage)$/) && newData.val() === true" }
+          },
+          "parties": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+          "fins": {
+            "$i": { ".validate": "$i.matches(/^[0-4]$/) && newData.isNumber()" }
+          },
+          "$autre": { ".validate": false }
+        },
+        "reglages": {
+          "maj": { ".validate": "newData.isNumber()" },
+          "valeurs": {
+            "$cle": { ".validate": "$cle.matches(/^(theme|langue|accessibilite|faces_fermees|sons|volume|musique|volume_musique|rappel_eau|gaucher|feux_artifice|vibrations|ordre_reglages|voix|vitesse_voix|ecran_allume|reglages_vue)$/) && newData.isString() && newData.val().length <= 600" }
+          },
+          "$autre": { ".validate": false }
+        },
+        "$autre": { ".validate": false }
+      }
     },
     "config_hist": {
       ".read": "auth != null && auth.uid === 'UID_ADMIN_A_REMPLACER'",
@@ -152,7 +209,7 @@
       "$code": {
         ".read": true,
         ".write": "!data.exists() || !newData.exists()",
-        ".validate": "$code.matches(/^[A-Z2-9]{5,6}$/)",
+        ".validate": "$code.matches(/^[A-Z2-9]{5,6}$/) && newData.hasChildren(['version', 'joueurs'])",
         "version": { ".validate": "newData.isNumber()" },
         "creee": { ".validate": "newData.isNumber()" },
         "soft": { ".validate": "newData.isBoolean()" },

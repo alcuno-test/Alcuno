@@ -9,11 +9,15 @@
 //                                              avantVersion : seulement pour les versions du jeu plus anciennes que celle-ci)
 //   coupures  : { voix, musique, enligne }     true = fonction coupée pour tout le monde
 //   themes    : { <thème>: { actif, debut, fin } }   actif:false = thème caché ; debut/fin = « MM-JJ » (chaque année)
+//                                              (thèmes de fête : sans debut/fin, ce sont leurs dates par défaut, PERIODES_FETES)
 //   majMin    : "9.64.0"                       version minimale : en dessous, bandeau « mets à jour »
 //   defauts   : { volumeMusique, vitesseVoix } valeurs de départ (seulement pour ceux qui n'ont jamais touché au curseur)
 //   defisHot  : { <id>: { t, n } }           défis du mode hot ajoutés depuis le pilotage, mélangés à ceux du jeu
 //                                              (t : texte avec {nom}, ou {nom1} et {nom2} ; n : niveau A, B ou C, comme dans js/mode-hot.js)
 //   defisMasques : { <id>: true }              défis du jeu (A1, B12… de js/mode-hot.js) qui ne sortent plus
+//   bar       : { <id>: { n, g, v, i, p, x, en } }  recettes du Bar (js/cocktails.js) : <id> d'une recette du jeu = sa version modifiée
+//                                              (x:true : masquée), autre <id> = recette ajoutée. n : nom, g : famille (FAMILLES_BAR),
+//                                              v : verre, i : ingrédients (une ligne chacun, séparés par « \n »), p : préparation
 //   v         : date de la dernière modification (ms) : les appareils la renvoient dans stats/appareils (voyant du pilotage)
 // =============================================================================================
 (function (global) {
@@ -24,6 +28,20 @@
     bordeaux: "Bordeaux", noir: "Sombre", vert: "Casino", bleu: "Nuit", soleil: "Soleil couchant",
     cerisier: "Cerisier", givre: "Givre", prestige: "Prestige", galaxie: "Star Wars", kawaii: "Kawaii", donjon: "BDSM", noel: "Noël", chandeleur: "Chandeleur", valentin: "Saint-Valentin", patrick: "Saint-Patrick", justrose: "Just Rosé", musique: "Musique", halloween: "Halloween"
   };
+  // Thèmes de fête : disponibles seulement pendant ces dates (« MM-JJ », chaque année, de 0 h le premier jour à minuit le
+  // dernier), sauf si le pilotage leur en donne d'autres. Ce sont les dates validées de FETES.md : ne pas les changer ici,
+  // les changer depuis le pilotage (stats.html).
+  const PERIODES_FETES = {
+    chandeleur: ["01-28", "02-03"], valentin: ["02-07", "02-15"], patrick: ["03-14", "03-18"], justrose: ["05-04", "05-12"],
+    musique: ["06-18", "06-22"], halloween: ["10-20", "11-01"], noel: ["12-18", "12-26"]
+  };
+  // Période d'un thème : celle du pilotage, sinon celle de la fête par défaut, sinon null (toute l'année)
+  function periodeTheme(config, theme) {
+    const t = config && config.themes && config.themes[theme];
+    if (t && t.debut && t.fin) return { debut: t.debut, fin: t.fin, parDefaut: false };
+    const f = PERIODES_FETES[theme];
+    return f ? { debut: f[0], fin: f[1], parDefaut: true } : null;
+  }
   const COUPURES_CONNUES = ["voix", "musique", "enligne"];
   const NOMS_COUPURES = { voix: "les annonces à voix haute", musique: "la musique", enligne: "le mode en ligne" };
   const MOIS = ["janvier", "fevrier", "mars", "avril", "mai", "juin", "juillet", "aout", "septembre", "octobre", "novembre", "decembre"];
@@ -33,6 +51,49 @@
   const NIVEAUX_DEFIS = { A: "Léger (moins de 5 gorgées)", B: "Moyen (5 à 10 gorgées)", C: "Osé (plus de 10 gorgées)",
     HA: "Hard : préliminaires (jusqu'à 4 gorgées, 2 en PJ)", HB: "Hard : actes sexuels (5 gorgées et plus, 3 en PJ)" }; // (HA / HB : mode hard)
   const motifIdDefi = /^[a-z0-9]{1,30}$/;
+  // Bar : familles des recettes (dans l'ordre d'affichage) et limites des textes
+  const FAMILLES_BAR = [
+    ["rhum", "Rhum"], ["vodka", "Vodka"], ["gin", "Gin"], ["tequila", "Tequila"], ["whisky", "Whisky"],
+    ["bulles", "Bulles & apéro"], ["shooter", "Shooters"], ["sans", "Sans alcool"]
+  ];
+  const BAR_MAX = 200, BAR_NOM_MAX = 50, BAR_VERRE_MAX = 60, BAR_TEXTE_MAX = 1000;
+  const motifIdBar = /^[a-z0-9-]{1,40}$/;
+  // Une recette { n, g, v, i, p } : null si elle est bonne, sinon ce qui ne va pas
+  function erreurCocktail(c) {
+    if (!estObjet(c)) return "Recette illisible.";
+    const n = typeof c.n === "string" ? c.n.trim() : "";
+    if (!n) return "Il manque le nom du cocktail.";
+    if (n.length > BAR_NOM_MAX) return `Nom trop long (${BAR_NOM_MAX} caractères max).`;
+    if (!FAMILLES_BAR.some((f) => f[0] === c.g)) return "Choisis une catégorie.";
+    if (typeof c.v !== "string" || !c.v.trim()) return "Il manque le verre.";
+    if (c.v.trim().length > BAR_VERRE_MAX) return `Verre trop long (${BAR_VERRE_MAX} caractères max).`;
+    if (typeof c.i !== "string" || !c.i.split("\n").some((l) => l.trim())) return "Il faut au moins un ingrédient.";
+    if (c.i.length > BAR_TEXTE_MAX) return `Ingrédients trop longs (${BAR_TEXTE_MAX} caractères max).`;
+    if (typeof c.p !== "string" || !c.p.trim()) return "Il manque la préparation.";
+    if (c.p.trim().length > BAR_TEXTE_MAX) return `Préparation trop longue (${BAR_TEXTE_MAX} caractères max).`;
+    // Version anglaise (facultative) : en { n, v, i, p }, chaque texte facultatif
+    if (c.en !== undefined && c.en !== null) {
+      if (!estObjet(c.en)) return "Version anglaise illisible.";
+      const max = { n: BAR_NOM_MAX, v: BAR_VERRE_MAX, i: BAR_TEXTE_MAX, p: BAR_TEXTE_MAX };
+      for (const k of Object.keys(c.en)) {
+        if (!max[k] || typeof c.en[k] !== "string") return "Version anglaise illisible.";
+        if (c.en[k].trim().length > max[k]) return `Version anglaise : texte trop long (${max[k]} caractères max).`;
+      }
+    }
+    return null;
+  }
+  // La même, nettoyée (espaces, lignes vides)
+  function propreCocktail(c) {
+    const lignes = (t) => t.split("\n").map((l) => l.trim()).filter(Boolean).join("\n");
+    const r = { n: c.n.trim(), g: c.g, v: c.v.trim(), i: lignes(c.i), p: c.p.trim() };
+    // (version anglaise : seulement les textes remplis ; rien du tout si tout est vide)
+    if (estObjet(c.en)) {
+      const en = {};
+      ["n", "v", "i", "p"].forEach((k) => { const t = typeof c.en[k] === "string" ? (k === "i" ? lignes(c.en[k]) : c.en[k].trim()) : ""; if (t) en[k] = t; });
+      if (Object.keys(en).length) r.en = en;
+    }
+    return r;
+  }
   const motifIdDefiJeu = /^(H?[AB]|C)[0-9]{1,3}$/; // (HA / HB : mode hard)
 
   // Texte d'un défi hot : null s'il est bon, sinon ce qui ne va pas.
@@ -94,6 +155,16 @@
       Object.keys(brut.defisMasques).filter((id) => motifIdDefiJeu.test(id) && brut.defisMasques[id] === true).sort().slice(0, 500)
         .forEach((id) => { (c.defisMasques = c.defisMasques || {})[id] = true; });
     }
+    if (estObjet(brut.bar)) {
+      Object.keys(brut.bar).sort().slice(0, BAR_MAX).forEach((id) => {
+        const r = brut.bar[id];
+        if (!motifIdBar.test(id) || !estObjet(r)) return;
+        const o = r.n !== undefined ? (erreurCocktail(r) ? null : propreCocktail(r)) : {};
+        if (!o) return;
+        if (r.x === true) o.x = true;
+        if (Object.keys(o).length) (c.bar = c.bar || {})[id] = o;
+      });
+    }
     if (typeof brut.v === "number" && isFinite(brut.v)) c.v = brut.v;
     if (typeof brut.majMin === "string" && /^\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(brut.majMin)) c.majMin = brut.majMin;
     return c;
@@ -112,10 +183,9 @@
 
   function themeDisponible(config, theme, date) {
     const t = config && config.themes && config.themes[theme];
-    if (!t) return true;
-    if (t.actif === false) return false;
-    if (t.debut && t.fin) return dansPeriode(t.debut, t.fin, date || new Date());
-    return true;
+    if (t && t.actif === false) return false;
+    const p = periodeTheme(config, theme);
+    return p ? dansPeriode(p.debut, p.fin, date || new Date()) : true;
   }
 
   const coupee = (config, nom) => !!(config && config.coupures && config.coupures[nom]);
@@ -187,7 +257,8 @@
           if (!Object.keys(c.themes[cmd.id]).length) delete c.themes[cmd.id];
           if (!Object.keys(c.themes).length) delete c.themes;
         }
-        return { config: c, resume: `Thème ${NOMS_THEMES[cmd.id]} : plus de dates (disponible toute l'année)` };
+        const f = PERIODES_FETES[cmd.id];
+        return { config: c, resume: f ? `Thème ${NOMS_THEMES[cmd.id]} : retour à ses dates par défaut (du ${dateEnTexte(f[0])} au ${dateEnTexte(f[1])})` : `Thème ${NOMS_THEMES[cmd.id]} : plus de dates (disponible toute l'année)` };
       }
       case "majmin": {
         if (cmd.version === null || cmd.version === undefined) { delete c.majMin; return { config: c, resume: "Plus de mise à jour obligatoire" }; }
@@ -238,11 +309,48 @@
         if (c.defisMasques) { delete c.defisMasques[cmd.id]; if (!Object.keys(c.defisMasques).length) delete c.defisMasques; }
         return { config: c, resume: `Défi du jeu remis (${cmd.id})${texte}` };
       }
-      case "tout_remettre": { // (les défis ajoutés ou masqués ne sont pas des réglages : ils restent)
+      // Bar : bar_enregistrer {id, cocktail, jeu} (id vide : nouvelle recette) · bar_masquer {id, masque} · bar_retirer {id}
+      // (bar_retirer : une recette ajoutée est supprimée ; une recette du jeu retrouve son texte d'origine et redevient visible)
+      case "bar_enregistrer": {
+        const e = erreurCocktail(cmd.cocktail);
+        if (e) return { erreur: e };
+        const r = propreCocktail(cmd.cocktail);
+        c.bar = c.bar || {};
+        let id = String(cmd.id || "");
+        if (id && !motifIdBar.test(id)) return { erreur: "Recette inconnue." };
+        if (!id) {
+          if (Object.keys(c.bar).length >= BAR_MAX) return { erreur: `Déjà ${BAR_MAX} recettes changées ou ajoutées.` };
+          id = "a" + Math.floor(maintenant).toString(36);
+          while (c.bar[id]) id += "x";
+        }
+        if (c.bar[id] && c.bar[id].x) r.x = true;
+        c.bar[id] = r;
+        return { config: c, resume: `${cmd.id ? (cmd.jeu ? "Recette du Bar modifiée" : "Recette ajoutée modifiée") : "Recette ajoutée au Bar"} : ${r.n}` };
+      }
+      case "bar_masquer": {
+        if (!motifIdBar.test(String(cmd.id))) return { erreur: "Recette inconnue." };
+        c.bar = c.bar || {};
+        const r = c.bar[cmd.id] || {};
+        if (cmd.masque) r.x = true; else delete r.x;
+        if (Object.keys(r).length) c.bar[cmd.id] = r; else delete c.bar[cmd.id];
+        if (!Object.keys(c.bar).length) delete c.bar;
+        const nom = cmd.nom ? ` : ${String(cmd.nom).slice(0, BAR_NOM_MAX)}` : "";
+        return { config: c, resume: (cmd.masque ? "Recette du Bar masquée" : "Recette du Bar remise") + nom };
+      }
+      case "bar_retirer": {
+        if (!c.bar || !c.bar[cmd.id]) return { erreur: "Rien à retirer pour cette recette." };
+        const nom = c.bar[cmd.id].n || cmd.nom || cmd.id;
+        if (cmd.jeu && c.bar[cmd.id].x) c.bar[cmd.id] = { x: true }; // (une recette du jeu masquée le reste)
+        else delete c.bar[cmd.id];
+        if (!Object.keys(c.bar).length) delete c.bar;
+        return { config: c, resume: (cmd.jeu ? "Recette du Bar remise d'origine" : "Recette retirée du Bar") + ` : ${nom}` };
+      }
+      case "tout_remettre": { // (les défis ajoutés ou masqués et les recettes du Bar ne sont pas des réglages : ils restent)
         const garde = {};
         if (c.defisHot) garde.defisHot = c.defisHot;
         if (c.defisMasques) garde.defisMasques = c.defisMasques;
-        return { config: garde, resume: "Tout remettre par défaut (aucun réglage à distance)" + (Object.keys(garde).length ? ", en gardant les défis hot ajoutés et masqués" : "") };
+        if (c.bar) garde.bar = c.bar;
+        return { config: garde, resume: "Tout remettre par défaut (aucun réglage à distance)" + (Object.keys(garde).length ? ", en gardant les défis hot et les recettes du Bar" : "") };
       }
       default:
         return { erreur: "Commande inconnue." };
@@ -452,7 +560,7 @@
       const d1 = du >= 0 ? dateDans(t, du) : null;
       const d2 = d1 ? dateDans(t, d1.fin) : null;
       if (d1 && d2) cmds.push({ op: "theme", id: theme, debut: d1.md, fin: d2.md });
-      else if (/toute l'annee|sans date|plus de date|n'importe quand/.test(t)) cmds.push({ op: "theme_periode_off", id: theme });
+      else if (/toute l'annee|sans date|plus de date|n'importe quand|dates? (par defaut|d'origine|normales?)/.test(t)) cmds.push({ op: "theme_periode_off", id: theme });
       else if (/(desactive|cache|masque|retire|supprime|enleve|coupe|bloque|ferme|vire)/.test(t)) cmds.push({ op: "theme", id: theme, actif: false });
       else if (/(active|reactive|remets?|affiche|montre|reouvre|rouvre|debloque)/.test(t)) cmds.push({ op: "theme", id: theme, actif: true });
     }
@@ -481,6 +589,7 @@
     if (c.defauts && c.defauts.volumeMusique !== undefined) l.push(`volume de la musique par défaut : ${c.defauts.volumeMusique} %`);
     if (c.defisHot) { const n = Object.keys(c.defisHot).length; l.push(`${n} défi${n > 1 ? "s" : ""} hot ajouté${n > 1 ? "s" : ""}`); }
     if (c.defisMasques) { const n = Object.keys(c.defisMasques).length; l.push(`${n} défi${n > 1 ? "s" : ""} du jeu masqué${n > 1 ? "s" : ""}`); }
+    if (c.bar) { const n = Object.keys(c.bar).length; l.push(`${n} recette${n > 1 ? "s" : ""} du Bar changée${n > 1 ? "s" : ""} ou ajoutée${n > 1 ? "s" : ""}`); }
     if (c.defauts && c.defauts.vitesseVoix !== undefined) l.push(`vitesse de la voix par défaut : ${String(c.defauts.vitesseVoix).replace(".", ",")}×`);
     return l.length ? l : ["rien : le jeu est réglé par défaut"];
   }
@@ -556,9 +665,9 @@
   }
 
   global.ConfigLib = {
-    THEMES_CONNUS, NOMS_THEMES, COUPURES_CONNUES, NOMS_COUPURES, TEXTE_MAX, DEFI_MAX, DEFIS_MAX, NIVEAUX_DEFIS, erreurDefi,
+    THEMES_CONNUS, NOMS_THEMES, PERIODES_FETES, periodeTheme, COUPURES_CONNUES, NOMS_COUPURES, TEXTE_MAX, DEFI_MAX, DEFIS_MAX, NIVEAUX_DEFIS, erreurDefi,
     valider, versionPlusVieille, themeDisponible, coupee, annonceVisible, appliquer, interpreter, decrire, dansPeriode, dateEnTexte,
-    SCENARIOS, MODELES_ANNONCES, repondreQuestion
+    SCENARIOS, MODELES_ANNONCES, repondreQuestion, FAMILLES_BAR, erreurCocktail, BAR_NOM_MAX, BAR_VERRE_MAX, BAR_TEXTE_MAX
   };
   if (typeof module !== "undefined" && module.exports) module.exports = global.ConfigLib;
 })(typeof window !== "undefined" ? window : globalThis);

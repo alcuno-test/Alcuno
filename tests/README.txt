@@ -25,6 +25,23 @@ Démarrage rapide (30 secondes, Linux / macOS / Windows)
   ne sortent que dans ce thème. Résultat attendu : « TOUT EST OK ». GitHub le lance aussi à chaque
   push (onglet Actions, « Tests de démarrage »).
 
+Spectateur en ligne (10 secondes, Linux / macOS / Windows)
+----------------------------------------------------------
+  node tests/test_spectateur.js
+
+  « Regarder une partie » (mode en ligne) avec un Firebase simulé en mémoire : écran sans pseudo, salle d'attente
+  sans ✕ ni « Lancer », manche qui démarre ou rattrapée en cours de route, aucune écriture dans la partie, aucune
+  action possible, départ sans toucher à la liste des joueurs. Lancé aussi par GitHub.
+
+Profil joueur (30 secondes, Linux / macOS / Windows)
+----------------------------------------------------
+  node tests/test_profil.js
+
+  Le profil joueur (js/profil.js) : la fusion entre le téléphone et le profil, les règles Firebase, puis le parcours dans le
+  jeu avec un Firebase et un compte Google simulés : connexion, sauvegarde d'un réglage, récupération sur un second téléphone
+  (déblocages et stickers réunis, réglages repris), reconnexion au lancement, base en panne, déconnexion, suppression.
+  Ne teste PAS la vraie fenêtre Google : à vérifier à la main sur un vrai téléphone (voir PILOTAGE.md). Lancé aussi par GitHub.
+
 Parties complètes du robot (1 à 2 minutes, Linux / macOS / Windows)
 -------------------------------------------------------------------
   node tests/test_partie_robot.js
@@ -150,7 +167,3 @@ Cache du service worker et images (tests/test_cache.js)
   Tourne aussi sur GitHub à chaque push.
 
 À regarder sur un vrai iPhone après une mise à jour : voir tests/VERIFICATION_IPHONE.md
-
-test_en_ligne_hard.js  mode hard EN LIGNE à deux "téléphones" (Playwright) : crée, rejoint, lance, joue 12 cartes, compare les deux états. Écrit une partie de test dans la base Firebase de l'appli TEST. 1 à 3 min.
-
-Note : test_en_ligne_hard.js a besoin d'un accès réseau à la base Firebase de test ET à son serveur de reconnexion (s-gke-euw1-…firebasedatabase.app) ; il efface la partie de test à la fin.

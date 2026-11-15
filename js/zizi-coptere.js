@@ -7,15 +7,14 @@
 // Visible seulement avec le thème Donjon (BDSM), sur l'écran d'accueil (#choixMode : caché avec lui).
 // Touché : il tourne et suit le doigt ; lâché, on peut le lancer : gravité, rebonds sur les bords, rotation qui ralentit.
 // Sa place n'est pas gardée : à chaque ouverture du jeu, il revient à côté du titre.
-const CLE_ZIZI_COPTERE = "alcuno_zizi_coptere";
 // APPLI TEST : débloqué de base pour l'essayer (ZIZI_TEST_DEBLOQUE). NE PAS PORTER dans le vrai jeu (voir PORTAGE.md).
 const ZIZI_TEST_DEBLOQUE = true;
+const CLE_ZIZI_COPTERE = "alcuno_zizi_coptere";
 function ziziCoptereDebloque(){
   if (ZIZI_TEST_DEBLOQUE) return true;
   try { return localStorage.getItem(CLE_ZIZI_COPTERE) === "1"; } catch (e) { return false; }
 }
 function debloquerZiziCoptere(){
-  // (la clé, et pas ziziCoptereDebloque : dans l'appli test il est débloqué de base, la notif doit quand même sortir)
   let deja = false;
   try { deja = localStorage.getItem(CLE_ZIZI_COPTERE) === "1"; } catch (e) {}
   if (deja) return;
@@ -25,12 +24,12 @@ function debloquerZiziCoptere(){
   const enDonjon = document.documentElement.dataset.theme === "donjon";
   try {
     afficherFenetreDeblocage("fenetreZiziCoptere", {
-      secret: "Partie hard terminée !",
-      titre: "🚁 Zizi-coptère<br>débloqué !",
-      texte: enDonjon ? "Il t'attend sur l'accueil.<br>Touche-le, lance-le !" : "Il t'attend sur l'accueil,<br>avec le thème BDSM",
+      secret: tr("Partie hard terminée !"),
+      titre: tr("🚁 Zizi-coptère<br>débloqué !"),
+      texte: enDonjon ? tr("Il t'attend sur l'accueil.<br>Touche-le, lance-le !") : tr("Il t'attend sur l'accueil,<br>avec le thème BDSM"),
       boutons: enDonjon ? [{ libelle: "OK", principal: true }] : [
-        { libelle: "Mettre le thème BDSM", principal: true, action: () => { const p = document.getElementById("pastilleDonjon"); if (p) p.click(); } },
-        { libelle: "Plus tard" }
+        { libelle: tr("Mettre le thème BDSM"), principal: true, action: () => { const p = document.getElementById("pastilleDonjon"); if (p) p.click(); } },
+        { libelle: tr("Plus tard") }
       ]
     });
   } catch (e) {}
@@ -41,7 +40,7 @@ const ziziCoptere = (() => {
   const el = document.createElement("div");
   el.setAttribute("role", "button");
   el.id = "ziziCoptere";
-  el.setAttribute("aria-label", "Zizi-coptère");
+  el.setAttribute("aria-label", tr("Zizi-coptère"));
   // Dessiné à l'horizontale, centré : il tourne autour de son milieu, comme une pale d'hélice
   // Style BDSM : peau en dégradé brillant, anneau de cuir noir clouté à la base, contour bordeaux, halo rouge (CSS)
   el.innerHTML = `<svg viewBox="0 0 120 60" aria-hidden="true">

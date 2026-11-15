@@ -1,6 +1,6 @@
 # Mode hard : décisions
 
-Statut : codé dans l'appli test (jeu 9.90.0, cache `alcuno-test-v95`). Dernière mise à jour : 12 novembre.
+Statut : en ligne dans l'appli test, puis porté dans le vrai jeu (9.88.0, cache `alcuno-v25`). Dernière mise à jour : 12 novembre.
 
 ## Règles
 - Une option de plus dans « Ta partie », comme les autres modes. Se cumule avec Mode PJ et Partie express,

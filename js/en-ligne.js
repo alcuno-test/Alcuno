@@ -36,17 +36,28 @@ function trouverCodeLibre(essaisRestants = 10){
   const code = genererCodePartie();
   return window.fbGet(window.fbRef(window.firebaseDB, `parties/${code}`)).then((snapshot) => {
     if (!snapshot.exists()) return code;
-    if (essaisRestants <= 1) throw new Error("Aucun code de partie libre trouvé");
+    if (essaisRestants <= 1) throw new Error(tr("Aucun code de partie libre trouvé"));
     return trouverCodeLibre(essaisRestants - 1);
   });
+}
+
+// Firebase toujours pas là au bout de quelques secondes (voir attendreFirebase, script.js) : le bouton redevient
+// utilisable et on dit pourquoi (avant : « Connexion… » sans fin)
+function firebaseInjoignable(finAttente){
+  return () => {
+    finAttente();
+    alert(navigator.onLine === false
+      ? tr("Pas de connexion internet : le mode en ligne a besoin du réseau.\n\nVérifie ta connexion, puis réessaie.")
+      : tr("Impossible de joindre le serveur du mode en ligne.\n\nVérifie ta connexion, puis réessaie."));
+  };
 }
 
 function erreurFirebase(err){
   console.error(err);
   const refus = err && String(err.code || err.message || "").toLowerCase().includes("permission");
   alert(refus
-    ? "Accès refusé par la base Firebase (règles de sécurité)."
-    : "Impossible de joindre le serveur. Vérifie ta connexion.");
+    ? tr("Accès refusé par la base Firebase (règles de sécurité).")
+    : tr("Impossible de joindre le serveur. Vérifie ta connexion."));
 }
 
 // Entrée dans un champ = clic sur le bouton de validation
@@ -63,6 +74,7 @@ validerAvecEntree(["codeRevenir"], "validerRevenir");
 // Rejoindre : Entrée sur le code => on passe au pseudo s'il est vide (sinon on valide)
 document.getElementById("codeRejoindre").addEventListener("keydown", (e) => {
   if (e.key !== "Enter") return;
+  if (document.getElementById("enLigneRejoindre").classList.contains("regarder")) { document.getElementById("validerRegarder").click(); return; }
   const champPseudo = document.getElementById("pseudoRejoindre");
   if (!champPseudo.value.trim()) ouvrirClavier(champPseudo);
   else document.getElementById("validerRejoindre").click();
@@ -295,7 +307,7 @@ function boutonEnAttente(id, texte){
 let codeAInviter = null;
 function afficherCodePartie(code){
   codeAInviter = code;
-  document.getElementById("codePartieAffiche").innerText = "Code de la partie : " + code;
+  document.getElementById("codePartieAffiche").innerText = tr("Code de la partie : ") + code;
   const zone = document.getElementById("qrPartie");
   try {
     const qr = qrcode(0, "M");
@@ -323,11 +335,20 @@ document.getElementById("btnCreerPartie").addEventListener("click", () => ouvrir
 }));
 
 document.getElementById("btnRejoindrePartie").addEventListener("click", () => {
+  document.getElementById("enLigneRejoindre").classList.remove("regarder");
   document.getElementById("enLigneChoix").style.display = "none";
   document.getElementById("enLigneRejoindre").style.display = "";
   // Code déjà rempli (lien d'un QR code) : clavier prêt pour le pseudo. Sinon pas de clavier :
   // on voit d'abord « Scanner le QR code » (il se cache quand on tape le code à la main)
   if (document.getElementById("codeRejoindre").value.trim()) ouvrirClavier(document.getElementById("pseudoRejoindre"));
+});
+
+// « Regarder une partie » : le même écran que « Rejoindre », sans pseudo (le code, ou le QR code, reste nécessaire : c'est lui qui
+// dit quelle partie regarder)
+document.getElementById("btnRegarderPartie").addEventListener("click", () => {
+  document.getElementById("enLigneRejoindre").classList.add("regarder");
+  document.getElementById("enLigneChoix").style.display = "none";
+  document.getElementById("enLigneRejoindre").style.display = "";
 });
 
 // ===== Scanner le QR code d'une partie (caméra) =====
@@ -343,14 +364,14 @@ let numeroScanner = 0; // change à chaque ouverture / fermeture : une lecture e
 document.getElementById("btnInviterPartie").addEventListener("click", () => {
   if (!codeAInviter) return;
   const lien = new URL("./", location.href).href + "?code=" + encodeURIComponent(codeAInviter);
-  const texte = `🍻 Rejoins ma partie d'Alcuno ! Code : ${codeAInviter}`;
+  const texte = tr`🍻 Rejoins ma partie d'Alcuno ! Code : ${codeAInviter}`;
   if (navigator.share) {
     navigator.share({ text: texte, url: lien }).catch(() => {});
     return;
   }
   const copie = navigator.clipboard ? navigator.clipboard.writeText(texte + "\n" + lien) : Promise.reject();
-  copie.then(() => afficherToast("Invitation copiée !"))
-    .catch(() => prompt("Copie l'invitation :", texte + " " + lien));
+  copie.then(() => afficherToast(tr("Invitation copiée !")))
+    .catch(() => prompt(tr("Copie l'invitation :"), texte + " " + lien));
 });
 
 // Texte du QR code => code de la partie (lien …/?code=ABC12 du jeu, ou le code tout seul)
@@ -421,13 +442,14 @@ function fermerScanner(){
 // (le mode télé, js/tele.js, s'en sert aussi pour lire le QR code de la télé)
 function remplirCodePartieScanne(code){
   document.getElementById("codeRejoindre").value = code;
+  if (document.getElementById("enLigneRejoindre").classList.contains("regarder")) return; // (pas de pseudo à saisir)
   const champPseudo = document.getElementById("pseudoRejoindre");
   if (!champPseudo.value.trim()) ouvrirClavier(champPseudo);
 }
 
 async function ouvrirScanner({ lireCode = codeDepuisQR, quandCode = remplirCodePartieScanne } = {}){
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-    alert("Ce téléphone ne permet pas de scanner ici : entre le code à la main.");
+    alert(tr("Ce téléphone ne permet pas de scanner ici : entre le code à la main."));
     return;
   }
   const numero = ++numeroScanner;
@@ -457,8 +479,8 @@ async function ouvrirScanner({ lireCode = codeDepuisQR, quandCode = remplirCodeP
     if (numero !== numeroScanner) return;
     fermerScanner();
     alert(e && e.name === "NotAllowedError"
-      ? "Autorise la caméra pour scanner le QR code (ou entre le code à la main)."
-      : "Impossible d'ouvrir la caméra : entre le code à la main.");
+      ? tr("Autorise la caméra pour scanner le QR code (ou entre le code à la main).")
+      : tr("Impossible d'ouvrir la caméra : entre le code à la main."));
   }
 }
 
@@ -532,16 +554,16 @@ document.getElementById("btnRetourRevenir").addEventListener("click", () => {
 
 document.getElementById("validerRevenir").addEventListener("click", () => {
   const code = document.getElementById("codeRevenir").value.trim().toUpperCase();
-  if (!code) { alert("Entre le code de la partie."); return; }
+  if (!code) { alert(tr("Entre le code de la partie.")); return; }
 
-  const finAttente = boutonEnAttente("validerRevenir", "Connexion…");
+  const finAttente = boutonEnAttente("validerRevenir", tr("Connexion…"));
   attendreFirebase(() => {
     window.fbGet(window.fbRef(window.firebaseDB, `parties/${code}`)).then((snapshot) => {
       finAttente();
       if (!snapshot.exists()) {
         oublierPartieLocale();
         majBoutonRevenir();
-        alert("Aucune partie trouvée avec ce code (elle est peut-être terminée).");
+        alert(tr("Aucune partie trouvée avec ce code (elle est peut-être terminée)."));
         return;
       }
       const partie = snapshot.val();
@@ -555,15 +577,15 @@ document.getElementById("validerRevenir").addEventListener("click", () => {
         majBoutonRevenir();
         document.getElementById("enLigneRevenir").style.display = "none";
         document.getElementById("enLigneChoix").style.display = "";
-        alert("Cette partie a été créée avec une ancienne version du jeu : elle ne peut plus être reprise.\n\n" +
-              "Créez une nouvelle partie.");
+        alert(tr("Cette partie a été créée avec une ancienne version du jeu : elle ne peut plus être reprise.\n\n") +
+              tr("Créez une nouvelle partie."));
         return;
       }
 
       if (!versionCompatible(partie)) return;
       revenirAvecLeCode(code, partie, !!(partie.etatJeu && partie.etatJeu.demarree));
     }).catch((e) => { finAttente(); erreurFirebase(e); });
-  });
+  }, firebaseInjoignable(finAttente));
 });
 
 // Même version du jeu que la partie ? Sinon message (et rechargement si c'est nous qui sommes en retard)
@@ -574,11 +596,11 @@ function versionCompatible(partie){
   const versionPartie = typeof partie.version === "number" ? partie.version : 0;
   if (versionPartie > VERSION_JEU) {
     // C'est nous qui sommes en retard : rechargement sur une adresse neuve (contourne le cache)
-    alert("Ton jeu n'est pas à jour : la page va se recharger.\nEntre ensuite à nouveau le code.");
+    alert(tr("Ton jeu n'est pas à jour : la page va se recharger.\nEntre ensuite à nouveau le code."));
     rechargerPage(location.pathname + "?v=" + versionPartie); // (js/retour-demarrage.js)
   } else {
-    alert("Le téléphone qui a créé la partie a une ancienne version du jeu.\n" +
-          "Il doit recharger la page (ou l'ouvrir en navigation privée), puis recréer la partie.");
+    alert(tr("Le téléphone qui a créé la partie a une ancienne version du jeu.\n") +
+          tr("Il doit recharger la page (ou l'ouvrir en navigation privée), puis recréer la partie."));
   }
   return false;
 }
@@ -588,10 +610,11 @@ document.getElementById("btnQuitterSalle").addEventListener("click", quitterPart
 document.getElementById("validerCreation").addEventListener("click", () => {
   const pseudo = document.getElementById("pseudoCreateur").value.replace(/\s+/g, " ").trim();
   if (estCodeHard(pseudo)) debloquerHard(); // (« Jojo » : mode hard débloqué, js/reglages.js)
-  if (!pseudo) { alert("Entre un pseudo."); return; }
-  if (PSEUDO_INVALIDE.test(pseudo)) { alert("Pseudo invalide (pas de . # $ [ ] /)."); return; }
+  if (!pseudo) { alert(tr("Entre un pseudo.")); return; }
+  if (PSEUDO_INVALIDE.test(pseudo)) { alert(tr("Pseudo invalide (pas de . # $ [ ] /).")); return; }
+  if (nomImpossible(pseudo)) { alert(tr("Ce pseudo n'est pas possible : choisis-en un autre.")); return; }
 
-  const finAttente = boutonEnAttente("validerCreation", "Création…");
+  const finAttente = boutonEnAttente("validerCreation", tr("Création…"));
   attendreFirebase(() => {
     let code = null;
     let soft = caseModeSoft.checked; // réglage de l'hôte, fixé pour toute la partie
@@ -629,8 +652,8 @@ document.getElementById("validerCreation").addEventListener("click", () => {
           .catch(() => {});
       }
       if (softRefuse) {
-        alert("Le Mode PJ n'est pas encore disponible en ligne (règles Firebase à mettre à jour) : " +
-              "la partie est créée en mode normal.");
+        alert(tr("Le Mode PJ n'est pas encore disponible en ligne (règles Firebase à mettre à jour) : ") +
+              tr("la partie est créée en mode normal."));
       }
       codePartieActuel = code;
       pseudoActuel = pseudo;
@@ -645,7 +668,7 @@ document.getElementById("validerCreation").addEventListener("click", () => {
       ecouterSalleAttente(code);
       ecouterEtatPartie(code);
     }).catch(erreurFirebase).finally(finAttente);
-  });
+  }, firebaseInjoignable(finAttente));
 });
 
 document.getElementById("validerRejoindre").addEventListener("click", () => {
@@ -653,20 +676,21 @@ document.getElementById("validerRejoindre").addEventListener("click", () => {
   const pseudo = document.getElementById("pseudoRejoindre").value.replace(/\s+/g, " ").trim();
   if (estCodeHard(pseudo)) debloquerHard(); // (« Jojo » : mode hard débloqué, js/reglages.js)
   if (!code || !pseudo) {
-    alert("Entre le code et ton pseudo.\n\n" +
-          "Tu as été déconnecté d'une partie ? Entre le code et le même pseudo qu'avant : tu reprendras ta place.");
+    alert(tr("Entre le code et ton pseudo.\n\n") +
+          tr("Tu as été déconnecté d'une partie ? Entre le code et le même pseudo qu'avant : tu reprendras ta place."));
     return;
   }
-  if (PSEUDO_INVALIDE.test(pseudo)) { alert("Pseudo invalide (pas de . # $ [ ] /)."); return; }
+  if (PSEUDO_INVALIDE.test(pseudo)) { alert(tr("Pseudo invalide (pas de . # $ [ ] /).")); return; }
+  if (nomImpossible(pseudo)) { alert(tr("Ce pseudo n'est pas possible : choisis-en un autre.")); return; }
 
-  const finAttente = boutonEnAttente("validerRejoindre", "Connexion…");
+  const finAttente = boutonEnAttente("validerRejoindre", tr("Connexion…"));
   attendreFirebase(() => {
     const db = window.firebaseDB;
     const refPartie = window.fbRef(db, `parties/${code}`);
 
     window.fbGet(refPartie).then((snapshot) => {
       if (!snapshot.exists()) {
-        alert("Aucune partie trouvée avec ce code.");
+        alert(tr("Aucune partie trouvée avec ce code."));
         return;
       }
 
@@ -682,10 +706,10 @@ document.getElementById("validerRejoindre").addEventListener("click", () => {
 
       if (nomExistant) {
         const ok = confirm(
-          `« ${nomExistant} » est déjà dans cette partie.\n\n` +
-          `C'est toi ? Appuie sur OK pour reprendre ta place` +
-          (enJeu ? " : tu retrouveras la partie là où elle en est." : ".") +
-          `\n\n(Sinon, annule et choisis un autre pseudo.)`
+          tr`« ${nomExistant} » est déjà dans cette partie.\n\n` +
+          tr`C'est toi ? Appuie sur OK pour reprendre ta place` +
+          (enJeu ? tr(" : tu retrouveras la partie là où elle en est.") : ".") +
+          tr`\n\n(Sinon, annule et choisis un autre pseudo.)`
         );
         if (ok) reprendrePlaceEnLigne(code, nomExistant, partie);
         return;
@@ -696,16 +720,16 @@ document.getElementById("validerRejoindre").addEventListener("click", () => {
         const nomRetire = joueurRetire(partie, pseudo);
         if (nomRetire) {
           const ok = confirm(
-            `« ${nomRetire} » a été retiré de cette partie.\n\n` +
-            `C'est toi ? Appuie sur OK pour y revenir : tu retrouveras la partie là où elle en est.`
+            tr`« ${nomRetire} » a été retiré de cette partie.\n\n` +
+            tr`C'est toi ? Appuie sur OK pour y revenir : tu retrouveras la partie là où elle en est.`
           );
           if (ok) revenirApresRetrait(code, nomRetire, partie);
           return;
         }
 
-        alert("La partie a déjà commencé : on ne peut plus y ajouter de joueur.\n\n" +
-              "Si tu en faisais partie et que tu as été déconnecté, entre exactement le même pseudo " +
-              "qu'avant pour reprendre ta place.");
+        alert(tr("La partie a déjà commencé : on ne peut plus y ajouter de joueur.\n\n") +
+              tr("Si tu en faisais partie et que tu as été déconnecté, entre exactement le même pseudo ") +
+              tr("qu'avant pour reprendre ta place."));
         return;
       }
 
@@ -728,19 +752,61 @@ document.getElementById("validerRejoindre").addEventListener("click", () => {
         ecouterEtatPartie(code);
       });
     }).catch(erreurFirebase).finally(finAttente);
-  });
+  }, firebaseInjoignable(finAttente));
 });
+
+// Regarder une partie sans y jouer : aucune fiche de joueur n'est écrite (on n'apparaît pas dans la liste, la partie ne compte pas un
+// joueur de plus), aucune action n'est envoyée. La manche est rejouée sur ce téléphone comme à une reconnexion, depuis le serveur.
+document.getElementById("validerRegarder").addEventListener("click", () => {
+  const code = document.getElementById("codeRejoindre").value.trim().toUpperCase();
+  if (!code) { alert(tr("Entre le code de la partie à regarder.")); return; }
+
+  const finAttente = boutonEnAttente("validerRegarder", tr("Connexion…"));
+  attendreFirebase(() => {
+    window.fbGet(window.fbRef(window.firebaseDB, `parties/${code}`)).then((snapshot) => {
+      if (!snapshot.exists()) {
+        alert(tr("Aucune partie trouvée avec ce code."));
+        return;
+      }
+      const partie = snapshot.val();
+      if (!versionCompatible(partie)) return;
+      regarderPartie(code, partie);
+    }).catch(erreurFirebase).finally(finAttente);
+  }, firebaseInjoignable(finAttente));
+});
+
+function regarderPartie(code, partie){
+  choisirModeSoftEnLigne(partie.soft === true);
+  choisirFacesEnLigne(partie.faces === true);
+  estSpectateur = true;
+  document.body.classList.add("mode-spectateur");
+  codePartieActuel = code;
+  pseudoActuel = null;
+  estHote = false;
+  repriseEnCours = !!(partie.etatJeu && partie.etatJeu.demarree); // manche en cours : rejouée en accéléré (demarrerMancheEnLigne)
+
+  document.getElementById("enLigneRejoindre").style.display = "none";
+  document.getElementById("enLigneRejoindre").classList.remove("regarder");
+  afficherCodePartie(code);
+  document.getElementById("infoSpectateur").style.display = "";
+  document.getElementById("salleAttente").style.display = "";
+
+  suivrePresence(code, null); // (seulement le logo « connexion perdue » : rien n'est écrit)
+  ecouterSalleAttente(code);
+  ecouterEtatPartie(code);
+  afficherToast(tr("Tu regardes la partie, sans y jouer"), 3500);
+}
 
 document.getElementById("lancerPartieEnLigne").addEventListener("click", () => {
   if (!estHote || !codePartieActuel) return;
 
-  const finAttente = boutonEnAttente("lancerPartieEnLigne", "Lancement…");
+  const finAttente = boutonEnAttente("lancerPartieEnLigne", tr("Lancement…"));
   window.fbGet(window.fbRef(window.firebaseDB, `parties/${codePartieActuel}/joueurs`)).then((snapshot) => {
     const liste = Object.values(snapshot.val() || {})
       .sort((a, b) => (a.rejoint || 0) - (b.rejoint || 0))
       .map(j => j.nom);
 
-    if (liste.length < 2) { alert("Il faut au moins 2 joueurs."); return; }
+    if (liste.length < 2) { alert(tr("Il faut au moins 2 joueurs.")); return; }
     return lancerMancheEnLigne(liste, true);
   }).catch(erreurFirebase).finally(finAttente);
 });
@@ -758,6 +824,7 @@ document.getElementById("btnRetourCreer").addEventListener("click", () => {
 });
 
 document.getElementById("btnRetourRejoindre").addEventListener("click", () => {
+  document.getElementById("enLigneRejoindre").classList.remove("regarder");
   document.getElementById("enLigneRejoindre").style.display = "none";
   document.getElementById("enLigneChoix").style.display = "";
 });
@@ -781,8 +848,8 @@ function ecouterSalleAttente(code){
 
     const data = snapshot.val();
 
-    // On n'est plus dans la liste : un autre joueur nous a retiré
-    if (!data[pseudoActuel]) {
+    // On n'est plus dans la liste : un autre joueur nous a retiré (un spectateur n'y est jamais)
+    if (!estSpectateur && !data[pseudoActuel]) {
       // Joueur retiré qui revient : sa fiche a pu être effacée en retard (nettoyage du retrait) => on la remet
       if (retourEnCours) {
         remettreFicheJoueur();
@@ -796,7 +863,7 @@ function ecouterSalleAttente(code){
     }
 
     // Le rôle d'hôte peut changer (l'hôte précédent est parti)
-    estHote = !!data[pseudoActuel].host;
+    estHote = !estSpectateur && !!data[pseudoActuel].host;
 
     // Seulement « false » : sans info de présence (champ absent), on ne marque personne
     const absents = Object.keys(data).filter(n => data[n].connecte === false && n !== pseudoActuel);
@@ -815,19 +882,19 @@ function ecouterSalleAttente(code){
     tries.forEach((j) => {
       const div = document.createElement("div");
       const nom = document.createElement("span");
-      nom.innerText = avecCouronne(j.nom) + (j.host ? " (hôte)" : "");
+      nom.innerText = avecCouronne(j.nom) + (j.host ? tr(" (hôte)") : "");
       ajouterBadgeDeconnecte(nom, deconnectes.has(j.nom));
       div.appendChild(nom);
 
       // Tout le monde peut retirer les autres joueurs (pour partir soi-même : « Retour »)
-      if (j.nom !== pseudoActuel) {
+      if (!estSpectateur && j.nom !== pseudoActuel) {
         const btn = document.createElement("button");
         btn.type = "button";
         btn.className = "btnExclure";
         btn.innerText = "✕";
-        btn.title = "Retirer " + j.nom;
+        btn.title = tr("Retirer ") + j.nom;
         btn.addEventListener("click", () => {
-          // Retirer l'hôte arrête la partie : écran de confirmation d'abord
+          // Retirer l'hôte : écran de confirmation d'abord (un autre joueur devient l'hôte)
           if (j.host) {
             demanderRetraitHote(code, j.nom);
             return;
@@ -851,8 +918,8 @@ let retraitHoteEnAttente = null; // { code, nom }
 
 function demanderRetraitHote(code, nomHote){
   document.getElementById("texteConfirmerHote").innerText =
-    `${nomHote} est l'hôte de la partie.\n` +
-    `Si tu le retires, la partie s'arrête pour tout le monde.`;
+    tr`${nomHote} est l'hôte de la partie.\n` +
+    tr`Si tu le retires, un autre joueur devient l'hôte.`;
   retraitHoteEnAttente = { code, nom: nomHote };
   ecranConfirmerHote.style.display = "";
 }
@@ -875,7 +942,7 @@ function ecouterEtatPartie(code){
   desabonnerEtat = window.fbOnValue(window.fbRef(window.firebaseDB, `parties/${code}/etatJeu`), (snapshot) => {
     const etat = snapshot.val();
 
-    // Partie supprimée (l'hôte est parti ou a été retiré)
+    // Partie supprimée (dernier joueur parti, nettoyage après une longue inactivité)
     if (!etat) {
       if (codePartieActuel === code) partieFermee();
       return;
@@ -895,6 +962,7 @@ function ecouterEtatPartie(code){
 // ceux de la manche), pour que tous les téléphones tirent dans la même liste. Si Firebase refuse (règles pas encore
 // publiées), on relance sans eux : chacun prend alors les siens (voir initialiserModeHot).
 function lancerMancheEnLigne(listeJoueurs, depuisSalle, avecDefis = true){
+  if (estSpectateur) return Promise.resolve();
   const mancheAttendue = mancheCourante;
   let hardRefuse = false; // (mode hard avec un autre nombre de joueurs que 2 : rien n'est lancé)
   const refEtat = window.fbRef(window.firebaseDB, `parties/${codePartieActuel}/etatJeu`);
@@ -926,7 +994,7 @@ function lancerMancheEnLigne(listeJoueurs, depuisSalle, avecDefis = true){
       hote: e.hote || pseudoActuel
     }, defis && Object.keys(defis).length ? { defisHot: defis } : {}, masques && Object.keys(masques).length ? { defisMasques: masques } : {});
   }).then((resultat) => {
-    if (hardRefuse) { alert("Le mode hard se joue à 2 joueurs seulement."); return; }
+    if (hardRefuse) { alert(tr("Le mode hard se joue à 2 joueurs seulement.")); return; }
     if (resultat && resultat.committed) { // statistiques : une fois par manche (celui qui lance)
       const seed = (resultat.snapshot && resultat.snapshot.val() || {}).seed || 0;
       noterPartieStats(true, { hot: graineHot(seed), hard: graineHard(seed), express: graineExpress(seed), pj: estModeSoft() });
@@ -946,8 +1014,17 @@ function marquerActivite(code){
     .catch(() => {}); // pas bloquant pour le jeu
 }
 
+// Après une action de jeu : au plus une fois par minute (le nettoyage ne regarde qu'à 3 h près)
+let activiteMarqueeLe = 0;
+function marquerActiviteAction(code){
+  if (Date.now() - activiteMarqueeLe < 60 * 1000) return;
+  activiteMarqueeLe = Date.now();
+  marquerActivite(code);
+}
+
 // « Modifier les joueurs » : tout le monde repasse en salle d'attente, même code
 function renvoyerEnSalleEnLigne(){
+  if (estSpectateur) return;
   const mancheAttendue = mancheCourante;
   const refEtat = window.fbRef(window.firebaseDB, `parties/${codePartieActuel}/etatJeu`);
 
@@ -983,11 +1060,12 @@ let refPresence = null;
 
 function suivrePresence(code, nom){
   arreterPresence();
-  refPresence = window.fbRef(window.firebaseDB, `parties/${code}/joueurs/${nom}/connecte`);
+  // Spectateur (nom null) : pas de fiche de joueur, donc rien à écrire ; on suit seulement la connexion (logo « connexion perdue »)
+  refPresence = nom ? window.fbRef(window.firebaseDB, `parties/${code}/joueurs/${nom}/connecte`) : null;
   const refConnecte = refPresence;
   desabonnerPresence = window.fbOnValue(window.fbRef(window.firebaseDB, ".info/connected"), (snapshot) => {
     majCoupureReseau(snapshot.val() === true);
-    if (snapshot.val() !== true) return;
+    if (snapshot.val() !== true || !refConnecte) return;
     // (re)connecté au serveur : on prépare le « false » automatique, puis on passe à true
     window.fbOnDisconnect(refConnecte).set(false)
       .then(() => window.fbSet(refConnecte, true))
@@ -999,8 +1077,33 @@ function suivrePresence(code, nom){
 // (mode en ligne seulement : tant que la présence est suivie). Tous les taps sont bloqués dès
 // la coupure ; le logo apparaît après 1,5 s (pas pour un simple raté de connexion). Tout est
 // retiré dès que Firebase est reconnecté.
+// Coupure qui dure (10 s) : un bouton « Quitter la partie » apparaît sous le logo. (Avant : tous les taps restaient
+// bloqués tant que le réseau ne revenait pas, il fallait fermer l'appli.) Le téléphone quitte alors la partie de son côté
+// seulement, sans rien écrire : la partie continue pour les autres, et il peut y revenir (« Revenir dans une partie en cours »).
+const DELAI_QUITTER_COUPURE = 10000;
 let firebaseConnecte = true;
 let timerCoupure = null;
+let timerQuitterCoupure = null;
+
+function quitterPendantCoupure(){
+  const code = codePartieActuel;
+  const pseudo = pseudoActuel;
+  noterJournal("partie quittée pendant une coupure de réseau");
+  quitterPartieEnLigne();
+  if (code && pseudo) memoriserPartieLocale(code, pseudo); // (pour y revenir une fois le réseau retrouvé)
+  allerAccueil();
+  afficherToast(tr("Partie quittée. Pour y revenir : Mode en ligne, « Revenir dans une partie en cours »"), 6000);
+}
+
+function montrerQuitterCoupure(logo){
+  if (!logo.isConnected || logo.querySelector(".coupureQuitter")) return;
+  const bouton = document.createElement("button");
+  bouton.type = "button";
+  bouton.className = "coupureQuitter";
+  bouton.textContent = tr("Quitter la partie");
+  bouton.addEventListener("click", quitterPendantCoupure);
+  logo.appendChild(bouton);
+}
 
 function majCoupureReseau(connecte){
   if (connecte !== undefined) firebaseConnecte = connecte;
@@ -1009,7 +1112,8 @@ function majCoupureReseau(connecte){
 
   if (!coupe) {
     clearTimeout(timerCoupure);
-    timerCoupure = null;
+    clearTimeout(timerQuitterCoupure);
+    timerCoupure = timerQuitterCoupure = null;
     if (logo) logo.remove();
     return;
   }
@@ -1019,14 +1123,17 @@ function majCoupureReseau(connecte){
   logo = document.createElement("div");
   logo.id = "coupureReseau";
   logo.setAttribute("role", "alert");
-  logo.setAttribute("aria-label", "Connexion perdue");
+  logo.setAttribute("aria-label", tr("Connexion perdue"));
   ["pointerdown", "pointerup", "click", "touchstart", "touchend", "mousedown", "mouseup", "contextmenu"].forEach((type) => {
     logo.addEventListener(type, (e) => {
-      e.preventDefault();
+      // (le bouton « Quitter la partie » garde son tap ; il ne passe pas au jeu derrière pour autant)
+      if (!(e.target.closest && e.target.closest(".coupureQuitter"))) e.preventDefault();
       e.stopPropagation();
     }, { passive: false });
   });
   document.body.appendChild(logo);
+  clearTimeout(timerQuitterCoupure);
+  timerQuitterCoupure = setTimeout(() => montrerQuitterCoupure(logo), DELAI_QUITTER_COUPURE);
 
   timerCoupure = setTimeout(() => {
     timerCoupure = null;
@@ -1055,6 +1162,8 @@ function majCoupureReseau(connecte){
 // Le téléphone signale aussi la perte du réseau tout de suite (wifi coupé, mode avion)
 window.addEventListener("offline", () => majCoupureReseau());
 window.addEventListener("online", () => majCoupureReseau());
+// Réseau revenu hors partie : le bouton « Revenir dans une partie en cours » est revérifié (partie quittée pendant une coupure)
+window.addEventListener("online", () => { if (!codePartieActuel) majBoutonRevenir(); });
 
 function arreterPresence(){
   if (desabonnerPresence) { desabonnerPresence(); desabonnerPresence = null; }
@@ -1106,7 +1215,7 @@ function revenirAvecLeCode(code, partie, enJeu){
     n.toLocaleLowerCase("fr-FR") === String(memoire.pseudo).toLocaleLowerCase("fr-FR"));
   if (memoire && memoire.code === code && memoire.pseudo &&
       (enJeu ? joueurRetire(partie, memoire.pseudo) : pseudoLibre())) {
-    if (confirm(`Tu as été retiré de la partie ${code}.\n\nY revenir en tant que « ${memoire.pseudo} » ?`)) {
+    if (confirm(tr`Tu as été retiré de la partie ${code}.\n\nY revenir en tant que « ${memoire.pseudo} » ?`)) {
       revenirApresRetrait(code, memoire.pseudo, partie);
     }
     return;
@@ -1120,13 +1229,13 @@ function revenirAvecLeCode(code, partie, enJeu){
 
   if (candidats.length === 0) {
     alert(enJeu
-      ? "Tous les joueurs de cette partie sont connectés : il n'y a pas de place à reprendre."
-      : "Entre ton pseudo pour rejoindre la partie.");
+      ? tr("Tous les joueurs de cette partie sont connectés : il n'y a pas de place à reprendre.")
+      : tr("Entre ton pseudo pour rejoindre la partie."));
     return;
   }
 
   if (candidats.length === 1) {
-    if (confirm(`Reprendre la place de « ${candidats[0]} » dans la partie ${code} ?`)) {
+    if (confirm(tr`Reprendre la place de « ${candidats[0]} » dans la partie ${code} ?`)) {
       reprendrePlaceEnLigne(code, candidats[0], partie);
     }
     return;
@@ -1140,7 +1249,7 @@ const ecranChoixPseudo = document.getElementById("ecranChoixPseudo");
 
 function afficherChoixPseudo(code, noms, partie){
   document.getElementById("texteChoixPseudo").innerText =
-    `Plusieurs joueurs se sont déconnectés de la partie ${code}.\nChoisis ton pseudo pour reprendre ta place.`;
+    tr`Plusieurs joueurs se sont déconnectés de la partie ${code}.\nChoisis ton pseudo pour reprendre ta place.`;
 
   const liste = document.getElementById("listeChoixPseudo");
   liste.innerHTML = "";
@@ -1233,7 +1342,7 @@ function alerteRetire(code, nom){
     memoriserPartieLocale(code, nom);
     majBoutonRevenir();
   }
-  alert("Tu as été retiré de la partie.\n\nPour y revenir : « Revenir dans une partie en cours ».");
+  alert(tr("Tu as été retiré de la partie.\n\nPour y revenir : « Revenir dans une partie en cours »."));
 }
 
 function arreterRetour(){
@@ -1248,6 +1357,12 @@ function arreterRetour(){
 function quitterPartie(){
   const code = codePartieActuel;
   const pseudo = pseudoActuel;
+
+  // Spectateur : il repart sans rien écrire (il n'est dans aucune liste)
+  if (estSpectateur) {
+    quitterPartieEnLigne();
+    return;
+  }
 
   // Joueur retiré qui revenait, pas encore remis dans la manche : il repart sans arrêter la partie
   // (sa demande de retour déjà envoyée est annulée par un retrait juste derrière, si possible)
@@ -1271,15 +1386,24 @@ function quitterPartie(){
   quitterPartieEnLigne();
   if (!code) return;
 
-  retirerJoueur(code, pseudo, `${pseudo} a quitté la partie`).catch(erreurFirebase);
+  retirerJoueur(code, pseudo, tr`${pseudo} a quitté la partie`).catch(erreurFirebase);
 }
 
 // Retire un joueur (soi-même ou un autre).
-// - Si c'est l'hôte (ou le dernier joueur) : la partie est supprimée => elle s'arrête pour tout le monde
-// - Sinon : il est retiré de la liste, et si une manche était en cours, tout le monde
-//   repasse en salle d'attente (la manche ne peut pas continuer sans lui)
-// Si deux joueurs retirent la même personne en même temps, la 2e suppression ne change rien.
-function retirerJoueur(code, nom, message){
+// - Dernier joueur : la partie est supprimée.
+// - L'hôte : la partie continue, le joueur arrivé le plus tôt parmi ceux qui restent (connecté de préférence) devient
+//   l'hôte. (Avant : la partie était supprimée pour tout le monde dès que l'hôte quittait la salle d'attente.)
+// - Si une manche était en cours avec lui, tout le monde repasse en salle d'attente (elle ne peut pas continuer sans lui).
+// Deux téléphones qui retirent en même temps : chaque écriture passe en entier ou pas du tout, et les règles Firebase
+// refusent celle qui laisserait la partie bancale (hôte déjà parti, plus aucun joueur) ; on relit alors la partie et on
+// recommence. Si deux joueurs retirent la même personne en même temps, la 2e suppression ne change rien.
+function nouvelHoteParmi(joueursPartie, sans){
+  const candidats = Object.keys(joueursPartie).filter(n => n !== sans)
+    .sort((a, b) => (joueursPartie[a].rejoint || 0) - (joueursPartie[b].rejoint || 0));
+  return candidats.find(n => joueursPartie[n].connecte !== false) || candidats[0];
+}
+
+function retirerJoueur(code, nom, message, essai = 1){
   const refPartie = window.fbRef(window.firebaseDB, `parties/${code}`);
 
   return window.fbGet(refPartie).then((snapshot) => {
@@ -1287,30 +1411,41 @@ function retirerJoueur(code, nom, message){
     if (!partie || !partie.joueurs || !partie.joueurs[nom]) return; // déjà retiré
 
     const restants = Object.keys(partie.joueurs).filter(n => n !== nom);
-    if (partie.hote === nom || restants.length === 0) {
-      return window.fbRemove(refPartie);
+    if (restants.length === 0) return window.fbRemove(refPartie);
+
+    // Fiche retirée et, s'il le faut, nouvel hôte : une seule écriture
+    const maj = { [`joueurs/${nom}`]: null };
+    let hote = partie.hote;
+    if (hote === nom || !partie.joueurs[hote]) {
+      hote = nouvelHoteParmi(partie.joueurs, nom);
+      maj[`joueurs/${hote}/host`] = true;
+      maj.hote = hote;
+      if (partie.etatJeu) maj["etatJeu/hote"] = hote; // (dans la même écriture : le nouvel hôte est le même partout tout de suite)
     }
 
-    const maj = { [`joueurs/${nom}`]: null };
-    if (partie.etatJeu && partie.etatJeu.demarree) {
-      maj.etatJeu = {
-        demarree: false,
-        manche: partie.etatJeu.manche,
-        hote: partie.hote,
-        message: message || `${nom} a été retiré de la partie`
-      };
-    }
-    return window.fbUpdate(refPartie, maj);
+    return window.fbUpdate(refPartie, maj).then(() =>
+      // Manche en cours avec lui : retour en salle d'attente. Par transaction, sur l'état du moment (une manche relancée
+      // entre-temps garde son numéro : avant, l'ancien numéro était remis, et la manche suivante retombait sur de vieilles actions)
+      window.fbRunTransaction(window.fbRef(window.firebaseDB, `parties/${code}/etatJeu`), (etat) => {
+        if (!etat) return; // (partie supprimée entre-temps)
+        const dansLaManche = !!etat.demarree && Object.values(etat.joueurs || {}).includes(nom);
+        if (dansLaManche) {
+          return { demarree: false, manche: etat.manche || 0, hote, message: message || tr`${nom} a été retiré de la partie` };
+        }
+        return etat.hote === hote ? undefined : Object.assign({}, etat, { hote });
+      })
+    );
+  }).catch((erreur) => {
+    const refus = /permission/i.test(String(erreur && (erreur.code || erreur.message)));
+    if (!refus || essai >= 3) throw erreur;
+    return new Promise(r => setTimeout(r, 150 + Math.random() * 250)).then(() => retirerJoueur(code, nom, message, essai + 1));
   });
 }
 
-// La partie n'existe plus (l'hôte est parti ou a été retiré)
+// La partie n'existe plus (le dernier joueur est parti, ou elle a été supprimée après une longue inactivité)
 function partieFermee(){
-  const etaisHote = estHote;
   quitterPartieEnLigne();
-  alert(etaisHote
-    ? "Tu as été retiré de la partie.\nComme tu étais l'hôte, la partie est terminée."
-    : "La partie est terminée : l'hôte l'a quittée ou a été retiré.");
+  alert(tr("La partie est terminée : elle a été fermée."));
 }
 
 function quitterPartieEnLigne(){
@@ -1326,10 +1461,14 @@ function quitterPartieEnLigne(){
 
   // Parti volontairement / retiré / partie fermée : plus de présence, plus rien à reprendre
   arreterPresence();
-  oublierPartieLocale();
+  // (un spectateur n'a rien à oublier : la partie que ce téléphone jouait peut-être avant reste reprenable)
+  if (!estSpectateur) oublierPartieLocale();
   majBoutonRevenir();
   arreterRetour();
 
+  estSpectateur = false;
+  document.body.classList.remove("mode-spectateur");
+  document.getElementById("infoSpectateur").style.display = "none";
   codePartieActuel = null;
   pseudoActuel = null;
   estHote = false;

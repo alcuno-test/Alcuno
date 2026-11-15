@@ -42,17 +42,17 @@ let erreurTeleSignalee = false;
 let arreterSuiviTele = null;  // fin du suivi de la connexion (voir suivreConnexionTele)
 
 function majBoutonCaster(){
-  btnCaster.querySelector(".casterTexte").textContent = codeTele ? "Caster sur la télé ✓" : "Caster sur la télé";
+  btnCaster.querySelector(".casterTexte").textContent = codeTele ? tr("Caster sur la télé ✓") : tr("Caster sur la télé");
   btnCaster.classList.toggle("caster-actif", !!codeTele);
 }
 
 function ouvrirEcranCaster(){
   const relie = !!codeTele;
-  document.getElementById("titreCaster").innerText = relie ? "Télé connectée" : "Caster sur la télé";
+  document.getElementById("titreCaster").innerText = relie ? tr("Télé connectée") : tr("Caster sur la télé");
   document.getElementById("casterRelier").style.display = relie ? "none" : "";
   document.getElementById("casterConnecte").style.display = relie ? "" : "none";
   document.getElementById("texteCasterConnecte").innerText = relie
-    ? `La partie s'affiche sur la télé (code ${codeTele}).` : "";
+    ? tr`La partie s'affiche sur la télé (code ${codeTele}).` : "";
   champCodeCaster.value = "";
   ecranCaster.style.display = "";
 }
@@ -118,7 +118,7 @@ function relierTele(code, silencieux = false){
   });
   majBoutonCaster();
   fermerEcranCaster();
-  if (!silencieux) afficherNotificationHaut("", "Télé connectée", true);
+  if (!silencieux) afficherNotificationHaut("", tr("Télé connectée"), true);
 }
 
 function arreterTele(){
@@ -131,7 +131,7 @@ function arreterTele(){
   rendreTele(code); // la télé revient sur son écran d'attente (QR code)
   majBoutonCaster();
   fermerEcranCaster();
-  afficherNotificationHaut("", "Télé déconnectée", true);
+  afficherNotificationHaut("", tr("Télé déconnectée"), true);
 }
 
 // Classe de la face d'une carte parmi ses autres classes : « trois_rouge1 », « plus_4_3 », « couleur2 »,
@@ -207,7 +207,8 @@ function voletPourTele(){
 // écran, n'est pas envoyé). Courtes (12 règles), envoyées d'un bloc.
 function reglesPourTele(){
   const page = document.getElementById("ecranRegles");
-  if (!estAffiche(page) || page.classList.contains("album") || page.classList.contains("faq") || page.classList.contains("page-sortie")) return null;
+  if (!estAffiche(page) || page.classList.contains("album") || page.classList.contains("faq") ||
+      page.classList.contains("bar") || page.classList.contains("ethylo") || page.classList.contains("page-sortie")) return null; // (album, FAQ, Bar, Éthylo : pas envoyés)
   const parties = reglesDuJeu().map((partie) => ({
     t: partie.titre,
     r: partie.regles.map((r) => ({ c: r.carte || "", n: r.nom, l: Array.isArray(r.texte) ? r.texte : [r.texte] }))
@@ -254,7 +255,7 @@ function ecranPourTele(){
   const estPlus4 = o.id === "overlayPlus4";
   let choix = Array.from(o.querySelectorAll("button"))
     .filter(b => estAffiche(b) && !b.classList.contains("cache") && b.innerText.trim() &&
-                 !b.matches(BOUTONS_ACTION_TELE) && b.innerText.trim() !== "Terminer")
+                 !b.matches(BOUTONS_ACTION_TELE) && b.innerText.trim() !== tr("Terminer"))
     .slice(0, 12)
     .map(b => {
       const t = b.innerText.replace(/\s+/g, " ").trim().slice(0, 40);
@@ -304,6 +305,7 @@ function etatPourTele(){
     couleur: couleurChoisie || "",
     regles,
     theme: document.documentElement.dataset.theme || "bordeaux",
+    langue: LANGUE, // (la télé passe dans la langue du téléphone qui caste, js/langue.js)
     voix: voixActive ? 1 : 0, // (réglage « Annonces à voix haute » : la télé lit alors les annonces, js/reglages.js)
     vitesseVoix, // (et à la vitesse choisie sur le téléphone)
     pause: !!pauseEnCours,
@@ -335,7 +337,7 @@ function envoyerEtatTele(){
       pauseTeleJusqua = Date.now() + 5000; // (pas en boucle)
       if (!erreurTeleSignalee) {
         erreurTeleSignalee = true;
-        afficherNotificationHaut("", "La télé ne reçoit pas la partie (réseau ?)", true);
+        afficherNotificationHaut("", tr("La télé ne reçoit pas la partie (réseau ?)"), true);
       }
     });
 }
@@ -401,7 +403,7 @@ function envolPourTele(carteElement, classeCarte, nom){
 
 function relierTeleDepuisCode(texte){
   const code = codeTeleDepuisTexte(texte);
-  if (!code) { afficherToast("Code de télé invalide (5 caractères)"); return; }
+  if (!code) { afficherToast(tr("Code de télé invalide (5 caractères)")); return; }
   relierTele(code);
 }
 
@@ -495,7 +497,10 @@ function creerDecorKawaiiTele(){
 }
 
 function demarrerPageTele(){
-  const code = genererCodeTele();
+  // (page rechargée pour prendre la langue du téléphone, voir dessinerTele : même code, le téléphone reste relié)
+  let codeGarde = "";
+  try { codeGarde = codeTeleDepuisTexte(sessionStorage.getItem("alcuno_tele_code_ecran") || ""); sessionStorage.removeItem("alcuno_tele_code_ecran"); } catch (e) {}
+  const code = codeGarde || genererCodeTele();
   const lien = `${ADRESSE_SITE_TELE}?caster=${code}`;
   appliquerThemeTele(THEME_TELE_ATTENTE);
 
@@ -540,16 +545,17 @@ function demarrerPageTele(){
         <div class="tele-pause-titre">PAUSE</div>
         <div class="tele-pause-texte">Remplissez les verres, on reprend juste après</div>
       </div>
-      <div class="tele-pied">Télé ${code}</div>
+      <div class="tele-pied">${tr("Télé")} ${code}</div>
     </div>
     <div class="tele-ecran" hidden>
       <div class="tele-ecran-cartes"></div>
       <div class="tele-ecran-texte"></div>
       <div class="tele-ecran-choix"></div>
-    </div>`;
+    </div>`; traduireElement(ecran);
   ecran.querySelector(".tele-jeu").prepend(creerDecorKawaiiTele());
   ecran.querySelector(".tele-ecran").prepend(creerDecorKawaiiTele());
   document.body.appendChild(ecran);
+  ecran.dataset.codeTele = code;
 
   const qr = qrcode(0, "M");
   qr.addData(lien);
@@ -632,19 +638,19 @@ function demarrerPageTele(){
 // seulement quand rien n'est affiché en grand (choix, annonce). Phrase tirée au sort parmi celles qui
 // vont avec la partie (pigeon, joueurs), jamais deux fois la même d'affilée. Seulement sur la télé.
 const PHRASES_TELE = [
-  { pigeon: true, texte: n => `Quelqu’un a pensé à donner des graines à <b>${n}</b> ?` },
-  { pigeon: true, texte: n => `<b>${n}</b> picore ses gorgées. 🐦` },
-  { aSec: true, texte: n => `<b>${n}</b> n’a pas bu depuis un moment… c’est louche.` },
-  { texte: n => `<b>${n}</b> ? Toujours vivant(e) ?` },
-  { sansCreateur: true, texte: n => `<b>${n}</b> fait semblant de comprendre les règles depuis le début.` },
-  { sansNom: true, texte: () => `Y’en a certains qui ont dit « je bois pas trop ce soir » ? Mdr.` },
-  { sansNom: true, texte: () => `Vous pouvez AUSSI prendre vos propres gorgées.` },
+  { pigeon: true, texte: n => tr`Quelqu’un a pensé à donner des graines à <b>${n}</b> ?` },
+  { pigeon: true, texte: n => tr`<b>${n}</b> picore ses gorgées. 🐦` },
+  { aSec: true, texte: n => tr`<b>${n}</b> n’a pas bu depuis un moment… c’est louche.` },
+  { texte: n => tr`<b>${n}</b> ? Toujours vivant(e) ?` },
+  { sansCreateur: true, texte: n => tr`<b>${n}</b> fait semblant de comprendre les règles depuis le début.` },
+  { sansNom: true, texte: () => tr`Y’en a certains qui ont dit « je bois pas trop ce soir » ? Mdr.` },
+  { sansNom: true, texte: () => tr`Vous pouvez AUSSI prendre vos propres gorgées.` },
   // thème Star Wars seulement : mêlées aux autres, même rythme
-  { galaxie: true, sansNom: true, texte: () => `Obi-Wan Kenobière, tu es mon seul espoir.` },
-  { galaxie: true, texte: n => `Dark Vodka n’est PAS ton père <b>${n}</b>.` },
-  { galaxie: true, sansNom: true, texte: () => `Luke, je suis ton verre.` },
+  { galaxie: true, sansNom: true, texte: () => tr`Obi-Wan Kenobière, tu es mon seul espoir.` },
+  { galaxie: true, texte: n => tr`Dark Vodka n’est PAS ton père <b>${n}</b>.` },
+  { galaxie: true, sansNom: true, texte: () => tr`Luke, je suis ton verre.` },
   // thème Noël seulement : mêlée aux autres, même rythme
-  { noel: true, sansNom: true, texte: () => `HoHoHo Joyeuse cuite ! 🎅🎄` }
+  { noel: true, sansNom: true, texte: () => tr`HoHoHo Joyeuse cuite ! 🎅🎄` }
 ];
 const PAS_NOTIFS_TELE = 5000;
 // Quelqu'un qui traîne à jouer : une fois par tour, au bout de 1 min 20 (temps sans choix ni annonce à
@@ -659,7 +665,7 @@ function phraseLenteur(etat){
   if (etat.ecran || etat.pause || lenteurDite || !etat.tour) return "";
   tempsTourLenteur += PAS_NOTIFS_TELE;
   if (tempsTourLenteur < DELAI_LENTEUR) return "";
-  return `<b>${echapperHtml(etat.tour)}</b> réfléchit depuis plus d’une minute… c’est pas une partie d’échecs.`;
+  return tr`<b>${echapperHtml(etat.tour)}</b> réfléchit depuis plus d’une minute… c’est pas une partie d’échecs.`;
 }
 const CARTES_A_SEC_TELE = 8; // « n'a pas bu depuis un moment » : au moins 8 cartes tirées sans boire
 const DUREE_NOTIF_TELE = 7000;
@@ -715,7 +721,7 @@ function montrerNotifTele(ecran, texte){
   const notif = document.createElement("div");
   notif.className = "tele-notif";
   notif.innerHTML = `<img src="icones/icone-192.png" alt=""><div><div class="tele-notif-haut">` +
-    `<span>ALCUNO</span><span class="tele-notif-heure">maintenant</span></div><div class="tele-notif-texte">${texte}</div></div>`;
+    tr`<span>ALCUNO</span><span class="tele-notif-heure">maintenant</span></div><div class="tele-notif-texte">${texte}</div></div>`;
   // centrée au-dessus du plateau, juste sous le titre ALCUNO
   const zone = ecran.querySelector(".tele-gauche").getBoundingClientRect();
   const entete = ecran.querySelector(".tele-entete").getBoundingClientRect();
@@ -760,10 +766,10 @@ function afficherNotifChambrage(texte){
   if (systemeStats() === "android") {
     notif.className = "notif-android";
     notif.innerHTML = `<div class="notifChambrage-haut"><img src="icones/icone-192.png" alt="">` +
-      `<span>Alcuno</span><span>•</span><span>maintenant</span></div><div class="notifChambrage-texte">${texte}</div>`;
+      tr`<span>Alcuno</span><span>•</span><span>maintenant</span></div><div class="notifChambrage-texte">${texte}</div>`;
   } else {
     notif.innerHTML = `<img src="icones/icone-192.png" alt=""><div><div class="notifChambrage-haut">` +
-      `<span>ALCUNO</span><span>maintenant</span></div><div class="notifChambrage-texte">${texte}</div></div>`;
+      tr`<span>ALCUNO</span><span>maintenant</span></div><div class="notifChambrage-texte">${texte}</div></div>`;
   }
   notif.insertAdjacentHTML("beforeend", '<span class="rappelEau-languette" aria-hidden="true"></span>');
   rendreNotifGlissable(notif, DUREE_NOTIF_TELE);
@@ -781,7 +787,7 @@ let dernierEauTele = null;
 function montrerEauTele(ecran, eau){
   const i = Number(eau) || 0;
   if (dernierEauTele !== null && i > dernierEauTele) {
-    montrerNotifTele(ecran, "💧 <b>MESSAGE DE TON ANGE GARDIEN</b><br>L’eau aussi, ça se boit 😉");
+    montrerNotifTele(ecran, tr("💧 <b>MESSAGE DE TON ANGE GARDIEN</b><br>L’eau aussi, ça se boit 😉"));
     jouerSon("eau");
   }
   dernierEauTele = Math.max(dernierEauTele || 0, i);
@@ -901,6 +907,22 @@ function dessinerTele(ecran, etat){
     majMusique();
     return;
   }
+  // Langue du téléphone qui caste : la télé la prend (sinon : règles en anglais venues du téléphone, libellés de la télé en
+  // français). La langue se choisit au chargement, donc on recharge ; le code de la télé est gardé (sessionStorage), le
+  // téléphone reste relié. Une seule tentative par minute, au cas où le réglage ne s'enregistrerait pas.
+  if ((etat.langue === "en" || etat.langue === "fr") && etat.langue !== LANGUE) {
+    let dernier = 0;
+    try { dernier = Number(sessionStorage.getItem("alcuno_tele_langue_a")) || 0; } catch (e) {}
+    if (Date.now() - dernier > 60000) {
+      try {
+        sessionStorage.setItem("alcuno_tele_langue_a", String(Date.now()));
+        localStorage.setItem(CLE_LANGUE, etat.langue);
+        sessionStorage.setItem("alcuno_tele_code_ecran", ecran.dataset.codeTele || "");
+        location.reload();
+        return;
+      } catch (e) {}
+    }
+  }
   attente.hidden = true;
   jeu.hidden = false;
   appliquerThemeTele(etat.theme);
@@ -934,8 +956,8 @@ function dessinerTele(ecran, etat){
     }
     zone.classList.toggle("tele-prepa-nombreux", noms.length > 8);
     ecran.querySelector(".tele-prepa-info").innerText = noms.length >= 2
-      ? "La partie va commencer…"
-      : "Ajoute les joueurs sur le téléphone";
+      ? tr("La partie va commencer…")
+      : tr("Ajoute les joueurs sur le téléphone");
   }
 
   // Plateau : on ne recrée que les cartes qui ont changé (pas de clignotement)
@@ -960,7 +982,7 @@ function dessinerTele(ecran, etat){
   // « Il reste 18 cartes », comme sous le plateau du téléphone
   const compteur = ecran.querySelector(".tele-compteur");
   const n = etat.partie ? Number(etat.restantes) || 0 : 0;
-  const texteCompteur = n > 0 ? `Il reste ${n} carte${n > 1 ? "s" : ""}` : "";
+  const texteCompteur = n > 0 ? tr`Il reste ${n} carte${n > 1 ? "s" : ""}` : "";
   if (compteur.textContent !== texteCompteur) compteur.textContent = texteCompteur;
   compteur.hidden = !texteCompteur;
   dessinerDernieresTele(ecran.querySelector(".tele-restantes"), etat.partie ? etat.h : []);
@@ -971,7 +993,7 @@ function dessinerTele(ecran, etat){
   tour.classList.toggle("tele-pigeon", !!etat.pigeon);
   tour.style.setProperty("--couleur-tele", COULEURS_JEU[etat.couleur] || "transparent");
   tour.classList.toggle("tele-avec-couleur", !!COULEURS_JEU[etat.couleur]);
-  const nomTour = etat.pigeon ? `PIGEON (${etat.tour})` : etat.tour;
+  const nomTour = etat.pigeon ? tr`PIGEON (${etat.tour})` : etat.tour;
   const elNomTour = ecran.querySelector(".tele-tour-nom");
   elNomTour.innerText = nomTour;
   // Nom long (« PIGEON (Maximilien 👑) ») : plus petit, pour tenir sur une ligne
@@ -990,7 +1012,7 @@ function dessinerTele(ecran, etat){
       ligne.className = "tele-joueur" + (j.t ? " tele-joueur-actif" : "") + (j.z ? " tele-joueur-pause" : "") + (j.p ? " tele-joueur-pigeon" : "");
       ligne.dataset.nom = j.n;
       const nom = document.createElement("span");
-      nom.innerText = j.n + (j.p ? " 🐦" : "") + (j.z ? " · en pause" : "");
+      nom.innerText = j.n + (j.p ? " 🐦" : "") + (j.z ? tr(" · en pause") : "");
       ligne.appendChild(nom);
       if (j.a > 0) {
         const badge = document.createElement("span");
@@ -1031,8 +1053,8 @@ function dessinerTele(ecran, etat){
     carre.className = "tele-couleur-carre";
     const texte = document.createElement("span");
     const nom = document.createElement("b");
-    nom.textContent = etat.couleur.toUpperCase();
-    texte.append(nom, ` : 1 gorgée en plus pour le prochain qui tire une carte ${ADJECTIFS_COULEUR[etat.couleur] || etat.couleur}`);
+    nom.textContent = tr(etat.couleur).toUpperCase();
+    texte.append(nom, tr` : 1 gorgée en plus pour le prochain qui tire une carte ${tr(ADJECTIFS_COULEUR[etat.couleur] || etat.couleur)}`);
     elCouleur.append(carre, texte);
   }
   afficherRegleBloc(ecran.querySelector(".tele-regles"), etat.regles); // (js/plateau.js)
@@ -1111,12 +1133,12 @@ function dessinerReglesTele(zone, regles){
   zone.innerHTML = "";
   const titre = document.createElement("div");
   titre.className = "tele-ecran-titre";
-  titre.innerText = "Règles du jeu";
+  titre.innerText = tr("Règles du jeu");
   zone.appendChild(titre);
   if (regles.pj) {
     const note = document.createElement("div");
     note.className = "tele-regles-pj";
-    note.innerText = "Mode PJ activé : moins de gorgées.";
+    note.innerText = tr("Mode PJ activé : moins de gorgées.");
     zone.appendChild(note);
   }
   const colonnes = document.createElement("div");
@@ -1155,7 +1177,7 @@ function dessinerFaqTele(zone, faq){
   zone.innerHTML = "";
   const titre = document.createElement("div");
   titre.className = "tele-ecran-titre";
-  titre.innerText = "Questions fréquentes";
+  titre.innerText = tr("Questions fréquentes");
   zone.appendChild(titre);
   const colonnes = document.createElement("div");
   colonnes.className = "tele-regles-colonnes";
@@ -1205,7 +1227,7 @@ function dessinerDernieresTele(zone, historique){
   if (!historique.length) return;
   const titre = document.createElement("span");
   titre.className = "tele-dernieres-titre";
-  titre.innerText = "Dernières cartes tirées";
+  titre.innerText = tr("Dernières cartes tirées");
   zone.appendChild(titre);
   historique.forEach((h) => {
     const item = document.createElement("div");
@@ -1222,7 +1244,7 @@ function dessinerHistoriqueTele(zone, historique){
   zone.innerHTML = "";
   const titre = document.createElement("div");
   titre.className = "tele-ecran-titre";
-  titre.innerText = "Dernières cartes";
+  titre.innerText = tr("Dernières cartes");
   zone.appendChild(titre);
   historique.forEach((h) => {
     const ligne = document.createElement("div");

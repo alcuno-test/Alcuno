@@ -3,10 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <!-- Anti-cache : GitHub Pages fait garder les fichiers 10 min par les navigateurs.
-         Un paramètre différent à chaque chargement force toujours la dernière version. -->
+    <!-- Version des fichiers du jeu : la même que VERSION_AFFICHEE dans script.js (tests/test_cache.js le vérifie), à changer
+         à chaque mise en ligne. Elle est ajoutée à l'adresse de chaque fichier (« script.js?v=9.89.0 ») : GitHub Pages fait
+         garder les fichiers 10 min par les navigateurs, une adresse neuve à chaque version force donc la nouvelle.
+         (Avant : « ?t= » + l'heure, différent à chaque lancement : tout le jeu était retéléchargé à chaque ouverture,
+         environ 400 Ko. Maintenant, tant que la version ne change pas, le navigateur se contente de vérifier.) -->
     <script>
-        window.ANTI_CACHE = Date.now();
+        window.VERSION_FICHIERS = "9.95.8";
+        // (ailleurs que sur le vrai site — poste de dev, appli de test — : l'heure en plus, comme avant, pour voir tout de
+        // suite un fichier modifié sans changer de version)
+        window.ANTI_CACHE = /(^|\.)github\.io$/i.test(location.hostname) ? window.VERSION_FICHIERS : window.VERSION_FICHIERS + "-" + Date.now();
         // Page privée des statistiques : …/Alcuno/?stats (appli TEST : alcuno-test.github.io/Alcuno/?stats) => stats.html
         if (/[?&]stats(=|&|$)/.test(location.search)) location.replace("stats.html");
         // Page de la télé (…/Alcuno/tele ou …/Alcuno/?tele) : seulement l'affichage de la partie, voir js/tele.js.
@@ -18,9 +24,12 @@
         // et en parallèle : en bas de la page, ils s'exécutent d'affilée, sans attente entre deux fichiers
         // (aucun bouton ni minuteur ne peut se déclencher avant que tout le jeu soit là).
         window.FICHIERS_JEU = ["script.js", "js/qrcode.js", "js/config-lib.js", "js/reglages.js", "js/en-ligne.js", "js/plateau.js", "js/regles.js", "js/mode-hot.js", "js/zizi-coptere.js", "js/reglages-vue.js",
-                               "js/synchro-en-ligne.js", "js/retour-demarrage.js", "js/tele.js", "js/stats.js", "js/config-distante.js", "js/stickers.js", "js/faq.js", "js/mouchard.js", "js/poisson.js", "js/piano-accueil.js"];
+                               "js/synchro-en-ligne.js", "js/retour-demarrage.js", "js/tele.js", "js/stats.js", "js/config-distante.js", "js/stickers.js", "js/faq.js", "js/mouchard.js", "js/poisson.js", "js/piano-accueil.js", "js/cocktails.js", "js/extras.js", "js/profil.js"];
+        // Langue (js/langue.js) : en tout premier ; les textes anglais (js/en.js) seulement si le jeu est en anglais
+        window.FICHIERS_JEU.unshift("js/langue.js");
+        try { if (localStorage.getItem("alcuno_langue") === "en") window.FICHIERS_JEU.unshift("js/en.js"); } catch (e) {}
         window.FICHIERS_JEU.forEach(function (f) {
-            document.write('<link rel="preload" as="script" href="' + f + '?t=' + window.ANTI_CACHE + '">');
+            document.write('<link rel="preload" as="script" href="' + f + '?v=' + window.ANTI_CACHE + '">');
         });
         // Pas de tap tant que tous les fichiers ne sont pas exécutés (retiré à la fin de js/retour-demarrage.js) :
         // un bouton du premier fichier peut appeler du code des suivants
@@ -95,6 +104,15 @@
         document.write('<meta name="theme-color" content="' + (couleursBarre[theme] || couleursBarre.bordeaux) + '">');
         // iPhone : page rechargée après un changement de thème (voir rafraichirBarreIphone dans script.js) :
         // on rouvre les Réglages dès le premier affichage
+        // Retour de la page de connexion Google (profil joueur, js/profil.js) : le jeton est retiré de l'adresse tout de suite,
+        // et les Réglages se rouvrent même si le téléphone a oublié qu'ils étaient ouverts
+        try {
+            if (/(^#|&)(id_token|error)=/.test(location.hash) && /(^#|&)state=/.test(location.hash)) {
+                window.RETOUR_GOOGLE = location.hash.slice(1);
+                history.replaceState(null, "", location.pathname + location.search);
+                if (sessionStorage.getItem("alcuno_rouvrir_reglages") === null) sessionStorage.setItem("alcuno_rouvrir_reglages", "0");
+            }
+        } catch (e) {}
         try { if (sessionStorage.getItem("alcuno_rouvrir_reglages") !== null) document.documentElement.classList.add("rouvrir-reglages"); } catch (e) {}
         // Les Réglages rouverts restent invisibles jusqu'à ce que leur mise en page (js/reglages-vue.js) soit prête, puis apparaissent en
         // fondu : sans ça, on voyait la liste brute un instant, puis un saut vers les tuiles. Filet de sécurité : au bout de 2,5 s, on les montre quoi qu'il arrive.
@@ -103,21 +121,21 @@
             setTimeout(function () { document.documentElement.classList.remove("rouvrir-vue"); }, 2500);
             setTimeout(function () { document.documentElement.classList.remove("rouvrir-fond"); }, 3000);
         }
-        document.write('<link rel="stylesheet" href="style_alcuno.css?t=' + window.ANTI_CACHE + '" />');
-        document.write('<link rel="stylesheet" href="style_kawaii.css?t=' + window.ANTI_CACHE + '" />'); // thème Kawaii (généré : outils/generer_kawaii.py)
-        document.write('<link rel="stylesheet" href="style_donjon.css?t=' + window.ANTI_CACHE + '" />'); // thème secret Donjon (débloqué par une partie en mode hot)
-        document.write('<link rel="stylesheet" href="style_feux.css?t=' + window.ANTI_CACHE + '" />'); // feux d'artifice du Nouvel An (tous écrans, tous thèmes)
-        document.write('<link rel="stylesheet" href="style_noel.css?t=' + window.ANTI_CACHE + '" />'); // thème de fête Noël
-        document.write('<link rel="stylesheet" href="style_chandeleur.css?t=' + window.ANTI_CACHE + '" />'); // thème de fête Chandeleur
-        document.write('<link rel="stylesheet" href="style_valentin.css?t=' + window.ANTI_CACHE + '" />'); // thème de fête Saint-Valentin
-        document.write('<link rel="stylesheet" href="style_patrick.css?t=' + window.ANTI_CACHE + '" />'); // thème de fête Saint-Patrick
-        document.write('<link rel="stylesheet" href="style_justrose.css?t=' + window.ANTI_CACHE + '" />'); // thème de fête Just Rosé
-        document.write('<link rel="stylesheet" href="style_musique.css?t=' + window.ANTI_CACHE + '" />'); // thème de fête Fête de la musique
-        document.write('<link rel="stylesheet" href="style_halloween.css?t=' + window.ANTI_CACHE + '" />'); // thème de fête Halloween
-        document.write('<link rel="stylesheet" href="style_annonce_fete.css?t=' + window.ANTI_CACHE + '" />'); // fenêtre d'annonce d'un thème de fête (aux couleurs de la fête)
-        document.write('<link rel="stylesheet" href="style_poisson.css?t=' + window.ANTI_CACHE + '" />'); // blagues du 1er avril (js/poisson.js)
+        document.write('<link rel="stylesheet" href="style_alcuno.css?v=' + window.ANTI_CACHE + '" />');
+        document.write('<link rel="stylesheet" href="style_kawaii.css?v=' + window.ANTI_CACHE + '" />'); // thème Kawaii (généré : outils/generer_kawaii.py)
+        document.write('<link rel="stylesheet" href="style_donjon.css?v=' + window.ANTI_CACHE + '" />'); // thème secret Donjon (débloqué par une partie en mode hot)
+        document.write('<link rel="stylesheet" href="style_feux.css?v=' + window.ANTI_CACHE + '" />'); // feux d'artifice du Nouvel An (tous écrans, tous thèmes)
+        document.write('<link rel="stylesheet" href="style_noel.css?v=' + window.ANTI_CACHE + '" />'); // thème de fête Noël
+        document.write('<link rel="stylesheet" href="style_chandeleur.css?v=' + window.ANTI_CACHE + '" />'); // thème de fête Chandeleur
+        document.write('<link rel="stylesheet" href="style_valentin.css?v=' + window.ANTI_CACHE + '" />'); // thème de fête Saint-Valentin
+        document.write('<link rel="stylesheet" href="style_patrick.css?v=' + window.ANTI_CACHE + '" />'); // thème de fête Saint-Patrick
+        document.write('<link rel="stylesheet" href="style_justrose.css?v=' + window.ANTI_CACHE + '" />'); // thème de fête Just Rosé
+        document.write('<link rel="stylesheet" href="style_musique.css?v=' + window.ANTI_CACHE + '" />'); // thème de fête Fête de la musique
+        document.write('<link rel="stylesheet" href="style_halloween.css?v=' + window.ANTI_CACHE + '" />'); // thème de fête Halloween
+        document.write('<link rel="stylesheet" href="style_annonce_fete.css?v=' + window.ANTI_CACHE + '" />'); // fenêtre d'annonce d'un thème de fête (aux couleurs de la fête)
+        document.write('<link rel="stylesheet" href="style_poisson.css?v=' + window.ANTI_CACHE + '" />'); // blagues du 1er avril (js/poisson.js)
     </script>
-    <title>Alcuno TEST</title>
+    <title>Alcuno</title>
 
     <!-- Appli installable (PWA) : manifest.json + sw.js -->
     <link rel="manifest" href="manifest.json">
@@ -133,10 +151,10 @@
          bas). iOS retient la barre choisie à l'installation : il faut réinstaller l'appli pour qu'elle change.
          Les appareils installés entre la 8.8.9 et la 8.8.23 doivent réinstaller l'appli. -->
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-title" content="Alcuno TEST">
+    <meta name="apple-mobile-web-app-title" content="Alcuno">
     <!-- Aperçu du lien partagé (Messages, WhatsApp…) : grande image du jeu (icones/apercu-lien.jpg, 1200 × 630 ;
          pas la carte dorée, c'est la surprise). Les applis gardent l'ancien aperçu en mémoire quelques jours. -->
-    <meta property="og:title" content="Alcuno TEST">
+    <meta property="og:title" content="Alcuno">
     <meta property="og:description" content="Comme un UNO mais en mieux. Gratuit, sur téléphone.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://alcuno-test.github.io/Alcuno/">
@@ -245,9 +263,24 @@
             <button type="button" id="btnModeClassique">Mode classique<br>(Hors connexion)</button>
             <!-- Installer l'appli : petit bouton en bas (téléphone : rouvre l'écran « Installer Alcuno » ;
                  ordinateur avec Chrome : installe directement). Rien quand le jeu est déjà ouvert en appli. -->
-            <!-- Album de stickers : caché jusqu'à ce qu'on le découvre (3 taps rapides sur la barre arc-en-ciel sous le titre), voir js/stickers.js -->
-            <div class="albumAccueil" id="albumAccueil" hidden>
-                <button type="button" class="btnInstaller" id="btnAlbumAccueil">Album de stickers</button>
+            <!-- Cartes en éventail : le Bar (recettes de cocktails) et l'Éthylo (estimation du taux d'alcool), js/extras.js.
+                 Entre les deux, l'album de stickers : caché jusqu'à ce qu'on le découvre (3 taps rapides sur la barre
+                 arc-en-ciel sous le titre), voir js/stickers.js -->
+            <div class="cartesAccueil" id="cartesAccueil">
+                <div class="carteAccueil carteBar" id="btnBarAccueil" role="button" tabindex="0" aria-label="Le Bar : recettes de cocktails">
+                    <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 9h32L24 27z"/><path d="M24 27v13M15 41h18"/><path d="M33 4l-5 9"/><circle cx="35" cy="5" r="3.2" class="plein"/></svg>
+                    <span>BAR</span>
+                </div>
+                <div id="albumAccueil" hidden>
+                    <div class="carteAccueil carteAlbum" id="btnAlbumAccueil" role="button" tabindex="0" aria-label="Album de stickers">
+                        <svg viewBox="0 0 48 48" aria-hidden="true"><path class="plein" d="M24 5l5.6 11.6 12.6 1.7-9.2 8.8 2.3 12.6L24 33.6 12.7 39.7 15 27.1l-9.2-8.8 12.6-1.7z"/></svg>
+                        <span>ALBUM</span>
+                    </div>
+                </div>
+                <div class="carteAccueil carteEthylo" id="btnEthyloAccueil" role="button" tabindex="0" aria-label="Éthylotest : estimer son taux d'alcool avant de conduire">
+                    <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="17"/><circle cx="24" cy="24" r="4.5" class="plein"/><path d="M8 21.5c5-3.6 10.3-5.3 16-5.3s11 1.7 16 5.3M21 28l-4 11M27 28l4 11"/></svg>
+                    <span>ÉTHYLO</span>
+                </div>
             </div>
             <div class="installerAppli" id="installerAppli" hidden>
                 <button type="button" id="btnInstallerAppli" class="btnInstaller">📲 Installer l'appli</button>
@@ -472,6 +505,21 @@
                     <button type="button" id="btnOublierPartie">Oublier</button>
                 </div>
 
+                <!-- Profil joueur : connexion Google facultative, pour retrouver sa progression sur un autre téléphone (js/profil.js) -->
+                <div class="blocReglage" data-cle="compte">
+                    <div class="optionReglage optionAction">
+                        <span class="optionTexte">
+                            <span class="optionTitre">Profil joueur</span>
+                            <span class="optionNote" id="texteProfil" aria-live="polite">Connecte-toi avec Google pour retrouver ta progression sur un autre téléphone.</span>
+                        </span>
+                        <button type="button" id="btnProfilConnexion" class="btnGoogle">
+                            <svg class="logoGoogle" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+                            <span id="texteBtnProfil">Se connecter avec Google</span>
+                        </button>
+                        <p class="profilSupprimer" id="ligneProfilSupprimer" hidden><button type="button" id="btnProfilSupprimer">Supprimer mon profil</button></p>
+                    </div>
+                </div>
+
                 <!-- Dit si le jeu peut se lancer sans réseau (mode avion) : fichiers du jeu + musiques gardés par le service worker -->
                 <div class="optionReglage" id="ligneHorsLigne" data-cle="hors-ligne">
                     <span class="optionTexte">
@@ -490,13 +538,13 @@
                     <svg class="optionChevron" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
                 </button>
 
-                <!-- Langue du jeu : seul le français existe pour l'instant (l'anglais viendra) -->
+                <!-- Langue du jeu : français ou anglais (js/langue.js ; la page se recharge au changement) -->
                 <div class="blocReglage" data-cle="langue">
                     <div class="optionReglage">
                         <span class="optionTexte"><span class="optionTitre">Langue</span></span>
                         <span class="choixLangue">
                             <button type="button" class="chipLangue actif" data-langue="fr" aria-pressed="true">Français</button>
-                            <button type="button" class="chipLangue" data-langue="en" disabled>English <small>bientôt</small></button>
+                            <button type="button" class="chipLangue" data-langue="en" aria-pressed="false">English</button>
                         </span>
                     </div>
                 </div>
@@ -525,6 +573,7 @@
                 <button type="button" id="btnRetourChoixMode" class="btnRetour">← Retour</button>
                 <button type="button" id="btnCreerPartie">Créer une partie</button>
                 <button type="button" id="btnRejoindrePartie">Rejoindre une partie</button>
+                <button type="button" id="btnRegarderPartie">Spectateur</button>
                 <button type="button" id="btnRevenirPartie" style="display:none;">Revenir dans une partie en cours</button>
             </div>
 
@@ -549,6 +598,8 @@
                 <input type="text" id="codeRejoindre" placeholder="Code de la partie" maxlength="6" autocapitalize="characters" autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="next" />
                 <input type="text" id="pseudoRejoindre" placeholder="Ton pseudo" maxlength="20" autocomplete="off" enterkeyhint="go" />
                 <button type="button" id="validerRejoindre">Rejoindre</button>
+                <!-- « Regarder une partie » : même écran, sans pseudo (classe « regarder », voir js/en-ligne.js) -->
+                <button type="button" id="validerRegarder">Regarder</button>
             </div>
 
             <div id="salleAttente" style="display:none;">
@@ -557,6 +608,7 @@
                 <h3 id="codePartieAffiche"></h3>
                 <button type="button" id="btnInviterPartie">📤 Inviter à rejoindre la partie</button>
                 <p id="infoModeSoft" class="infoModeSoft" style="display:none;">Partie en Mode PJ</p>
+                <p id="infoSpectateur" class="infoModeSoft" style="display:none;">Tu regardes cette partie sans y jouer</p>
                 <div id="listeJoueursEnLigne"></div>
                 <button type="button" id="lancerPartieEnLigne" style="display:none;">Lancer la partie</button>
             </div>
@@ -762,11 +814,9 @@
     <!-- async : le jeu démarre sans attendre le téléchargement de Firebase (lent en 4G).
          Ce qui a besoin de Firebase l'attend (attendreFirebase / événement « firebase-ready ») -->
     <script type="module" async>
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
-        import {
-            getDatabase, ref, set, get, update, onValue, onChildAdded, remove, onDisconnect, runTransaction, serverTimestamp
-        } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
-
+        // (import() et pas « import … from » : un téléchargement raté — pas de réseau au lancement — peut être redemandé
+        // sans recharger la page : au retour du réseau, et quand un bouton du mode en ligne attend Firebase, voir attendreFirebase)
+        const ADRESSE_FIREBASE = "https://www.gstatic.com/firebasejs/12.19.0/";
         const firebaseConfig = {
             apiKey: "AIzaSyB5EFLm9xqi7ZPO54-QctSk-j6uirvlPJs",
             authDomain: "alcuno-test.firebaseapp.com",
@@ -776,29 +826,44 @@
             messagingSenderId: "691029716865",
             appId: "1:691029716865:web:e56344f576171874ab0280"
         };
+        // (pour js/profil.js : le profil joueur a sa propre appli Firebase, avec l'authentification en plus)
+        window.ADRESSE_FIREBASE = ADRESSE_FIREBASE;
+        window.CONFIG_FIREBASE = firebaseConfig;
 
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
+        let chargement = null;
+        function chargerFirebase(){
+            if (window.firebaseDB || chargement) return chargement;
+            chargement = Promise.all([import(ADRESSE_FIREBASE + "firebase-app.js"), import(ADRESSE_FIREBASE + "firebase-database.js")])
+                .then(([{ initializeApp }, { getDatabase, ref, set, get, update, onValue, onChildAdded, remove, onDisconnect, runTransaction, serverTimestamp }]) => {
+                    const app = initializeApp(firebaseConfig);
+                    const db = getDatabase(app);
 
-        // On rend tout accessible depuis script.js
-        window.firebaseDB = db;
-        window.fbRef = ref;
-        window.fbSet = set;
-        window.fbGet = get;
-        window.fbUpdate = update;
-        window.fbOnValue = onValue;
-        window.fbRemove = remove;
-        window.fbOnChildAdded = onChildAdded;
-        window.fbRunTransaction = runTransaction;
-        window.fbServerTimestamp = serverTimestamp;
-        window.fbOnDisconnect = onDisconnect;
+                    // On rend tout accessible depuis script.js
+                    window.fbRef = ref;
+                    window.fbSet = set;
+                    window.fbGet = get;
+                    window.fbUpdate = update;
+                    window.fbOnValue = onValue;
+                    window.fbRemove = remove;
+                    window.fbOnChildAdded = onChildAdded;
+                    window.fbRunTransaction = runTransaction;
+                    window.fbServerTimestamp = serverTimestamp;
+                    window.fbOnDisconnect = onDisconnect;
+                    window.firebaseDB = db; // (en dernier : c'est lui qu'attendreFirebase regarde)
 
-        window.dispatchEvent(new Event("firebase-ready"));
+                    window.dispatchEvent(new Event("firebase-ready"));
+                })
+                .catch(() => { chargement = null; }); // (réessayé plus tard)
+            return chargement;
+        }
+        window.chargerFirebase = chargerFirebase;
+        window.addEventListener("online", chargerFirebase);
+        chargerFirebase();
     </script>
     
     <script>
         window.FICHIERS_JEU.forEach(function (f) {
-            document.write('<script src="' + f + '?t=' + window.ANTI_CACHE + '" onerror="echecChargementJeu()"><\/script>');
+            document.write('<script src="' + f + '?v=' + window.ANTI_CACHE + '" onerror="echecChargementJeu()"><\/script>');
         });
     </script>
     <!-- Thème Prestige : reflet doré qui traverse l'écran de temps en temps (ne bloque aucun tap) -->

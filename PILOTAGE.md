@@ -107,3 +107,95 @@ Pour revenir en arrière : recoller l'ancien contenu de `database.rules.json` (g
 
 À faire aussi dans la console (sans code) : restreindre la clé d'API aux adresses du jeu (Google Cloud Console → Identifiants), désactiver la création de comptes
 (Authentication → Paramètres → Actions de l'utilisateur), mot de passe administrateur long et unique, alerte de budget / quota.
+
+## Onglet Public et rangement par rubriques (stats 1.22.0, jeu 9.93.0)
+
+### Ce qui a changé dans Alcuno Stats
+
+- 5 onglets : **Stats** (ce qui se passe dans le jeu, en trois groupes : Parties, Quand on joue, Joueurs), **Public** (nouveau),
+  **Santé**, **Pilotage**, **Aide**.
+- **Pilotage** n'est plus une longue page : 8 rubriques, une seule affichée à la fois (la dernière ouverte est retenue).
+  👁 Aperçu (réglé en ce moment, ce que voit un joueur, lecture, historique, annuler) · 💬 Assistant (+ raccourcis, clé d'IA) ·
+  📣 Annonce · 🔊 Son et jeu (couper une fonction, valeurs de départ, **mise à jour demandée**, qui a maintenant son propre réglage) ·
+  🎨 Thèmes · 🔥 Défis hot · 🍹 Bar (l'ancien onglet Bar) · 🔑 Compte (identifiant, déconnexion, réinitialisation des statistiques).
+- Adresse directe vers une rubrique : `stats.html#pilotage-themes`, `#pilotage-bar`, `#public-liste`…
+
+### Onglet Public : d'où viennent les appareils
+
+Pour chaque appareil qui ouvre le jeu (jeu 9.93.0 ou plus), `js/stats.js` ajoute à sa fiche `stats/appareils/{id}` :
+
+| Information | D'où elle vient |
+|---|---|
+| Pays, région, ville, fournisseur internet | de l'**adresse IP**, par un service extérieur (ipwho.is, puis get.geojs.io si le premier ne répond pas), une fois par jour et par appareil |
+| Type d'appareil, navigateur, version du système, résolution d'écran, langue de l'appareil, fuseau horaire | du **navigateur** (l'adresse IP ne les donne pas) |
+
+- **Aucune autorisation n'est demandée au joueur** : le jeu n'utilise pas la position du téléphone (GPS), un test le vérifie.
+- **L'adresse IP n'est pas enregistrée** ; seul le lieu déduit l'est. Le service de lieu, lui, voit l'adresse IP (comme tout site visité).
+- La ville est **approximative** : en 4G / 5G c'est souvent celle du relais de l'opérateur, avec un VPN celle du VPN.
+- Chrome sur Android et les ordinateurs ne donnent pas toujours la version exacte du système : elle s'affiche alors sans numéro.
+- Les deux services sont gratuits et sans clé ; leurs limites d'usage peuvent changer. Si « localisés » reste à 0 alors que les autres
+  informations arrivent, c'est le service qui ne répond plus (adresses dans `SERVICES_ORIGINE`, `js/stats.js`).
+
+### À faire après la mise en ligne
+
+Recoller `database.rules.json` dans Realtime Database → Règles → **Publier** (10 nouveaux champs dans `stats/appareils`).
+Tant que ce n'est pas fait, rien ne casse : l'origine est écrite à part, seule cette écriture est refusée, et l'onglet Public reste vide.
+
+### À savoir (données personnelles)
+
+Un lieu déduit de l'adresse IP, un fournisseur d'accès et les caractéristiques d'un appareil, rattachés à un identifiant, sont des
+données personnelles au sens du RGPD, et l'adresse IP part chez un service tiers. Le jeu ne peut donc plus être présenté comme ne
+collectant « aucune donnée personnelle » : il faut au minimum en informer les joueurs (FAQ ou Crédits du jeu). Ce point n'est pas réglé par le code.
+
+### Infos en temps réel (stats 1.23.0)
+Onglet Public, sous « Portée » : une ligne par appareil qui a le jeu ouvert maintenant (présence rafraîchie depuis moins de 3 min) : état (menu, partie classique, partie en ligne, télé), thème, lieu, fournisseur, appareil, navigateur, système, écran, langue, fuseau et heure locale, version du jeu. Rien de nouveau n'est écrit par les joueurs : la page rapproche `presence/{id}` de `stats/appareils/{id}` (même identifiant). Limites : le thème est celui relevé à l'ouverture du jeu (un changement de thème recharge la page, donc il est à jour) ; une télé castée n'a pas de fiche d'appareil (affichée « Appareil inconnu »).
+
+## Profil joueur : connexion Google (jeu 9.95.0)
+
+Dans les Réglages du jeu, le bloc **Profil joueur** permet de se connecter avec Google (facultatif) pour retrouver sa progression
+sur un autre téléphone : thèmes secrets débloqués, mode hard, album de stickers, zizi-coptère, et les réglages (thème, sons, voix,
+langue, ordre des Réglages…). Sans compte, rien ne change. Code : `js/profil.js` ; test : `node tests/test_profil.js`.
+
+**À faire une seule fois, AVANT de mettre cette version en ligne** (sinon « Se connecter » répond « La connexion Google n'est pas
+encore activée pour le jeu ») :
+
+1. **Console Firebase** → **Authentication** → **Sign-in method** → *Ajouter un fournisseur* → **Google** → Activer
+   (nom public du projet : « Alcuno », e-mail d'assistance : le tien) → Enregistrer.
+2. **Authentication** → **Settings** → **Authorized domains** : ajoute `tristan-escardo.github.io` (et tout autre domaine où le jeu
+   est servi).
+3. **Authentication** → **Settings** → **User actions** : la **création de comptes doit rester autorisée** (si tu l'avais désactivée
+   à l'étape 2 du début de ce document, réactive-la : un joueur qui se connecte pour la première fois crée son compte).
+4. **Realtime Database** → **Règles** : recolle `database.rules.json` (nouvelle section `profils`) → **Publier**. Sans ça, la
+   connexion marche mais rien n'est sauvegardé (« Connecté, mais la sauvegarde n'a pas pu se faire »).
+5. **Google Cloud Console** (console.cloud.google.com, projet *alcuno*) → **API et services** → **Identifiants** → *ID clients
+   OAuth 2.0* → **Web client (auto created by Google Service)** → **URI de redirection autorisés** → *Ajouter un URI* →
+   `https://tristan-escardo.github.io/Alcuno/` (exactement, avec la barre finale) → Enregistrer. Ne retire pas l'URI
+   `https://alcuno.firebaseapp.com/__/auth/handler` déjà présent. Sans ça, dans l'appli installée, la page Google répond
+   « Accès bloqué : redirect_uri_mismatch ». Si le jeu est servi à une autre adresse, ajoute-la aussi.
+   Pour **l'appli Stats installée** (bouton « Se connecter avec Google » de l'écran d'accès), ajoute aussi
+   `https://tristan-escardo.github.io/Alcuno/stats.html` (exactement) : même chemin, même compte administrateur.
+
+Ce qui est enregistré : `profils/<uid>` (déblocages, stickers, réglages), lisible et modifiable **seulement par son propriétaire**
+(pas même par le compte administrateur depuis le jeu ; tu le vois dans la console Firebase). Ni nom ni e-mail dans la base : ils sont
+dans Authentication → Users. Ne partent jamais : l'éthylotest (poids, sexe), le journal du mouchard, la partie en cours, les codes.
+
+Règles de fusion : déblocages et stickers = l'union des téléphones (rien ne se perd) ; réglages = le dernier modifié gagne, et à la
+première connexion sur un téléphone ce sont ceux du profil qui sont repris (la page se recharge une fois, depuis l'accueil seulement).
+
+« Supprimer mon profil » (visible une fois connecté) efface `profils/<uid>` et le compte dans Authentication ; le téléphone garde ce
+qu'il a. C'est le droit à l'effacement du RGPD : pense à mentionner le profil dans ta politique de confidentialité si tu en as une.
+
+Le profil utilise sa propre appli Firebase (nommée « profil ») : ta connexion administrateur d'Alcuno Stats n'est pas touchée, et le
+reste du jeu continue de parler à la base sans être connecté.
+
+**Deux façons de se connecter** (jeu 9.95.2) :
+- dans un navigateur : la fenêtre Google de Firebase ;
+- dans l'**appli installée** (écran d'accueil de l'iPhone surtout), où cette fenêtre ne s'ouvre jamais et ne répond jamais (le
+  bouton restait sur « Connexion… ») : le jeu va sur la page Google, qui revient dans le jeu déjà connecté, Réglages rouverts.
+  C'est l'étape 5 ci-dessus qui l'autorise. Pas pendant une partie (la page est rechargée au retour) : « Termine ta partie, puis
+  connecte-toi depuis l'accueil ».
+- la page Google sert aussi de secours : fenêtre bloquée par le navigateur, ou sans réponse au bout de 8 s (le bouton est rendu,
+  le tap suivant passe par la page Google).
+
+**À vérifier à la main sur de vrais téléphones** (le test automatique simule Google) : iPhone avec l'appli ajoutée à l'écran
+d'accueil, iPhone dans Safari, Android (Chrome et appli installée).

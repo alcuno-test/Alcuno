@@ -835,9 +835,9 @@ function verifier(ok, texte){
     const ordre = () => page.evaluate(() => [...document.querySelectorAll("#ecranReglages .reglages-contenu > [data-cle]")].map((e) => e.dataset.cle).join(","));
     await page.click("#btnReglages"); await page.waitForTimeout(600);
     const origine = await ordre();
-    const avant = await page.evaluate(() => ({ defaut: getComputedStyle(document.getElementById("btnParDefautReglages")).display, texte: document.getElementById("btnModifierReglages").textContent, poignees: document.querySelectorAll(".ctrlReglage").length }));
+    const avant = await page.evaluate(() => ({ defaut: getComputedStyle(document.getElementById("btnParDefautReglages")).display, texte: document.getElementById("btnModifierReglages").getAttribute("aria-label"), poignees: document.querySelectorAll(".ctrlReglage").length }));
     await page.click("#btnModifierReglages"); await page.waitForTimeout(400);
-    const pendant = await page.evaluate(() => ({ edition: document.getElementById("ecranReglages").classList.contains("reglages-edition"), texte: document.getElementById("btnModifierReglages").textContent,
+    const pendant = await page.evaluate(() => ({ edition: document.getElementById("ecranReglages").classList.contains("reglages-edition"), texte: document.getElementById("btnModifierReglages").getAttribute("aria-label"),
       defaut: getComputedStyle(document.getElementById("btnParDefautReglages")).display, poignees: document.querySelectorAll(".ctrlReglage .ctrlPoignee").length, fleches: document.querySelectorAll(".ctrlHaut, .ctrlBas").length,
       tremble: getComputedStyle(document.querySelector('#ecranReglages .reglages-contenu > [data-cle]')).animationName,
       // une poignée par bloc visible, et chacune à la hauteur de « son » bloc (avant : celle d'un bloc caché restait en haut de la page)
@@ -856,7 +856,7 @@ function verifier(ok, texte){
     await page.mouse.up(); await page.waitForTimeout(300);
     const apresGlisse = await ordre();
     await page.click("#btnModifierReglages"); await page.waitForTimeout(300);
-    const fini = await page.evaluate(() => ({ edition: document.getElementById("ecranReglages").classList.contains("reglages-edition"), controles: document.querySelectorAll(".ctrlReglage").length, texte: document.getElementById("btnModifierReglages").textContent }));
+    const fini = await page.evaluate(() => ({ edition: document.getElementById("ecranReglages").classList.contains("reglages-edition"), controles: document.querySelectorAll(".ctrlReglage").length, texte: document.getElementById("btnModifierReglages").getAttribute("aria-label") }));
     await page.reload(); await page.waitForTimeout(700);
     await page.click("#btnReglages"); await page.waitForTimeout(500);
     const rechargee = await ordre();
@@ -867,15 +867,15 @@ function verifier(ok, texte){
     await page.click("#btnModifierReglages"); await page.waitForTimeout(300);
     const interrupteur = await page.evaluate(() => { const c = document.getElementById("optionVibrations"), v = c.checked; c.click(); return c.checked !== v; });
     // « Partager » et « À propos » : pas de poignée et toujours en bas, même après avoir réorganisé (vérifié ici avant l'ordre d'origine, plus haut après le glisser)
-    const queue = await page.evaluate(() => { const e = [...document.querySelectorAll("#ecranReglages .reglages-contenu > *")].filter((x) => x.id !== "controlesReglages"); return e.slice(-2).map((x) => x.className).join(","); });
+    const queue = await page.evaluate(() => { const e = [...document.querySelectorAll("#ecranReglages .reglages-contenu > *")].filter((x) => x.id !== "controlesReglages" && !x.classList.contains("enteteGroupe")); return e.slice(-2).map((x) => x.classList.contains("blocPartage") ? "blocPartage" : x.classList.contains("aPropos") ? "aPropos" : x.className).join(","); });
     const fixesSansPoignee = await page.evaluate(() => !document.querySelector('.blocPartage[data-cle], .aPropos[data-cle], .ctrlReglage[data-pour="partage"], .ctrlReglage[data-pour="a-propos"]'));
     const attendueFleche = origine.replace("sons,musique", "musique,sons");
     // glisser : « voix » est monté (la distance exacte dépend du défilement), sans qu'aucun bloc ne soit perdu ni dupliqué
     const monte = apresGlisse.split(",").indexOf("voix") < apresFleche.split(",").indexOf("voix") && apresGlisse.split(",").sort().join() === apresFleche.split(",").sort().join();
     const attendueGlisse = apresGlisse;
-    verifier(avant.defaut === "none" && avant.texte === "Modifier" && avant.poignees === 0 && pendant.edition && pendant.texte === "OK" && pendant.defaut !== "none" &&
-      pendant.poignees >= 13 && pendant.fleches === 0 && pendant.tremble === "none" && pendant.poigneesVisibles === pendant.visibles && pendant.desalignees === 0 && pendant.poignees === 13 && apresFleche === attendueFleche && monte &&
-      !fini.edition && fini.controles === 0 && fini.texte === "Modifier" && rechargee === attendueGlisse && parDefaut === origine && stocke === null && interrupteur && queue === "blocPartage,aPropos" && fixesSansPoignee && erreurs.length === 0,
+    verifier(avant.defaut === "none" && avant.texte === "Réorganiser les réglages" && avant.poignees === 0 && pendant.edition && pendant.texte === "Terminer la modification" && pendant.defaut !== "none" &&
+      pendant.poignees >= 14 && pendant.fleches === 0 && pendant.tremble === "none" && pendant.poigneesVisibles === pendant.visibles && pendant.desalignees === 0 && pendant.poignees === 16 && apresFleche === attendueFleche && monte &&
+      !fini.edition && fini.controles === 0 && fini.texte === "Réorganiser les réglages" && rechargee === attendueGlisse && parDefaut === origine && stocke === null && interrupteur && queue === "blocPartage,aPropos" && fixesSansPoignee && erreurs.length === 0,
       `réglages réorganisables : avant ${JSON.stringify(avant)}, pendant ${JSON.stringify(pendant)}, flèche ${apresFleche === attendueFleche}, glisser monté ${monte} (${apresGlisse}), fini ${JSON.stringify(fini)}, rechargé ${rechargee === attendueGlisse}, par défaut ${parDefaut === origine}, stocké ${stocke}, interrupteur ${interrupteur}, fin de page ${queue}, fixes sans poignée ${fixesSansPoignee} ${erreurs.join("|")}`);
     await ctx.close();
   }
@@ -893,7 +893,7 @@ function verifier(ok, texte){
     await page.waitForTimeout(1500);
     await page.reload();
     await page.waitForTimeout(9000); // (sans toucher l'écran : le téléchargement en arrière-plan démarre seul)
-    const gardees = await page.evaluate(async () => { const c = await caches.open((await caches.keys())[0]); return (await c.keys()).map((r) => r.url.split("/").pop()).filter((n) => /^musique_ambiance/.test(n)).sort(); });
+    const gardees = await page.evaluate(async () => { const urls = []; for (const cle of await caches.keys()) urls.push(...(await (await caches.open(cle)).keys()).map((r) => r.url.split("/").pop())); return [...new Set(urls)].filter((n) => /^musique_ambiance/.test(n)).sort(); }); // (les musiques sont dans un cache à part : alcuno-musiques-v1)
     await ctx.setOffline(true);
     await page.goto(url); await page.waitForTimeout(800);
     await page.mouse.click(4, 600); await page.waitForTimeout(3500);
@@ -910,12 +910,13 @@ function verifier(ok, texte){
     const note = await page.evaluate(() => { const n = document.getElementById("noteMusiqueHorsLigne"); return n.hidden ? "(cachée)" : n.textContent; });
     // bloc « Utilisable hors connexion » : coche verte quand le jeu et les musiques sont gardés, en mode avion
     const hl = await page.evaluate(() => { const l = document.getElementById("ligneHorsLigne"); return l.dataset.etat + "|" + document.getElementById("pastilleHorsLigne").textContent + "|" + (l.getBoundingClientRect().height > 20); });
+    const pastilleSvg = await page.evaluate(() => !!document.querySelector("#pastilleHorsLigne svg path"));
     // la ligne reste visible quand la musique est coupée (changer de thème la coupe)
     await page.evaluate(() => { const c = document.getElementById("optionMusique"); c.checked = false; c.dispatchEvent(new Event("change")); }); await page.waitForTimeout(800);
     const noteCoupee = await page.evaluate(() => { const n = document.getElementById("noteMusiqueHorsLigne"); return n.hidden ? "(cachée)" : n.textContent; });
     verifier(gardees.length >= 6 && gardees.includes("musique_ambiance.mp3") && horsLigne && themes.join() === "musique_ambiance_givre,musique_ambiance_cerisier,musique_ambiance_sombre" &&
-      hl === "ok|✓|true" && note === "Hors connexion : musiques prêtes ✓" && noteCoupee === "Hors connexion : musiques prêtes ✓" && erreurs.length === 0,
-      `musique hors connexion : gardées sans tap ${JSON.stringify(gardees)}, jouée sans réseau ${horsLigne}, après changement de thème ${JSON.stringify(themes)}, ligne « ${note} », bloc hors connexion ${hl}, musique coupée « ${noteCoupee} » ${erreurs.join("|")}`);
+      hl === "ok||true" && pastilleSvg && note === "Hors connexion : musiques prêtes ✓" && noteCoupee === "Hors connexion : musiques prêtes ✓" && erreurs.length === 0,
+      `musique hors connexion : gardées sans tap ${JSON.stringify(gardees)}, jouée sans réseau ${horsLigne}, après changement de thème ${JSON.stringify(themes)}, ligne « ${note} », bloc hors connexion ${hl} icône ${pastilleSvg}, musique coupée « ${noteCoupee} » ${erreurs.join("|")}`);
     await ctx.close();
   }
 
@@ -1052,6 +1053,49 @@ function verifier(ok, texte){
     const vrai = await ecritures(url + "?vraistats=1"), essai = await ecritures(url + "?modetest=1");
     verifier(!vrai.test && !/TEST/.test(vrai.version) && vrai.ecr.length > 0 && essai.test && / · TEST$/.test(essai.version) && essai.ecr.length === 0,
       `appli de test : vraie appli ${vrai.ecr.length} écritures de stats, version « ${vrai.version} » ; test ${essai.ecr.length} écriture, version « ${essai.version} »`);
+  }
+
+  // 39 bis. Origine de l'appareil (onglet Public d'Alcuno Stats) : écrite à part de la fiche, lieu demandé une fois par jour à un service
+  // extérieur (ici simulé), deuxième service si le premier ne répond pas, jamais de demande de position (GPS), rien en mode test
+  {
+    const origine = async (adresse, { premierEnPanne = false, deuxFois = false } = {}) => {
+      const ctx = await nav.newContext({ viewport: { width: 390, height: 780 }, locale: "fr-FR", timezoneId: "Europe/Paris" });
+      const page = await ctx.newPage();
+      const appels = [];
+      await ctx.route("https://ipwho.is/**", (r) => { appels.push("ipwho"); return premierEnPanne ? r.fulfill({ status: 500, body: "" }) : r.fulfill({ contentType: "application/json", headers: { "access-control-allow-origin": "*" }, body: JSON.stringify({ success: true, country_code: "FR", region: "Occitanie", city: "Toulouse", connection: { asn: 3215, org: "Orange S.A.", isp: "Orange S.A." } }) }); });
+      await ctx.route("https://get.geojs.io/**", (r) => { appels.push("geojs"); return r.fulfill({ contentType: "application/json", headers: { "access-control-allow-origin": "*" }, body: JSON.stringify({ ip: "203.0.113.7", country_code: "BE", region: "Brussels Capital", city: "Brussels", organization_name: "Proximus NV" }) }); });
+      await page.addInitScript(() => {
+        window.__maj = []; window.__gps = 0;
+        const rien = () => Promise.resolve({ val: () => null, exists: () => false });
+        window.firebaseDB = {};
+        window.fbRef = (db, chemin) => chemin;
+        window.fbSet = rien; window.fbRunTransaction = rien; window.fbRemove = rien; window.fbGet = rien;
+        window.fbUpdate = (chemin, valeur) => { window.__maj.push([chemin, JSON.parse(JSON.stringify(valeur))]); return Promise.resolve(); };
+        window.fbOnDisconnect = () => ({ remove: () => Promise.resolve() }); window.fbServerTimestamp = () => 1;
+        try { const g = navigator.geolocation; ["getCurrentPosition", "watchPosition"].forEach((m) => { g[m] = () => { window.__gps++; }; }); } catch (e) {}
+      });
+      await page.goto(adresse); await page.waitForTimeout(1500);
+      if (deuxFois) { await page.reload(); await page.waitForTimeout(1500); }
+      const r = await page.evaluate(() => ({ maj: window.__maj.filter((m) => /^stats\/appareils\/[a-z0-9]{12}$/.test(m[0])).map((m) => m[1]), gps: window.__gps, garde: localStorage.getItem("alcuno_origine_stats") }));
+      await ctx.close();
+      return { ...r, appels };
+    };
+    const un = await origine(url + "?vraistats=1");
+    const fiche = un.maj[0] || {}, technique = un.maj[1] || {}, lieu = un.maj.find((m) => m.pays) || {};
+    verifier(un.maj.length >= 3 && fiche.os && fiche.vu === 1 && fiche.type === undefined && fiche.pays === undefined
+      && technique.type === "ordi" && /^Chrome \d+$/.test(technique.nav) && !!technique.osv && /^390x780@1$/.test(technique.ecran) && technique.langue === "fr-FR" && technique.fuseau === "Europe/Paris" && technique.os === undefined
+      && lieu.pays === "FR" && lieu.region === "Occitanie" && lieu.ville === "Toulouse" && lieu.fai === "Orange S.A." && un.appels.join() === "ipwho" && un.gps === 0
+      && !/203\.0\.113|"ip"/.test(JSON.stringify(un.maj)) && /Toulouse/.test(un.garde || ""),
+      `origine de l'appareil : fiche habituelle intacte, puis écriture à part (${JSON.stringify(technique)}), lieu d'après l'IP (${JSON.stringify(lieu)}), ${un.appels.length} appel, aucune demande de position (${un.gps})`);
+    const deux = await origine(url + "?vraistats=1", { deuxFois: true });
+    const apresRechargement = deux.maj.slice(-2).concat(deux.maj).find((m) => m.type && m.pays) || {};
+    verifier(deux.appels.length === 1 && apresRechargement.ville === "Toulouse" && apresRechargement.type === "ordi", `origine : une seule demande de lieu par jour (${deux.appels.length} appel pour 2 ouvertures), lieu gardé réécrit avec la fiche (${JSON.stringify(apresRechargement)})`);
+    const secours = await origine(url + "?vraistats=1", { premierEnPanne: true });
+    const lieuSecours = secours.maj.find((m) => m.pays) || {};
+    verifier(secours.appels.join() === "ipwho,geojs" && lieuSecours.pays === "BE" && lieuSecours.ville === "Brussels" && lieuSecours.fai === "Proximus NV" && !/203\.0\.113/.test(JSON.stringify(secours.maj) + secours.garde),
+      `origine : premier service en panne => le deuxième répond (${secours.appels}), l'adresse IP n'est écrite nulle part (${JSON.stringify(lieuSecours)})`);
+    const essai = await origine(url + "?modetest=1");
+    verifier(essai.maj.length === 0 && essai.appels.length === 0 && essai.garde === null, `origine : rien en mode test (${essai.maj.length} écriture, ${essai.appels.length} appel)`);
   }
 
   // 40. Écran « le jeu n'a pas pu se charger » : sur un navigateur trop ancien, il le dit clairement (et plus « vérifie ta connexion »)
@@ -1286,7 +1330,7 @@ function verifier(ok, texte){
 
   // 48b. « Ta partie » : Mode PJ, express et hot ne sont plus enregistrés ; décochés au chargement (anciennes clés effacées) et à chaque ouverture
   {
-    const { ctx, page, erreurs } = await ouvrir({}, `try{["alcuno_mode_hot","alcuno_mode_soft","alcuno_partie_express"].forEach((c) => localStorage.setItem(c, "1"))}catch(e){}`);
+    const { ctx, page, erreurs } = await ouvrir({}, `try{if(window.top===window)["alcuno_mode_hot","alcuno_mode_soft","alcuno_partie_express"].forEach((c) => localStorage.setItem(c, "1"))}catch(e){}`); // (document principal seulement : le script tourne aussi dans les cadres about:blank de l'appli, qui remettraient les clés)
     const ids = ["optionModeSoft", "optionPartieExpress", "optionModeHot"];
     const lire = () => page.evaluate((ids) => ({ cases: ids.map((i) => document.getElementById(i).checked),
       cles: ["alcuno_mode_hot", "alcuno_mode_soft", "alcuno_partie_express"].map((c) => localStorage.getItem(c)) }), ids);
@@ -1374,7 +1418,7 @@ function verifier(ok, texte){
     await c.ctx.close();
     verifier(sansDeblocage.theme === "bordeaux" && sansDeblocage.cachee && sansHot.cle === null && sansHot.cachee &&
       apresHot.cle === "1" && !apresHot.cachee && apresHot.nouveau &&
-      applique.theme === "donjon" && !applique.nouveau && applique.objets === 8 && applique.zone !== "none" && applique.barre === "#12040a" && applique.stocke === "donjon" && c.erreurs.length === 0,
+      applique.theme === "donjon" && !applique.nouveau && applique.objets === 4 && applique.zone !== "none" && applique.barre === "#12040a" && applique.stocke === "donjon" && c.erreurs.length === 0,
       `thème Donjon : ${JSON.stringify({ sansDeblocage, sansHot, apresHot, applique, erreurs: c.erreurs })}`);
   }
 

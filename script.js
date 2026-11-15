@@ -95,16 +95,32 @@ function lireCodeInvitation(enAppli){
 // Réglages à distance (js/config-lib.js, js/config-distante.js) : copie validée de « config » dans Firebase, {} tant qu'il n'y en a pas
 let configDistante = {};
 
-function attendreFirebase(callback){
+// siEchec (facultatif) : appelé à la place de callback si Firebase n'est toujours pas là au bout de DELAI_FIREBASE (hors connexion,
+// téléchargement de Firebase bloqué…). Pour les boutons qui attendent (« Créer », « Rejoindre », « Revenir ») : avant, ils
+// restaient sur « Connexion… » sans fin. Sans siEchec, on attend aussi longtemps qu'il faut (statistiques, réglages à distance…).
+const DELAI_FIREBASE = 8000;
+function attendreFirebase(callback, siEchec){
   if (window.firebaseDB) {
     callback();
-  } else {
-    window.addEventListener("firebase-ready", () => callback(), { once: true });
+    return;
   }
+  let minuteur = null;
+  const pret = () => { clearTimeout(minuteur); callback(); };
+  window.addEventListener("firebase-ready", pret, { once: true });
+  if (typeof siEchec !== "function") return;
+  // (Firebase pas encore téléchargé, ou téléchargement raté au lancement : on le redemande, voir index.html)
+  if (typeof window.chargerFirebase === "function") window.chargerFirebase();
+  minuteur = setTimeout(() => {
+    window.removeEventListener("firebase-ready", pret);
+    siEchec();
+  }, DELAI_FIREBASE);
 }
 
 let codePartieActuel = null;
 let pseudoActuel = null;
+// Mode en ligne : ce téléphone regarde la partie sans y jouer (js/en-ligne.js, « Regarder une partie ») : pas de pseudo, pas de fiche
+// de joueur, aucune action envoyée
+let estSpectateur = false;
 let estHote = false;
 let hotePartie = null;
 // En ligne : pseudos marqués déconnectés dans Firebase (affichés « déconnecté » à côté du nom)
@@ -144,6 +160,11 @@ let retourAnnonce = false;      // message « Tu reviens dans la partie… » d�
 let timerRetour = null;
 
 const PSEUDO_INVALIDE = /[.#$\[\]\/]/;
+// Noms qui sont aussi des mots réservés du langage (« constructor », « toString », « __proto__ »…) : les compteurs du jeu sont
+// rangés par nom de joueur, et avec un de ces noms ils se déréglaient (« NaN » annulations). Refusés à la saisie.
+function nomImpossible(nom){
+  return String(nom) in Object.prototype;
+}
 
 // Easter egg : couronne 👑 à côté du nom des créateurs du jeu
 // (majuscules/minuscules ignorées : « TrIs », « ROSA »… comptent aussi)
@@ -223,7 +244,7 @@ try {
 // Affichée en bas de l'accueil. Enregistrée dans Firebase sous forme de nombre
 // (les règles l'exigent) : "8.3.2" => 80302, pour pouvoir comparer les versions.
 // Numérotation : +0.0.1 à chaque mise en ligne, et après x.y.9 on passe à x.(y+1).0 (ex. 9.5.9 => 9.6.0)
-const VERSION_AFFICHEE = "9.90.63";
+const VERSION_AFFICHEE = "9.95.8";
 // Appli de test (adresse autre que GitHub Pages et que le poste de dev, ou « ?modetest ») : même jeu, même Firebase, mais
 // elle n'envoie ni statistiques ni plantages (les chiffres restent ceux de la vraie appli) et affiche « TEST » dans les Réglages
 // Un navigateur piloté par un programme (tests automatiques de Claude : navigator.webdriver) est aussi en mode test, pour que
@@ -282,7 +303,7 @@ document.addEventListener("pointerdown", () => { clicAAvaler = false; }, true);
 // (il se tasse puis revient, un peu plus clair un instant, 0,2 s). Seulement tant qu'il est à l'écran :
 // rien ne reste par-dessus l'écran suivant.
 const BOUTONS_AVEC_POP = "#btnModeEnLigne, #btnModeClassique, .btnRetour, #btnPartagerJeu, #btnCreerPartie, " +
-  "#btnRejoindrePartie, #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #btnScannerQR, " +
+  "#btnRejoindrePartie, #btnRegarderPartie, #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #validerRegarder, #btnScannerQR, " +
   "#lancerPartieEnLigne, #btnRejouerMemes, #btnModifierJoueurs, #btnChoixPseudoAnnuler, #listeChoixPseudo button, #btnConfirmerAccueilOui, " +
   "#btnConfirmerAccueilNon, #btnConfirmerHoteOui, #btnConfirmerHoteNon, #btnConfirmerRetraitOui, #btnConfirmerRetraitNon, " +
   "#ajouterJoueur, #jouer, #btnCaster, #supprimerJoueur, #nouvellePartie, #termineSuppression, #btnInstallationInstaller, " +
