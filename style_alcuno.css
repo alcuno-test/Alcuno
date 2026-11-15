@@ -7136,14 +7136,14 @@ html:is([data-theme="bordeaux"], [data-theme="vert"], [data-theme="bleu"]) :is(#
 
 /* ===== Sombre : plus de restes de bordeaux, tout en noir et gris neutres ===== */
 html[data-theme="noir"]{ --pastille-haut: rgba(40, 40, 40, 0.94); --pastille-bas: rgba(10, 10, 10, 0.92); }
-/* Boutons du thème Sombre « Obsidienne » : plaques de graphite à peine détachées du noir, liseré gris très fin, texte gris
-   clair. Plus aucun contour jaune : le doré ne reste que sur le titre et les textes importants. Tout passe par ces
-   variables (pour retrouver un texte doré : --noir-btn-texte: #ffd426). */
+/* Boutons du thème Sombre « Obsidienne » : plaques de graphite à peine détachées du noir, liseré gris très fin, texte jaune.
+   Plus aucun contour jaune : le jaune reste sur les écritures, les icônes et le titre. Tout passe par ces
+   variables (texte jaune : --noir-btn-texte). */
 html[data-theme="noir"]{
   --noir-btn-fond: linear-gradient(180deg, #19191c, #0e0e10);
   --noir-btn-bord: rgba(255, 255, 255, 0.09);
   --noir-btn-bord-survol: rgba(255, 255, 255, 0.3);
-  --noir-btn-texte: #d6d6dc;
+  --noir-btn-texte: #ffd426;
   --noir-bord-fort: rgba(255, 255, 255, 0.38);
 }
 html[data-theme="noir"] :is(#ecranPause, #ecranTele .tele-pause){ background: rgba(0, 0, 0, 0.6); }
@@ -9258,7 +9258,7 @@ html[data-theme="noir"] body #ecranReglages .pastilleTheme[aria-pressed="true"] 
   box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.14) !important;
 }
 html[data-theme="noir"] body .chipLangue.actif{
-  background: var(--noir-btn-fond) !important; color: #fff !important; border-color: var(--noir-bord-fort) !important;
+  background: var(--noir-btn-fond) !important; color: var(--noir-btn-texte) !important; border-color: var(--noir-bord-fort) !important;
 }
 html[data-theme="noir"] body .qrJeu{ box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25), 0 10px 24px rgba(0, 0, 0, 0.6) !important; }
 html[data-theme="noir"] body .lignesRegle li::before{ background: #6f6f78 !important; }
@@ -9281,3 +9281,10 @@ html[data-theme="noir"] body .qrPartie{ border-color: rgba(255, 255, 255, 0.25) 
 html[data-theme="noir"] body #ecranReglages:not(.reglages-edition) #btnModifierReglages{
   background: var(--noir-btn-fond) !important; color: var(--noir-btn-texte) !important; border-color: var(--noir-btn-bord) !important;
 }
+
+/* Sombre : tout ce qui était resté blanc (Retour, Mise en page, crayon, icônes des boutons, titres de blocs, nom du joueur actif) en jaune comme le reste */
+html[data-theme="noir"] body :is(.titreBloc, .btnRetour, .btnMiseEnPage, #btnMiseEnPage, .btnModifierReglages, #btnModifierReglages,
+  #menu button, #stickyJoueurActif, #stickyJoueurActif .sticky-nom, #stickyJoueurActif button){
+  color: var(--noir-btn-texte) !important;
+}
+html[data-theme="noir"] body :is(#menu button, .btnRetour, .btnMiseEnPage, .btnModifierReglages, #stickyJoueurActif button) svg{ stroke: var(--noir-btn-texte); }
