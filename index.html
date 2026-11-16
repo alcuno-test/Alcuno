@@ -9,7 +9,7 @@
          (Avant : « ?t= » + l'heure, différent à chaque lancement : tout le jeu était retéléchargé à chaque ouverture,
          environ 400 Ko. Maintenant, tant que la version ne change pas, le navigateur se contente de vérifier.) -->
     <script>
-        window.VERSION_FICHIERS = "9.95.22";
+        window.VERSION_FICHIERS = "9.95.23";
         // (ailleurs que sur le vrai site — poste de dev, appli de test — : l'heure en plus, comme avant, pour voir tout de
         // suite un fichier modifié sans changer de version)
         window.ANTI_CACHE = /(^|\.)github\.io$/i.test(location.hostname) ? window.VERSION_FICHIERS : window.VERSION_FICHIERS + "-" + Date.now();
@@ -102,6 +102,26 @@
         var couleursBarre = { bordeaux: "#2b001d", noir: "#000000", vert: "#08301e", bleu: "#0a1634", soleil: "#1f3566",
                               cerisier: "#5a1740", givre: "#e4f5fc", prestige: "#937810", galaxie: "#02030a", kawaii: "#ffd6ec", donjon: "#12040a", noel: "#b3121f", chandeleur: "#bd4f10", valentin: "#c2185b", patrick: "#0f6a44", justrose: "#cc3381", musique: "#5b2bd1", halloween: "#0a0204" };
         document.write('<meta name="theme-color" content="' + (couleursBarre[theme] || couleursBarre.bordeaux) + '">');
+        // Page rechargée après un changement de thème : elle arrive cachée derrière un voile de la couleur du thème (le même
+        // que celui posé juste avant le rechargement, js/reglages.js), qui s'efface en fondu une fois le jeu chargé
+        // (sélecteur répété et !important : le thème BDSM se sert aussi de html::after pour son décor)
+        try {
+            if (sessionStorage.getItem("alcuno_fondu_theme") !== null) {
+                sessionStorage.removeItem("alcuno_fondu_theme");
+                document.write('<style>html.fondu-theme.fondu-theme.fondu-theme::after{content:"" !important;position:fixed !important;top:0 !important;left:0 !important;right:0 !important;bottom:0 !important;width:auto !important;height:auto !important;z-index:2147483647 !important;pointer-events:none;animation:none !important;transform:none !important;filter:none !important;opacity:1 !important;transition:opacity .4s ease !important;background:' + (couleursBarre[theme] || couleursBarre.bordeaux) + ' !important}html.fondu-theme.fondu-theme.fondu-theme.fondu-fin::after{opacity:0 !important}</style>');
+                document.documentElement.classList.add("fondu-theme");
+                var finFonduTheme = function(){
+                    if (finFonduTheme.fait) return;
+                    finFonduTheme.fait = true;
+                    requestAnimationFrame(function(){ requestAnimationFrame(function(){
+                        document.documentElement.classList.add("fondu-fin");
+                        setTimeout(function(){ document.documentElement.classList.remove("fondu-theme", "fondu-fin"); }, 500);
+                    }); });
+                };
+                window.addEventListener("load", finFonduTheme);
+                setTimeout(finFonduTheme, 2500); // (au pire : le voile ne reste jamais)
+            }
+        } catch (e) {}
         // iPhone : page rechargée après un changement de thème (voir rafraichirBarreIphone dans script.js) :
         // on rouvre les Réglages dès le premier affichage
         // Retour de la page de connexion Google (profil joueur, js/profil.js) : le jeton est retiré de l'adresse tout de suite,

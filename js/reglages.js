@@ -873,9 +873,19 @@ function rafraichirBarreIphone(){
     try {
       if (reglagesOuverts) sessionStorage.setItem(CLE_ROUVRIR_REGLAGES, String(ecranReglages.scrollTop));
     } catch (e) {}
-    rechargerPage(); // (js/retour-demarrage.js)
+    // Le rechargement est masqué : l'écran se fond vers la couleur du nouveau thème, la page se recharge derrière, puis
+    // le nouveau thème apparaît en fondu (voir « fondu-theme » dans le script du <head> de index.html)
+    const voile = document.createElement("div");
+    voile.style.cssText = "position:fixed;inset:0;z-index:2147483647;opacity:0;transition:opacity .22s ease;background:" + (THEMES[document.documentElement.dataset.theme] || THEMES.bordeaux);
+    document.body.appendChild(voile);
+    void voile.offsetWidth;
+    voile.style.opacity = "1";
+    setTimeout(() => {
+      try { sessionStorage.setItem("alcuno_fondu_theme", "1"); } catch (e) {}
+      rechargerPage(); // (js/retour-demarrage.js)
+    }, 240);
   };
-  rechargementTheme = setTimeout(recharger, 100);
+  rechargementTheme = setTimeout(recharger, 450); // (le temps du fondu entre les deux thèmes)
 }
 
 // Après ce rechargement : Réglages rouverts tels quels (sans animation), au même endroit
@@ -1037,10 +1047,18 @@ document.querySelectorAll(".pastilleTheme").forEach((pastille) => {
       ecrireReglage(CLE_MUSIQUE, false);
       majLigneMusique();
     }
-    appliquerTheme(pastille.dataset.theme, barreIphoneARafraichir());
-    try { localStorage.setItem(CLE_THEME, pastille.dataset.theme); } catch (e) {}
-    try { setTimeout(majNoteMusiqueHorsLigne, 300); } catch (e) {} // (la ligne « Hors connexion » sous le volume de la musique)
-    try { noterAppareilStats(); } catch (e) {} // statistiques : thème choisi
+    const changer = () => {
+      appliquerTheme(pastille.dataset.theme, barreIphoneARafraichir());
+      try { localStorage.setItem(CLE_THEME, pastille.dataset.theme); } catch (e) {}
+      try { setTimeout(majNoteMusiqueHorsLigne, 300); } catch (e) {} // (la ligne « Hors connexion » sous le volume de la musique)
+      try { noterAppareilStats(); } catch (e) {} // statistiques : thème choisi
+    };
+    // Fondu de l'ancien thème vers le nouveau (navigateurs qui savent le faire ; sinon changement immédiat, comme avant)
+    const fondu = pastille.dataset.theme !== document.documentElement.dataset.theme && typeof document.startViewTransition === "function" &&
+      !(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+    let fait = false;
+    const unefois = () => { if (!fait) { fait = true; changer(); } };
+    if (fondu) { try { document.startViewTransition(unefois); } catch (e) { unefois(); } } else unefois();
     rafraichirBarreIphone();
   });
 });
