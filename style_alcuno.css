@@ -10091,6 +10091,3 @@ html[data-theme="donjon"] #ecranReglages #tuilesReglages .haloTuile{
    faisait défiler (ou rebondir) la page derrière. Aucun glissement n'y est utile (les taps marchent toujours, et les cartes
    Bar / Éthylo et le zizi-coptère suivent le doigt par leur propre code). ===== */
 #choixMode{ touch-action: none; overscroll-behavior: none; }
-
-/* Changement de thème : fondu de l'ancien thème vers le nouveau (js/reglages.js, document.startViewTransition) */
-::view-transition-old(root), ::view-transition-new(root){ animation-duration: 0.4s; animation-timing-function: ease; }
