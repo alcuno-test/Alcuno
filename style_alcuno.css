@@ -8220,6 +8220,24 @@ html[data-theme="galaxie"] #choixMode .titreAccueilBarre, html[data-theme="galax
   height: 5px !important; border-radius: 3px !important; background: #eaf6ff !important;
   box-shadow: 0 0 4px #fff, 0 0 10px #39a0ff, 0 0 22px #1f7bff, 0 0 40px rgba(31,123,255,.6) !important; animation:none !important;
 }
+/* Sabre sous le titre : poignée (style sabre d'Anakin, épisode 3 : pommeau sombre, grip noir strié, corps argent, émetteur
+   évasé) à gauche, lame bleue ensuite. Poignée + lame font exactement la largeur du titre (le bloc se cale sur le titre) */
+html[data-theme="galaxie"] #choixMode .titreAccueil{ width: fit-content; max-width: 100%; align-self: center; }
+html[data-theme="galaxie"] #choixMode .titreAccueilBarre{ width: calc(100% - min(1.55vw, 2vh)) !important; align-self: flex-end; position: relative; overflow: visible; } /* (moins le retrait à gauche du titre : de la 1re lettre à la dernière) */
+html[data-theme="galaxie"] #choixMode .titreAccueilBarre::before,
+html[data-theme="galaxie"] #choixMode .titreAccueilBarre::after{ content: ""; position: absolute; top: 50%; pointer-events: none; }
+html[data-theme="galaxie"] #choixMode .titreAccueilBarre::before{ /* pommeau, grip et corps */
+  left: 0; width: 56px; height: 12px; transform: translateY(-50%); border-radius: 3px 0 0 3px;
+  background:
+    radial-gradient(circle at 47px 50%, #7a1010 0 1.3px, transparent 2px),
+    linear-gradient(90deg, transparent 0 8px, #c9d1da 8px 10px, transparent 10px 36px, #c9d1da 36px 38px, transparent 38px),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.16) 0 1px, transparent 1px 3px) 11px 0 / 25px 100% no-repeat,
+    linear-gradient(90deg, #565c65 0 8px, #0b0d10 8px 38px, #9aa4af 38px 100%);
+  box-shadow: 0 1px 3px rgba(0,0,0,.9), inset 0 2px 1px rgba(255,255,255,.35), inset 0 -2px 2px rgba(0,0,0,.45); }
+html[data-theme="galaxie"] #choixMode .titreAccueilBarre::after{ /* émetteur évasé */
+  left: 54px; width: 11px; height: 17px; transform: translateY(-50%); border-radius: 2px 3px 3px 2px;
+  background: linear-gradient(180deg, #f2f5f8, #aab4bf 40%, #6a7480 70%, #3a4048);
+  box-shadow: 0 1px 3px rgba(0,0,0,.9), inset -2px 0 0 rgba(0,0,0,.35); }
 /* Boutons : lame bleue, « Jouer » et le mode classique en rouge */
 html[data-theme="galaxie"] button:not(#btnProfilSupprimer):not(#btnProfilConnexion):not(#btnInstallationInstaller):not(#btnInstallationPlusTard):not(.pastilleTheme):not(#btnRemonter):not(#btnPause):not(#btnHistorique):not(#btnReglagesJeu):not(.btnPauseJoueur):not(.btnLivre):not(#btnReglages):not(.btnAccueilTexte):not(#btnSignalerBug):not(#btnFaq):not(.fenetrePrestige-essayer):not(.fenetreKawaii-essayer):not(.fenetreKawaii-plusTard):not(.fenetrePrestige-plusTard):not(.fenetreGalaxie-ok):not(.fenetreGalaxie-plusTard):not(.bloc-hot-btn):not(#overlayDuel .duel-boutons button:disabled){
   background: linear-gradient(180deg, rgba(14,22,44,.92), rgba(6,10,22,.92)) !important; color:#eaf3ff !important; text-shadow:none !important;
