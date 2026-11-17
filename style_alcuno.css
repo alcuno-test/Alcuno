@@ -10460,3 +10460,19 @@ html[data-theme="givre"] #ecranTele .tele-joueur-actif{
 /* « Ta partie », en ligne : une seule phrase sur l'hôte, en haut (au lieu d'une sous chaque mode) */
 #ecranReglages .optionsPartieEnLigne{ display: none; margin: 0 4px 12px; font-size: 14px; font-weight: 700; line-height: 1.4; text-align: center; opacity: 0.9; }
 #ecranReglages.options-en-ligne .optionsPartieEnLigne{ display: block; }
+
+/* ===== APPLI TEST : Givre, lueurs qui tournent en continu autour du joueur actif, en suivant le contour arrondi (js/extras.js). Remplacent
+   les bandes droites ci-dessus. Comètes : une tête vive et une queue qui s'efface. ===== */
+html[data-theme="givre"] #listeJoueurs .joueur-ligne-actif{ overflow: visible; }
+html[data-theme="givre"] :is(#listeJoueurs .joueur-ligne-actif, #ecranTele .tele-joueur-actif)::after{ display: none; }
+html[data-theme="givre"] :is(#listeJoueurs .joueur-ligne-actif, #ecranTele .tele-joueur-actif){ position: relative; overflow: visible; }
+html[data-theme="givre"] .lueur-tour{
+  position: absolute; left: 0; top: 0; width: 58px; height: 7px; border-radius: 99px; pointer-events: none; z-index: 2;
+  background: linear-gradient(90deg, rgba(120, 225, 255, 0), rgba(70, 205, 255, 0.85) 55%, #ffffff);
+  box-shadow: 0 0 10px 2px rgba(60, 200, 255, 0.85), 0 0 22px 4px rgba(120, 230, 255, 0.5);
+  offset-path: var(--chemin-tour); offset-rotate: auto; offset-anchor: 100% 50%; offset-distance: 0%;
+  animation: givreTour var(--duree-tour, 2s) linear infinite; animation-delay: calc(var(--i, 0) * var(--duree-tour, 2s) / -4);
+}
+html[data-theme="givre"] #ecranTele .lueur-tour{ width: 7.4vh; height: 0.9vh; }
+@keyframes givreTour{ from { offset-distance: 0%; } to { offset-distance: 100%; } }
+@media (prefers-reduced-motion: reduce){ html[data-theme="givre"] .lueur-tour{ display: none; } }

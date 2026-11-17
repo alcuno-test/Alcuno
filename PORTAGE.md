@@ -198,3 +198,8 @@ l'ancien cache était supprimé avec les musiques téléchargées.
 - PORTÉ dans le vrai jeu (9.88.12, cache v37) : chevrons des sections sans rond (recopié ici en 9.90.59).
 - 9.88.13 : pastille « utilisable hors connexion » refaite (recopiée en 9.90.60)
 - SYNCHRO COMPLÈTE avec le vrai jeu (9.95.8, cache test v159) : tout le code du vrai jeu repris (version anglaise, Bar, Éthylotest, Spectateur, profil Google, stats 1.24, 18 thèmes), éléments propres au test conservés (Firebase test, adresses, MODE_TEST, caches alcuno-test-*, zizi débloqué, manifestes/icônes TEST, nettoyage).
+
+## Ne pas porter (test seulement)
+
+- **Lueurs qui tournent autour du joueur actif en Givre** : bloc « APPLI TEST : lueurs qui tournent… » à la fin de `js/extras.js` et
+  bloc du même nom à la fin de `style_alcuno.css`. La vraie appli garde les bandes droites qui défilent.

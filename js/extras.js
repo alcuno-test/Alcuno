@@ -860,3 +860,43 @@ activerCarteAccueil("btnAlbumAccueil", ouvrirAlbum); // (js/stickers.js ne pose 
   }).observe(regles, { attributes: true, attributeFilter: ["class"] });
 })();
 // #endregion
+
+// #region APPLI TEST : lueurs qui tournent autour du joueur actif en Givre (téléphone et télé)
+// Des comètes de lumière suivent le contour arrondi de la pastille (chemin « path() » à la taille du bouton, vitesse constante
+// quel que soit sa longueur). Posées / retirées toutes les 0,5 s selon le thème ; pas dans le vrai jeu (voir PORTAGE.md).
+(() => {
+  const NB_LUEURS = 4;
+  const VITESSE = 300; // px par seconde le long du contour
+  const SELECTEUR = "#listeJoueurs .joueur-ligne-actif, #ecranTele .tele-joueur-actif";
+  function poser(el){
+    const w = el.offsetWidth, h = el.offsetHeight;
+    if (!w || !h) return;
+    const cle = w + "x" + h;
+    let lueurs = el.querySelectorAll(":scope > .lueur-tour");
+    if (lueurs.length !== NB_LUEURS) {
+      lueurs.forEach((l) => l.remove());
+      for (let i = 0; i < NB_LUEURS; i++) {
+        const l = document.createElement("i");
+        l.className = "lueur-tour";
+        l.setAttribute("aria-hidden", "true");
+        l.style.setProperty("--i", String(i));
+        el.appendChild(l);
+      }
+      el._cleLueurs = "";
+    }
+    if (el._cleLueurs === cle) return;
+    el._cleLueurs = cle;
+    // contour suivi : la pastille, rentrée de 2 px (la lueur roule sur le bord)
+    const m = 2, x0 = m, y0 = m, x1 = w - m, y1 = h - m, r = (y1 - y0) / 2;
+    const chemin = `path('M ${x0 + r} ${y0} H ${x1 - r} A ${r} ${r} 0 0 1 ${x1 - r} ${y1} H ${x0 + r} A ${r} ${r} 0 0 1 ${x0 + r} ${y0} Z')`;
+    const perimetre = 2 * (x1 - x0 - 2 * r) + 2 * Math.PI * r;
+    el.style.setProperty("--chemin-tour", chemin);
+    el.style.setProperty("--duree-tour", (perimetre / VITESSE).toFixed(2) + "s");
+  }
+  function retirer(){ document.querySelectorAll(".lueur-tour").forEach((l) => { if (l.parentNode) { l.parentNode._cleLueurs = ""; l.remove(); } }); }
+  setInterval(() => {
+    if (document.documentElement.dataset.theme !== "givre" || !(window.CSS && CSS.supports && CSS.supports("offset-path", "path('M 0 0 H 1')"))) { retirer(); return; }
+    document.querySelectorAll(SELECTEUR).forEach(poser);
+  }, 500);
+})();
+// #endregion
