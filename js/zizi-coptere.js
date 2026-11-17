@@ -7,11 +7,8 @@
 // Visible seulement avec le thème Donjon (BDSM), sur l'écran d'accueil (#choixMode : caché avec lui).
 // Touché : il tourne et suit le doigt ; lâché, on peut le lancer : gravité, rebonds sur les bords, rotation qui ralentit.
 // Sa place n'est pas gardée : à chaque ouverture du jeu, il revient à côté du titre.
-// APPLI TEST : débloqué de base pour l'essayer (ZIZI_TEST_DEBLOQUE). NE PAS PORTER dans le vrai jeu (voir PORTAGE.md).
-const ZIZI_TEST_DEBLOQUE = true;
 const CLE_ZIZI_COPTERE = "alcuno_zizi_coptere";
 function ziziCoptereDebloque(){
-  if (ZIZI_TEST_DEBLOQUE) return true;
   try { return localStorage.getItem(CLE_ZIZI_COPTERE) === "1"; } catch (e) { return false; }
 }
 function debloquerZiziCoptere(){
