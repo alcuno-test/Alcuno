@@ -43,7 +43,7 @@ function ouvrirOptionsPartie(suite, enLigne = false){
   ecranReglages.classList.toggle("options-en-ligne", !!enLigne); // (phrase « En ligne, ce sont les choix de l'hôte… » en haut)
   // Chaque nouvelle partie repart sans option : rien n'est gardé d'une partie à l'autre (la revanche et la reprise
   // d'une partie interrompue gardent, elles, le mode de la partie en cours)
-  [caseModeSoft, casePartieExpress, caseModeHot, caseModeHard].forEach((c) => { c.checked = false; });
+  [caseModeSoft, casePartieExpress, caseModeHot, caseModeHard, caseDefisPersonnels].forEach((c) => { c.checked = false; });
   majOptionHard(); // (ligne « Mode hard » : seulement une fois débloqué)
   majTitrePJ();
   ecranReglages.classList.add("vue-options");
@@ -1104,6 +1104,18 @@ caseModeHot.addEventListener("change", () => {
 let hotPartieEnLigne = false;
 function estModeHot(){
   return codePartieActuel ? hotPartieEnLigne : caseModeHot.checked;
+}
+
+// Défis personnels : activés seulement pour la partie choisie sur l'écran « Ta partie ».
+// En ligne, seul l'hôte transporte sa liste dans l'état de la manche.
+const caseDefisPersonnels = document.getElementById("optionDefisPersonnels");
+caseDefisPersonnels.checked = false;
+let defisPersonnelsActifsEnLigne = false;
+function defisPersonnelsActifs(){
+  return codePartieActuel ? defisPersonnelsActifsEnLigne : caseDefisPersonnels.checked;
+}
+function choisirDefisPersonnelsEnLigne(actifs){
+  defisPersonnelsActifsEnLigne = !!actifs;
 }
 
 // ===== Mode hard : la mécanique du mode hot, avec des défis sexuels, à 2 joueurs (voir MODE_HARD.md) =====
