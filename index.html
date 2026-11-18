@@ -9,7 +9,7 @@
          (Avant : « ?t= » + l'heure, différent à chaque lancement : tout le jeu était retéléchargé à chaque ouverture,
          environ 400 Ko. Maintenant, tant que la version ne change pas, le navigateur se contente de vérifier.) -->
     <script>
-        window.VERSION_FICHIERS = "9.96.4";
+        window.VERSION_FICHIERS = "9.96.5";
         // (ailleurs que sur le vrai site — poste de dev, appli de test — : l'heure en plus, comme avant, pour voir tout de
         // suite un fichier modifié sans changer de version)
         window.ANTI_CACHE = /(^|\.)github\.io$/i.test(location.hostname) ? window.VERSION_FICHIERS : window.VERSION_FICHIERS + "-" + Date.now();
@@ -454,6 +454,15 @@
                     <label class="interrupteur" for="optionPartieExpress" aria-hidden="true"></label>
                 </div>
 
+                <div class="optionReglage" id="ligneDefisPersonnelsPartie">
+                    <span class="optionTexte">
+                        <span class="optionTitre">Défis personnalisés</span>
+                        <span class="optionNote">Ajoute tes propres défis hot ou hard.</span>
+                    </span>
+                    <input type="checkbox" id="optionDefisPersonnels" aria-label="Défis personnalisés">
+                    <label class="interrupteur" for="optionDefisPersonnels"></label>
+                </div>
+
                 <div class="optionReglage">
                     <span class="optionTexte">
                         <span class="optionTitre">Mode hot 🔥</span>
@@ -471,14 +480,6 @@
                     </span>
                     <input type="checkbox" id="optionModeHard" aria-label="Mode hard">
                     <label class="interrupteur" for="optionModeHard" aria-hidden="true"></label>
-                </div>
-                <div class="optionReglage" id="ligneDefisPersonnelsPartie">
-                    <span class="optionTexte">
-                        <span class="optionTitre">Défis personnalisés</span>
-                        <span class="optionNote">Ajoute tes propres défis hot ou hard. En ligne : seuls ceux de l’hôte sont utilisés.</span>
-                    </span>
-                    <input type="checkbox" id="optionDefisPersonnels" aria-label="Défis personnalisés">
-                    <label class="interrupteur" for="optionDefisPersonnels"></label>
                 </div>
                     <div class="optionReglage optionsSuite">
                         <button type="button" id="btnContinuerOptions">Continuer</button>
