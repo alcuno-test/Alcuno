@@ -14,6 +14,8 @@ const anglais = chargerCatalogue("en.js", "TEXTES_EN");
 const espagnol = chargerCatalogue("es.js", "TEXTES_ES");
 const italien = chargerCatalogue("it.js", "TEXTES_IT");
 assert.ok(anglais && espagnol && italien, "les catalogues anglais, espagnol et italien doivent être chargés");
+const politique = fs.readFileSync(path.join(racine, "confidentialite.html"), "utf8");
+assert.ok(!politique.includes("En bref"), "la politique de confidentialité ne doit plus afficher le résumé « En bref »");
 
 for(const [nom, catalogue] of [["espagnol", espagnol], ["italien", italien]]){
   assert.deepEqual(Object.keys(catalogue).sort(), Object.keys(anglais).sort(), `${nom} : les catalogues doivent couvrir les mêmes clés`);
@@ -67,8 +69,6 @@ for(const cle of clesDefis){
   assert.ok(italien[cle], `traduction italienne du défi manquante : ${cle}`);
 }
 for(const cle of [
-  "Pas de compte obligatoire, pas de publicité, pas de revente de données.",
-  "Le jeu en mode classique marche sur ton téléphone, sans envoyer tes parties.",
   "Toute personne qui connaît le code d'une partie peut la lire",
   "La langue de cette page suit celle de l'application."
 ]){
