@@ -2126,7 +2126,7 @@ function texteDiagnostic(){
   delete etat.journal;
   return [
     "=== Diagnostic Alcuno ===",
-    `Version ${VERSION_AFFICHEE} | ${new Date().toLocaleString("fr-FR")}`,
+    `Version ${VERSION_AFFICHEE} | ${new Date().toLocaleString(LOCALE_LANGUE)}`,
     `Téléphone : ${navigator.userAgent}`,
     `Réseau : ${navigator.onLine ? "en ligne" : "hors connexion"} | Firebase chargé : ${!!window.firebaseDB}`,
     infosEcranDiagnostic(),
@@ -2609,9 +2609,9 @@ function textePourVoix(brut){
   return String(brut || "")
     .replace(regexEmojisVoix, " ")
     .replace(/\b(Il|Elle|il|elle)\/(il|elle)\b/g, "$1 ou $2")
-    .replace(/\b(\d+) cl\b/g, estAnglais ? "$1 centilitres" : estEspanol ? "$1 centilitros" : "$1 cl")
+    .replace(/\b(\d+) cl\b/g, (m, n) => estAnglais ? n + " centilitres" : estEspanol ? n + " centilitros" : estItalien ? n + (n === "1" ? " centilitro" : " centilitri") : n + " cl")
     .replace(/\+(\d+)/g, "plus $1")
-    .replace(/(\d+)\s*\/\s*(\d+)/g, estAnglais ? "$1 out of $2" : estEspanol ? "$1 de $2" : "$1 sur $2")
+    .replace(/(\d+)\s*\/\s*(\d+)/g, estAnglais ? "$1 out of $2" : estEspanol ? "$1 de $2" : estItalien ? "$1 su $2" : "$1 sur $2")
     .replace(/\s+/g, " ").replace(/\s+([.,!?])/g, "$1").replace(/([!?])\./g, "$1").trim();
 }
 
@@ -2622,8 +2622,8 @@ function noteVoix(v){
   const nom = `${v.name || ""} ${v.voiceURI || ""}`;
   let n = 0;
   if (/premium|enhanced|am[ée]lior[ée]e?|neural|natural|naturelle/i.test(nom)) n += 100;
-  const langueVoix = estAnglais ? "en" : estEspanol ? "es" : "fr";
-  const regionVoix = estAnglais ? "US" : estEspanol ? "ES" : "FR";
+  const langueVoix = LANGUE;
+  const regionVoix = estAnglais ? "US" : estEspanol ? "ES" : estItalien ? "IT" : "FR";
   if ((new RegExp("^" + langueVoix + "[-_]" + regionVoix + "$", "i")).test(v.lang)) n += 20;
   else if ((new RegExp("^" + langueVoix + "$", "i")).test(v.lang)) n += 10;
   if (v.localService) n += 5;
@@ -2634,7 +2634,7 @@ function noteVoix(v){
 function meilleureVoixFr(){
   ecouterChangementDeVoix();
   if (voixFrCherchee && voixFrChoisie) return voixFrChoisie;
-  const langueVoix = estAnglais ? /^en/i : estEspanol ? /^es/i : /^fr/i;
+  const langueVoix = estAnglais ? /^en/i : estEspanol ? /^es/i : estItalien ? /^it/i : /^fr/i;
   const voix = (window.speechSynthesis.getVoices() || []).filter((v) => langueVoix.test(v.lang)); // (voix de la langue du jeu)
   voixFrCherchee = voix.length > 0; // (liste encore vide : on redemande à la prochaine lecture)
   voixFrChoisie = voix.length ? voix.slice().sort((a, b) => noteVoix(b) - noteVoix(a))[0] : null;
@@ -2658,7 +2658,7 @@ function dire(brut, force = false, vitesse = null){
   try {
     window.speechSynthesis.cancel();
     const lecture = new SpeechSynthesisUtterance(texte);
-    lecture.lang = estAnglais ? "en-US" : estEspanol ? "es-ES" : "fr-FR";
+    lecture.lang = LOCALE_LANGUE;
     lecture.rate = Math.min(1.6, Math.max(0.6, Number(vitesse) || vitesseVoix));
     const voixFr = meilleureVoixFr();
     if (voixFr) lecture.voice = voixFr;

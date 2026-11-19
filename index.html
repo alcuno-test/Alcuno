@@ -9,7 +9,7 @@
          (Avant : « ?t= » + l'heure, différent à chaque lancement : tout le jeu était retéléchargé à chaque ouverture,
          environ 400 Ko. Maintenant, tant que la version ne change pas, le navigateur se contente de vérifier.) -->
     <script>
-        window.VERSION_FICHIERS = "9.96.7";
+        window.VERSION_FICHIERS = "9.96.8";
         // (ailleurs que sur le vrai site — poste de dev, appli de test — : l'heure en plus, comme avant, pour voir tout de
         // suite un fichier modifié sans changer de version)
         window.ANTI_CACHE = /(^|\.)github\.io$/i.test(location.hostname) ? window.VERSION_FICHIERS : window.VERSION_FICHIERS + "-" + Date.now();
@@ -31,6 +31,7 @@
             var langueChoisie = localStorage.getItem("alcuno_langue");
             if (langueChoisie === "en") window.FICHIERS_JEU.unshift("js/en.js");
             else if (langueChoisie === "es") window.FICHIERS_JEU.unshift("js/es.js");
+            else if (langueChoisie === "it") window.FICHIERS_JEU.unshift("js/it.js");
         } catch (e) {}
         window.FICHIERS_JEU.forEach(function (f) {
             document.write('<link rel="preload" as="script" href="' + f + '?v=' + window.ANTI_CACHE + '">');
@@ -70,15 +71,18 @@
                 try { langueErreur = localStorage.getItem("alcuno_langue") || ""; } catch (e) {}
                 var ancienTexte = langueErreur === "es"
                     ? 'Es probable que tu teléfono o navegador sea demasiado antiguo para cargar el juego.<br><span style="font-size:15px;font-weight:700;opacity:.8">Actualiza tu navegador o sistema, o juega desde otro teléfono.'
-                    : langueErreur === "en"
-                        ? 'Your phone or browser may be too old to load the game.<br><span style="font-size:15px;font-weight:700;opacity:.8">Update your browser or system, or play on another phone.'
-                        : 'Ton téléphone ou ton navigateur est probablement trop ancien pour charger le jeu.<br><span style="font-size:15px;font-weight:700;opacity:.8">Mets à jour ton navigateur ou ton système, ou joue depuis un autre téléphone.';
+                    : langueErreur === "it"
+                        ? 'Il tuo telefono o browser potrebbe essere troppo vecchio per caricare il gioco.<br><span style="font-size:15px;font-weight:700;opacity:.8">Aggiorna il browser o il sistema, oppure gioca da un altro telefono.'
+                        : langueErreur === "en"
+                            ? 'Your phone or browser may be too old to load the game.<br><span style="font-size:15px;font-weight:700;opacity:.8">Update your browser or system, or play on another phone.'
+                            : 'Ton téléphone ou ton navigateur est probablement trop ancien pour charger le jeu.<br><span style="font-size:15px;font-weight:700;opacity:.8">Mets à jour ton navigateur ou ton système, ou joue depuis un autre téléphone.';
                 var texte = ancien
                     ? ancienTexte + (nav ? '<br>(' + nav + ')' : '') + '</span>'
                     : langueErreur === "es" ? 'No se pudo cargar el juego.<br>Comprueba tu conexión a internet.'
-                        : langueErreur === "en" ? 'The game could not be loaded.<br>Check your internet connection.'
-                            : 'Le jeu n’a pas pu se charger.<br>Vérifie ta connexion internet.';
-                var reessayer = langueErreur === "es" ? "Reintentar" : langueErreur === "en" ? "Try again" : "Réessayer";
+                        : langueErreur === "it" ? 'Impossibile caricare il gioco.<br>Controlla la connessione a internet.'
+                            : langueErreur === "en" ? 'The game could not be loaded.<br>Check your internet connection.'
+                                : 'Le jeu n’a pas pu se charger.<br>Vérifie ta connexion internet.';
+                var reessayer = langueErreur === "es" ? "Reintentar" : langueErreur === "it" ? "Riprova" : langueErreur === "en" ? "Try again" : "Réessayer";
                 m.innerHTML = '<div style="font-size:42px">' + (ancien ? '📱' : '📶') + '</div>' +
                     '<div>' + texte + '</div>' +
                     '<button type="button" style="padding:16px 34px;border:none;border-radius:14px;background:#ffcc00;' +
@@ -583,7 +587,7 @@
                     <svg class="optionChevron" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
                 </button>
 
-                <!-- Langue du jeu : français ou anglais (js/langue.js ; la page se recharge au changement) -->
+                <!-- Langue du jeu (js/langue.js ; la page se recharge au changement) -->
                 <div class="blocReglage" data-cle="langue">
                     <div class="optionReglage">
                         <span class="optionTexte"><span class="optionTitre">Langue</span></span>
@@ -591,6 +595,7 @@
                             <button type="button" class="chipLangue actif" data-langue="fr" aria-pressed="true">Français</button>
                             <button type="button" class="chipLangue" data-langue="en" aria-pressed="false">English</button>
                             <button type="button" class="chipLangue" data-langue="es" aria-pressed="false">Español</button>
+                            <button type="button" class="chipLangue" data-langue="it" aria-pressed="false">Italiano</button>
                         </span>
                     </div>
                 </div>

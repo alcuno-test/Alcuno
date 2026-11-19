@@ -977,7 +977,7 @@ function dessinerTele(ecran, etat){
   // Langue du téléphone qui caste : la télé la prend (sinon : règles en anglais venues du téléphone, libellés de la télé en
   // français). La langue se choisit au chargement, donc on recharge ; le code de la télé est gardé (sessionStorage), le
   // téléphone reste relié. Une seule tentative par minute, au cas où le réglage ne s'enregistrerait pas.
-  if ((etat.langue === "en" || etat.langue === "fr") && etat.langue !== LANGUE) {
+  if (["en", "es", "it", "fr"].includes(etat.langue) && etat.langue !== LANGUE) {
     let dernier = 0;
     try { dernier = Number(sessionStorage.getItem("alcuno_tele_langue_a")) || 0; } catch (e) {}
     if (Date.now() - dernier > 60000) {

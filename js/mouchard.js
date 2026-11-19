@@ -28,7 +28,7 @@ function sauverMouchard(){
 function noter(texte){
   if (!mouchardActif) return;
   const d = new Date();
-  const heure = d.toLocaleTimeString("fr-FR") + "." + String(d.getMilliseconds()).padStart(3, "0");
+  const heure = d.toLocaleTimeString(LOCALE_LANGUE) + "." + String(d.getMilliseconds()).padStart(3, "0");
   lignesMouchard.push(`${heure} ${texte}`);
   if (lignesMouchard.length > MAX_LIGNES_MOUCHARD) lignesMouchard.splice(0, lignesMouchard.length - MAX_LIGNES_MOUCHARD);
   if (!sauvegardeMouchardPrevue) sauvegardeMouchardPrevue = setTimeout(sauverMouchard, 2000);

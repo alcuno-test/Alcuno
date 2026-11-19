@@ -129,7 +129,7 @@
 (function(){
   let langue;
   try { langue = localStorage.getItem("alcuno_langue"); } catch (e) { return; }
-  if(langue !== "en" && langue !== "es") return;
+  if(langue !== "en" && langue !== "es" && langue !== "it") return;
   const charger = (fichier, termine) => {
     const script = document.createElement("script");
     script.src = "js/" + fichier + ".js";

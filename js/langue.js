@@ -1,19 +1,21 @@
 // =============================================================================================
-// ALCUNO : langue du jeu (français, anglais ou espagnol). Chargé en tout premier (index.html, FICHIERS_JEU).
-// Le français est écrit dans le code ; les autres langues sont dans js/en.js et js/es.js (texte français -> traduction), chargées
+// ALCUNO : langue du jeu (français, anglais, espagnol ou italien). Chargé en tout premier (index.html, FICHIERS_JEU).
+// Le français est écrit dans le code ; les autres langues sont dans js/en.js, js/es.js et js/it.js (texte français -> traduction), chargées
 // seulement quand elle est choisie. tr("texte") ou tr`texte ${variable}` rend le texte dans la langue
 // du jeu ; un texte absent du dictionnaire reste en français. La langue se choisit dans Réglages > Langue : la
 // page se recharge (les textes sont posés un peu partout au chargement).
-// Ajouter un texte : l'écrire en français dans tr(...), puis ajouter sa traduction dans js/en.js et js/es.js
+// Ajouter un texte : l'écrire en français dans tr(...), puis ajouter sa traduction dans les dictionnaires anglais, espagnol et italien
 // (clé : le texte français, avec {0}, {1}… à la place des ${...}).
 // =============================================================================================
 const CLE_LANGUE = "alcuno_langue";
 const LANGUE = (() => {
-  try { const l = localStorage.getItem(CLE_LANGUE); return l === "en" || l === "es" ? l : "fr"; } catch (e) { return "fr"; }
+  try { const l = localStorage.getItem(CLE_LANGUE); return l === "en" || l === "es" || l === "it" ? l : "fr"; } catch (e) { return "fr"; }
 })();
-const TEXTES_LANGUE = (LANGUE === "en" && window.TEXTES_EN) || (LANGUE === "es" && window.TEXTES_ES) || null;
+const TEXTES_LANGUE = (LANGUE === "en" && window.TEXTES_EN) || (LANGUE === "es" && window.TEXTES_ES) || (LANGUE === "it" && window.TEXTES_IT) || null;
 const estAnglais = LANGUE === "en";
 const estEspanol = LANGUE === "es";
+const estItalien = LANGUE === "it";
+const LOCALE_LANGUE = estAnglais ? "en-US" : estEspanol ? "es-ES" : estItalien ? "it-IT" : "fr-FR";
 
 // tr("Retour") -> "Back" ; tr`Tour de ${nom}` -> cherche « Tour de {0} »
 function tr(a, ...valeurs){
@@ -26,7 +28,29 @@ function tr(a, ...valeurs){
     let cle = "";
     for (let i = 0; i < a.length; i++) cle += a[i] + (i < a.length - 1 ? "{" + i + "}" : "");
     const t = TEXTES_LANGUE[cle.replace(/\n[ \t]*/g, "\n")];
-    if (t !== undefined) return t.replace(/\{(\d+)\}/g, (m, i) => (i < valeurs.length ? String(valeurs[i]) : m));
+    if (t !== undefined) {
+      let resultat = "";
+      let positionPrecedente = 0;
+      t.replace(/\{(\d+)\}/g, (m, i, position) => {
+        let segment = t.slice(positionPrecedente, position);
+        if(i >= valeurs.length){
+          resultat += segment + m;
+        }else{
+          const valeur = String(valeurs[i]);
+          const finalesItaliennes = { a: "e", o: "i", e: "i" };
+          const finale = segment.slice(-1).toLowerCase();
+          if(estItalien && valeur === "s" && finalesItaliennes[finale]){
+            segment = segment.slice(0, -1) + finalesItaliennes[finale];
+            resultat += segment;
+          }else{
+            resultat += segment + valeur;
+          }
+        }
+        positionPrecedente = position + m.length;
+        return m;
+      });
+      return resultat + t.slice(positionPrecedente);
+    }
   }
   let texte = "";
   for (let i = 0; i < a.length; i++) texte += a[i] + (i < valeurs.length ? String(valeurs[i]) : "");
@@ -36,10 +60,12 @@ function tr(a, ...valeurs){
 // « 3 gorgées », « 2 annulées » : accord au pluriel en français et espagnol, formes anglaises irrégulières à part
 const MOTS_INVARIABLES_EN = ["cancelled"];
 const PLURIELS_ES = { "anulación": "anulaciones", "vez": "veces", "luz": "luces", "voz": "voces" };
+const PLURIELS_IT = { "sorso": "sorsi", "ricetta": "ricette" };
 function trPluriel(n, mot){
   const m = tr(mot);
   if(n === 1 || (estAnglais && MOTS_INVARIABLES_EN.includes(m))) return `${n} ${m}`;
   if(estEspanol) return `${n} ${PLURIELS_ES[m] || m + (/[aeiouáéíóú]$/i.test(m) ? "s" : "es")}`;
+  if(estItalien) return `${n} ${PLURIELS_IT[m] || m.replace(/o$/i, "i").replace(/a$/i, "e").replace(/e$/i, "i")}`;
   return `${n} ${m}${estAnglais && /s$/.test(m) ? "es" : "s"}`;
 }
 
@@ -81,7 +107,7 @@ if (TEXTES_LANGUE) {
 
 // Réglages > Langue : on retient le choix et on recharge la page
 function choisirLangue(langue){
-  const nouvelle = langue === "en" || langue === "es" ? langue : "fr";
+  const nouvelle = langue === "en" || langue === "es" || langue === "it" ? langue : "fr";
   if (nouvelle === LANGUE) return;
   try { localStorage.setItem(CLE_LANGUE, nouvelle); } catch (e) { return; }
   // Même chemin que le changement de thème (js/reglages.js) : rechargerPage() (js/retour-demarrage.js) revient d'abord à la

@@ -72,7 +72,7 @@ function remplirListeBar(zone){
   // (recettes traduites selon la langue du jeu)
   const favoris = lireFavorisBar();
   const trouves = cocktailsBar(typeof configDistante === "object" ? configDistante : null)
-    .map((c) => (estAnglais || estEspanol ? cocktailDansLaLangue(c) : c)).filter((c) => (!familleBar || (familleBar === "fav" ? favoris.has(c.id) : c.g === familleBar)) &&
+    .map((c) => (estAnglais || estEspanol || estItalien ? cocktailDansLaLangue(c) : c)).filter((c) => (!familleBar || (familleBar === "fav" ? favoris.has(c.id) : c.g === familleBar)) &&
     (!cherche || simplifierTexteBar(c.n + " " + c.i.join(" ")).includes(cherche)));
   if (!trouves.length) {
     const vide = elementExtras("div", "blocRegles");
@@ -216,7 +216,7 @@ try {
 function garderEthylo(){
   try { localStorage.setItem(CLE_ETHYLO, JSON.stringify({ poids: ethylo.poids, sexe: ethylo.sexe, probatoire: ethylo.probatoire })); } catch (e) {}
 }
-function texteDegre(deg){ return estAnglais || estEspanol ? deg + "%" : String(deg).replace(".", ",") + "°"; }
+function texteDegre(deg){ return estAnglais || estEspanol || estItalien ? deg + "%" : String(deg).replace(".", ",") + "°"; }
 
 // Tous les verres comptés, en grammes d'alcool pur (un nombre par verre)
 function grammesBus(e){
@@ -385,7 +385,7 @@ function glissiereEthylo(titre, min, max, pas, valeur, texte, siChange, o){
 // Heure de l'horloge du téléphone, il y a tant de minutes : « 21 h 30 »
 function heureIlYa(minutes){
   const d = new Date(Date.now() - minutes * 60000);
-  return `${d.getHours()}${estAnglais || estEspanol ? ":" : " h "}${String(d.getMinutes()).padStart(2, "0")}`;
+  return `${d.getHours()}${estAnglais || estEspanol || estItalien ? ":" : " h "}${String(d.getMinutes()).padStart(2, "0")}`;
 }
 
 // sansSon : écran redessiné (« Tout remettre à zéro »), sans rejouer le son d'ouverture
@@ -518,7 +518,7 @@ function ouvrirEthylo(sansSon){
   };
   // (graduations tous les 2 degrés ; les demi-degrés restent possibles entre deux)
   const graduationsDegre = [];
-  for (let v = DEGRE_BIERE_MIN; v <= DEGRE_BIERE_MAX; v += 4) graduationsDegre.push({ v, grand: true, texte: v + (estAnglais || estEspanol ? "%" : "°") });
+  for (let v = DEGRE_BIERE_MIN; v <= DEGRE_BIERE_MAX; v += 4) graduationsDegre.push({ v, grand: true, texte: v + (estAnglais || estEspanol || estItalien ? "%" : "°") });
   const degre = glissiereEthylo(tr("Degré de la bière"), DEGRE_BIERE_MIN, DEGRE_BIERE_MAX, 0.5, ethylo.degBiere, texteDegre,
     (v) => { ethylo.degBiere = v; majBieres(); },
     { estPalier: (v) => v % 5 === 0, graduations: graduationsDegre });
@@ -556,7 +556,7 @@ function ouvrirEthylo(sansSon){
     const ilYa = minuteDe(t);
     return ilYa <= 0
       ? [tr("maintenant"), tr("donc à ") + heureIlYa(0)]
-      : [estAnglais ? texteDureeEthylo(ilYa) + " ago" : estEspanol ? "hace " + texteDureeEthylo(ilYa) : "il y a " + texteDureeEthylo(ilYa), tr("donc à ") + heureIlYa(ilYa)];
+      : [estAnglais ? texteDureeEthylo(ilYa) + " ago" : estEspanol ? "hace " + texteDureeEthylo(ilYa) : estItalien ? texteDureeEthylo(ilYa) + " fa" : "il y a " + texteDureeEthylo(ilYa), tr("donc à ") + heureIlYa(ilYa)];
   };
   const curseurQuand = (titre, cle) => glissiereEthylo(titre, 0, DUREE_MAX_ETHYLO, 1, DUREE_MAX_ETHYLO - Math.min(DUREE_MAX_ETHYLO, ethylo[cle]),
     texteQuand, (t) => { ethylo[cle] = minuteDe(t); maj(); }, { aimant: aimantHeure, estPalier: estDemiHeure, graduations: graduationsHeures });

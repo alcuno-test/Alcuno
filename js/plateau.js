@@ -28,11 +28,10 @@ const messageTexte = document.getElementById("messageTexte");
 // des joueurs sont tapés par les joueurs. innerText redonne le texte ligne par ligne (télé, tests).
 // Ligne de texte avec les gorgées (et le cul sec) en <em> doré, construite en DOM
 function remplirAvecGorgees(parent, ligne){
-  const motifGorgees = estAnglais ? /(\d+ sips?|a CHUG)/ : estEspanol
-    ? new RegExp("(\\d+\\s+(?:" + [trPluriel(2, "gorgée").replace(/^2\s+/, ""), tr("gorgée")]
+  const motifGorgees = estAnglais ? /(\d+ sips?|a CHUG)/ : new RegExp(
+    "(\\d+\\s+(?:" + [trPluriel(2, "gorgée").replace(/^2\s+/, ""), tr("gorgée")]
       .map((mot) => mot.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|") + ")|" +
-      tr("un CUL SEC").replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "i")
-    : /(\d+ gorgées?|un CUL SEC)/;
+      tr("un CUL SEC").replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "i");
   ligne.split(motifGorgees).forEach((morceau, i) => {
     if(!morceau) return;
     if(i % 2){
