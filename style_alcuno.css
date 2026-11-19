@@ -9044,7 +9044,7 @@ html #choixMode .annonceAccueil #btnAnnonceFermer:active{ background: rgba(0,0,0
 html[data-theme="givre"] #stickyJoueurActif #btnReglagesJeu svg{ stroke: #1a9be0; }
 html[data-theme="soleil"] #stickyJoueurActif #btnReglagesJeu svg{ stroke: var(--soleil-peche); }
 html.gaucher #stickyJoueurActif #btnReglagesJeu{ order: -1; margin: -6px 0 -6px -6px; }
-html.reglages-en-partie :is([data-cle="faces-cachees"], [data-cle="mode-pj"], [data-cle="express"], [data-cle="ecran-tele"], [data-cle="partie-memoire"]){
+html.reglages-en-partie :is([data-cle="langue"], [data-cle="faces-cachees"], [data-cle="mode-pj"], [data-cle="express"], [data-cle="ecran-tele"], [data-cle="partie-memoire"]){
   opacity: 0.4;
   filter: grayscale(1);
   pointer-events: none;

@@ -7,9 +7,9 @@
 // Chaque réglage est retenu sur le téléphone (stockage local du navigateur)
 const ecranReglages = document.getElementById("ecranReglages");
 
-// Réglages ouverts pendant une partie : ceux qui pourraient la casser (faces cachées,
+// Réglages ouverts pendant une partie : ceux qui pourraient la casser (langue, faces cachées,
 // écran télé, partie en mémoire) sont grisés et bloqués ; tout le reste (thème, sons, voix, gaucher…) marche
-const REGLAGES_BLOQUES_EN_PARTIE = ["faces-cachees", "ecran-tele", "partie-memoire"];
+const REGLAGES_BLOQUES_EN_PARTIE = ["langue", "faces-cachees", "ecran-tele", "partie-memoire"];
 function majReglagesEnPartie(){
   const enPartie = partieLancee;
   document.documentElement.classList.toggle("reglages-en-partie", enPartie);
