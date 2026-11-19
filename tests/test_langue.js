@@ -68,6 +68,10 @@ for(const cle of clesDefis){
   assert.ok(anglais[cle] && espagnol[cle], `traduction du défi manquante : ${cle}`);
   assert.ok(italien[cle], `traduction italienne du défi manquante : ${cle}`);
 }
+for(const cle of ["Il est dans Réglages › Thèmes.", "Bravo, album complet !"]){
+  assert.ok(anglais[cle] && espagnol[cle], `traduction de l'album manquante : ${cle}`);
+  assert.ok(italien[cle], `traduction italienne de l'album manquante : ${cle}`);
+}
 for(const cle of [
   "Toute personne qui connaît le code d'une partie peut la lire",
   "La langue de cette page suit celle de l'application."
