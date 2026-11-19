@@ -21,6 +21,10 @@ function majReglagesEnPartie(){
       if (el.matches("input, button")) el.disabled = enPartie;
     });
   });
+  ecranReglages.querySelectorAll('.enteteGroupe[data-groupe="langue"], .tuileReglage[data-groupe="langue"]').forEach((el) => {
+    el.setAttribute("aria-disabled", enPartie ? "true" : "false");
+    el.disabled = enPartie;
+  });
 }
 
 function ouvrirReglages(){

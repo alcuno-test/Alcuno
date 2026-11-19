@@ -9049,6 +9049,11 @@ html.reglages-en-partie :is([data-cle="langue"], [data-cle="faces-cachees"], [da
   filter: grayscale(1);
   pointer-events: none;
 }
+html.reglages-en-partie #ecranReglages :is(.enteteGroupe[data-groupe="langue"], .tuileReglage[data-groupe="langue"]){
+  opacity: 0.4 !important;
+  filter: grayscale(1);
+  pointer-events: none;
+}
 
 /* Nom du joueur dont c'est le tour, dans la bannière « Tour de » : jusqu'à 2 lignes avant d'être coupé (avec le ⚙, une seule
    ligne ne laissait que « PIGEON (Orig… »), et « +1 » ne se casse jamais en « + » / « 1 » */
