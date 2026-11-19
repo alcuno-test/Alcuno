@@ -1690,7 +1690,7 @@ function afficherJoueurs(){
     const lien = partenaireHot(j) ? tr` <span class="badge-lien" title="Lié par Cupidon">💘</span>` : ""; // (mode hot)
     const classePause = estEnPause(j) ? " joueur-en-pause" : "";
     if(i === indexPigeon){
-      return `<div class="joueur-ligne joueur-ligne-pigeon${classePause}"><span class="joueur-nom${classeNomLong(nomPigeonOriginal)}"><strong>PIGEON</strong> (${echapperHtml(avecCouronne(nomPigeonOriginal))})</span>${lien}${bonus}${pause}${badgeDeconnecte(j)}</div>`;
+      return `<div class="joueur-ligne joueur-ligne-pigeon${classePause}"><span class="joueur-nom${classeNomLong(nomPigeonOriginal)}"><strong>${echapperHtml(tr("PIGEON"))}</strong> (${echapperHtml(avecCouronne(nomPigeonOriginal))})</span>${lien}${bonus}${pause}${badgeDeconnecte(j)}</div>`;
     }
 
     return `<div class="joueur-ligne${classePause}"><span class="joueur-nom${classeNomLong(j)}">${echapperHtml(avecCouronne(j))}</span>${lien}${bonus}${pause}${badgeDeconnecte(j)}</div>`;

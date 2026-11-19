@@ -49,6 +49,7 @@ const clesDefis = [
   "Choisis un niveau.",
   "version",
   "mouchard actif",
+  "PIGEON",
   "défi personnalisé",
   "défis personnalisés"
 ];
@@ -83,6 +84,7 @@ assert.equal(vm.runInContext("LANGUE", contexte), "es");
 assert.equal(document.documentElement.lang, "es");
 assert.equal(vm.runInContext("tr(cleTest)", contexte), espagnol[contexte.cleTest]);
 assert.equal(vm.runInContext('tr("clé inconnue")', contexte), "clé inconnue");
+assert.equal(vm.runInContext('tr("PIGEON")', contexte), "PALOMA");
 const sorbo = vm.runInContext('tr("gorgée")', contexte);
 assert.equal(vm.runInContext('trPluriel(1, "gorgée")', contexte), `1 ${sorbo}`);
 assert.equal(vm.runInContext('trPluriel(2, "gorgée")', contexte), `2 ${sorbo}s`);

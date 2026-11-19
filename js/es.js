@@ -682,6 +682,7 @@ window.TEXTES_ES = {
 "Où changer le thème du jeu ?": "¿Dónde puedo cambiar el tema del juego?",
 "Où sont les règles et les réglages": "Dónde están las reglas y los ajustes",
 "PAUSE": "PAUSA",
+"PIGEON": "PALOMA",
 "PIGEON ({0})": "PALOMA ({0})",
 "PJ": "PJ",
 "PLUS 4\nDistribue {0}": "MÁS 4\nReparte {0}",
