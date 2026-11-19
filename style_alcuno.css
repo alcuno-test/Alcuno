@@ -3381,9 +3381,15 @@ body.rattrapage [id^="overlay"] *{
 }
 
 #bandeauMiseAJour .plusTard{
-  flex: 0 0 auto;
-  padding: 6px 8px;
+  flex: 0 0 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
   border: none;
+  border-radius: 50%;
   background: none;
   color: var(--bandeau-texte);
   opacity: 0.6;
