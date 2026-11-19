@@ -9,7 +9,7 @@
          (Avant : « ?t= » + l'heure, différent à chaque lancement : tout le jeu était retéléchargé à chaque ouverture,
          environ 400 Ko. Maintenant, tant que la version ne change pas, le navigateur se contente de vérifier.) -->
     <script>
-        window.VERSION_FICHIERS = "9.96.14";
+        window.VERSION_FICHIERS = "9.96.15";
         // (ailleurs que sur le vrai site — poste de dev, appli de test — : l'heure en plus, comme avant, pour voir tout de
         // suite un fichier modifié sans changer de version)
         window.ANTI_CACHE = /(^|\.)github\.io$/i.test(location.hostname) ? window.VERSION_FICHIERS : window.VERSION_FICHIERS + "-" + Date.now();
@@ -590,7 +590,7 @@
                 <!-- Langue du jeu (js/langue.js ; la page se recharge au changement) -->
                 <div class="blocReglage" data-cle="langue">
                     <div class="optionReglage">
-                        <span class="optionTexte"><span class="optionTitre">Langue</span></span>
+                        <span class="optionTexte"><span class="optionTitre">Langues</span></span>
                         <span class="choixLangue">
                             <button type="button" class="chipLangue actif" data-langue="fr" aria-pressed="true">Français</button>
                             <button type="button" class="chipLangue" data-langue="en" aria-pressed="false">English</button>
