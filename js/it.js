@@ -571,6 +571,7 @@ window.TEXTES_IT = {
 "Lancement…": "Lancio…",
 "Lancer la partie": "Inizia il gioco",
 "Langue": "Lingua",
+"Langues": "Lingue",
 "Lapin": "Coniglio",
 "Le Bar": "Il Bar",
 "Le Bar : recettes de cocktails": "Le Bar: ricette di cocktail",

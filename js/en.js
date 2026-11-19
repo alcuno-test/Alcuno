@@ -571,6 +571,7 @@ window.TEXTES_EN = {
 "Lancement…": "Starting…",
 "Lancer la partie": "Start the game",
 "Langue": "Language",
+"Langues": "Languages",
 "Lapin": "Bunny",
 "Le Bar": "The Bar",
 "Le Bar : recettes de cocktails": "The Bar: cocktail recipes",

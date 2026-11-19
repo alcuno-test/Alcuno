@@ -132,5 +132,8 @@ assert.equal(italien["1 c. à café de sucre"], "1 cucchiaino di zucchero");
 assert.equal(italien["Mode en ligne"], "Modalità online");
 assert.equal(italien["Ouvrir"], "Apri");
 assert.ok(!italien["Envoi du mouchard…"].includes("cookie"));
+assert.equal(anglais["Langues"], "Languages");
+assert.equal(espagnol["Langues"], "Idiomas");
+assert.equal(italien["Langues"], "Lingue");
 
 console.log(`Langues espagnole et italienne : ${Object.keys(espagnol).length} / ${Object.keys(italien).length} traductions et runtimes vérifiés.`);

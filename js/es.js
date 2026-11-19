@@ -571,6 +571,7 @@ window.TEXTES_ES = {
 "Lancement…": "Iniciando…",
 "Lancer la partie": "Iniciar la partida",
 "Langue": "Idioma",
+"Langues": "Idiomas",
 "Lapin": "Conejo",
 "Le Bar": "El bar",
 "Le Bar : recettes de cocktails": "El bar: recetas de cócteles",
