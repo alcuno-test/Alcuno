@@ -9346,9 +9346,11 @@ html[data-theme="soleil"] body #overlayRegleUnique .regle-detail:is(.regle-boit,
 /* « Ta partie » : ni sélecteur de vue ni tuiles */
 #ecranReglages.vue-options #tuilesReglages{ display: none !important; }
 /* Langue */
-#ecranReglages .choixLangue{ display: flex; gap: 8px; flex: none; }
+#ecranReglages .choixLangue{ display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; flex: none; width: 100%; }
+#ecranReglages [data-cle="langue"] > .optionReglage{ flex-direction: column; align-items: stretch; gap: 12px; }
+#ecranReglages [data-cle="langue"] .optionTexte{ flex: none; }
 #ecranReglages .chipLangue{
-  padding: 8px 12px; border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: none;
+  min-height: 40px; padding: 8px 12px; border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: none;
   background: rgba(255,255,255,.08); color: inherit; border: 1px solid rgba(255,255,255,.25);
 }
 #ecranReglages .chipLangue.actif{ background: var(--accent-reglage, #FFD700); color: var(--accent-encre, #3a2a00); border-color: var(--accent-reglage, #FFD700); }
