@@ -83,7 +83,7 @@
     const note = document.getElementById("noteDefisPersonnels");
     if(note) {
       const n = Object.keys(lire()).length;
-      note.textContent = n ? `${n} défi${n > 1 ? "s" : ""} personnalisé${n > 1 ? "s" : ""}.` : "Ajoute tes propres défis pour les modes hot et hard.";
+      note.textContent = n ? `${n} ${tr(n === 1 ? "défi personnalisé" : "défis personnalisés")}.` : tr("Ajoute tes propres défis pour les modes hot et hard.");
     }
   }
   global.DefisPersonnels = { CLE, NIVEAUX, lire, valider, enregistrer, supprimer, remplacer, pourPartie, apercu, majCompteur };
@@ -103,15 +103,15 @@ if(typeof document !== "undefined" && !document.documentElement.classList.contai
   function majApercu(){
     if(!apercu) return;
     apercu.textContent = texte && texte.value.trim()
-      ? "Aperçu : " + DefisPersonnels.apercu(texte.value.trim())
-      : "Aperçu : …";
+      ? tr("Aperçu : ") + DefisPersonnels.apercu(texte.value.trim())
+      : tr("Aperçu : …");
   }
   function effacerFormulaire(){
     if(id) id.value = "";
     if(texte) texte.value = "";
     if(niveau) niveau.value = "A";
     if(erreur) erreur.textContent = "";
-    if(bouton) bouton.textContent = "Ajouter le défi";
+    if(bouton) bouton.textContent = tr("Ajouter le défi");
     majApercu();
   }
   function dessiner(){
@@ -127,19 +127,19 @@ if(typeof document !== "undefined" && !document.documentElement.classList.contai
       const actions = document.createElement("div");
       const modifier = document.createElement("button");
       modifier.type = "button";
-      modifier.textContent = "Modifier";
+      modifier.textContent = tr("Modifier");
       modifier.addEventListener("click", () => {
         id.value = cle;
         texte.value = d.t;
         niveau.value = d.n;
-        bouton.textContent = "Enregistrer";
+        bouton.textContent = tr("Enregistrer");
         majApercu();
         texte.focus();
         if(erreur) erreur.textContent = "";
       });
       const supprimer = document.createElement("button");
       supprimer.type = "button";
-      supprimer.textContent = "Supprimer";
+      supprimer.textContent = tr("Supprimer");
       supprimer.addEventListener("click", () => DefisPersonnels.supprimer(cle));
       actions.append(modifier, supprimer);
       carte.append(titre, actions);
@@ -149,12 +149,12 @@ if(typeof document !== "undefined" && !document.documentElement.classList.contai
   }
   if(bouton) bouton.addEventListener("click", () => {
     const r = DefisPersonnels.enregistrer(niveau ? niveau.value : "A", texte ? texte.value : "", id ? id.value : "");
-    if(r.erreur) { if(erreur) erreur.textContent = r.erreur; return; }
+    if(r.erreur) { if(erreur) erreur.textContent = tr(r.erreur); return; }
     effacerFormulaire();
     dessiner();
   });
   if(texte) texte.addEventListener("input", () => {
-    if(erreur) erreur.textContent = DefisPersonnels.valider(texte.value);
+    if(erreur) erreur.textContent = tr(DefisPersonnels.valider(texte.value));
     majApercu();
   });
   document.querySelectorAll("[data-inserer]").forEach((boutonInsertion) => {

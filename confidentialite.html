@@ -122,8 +122,25 @@
     <h2>Tes droits</h2>
     <p>Tu peux demander à savoir quelles données te concernent, à les faire corriger ou supprimer. Les statistiques ne sont rattachées qu'à un identifiant aléatoire stocké sur ton appareil, pas à ta personne : il est donc en pratique difficile de retrouver celles d'une personne précise. Pour supprimer ton profil Google, utilise le bouton des Réglages.</p>
     <p>Cette politique peut évoluer avec le jeu ; la date en haut de page indique la dernière mise à jour.</p>
-    <p><small>Cette page est en français.</small></p>
+    <p><small>La langue de cette page suit celle de l'application.</small></p>
   </section>
 </main>
+<script>
+(function(){
+  let langue;
+  try { langue = localStorage.getItem("alcuno_langue"); } catch (e) { return; }
+  if(langue !== "en" && langue !== "es") return;
+  const charger = (fichier, termine) => {
+    const script = document.createElement("script");
+    script.src = "js/" + fichier + ".js";
+    script.onload = termine;
+    script.onerror = () => console.error("Impossible de charger le dictionnaire " + fichier);
+    document.head.appendChild(script);
+  };
+  charger(langue, () => charger("langue", () => {
+    document.title = "Alcuno – " + tr("Politique de confidentialité");
+  }));
+})();
+</script>
 </body>
 </html>

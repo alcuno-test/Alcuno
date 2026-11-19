@@ -2141,7 +2141,7 @@ function texteDiagnostic(){
   ].join("\n");
 }
 
-document.getElementById("btnConfidentialite").addEventListener("click", () => { location.href = "confidentialite.html"; }); // (page à part : texte en français)
+document.getElementById("btnConfidentialite").addEventListener("click", () => { location.href = "confidentialite.html"; }); // (page à part, langue de l'application)
 
 document.getElementById("btnDiagnostic").addEventListener("click", () => {
   const texte = texteDiagnostic();
@@ -2609,9 +2609,9 @@ function textePourVoix(brut){
   return String(brut || "")
     .replace(regexEmojisVoix, " ")
     .replace(/\b(Il|Elle|il|elle)\/(il|elle)\b/g, "$1 ou $2")
-    .replace(/\b(\d+) cl\b/g, estAnglais ? "$1 centilitres" : "$1 cl")
+    .replace(/\b(\d+) cl\b/g, estAnglais ? "$1 centilitres" : estEspanol ? "$1 centilitros" : "$1 cl")
     .replace(/\+(\d+)/g, "plus $1")
-    .replace(/(\d+)\s*\/\s*(\d+)/g, estAnglais ? "$1 out of $2" : "$1 sur $2")
+    .replace(/(\d+)\s*\/\s*(\d+)/g, estAnglais ? "$1 out of $2" : estEspanol ? "$1 de $2" : "$1 sur $2")
     .replace(/\s+/g, " ").replace(/\s+([.,!?])/g, "$1").replace(/([!?])\./g, "$1").trim();
 }
 
@@ -2622,7 +2622,10 @@ function noteVoix(v){
   const nom = `${v.name || ""} ${v.voiceURI || ""}`;
   let n = 0;
   if (/premium|enhanced|am[ée]lior[ée]e?|neural|natural|naturelle/i.test(nom)) n += 100;
-  if ((estAnglais ? /^en[-_](US|GB)$/i : /^fr[-_]FR$/i).test(v.lang)) n += 20; else if ((estAnglais ? /^en$/i : /^fr$/i).test(v.lang)) n += 10;
+  const langueVoix = estAnglais ? "en" : estEspanol ? "es" : "fr";
+  const regionVoix = estAnglais ? "US" : estEspanol ? "ES" : "FR";
+  if ((new RegExp("^" + langueVoix + "[-_]" + regionVoix + "$", "i")).test(v.lang)) n += 20;
+  else if ((new RegExp("^" + langueVoix + "$", "i")).test(v.lang)) n += 10;
   if (v.localService) n += 5;
   if (/google/i.test(nom)) n += 3;
   if (v.default) n += 1;
@@ -2631,7 +2634,8 @@ function noteVoix(v){
 function meilleureVoixFr(){
   ecouterChangementDeVoix();
   if (voixFrCherchee && voixFrChoisie) return voixFrChoisie;
-  const voix = (window.speechSynthesis.getVoices() || []).filter((v) => (estAnglais ? /^en/i : /^fr/i).test(v.lang)); // (voix de la langue du jeu)
+  const langueVoix = estAnglais ? /^en/i : estEspanol ? /^es/i : /^fr/i;
+  const voix = (window.speechSynthesis.getVoices() || []).filter((v) => langueVoix.test(v.lang)); // (voix de la langue du jeu)
   voixFrCherchee = voix.length > 0; // (liste encore vide : on redemande à la prochaine lecture)
   voixFrChoisie = voix.length ? voix.slice().sort((a, b) => noteVoix(b) - noteVoix(a))[0] : null;
   return voixFrChoisie;
@@ -2654,7 +2658,7 @@ function dire(brut, force = false, vitesse = null){
   try {
     window.speechSynthesis.cancel();
     const lecture = new SpeechSynthesisUtterance(texte);
-    lecture.lang = estAnglais ? "en-US" : "fr-FR";
+    lecture.lang = estAnglais ? "en-US" : estEspanol ? "es-ES" : "fr-FR";
     lecture.rate = Math.min(1.6, Math.max(0.6, Number(vitesse) || vitesseVoix));
     const voixFr = meilleureVoixFr();
     if (voixFr) lecture.voice = voixFr;
