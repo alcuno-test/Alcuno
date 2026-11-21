@@ -24,12 +24,11 @@ for(const [nom, catalogue] of [["espagnol", espagnol], ["italien", italien]]){
     assert.ok(catalogue[cle].trim(), `${nom} : traduction vide : ${cle}`);
     const variables = (texte) => (texte.match(/\{\d+\}/g) || []).sort();
     const variablesTraduction = variables(catalogue[cle]);
-    if(nom === "italien"){
-      assert.ok(variables(traduction).every(v => variablesTraduction.includes(v)), `${nom} : variable anglaise manquante : ${cle}`);
-      assert.ok(variablesTraduction.every(v => variables(cle).includes(v)), `${nom} : variable absente du texte source : ${cle}`);
-    }else{
-      assert.deepEqual(variablesTraduction, variables(traduction), `${nom} : variables différentes : ${cle}`);
-    }
+    // Chaque variable du texte français doit être reprise, sauf les marques de pluriel collées à un mot (« carte{1} » = « s »
+    // ou rien) : une langue peut tourner la phrase autrement (« Cartas restantes: {0} »). Aucune variable inventée.
+    const marquesPluriel = (cle.match(/[A-Za-zÀ-ÿ]\{\d+\}/g) || []).map(m => m.slice(1));
+    assert.ok(variablesTraduction.every(v => variables(cle).includes(v)), `${nom} : variable absente du texte source : ${cle}`);
+    assert.ok(variables(cle).filter(v => !marquesPluriel.includes(v)).every(v => variablesTraduction.includes(v)), `${nom} : variable manquante : ${cle}`);
   }
 }
 
@@ -115,6 +114,10 @@ const sorbo = vm.runInContext('tr("gorgée")', contexte);
 assert.equal(vm.runInContext('trPluriel(1, "gorgée")', contexte), `1 ${sorbo}`);
 assert.equal(vm.runInContext('trPluriel(2, "gorgée")', contexte), `2 ${sorbo}s`);
 assert.equal(vm.runInContext('trPluriel(0, "gorgée")', contexte), `0 ${sorbo}s`);
+// pluriels espagnols : « sorbo » est masculin, « anulación » ne prend pas un simple « s »
+assert.equal(vm.runInContext('tr`${"3 sorbos"} (${2} annulée${"s"})`', contexte), "3 sorbos (2 anulados)");
+assert.equal(vm.runInContext('tr`${2} défi${"s"} relevé${"s"}`', contexte), "2 retos superados");
+assert.equal(vm.runInContext('tr`Tu as ${2} annulation${"s"}.`', contexte), "Anulaciones disponibles: 2.");
 
 const contexteItalien = vm.createContext({
   window: { TEXTES_IT: italien },
@@ -149,7 +152,8 @@ assert.ok(sourceReglages.includes("donjon: SONS_BDSM"), "thème BDSM : sons resp
 assert.ok(sourceReglages.includes("musique: SONS_SAXO"), "thème Fête de la musique : sons respectifs disponibles");
 assert.equal(vm.runInContext('trPluriel(2, "recette")', contexteItalien), "2 ricette");
 assert.equal(vm.runInContext('tr` gorgée${"s"}`', contexteItalien), " sorsi");
-assert.equal(vm.runInContext('tr`Il reste ${2} carte${"s"}`', contexteItalien), "Restano 2 carte");
+assert.equal(vm.runInContext('tr`Il reste ${2} carte${"s"}`', contexteItalien), "Carte rimaste: 2");
+assert.equal(vm.runInContext('tr`Il reste ${1} carte${""}`', contexteItalien), "Carte rimaste: 1");
 assert.equal(vm.runInContext('tr`${2} duel${"s"} gagné${"s"}`', contexteItalien), "2 duelli vinti");
 assert.equal(vm.runInContext('tr`Tu as ${2} annulation${"s"}.`', contexteItalien), "Hai 2 annullamenti.");
 assert.equal(italien["PIGEON"], "PICCIONE");

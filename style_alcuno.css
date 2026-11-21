@@ -5599,6 +5599,33 @@ html[data-theme="musique"] .ecranDefisPersonnels{ --defis-accent: #d9c9ff; }
 html[data-theme="patrick"] .ecranDefisPersonnels{ --defis-accent: #7dff9f; }
 html[data-theme="valentin"] .ecranDefisPersonnels{ --defis-accent: #ffb3cf; }
 html[data-theme="galaxie"] .ecranDefisPersonnels{ --defis-accent: #FFE81F; }
+/* Fond plein sous les textes (formulaire, cartes, phrase d'intro, titre de la liste) : sans lui, les décors des thèmes (notes de
+   musique, cœurs, trèfles, cookies…) et les dégradés clairs passaient à travers et gênaient la lecture. Mêmes couleurs que les
+   blocs de l'écran Réglages du thème, rendues opaques. Thèmes à fond uni : rien ne passe à travers, on garde la transparence. */
+.ecranDefisPersonnels{ --defis-fond: transparent; }
+html[data-theme="givre"] .ecranDefisPersonnels{ --defis-fond: #f5fafd; }
+html[data-theme="halloween"] .ecranDefisPersonnels{ --defis-fond: #160407; }
+html[data-theme="musique"] .ecranDefisPersonnels{ --defis-fond: #280e6c; }
+html[data-theme="justrose"] .ecranDefisPersonnels{ --defis-fond: #6a1e43; }
+html[data-theme="patrick"] .ecranDefisPersonnels{ --defis-fond: #043a24; }
+html[data-theme="valentin"] .ecranDefisPersonnels{ --defis-fond: #680a34; }
+html[data-theme="soleil"] .ecranDefisPersonnels{ --defis-fond: #2a2350; }
+html[data-theme="chandeleur"] .ecranDefisPersonnels{ --defis-fond: #5c2206; }
+html[data-theme="noel"] .ecranDefisPersonnels{ --defis-fond: #680816; }
+html[data-theme="galaxie"] .ecranDefisPersonnels{ --defis-fond: #0b0b1e; }
+html[data-theme="cerisier"] .ecranDefisPersonnels{ --defis-fond: #4a1336; }
+html:is([data-theme="givre"], [data-theme="halloween"], [data-theme="musique"], [data-theme="justrose"], [data-theme="patrick"], [data-theme="valentin"],
+  [data-theme="soleil"], [data-theme="chandeleur"], [data-theme="noel"], [data-theme="galaxie"], [data-theme="cerisier"]) .ecranDefisPersonnels :is(.defisPersonnelsIntro, .defisTitreListe){
+  position: relative;
+  z-index: 1;
+  align-self: center;
+  padding: 8px 14px;
+  background: var(--defis-fond);
+  border-radius: 12px;
+  opacity: 1;
+}
+html:is([data-theme="givre"], [data-theme="halloween"], [data-theme="musique"], [data-theme="justrose"], [data-theme="patrick"], [data-theme="valentin"],
+  [data-theme="soleil"], [data-theme="chandeleur"], [data-theme="noel"], [data-theme="galaxie"], [data-theme="cerisier"]) .ecranDefisPersonnels .defisVide{ background: var(--defis-fond); opacity: 1; }
 .ecranDefisPersonnels .defisPersonnelsContenu{
   width: 100%;
   max-width: 520px;
@@ -5610,7 +5637,9 @@ html[data-theme="galaxie"] .ecranDefisPersonnels{ --defis-accent: #FFE81F; }
 .ecranDefisPersonnels h2{ margin: 0; text-align: center; }
 .defisPersonnelsIntro{ margin: 0; text-align: center; opacity: .85; font-size: 15px; line-height: 1.4; }
 .defisFormulaire, .carteDefiPersonnel{
-  background: color-mix(in srgb, currentColor 9%, transparent);
+  position: relative;
+  z-index: 1;
+  background: color-mix(in srgb, currentColor 9%, var(--defis-fond));
   border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
   border-radius: 18px;
 }

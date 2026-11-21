@@ -97,7 +97,7 @@ const verifier = (nom, ok, detail) => { console.log((ok ? "OK    " : "ECHEC ") +
     const { ctx, page, erreurs } = await ouvrirJeu({ alcuno_langue: "es" });
     await ouvrirDefis(page);
     const texte = await page.evaluate(() => document.getElementById("ecranDefisPersonnels").innerText);
-    verifier("espagnol : écran traduit", /Mis desafíos guardados/i.test(texte) && /Tu desafío/i.test(texte) && /Aún no hay desafíos/i.test(texte), texte.replace(/\s+/g, " ").slice(0, 140));
+    verifier("espagnol : écran traduit", /Mis retos guardados/i.test(texte) && /Tu reto/i.test(texte) && /Aún no hay retos/i.test(texte), texte.replace(/\s+/g, " ").slice(0, 140));
     verifier("espagnol : aucun mot français restant", !/(Ton défi|Mes défis|Aucun défi|Ajouter le défi)/i.test(texte));
     verifier("pas d'erreur JS", erreurs.length === 0, erreurs.join(" | "));
     await ctx.close();
