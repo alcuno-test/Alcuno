@@ -36,6 +36,22 @@ html{
     box-sizing: border-box;
 }
 
+html body, html body *{
+  -webkit-user-select: none !important;
+  user-select: none !important;
+}
+html body input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="file"]):not([type="color"]):not([type="hidden"]):not([type="image"]),
+html body textarea,
+html body [contenteditable="true"],
+html body [contenteditable="plaintext-only"],
+html body [contenteditable="true"] *,
+html body [contenteditable="plaintext-only"] *,
+html body [role="textbox"],
+html body [role="textbox"] *{
+  -webkit-user-select: text !important;
+  user-select: text !important;
+}
+
 header {
     border-bottom: 2px solid #fff;
     padding-bottom: 10px;
