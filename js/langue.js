@@ -117,11 +117,21 @@ function choisirLangue(langue){
     const ouverts = typeof ecranReglages !== "undefined" && ecranReglages.style.display !== "none" && !ecranReglages.classList.contains("page-sortie");
     if (ouverts && typeof CLE_ROUVRIR_REGLAGES !== "undefined") sessionStorage.setItem(CLE_ROUVRIR_REGLAGES, String(ecranReglages.scrollTop));
   } catch (e) {}
-  if (typeof rechargerPage === "function") rechargerPage(); else location.reload();
+  setTimeout(() => {
+    if (typeof rechargerPage === "function") rechargerPage(); else location.reload();
+  }, 250);
 }
+let sonLangueJoueA = 0;
 document.querySelectorAll(".chipLangue").forEach((chip) => {
   const active = chip.dataset.langue === LANGUE;
   chip.classList.toggle("actif", active);
   chip.setAttribute("aria-pressed", active ? "true" : "false");
-  chip.addEventListener("click", () => choisirLangue(chip.dataset.langue));
+  chip.addEventListener("pointerdown", () => {
+    if (typeof jouerSon === "function") jouerSon("bouton");
+    sonLangueJoueA = Date.now();
+  });
+  chip.addEventListener("click", () => {
+    if (Date.now() - sonLangueJoueA >= 300 && typeof jouerSon === "function") jouerSon("bouton");
+    choisirLangue(chip.dataset.langue);
+  });
 });

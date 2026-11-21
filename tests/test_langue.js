@@ -178,6 +178,17 @@ assert.equal(vm.runInContext("tr(cleTest)", contexteItalien), italien[contexteIt
 assert.equal(vm.runInContext('tr("PIGEON")', contexteItalien), italien["PIGEON"]);
 assert.equal(vm.runInContext('trPluriel(1, "gorgée")', contexteItalien), "1 sorso");
 assert.equal(vm.runInContext('trPluriel(2, "gorgée")', contexteItalien), "2 sorsi");
+
+const sourceLangue = fs.readFileSync(path.join(racine, "js", "langue.js"), "utf8");
+assert.ok(sourceLangue.includes('jouerSon("bouton")'), "changement de langue : un son doit être joué");
+assert.ok(sourceLangue.includes('pointerdown'), "changement de langue : le son doit partir à l'appui");
+assert.ok(sourceLangue.includes('setTimeout(() =>'), "changement de langue : le rechargement doit laisser passer le son");
+
+const sourceReglages = fs.readFileSync(path.join(racine, "js", "reglages.js"), "utf8");
+assert.ok(sourceReglages.includes(".chipLangue"), "changement de langue : puce exclue du double clic sonore générique");
+assert.ok(sourceReglages.includes("galaxie: SONS_SABRE"), "thème Star Wars : sons de sabre disponibles");
+assert.ok(sourceReglages.includes("donjon: SONS_BDSM"), "thème BDSM : sons respectifs disponibles");
+assert.ok(sourceReglages.includes("musique: SONS_SAXO"), "thème Fête de la musique : sons respectifs disponibles");
 assert.equal(vm.runInContext('trPluriel(2, "recette")', contexteItalien), "2 ricette");
 assert.equal(vm.runInContext('tr` gorgée${"s"}`', contexteItalien), " sorsi");
 assert.equal(vm.runInContext('tr`Il reste ${2} carte${"s"}`', contexteItalien), "Restano 2 carte");

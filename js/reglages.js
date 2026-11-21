@@ -1859,7 +1859,7 @@ function chargerSons(){
 // (annuler des gorgées, distribuer au +4, choisir le pigeon ou la victime de la carte dorée), et sauf
 // « Signaler un bug » et « Copier le diagnostic » (silencieux), et sauf les touches du petit piano de l'accueil (elles jouent leur note)
 const BOUTONS_AVEC_LEUR_SON = ".bouton-annulation, .plus4-joueur-btn, #overlayPigeon .bouton-pigeon, .bouton-doree, " +
-  "#btnSignalerBug, #btnDiagnostic, #btnRegles, #btnReglesJeu, #btnFaq, #btnFaqDepuisRegles, #bandeauMiseAJour .maj, .fenetreGalaxie-ok, .etoileFilante, .pianoTouche";
+  "#btnSignalerBug, #btnDiagnostic, #btnRegles, #btnReglesJeu, #btnFaq, #btnFaqDepuisRegles, #bandeauMiseAJour .maj, .fenetreGalaxie-ok, .etoileFilante, .pianoTouche, .chipLangue";
 document.addEventListener("click", (e) => {
   if (!e.isTrusted || document.documentElement.classList.contains("mode-tele")) return;
   if (Date.now() - sonBoutonJoueLe < 500) return; // déjà joué au doigt levé (activerMemePendantElan)
