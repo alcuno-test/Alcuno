@@ -117,9 +117,12 @@ function choisirLangue(langue){
     const ouverts = typeof ecranReglages !== "undefined" && ecranReglages.style.display !== "none" && !ecranReglages.classList.contains("page-sortie");
     if (ouverts && typeof CLE_ROUVRIR_REGLAGES !== "undefined") sessionStorage.setItem(CLE_ROUVRIR_REGLAGES, String(ecranReglages.scrollTop));
   } catch (e) {}
+  // Rechargement après le clic : 250 ms pour le petit clic normal ; dans les thèmes Star Wars, BDSM et Fête de la musique, le son
+  // du bouton (sabre, son BDSM, saxophone : 0,4 à 1 s) était coupé net par le rechargement => on attend qu'il ait fini (1,2 s au plus)
+  const resteClic = typeof finDernierClicA === "number" ? finDernierClicA - Date.now() : 0;
   setTimeout(() => {
     if (typeof rechargerPage === "function") rechargerPage(); else location.reload();
-  }, 250);
+  }, Math.max(250, Math.min(1200, resteClic + 50)));
 }
 let sonLangueJoueA = 0;
 document.querySelectorAll(".chipLangue").forEach((chip) => {

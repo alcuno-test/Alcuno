@@ -1917,6 +1917,7 @@ function arreterSonTraineau(){
   } catch (e) {}
 }
 
+let finDernierClicA = 0; // moment où le dernier clic (bouton, sabre, son BDSM, saxophone) finit de sonner (voir choisirLangue, js/langue.js)
 let dernierClicJoueA = 0; // moment où le dernier clic (bouton ou sabre) a vraiment commencé (voir rafraichirBarreIphone)
 function lireSon(nom, son){
   const ctx = contexteAudio();
@@ -1936,7 +1937,10 @@ function lireSon(nom, son){
     lectureTraineau = { ctx, lecture, sortie };
     lecture.onended = () => { if (lectureTraineau && lectureTraineau.lecture === lecture) lectureTraineau = null; };
   }
-  if (nom === "bouton" || nom.startsWith("sabre/") || nom.startsWith("bdsm_buttons/") || nom.startsWith("saxo/")) dernierClicJoueA = Date.now();
+  if (nom === "bouton" || nom.startsWith("sabre/") || nom.startsWith("bdsm_buttons/") || nom.startsWith("saxo/")) {
+    dernierClicJoueA = Date.now();
+    finDernierClicA = Date.now() + Math.min(son.duration, DUREE_MAX_SONS[nom] || son.duration) * 1000;
+  }
 
   const dureeMax = DUREE_MAX_SONS[nom];
   if (SONS_QUI_BAISSENT_LA_MUSIQUE.includes(nom)) attenuerMusique(Math.min(son.duration, dureeMax || son.duration));
@@ -2146,7 +2150,11 @@ function texteDiagnostic(){
   ].join("\n");
 }
 
-document.getElementById("btnConfidentialite").addEventListener("click", () => { location.href = "confidentialite.html"; }); // (page à part, langue de l'application)
+// (page à part, langue de l'application) : on change de page quand le son du bouton a fini (sabre, son BDSM, saxophone : 0,4 à
+// 1 s dans les thèmes Star Wars, BDSM et Fête de la musique ; le changement de page le coupait net), 1,2 s au plus
+document.getElementById("btnConfidentialite").addEventListener("click", () => {
+  setTimeout(() => { location.href = "confidentialite.html"; }, Math.max(0, Math.min(1200, finDernierClicA - Date.now() + 50)));
+});
 
 document.getElementById("btnDiagnostic").addEventListener("click", () => {
   const texte = texteDiagnostic();
