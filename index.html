@@ -9,7 +9,7 @@
          (Avant : « ?t= » + l'heure, différent à chaque lancement : tout le jeu était retéléchargé à chaque ouverture,
          environ 400 Ko. Maintenant, tant que la version ne change pas, le navigateur se contente de vérifier.) -->
     <script>
-        window.VERSION_FICHIERS = "9.96.21";
+        window.VERSION_FICHIERS = "9.96.22";
         // (ailleurs que sur le vrai site — poste de dev, appli de test — : l'heure en plus, comme avant, pour voir tout de
         // suite un fichier modifié sans changer de version)
         window.ANTI_CACHE = /(^|\.)github\.io$/i.test(location.hostname) ? window.VERSION_FICHIERS : window.VERSION_FICHIERS + "-" + Date.now();
@@ -475,7 +475,7 @@
                 <div class="optionReglage" id="ligneDefisPersonnelsPartie">
                     <span class="optionTexte">
                         <span class="optionTitre">Défis personnalisés</span>
-                        <span class="optionNote">Ajoute tes propres défis hot ou hard.</span>
+                        <span class="optionNote" id="noteDefisPersonnelsPartie">Ajoute tes propres défis hot ou hard.</span>
                     </span>
                     <input type="checkbox" id="optionDefisPersonnels" aria-label="Défis personnalisés">
                     <label class="interrupteur" for="optionDefisPersonnels"></label>
@@ -535,15 +535,13 @@
                     <button type="button" id="btnOublierPartie">Oublier</button>
                 </div>
 
-                <div class="blocReglage" data-cle="defis-personnels">
-                    <div class="optionReglage optionAction">
-                        <span class="optionTexte">
-                            <span class="optionTitre">Mes défis</span>
-                            <span class="optionNote" id="noteDefisPersonnels">Ajoute tes propres défis pour les modes hot et hard.</span>
-                        </span>
-                        <button type="button" id="btnMesDefis">Ouvrir</button>
-                    </div>
-                </div>
+                <button type="button" class="optionReglage optionLien" id="btnMesDefis" data-cle="defis-personnels">
+                    <span class="optionTexte">
+                        <span class="optionTitre">Mes défis</span>
+                        <span class="optionNote" id="noteDefisPersonnels">Ajoute tes propres défis pour les modes hot et hard.</span>
+                    </span>
+                    <svg class="optionChevron" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+                </button>
 
                 <!-- Profil joueur : connexion Google facultative, pour retrouver sa progression sur un autre téléphone (js/profil.js) -->
                 <div class="blocReglage" data-cle="compte">
@@ -624,8 +622,9 @@
             <div class="defisPersonnelsContenu">
                 <h2>Mes défis</h2>
                 <p class="defisPersonnelsIntro">Ils sont gardés sur cet appareil et synchronisés avec Google si tu es connecté.</p>
-                <div class="defisPersonnelsNiveau">
-                    <label for="niveauDefiPersonnel">Niveau</label>
+
+                <div class="defisFormulaire">
+                    <label class="defisEtiquette" for="niveauDefiPersonnel">Niveau</label>
                     <select id="niveauDefiPersonnel">
                         <option value="A">Léger — moins de 5 gorgées</option>
                         <option value="B">Moyen — 5 à 10 gorgées</option>
@@ -633,17 +632,25 @@
                         <option value="HA">Hard HA — préliminaires</option>
                         <option value="HB">Hard HB — actes sexuels</option>
                     </select>
+
+                    <label class="defisEtiquette" for="texteDefiPersonnel">Ton défi</label>
+                    <textarea id="texteDefiPersonnel" maxlength="160" rows="3" placeholder="Exemple : Fais un compliment sincère à {nom}."></textarea>
+                    <div class="defisPiedChamp">
+                        <div class="defisPersonnelsInsertion">
+                            <button type="button" data-inserer="{nom}">{nom}</button>
+                            <button type="button" data-inserer="{nom1}">{nom1}</button>
+                            <button type="button" data-inserer="{nom2}">{nom2}</button>
+                        </div>
+                        <span class="defisCompteur" id="compteurDefiPersonnel" aria-hidden="true">0/160</span>
+                    </div>
+
+                    <p class="defiPersonnelErreur" id="erreurDefiPersonnel" aria-live="polite"></p>
+                    <p class="defiPersonnelApercu" id="apercuDefiPersonnel">Aperçu : …</p>
+                    <input type="hidden" id="idDefiPersonnel">
+                    <button type="button" id="btnAjouterDefiPersonnel">Ajouter le défi</button>
                 </div>
-                <textarea id="texteDefiPersonnel" maxlength="160" rows="4" placeholder="Exemple : Fais un compliment sincère à {nom}."></textarea>
-                <div class="defisPersonnelsInsertion">
-                    <button type="button" data-inserer="{nom}">{nom}</button>
-                    <button type="button" data-inserer="{nom1}">{nom1}</button>
-                    <button type="button" data-inserer="{nom2}">{nom2}</button>
-                </div>
-                <p class="defiPersonnelErreur" id="erreurDefiPersonnel" aria-live="polite"></p>
-                <p class="defiPersonnelApercu" id="apercuDefiPersonnel">Aperçu : …</p>
-                <input type="hidden" id="idDefiPersonnel">
-                <button type="button" id="btnAjouterDefiPersonnel">Ajouter le défi</button>
+
+                <h3 class="defisTitreListe">Mes défis enregistrés</h3>
                 <div class="listeDefisPersonnels" id="listeDefisPersonnels"></div>
             </div>
         </section>

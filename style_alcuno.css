@@ -1246,7 +1246,7 @@ html[data-theme="galaxie"] .fin-choix-numeros b{ background: #8fd0ff; color: #02
     /* télé connectée : badge « LIVE » rouge (voir la fin de ce fichier) */
     html #menu #btnCaster .casterIcone svg{ width: 26px; height: 26px; }
     #menu .libelleLong{ display: none; }
-    #menu :is(#ajouterJoueur, #supprimerJoueur) .libelleCourt{ display: flex; align-items: center; justify-content: center; }
+    #menu :is(#ajouterJoueur, #btnAjouterDefiPersonnel, #supprimerJoueur) .libelleCourt{ display: flex; align-items: center; justify-content: center; }
     #menu .libelleCourt svg{ width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
     /* (en partie, « Supprimer un joueur » n'est pas affiché ; sinon ses deux versions de texte) */
 }
@@ -5198,7 +5198,7 @@ header #btnReglesJeu path.couverture{
 }
 
 /* L'écran : mise en page des Réglages (au-dessus des overlays : en ligne, le jeu peut avancer derrière) */
-#ecranRegles{
+#ecranRegles,#ecranDefisPersonnels{
   position: fixed;
   inset: 0;
   z-index: 10002;
@@ -5213,7 +5213,7 @@ header #btnReglesJeu path.couverture{
     var(--deco-theme, none),
     linear-gradient(var(--fond-theme), var(--fond-theme)) var(--couleur-barre);
 }
-#ecranRegles .btnRetour{
+#ecranRegles .btnRetour,#ecranDefisPersonnels .btnRetour{
   position: absolute;
   top: 20px;
   left: 20px;
@@ -5236,7 +5236,7 @@ header #btnReglesJeu path.couverture{
   gap: 14px;
   animation: fadeIn 0.25s ease forwards;
 }
-#ecranRegles h2{
+#ecranRegles h2,#ecranDefisPersonnels h2{
   margin: 0 0 6px;
   text-align: center;
   color: #FFD700;
@@ -5363,8 +5363,8 @@ html[data-theme="givre"] #choixMode #btnRegles svg,
 html[data-theme="givre"] header #btnReglesJeu svg{
   filter: drop-shadow(0 2px 0 #0b5a8c) drop-shadow(0 3px 6px rgba(13, 53, 80, 0.2));
 }
-html[data-theme="givre"] #ecranRegles{ color: var(--givre-texte); }
-html[data-theme="givre"] #ecranRegles h2,
+html[data-theme="givre"] #ecranRegles,html[data-theme="givre"] #ecranDefisPersonnels{ color: var(--givre-texte); }
+html[data-theme="givre"] #ecranRegles h2,html[data-theme="givre"] #ecranDefisPersonnels h2,
 html[data-theme="givre"] #ecranRegles .blocRegles h3{
   color: var(--givre-accent);
   text-shadow: 0 2px 8px rgba(255, 255, 255, 0.9);
@@ -5377,7 +5377,7 @@ html[data-theme="givre"] #ecranRegles .nomRegle{ color: var(--givre-texte); }
 html[data-theme="givre"] #ecranRegles .detailRegle{ color: var(--givre-texte); opacity: 0.85; }
 html[data-theme="givre"] #ecranRegles .ligneRegle + .ligneRegle{ border-top-color: var(--givre-bord); }
 html[data-theme="givre"] #ecranRegles .reglesNotePJ{ color: #127a3e; }
-html[data-theme="givre"] #ecranRegles .btnRetour{
+html[data-theme="givre"] #ecranRegles .btnRetour,html[data-theme="givre"] #ecranDefisPersonnels .btnRetour{
   background: var(--givre-bouton);
   color: #fff;
   text-shadow: 0 1px 2px rgba(8, 60, 100, 0.55);
@@ -5586,63 +5586,134 @@ html[data-theme] #ecranReglages .optionsPartie .optionReglage.optionsSuite.optio
   border-radius: 14px;
 }
 
-/* ===== Mes défis personnalisés ===== */
-.ecranDefisPersonnels{
-  position: fixed;
-  inset: 0;
-  z-index: 10002;
-  overflow-y: auto;
-  padding: 72px 18px 24px;
-  background: var(--fond-ecran, #1b1020);
-  color: #fff;
-}
-.defisPersonnelsContenu{
-  width: min(680px, 100%);
+/* ===== Mes défis personnalisés =====
+   L'écran prend le fond, le titre et le bouton « Retour » des autres écrans (les règles de #ecranRegles valent aussi pour lui, dans tous les
+   thèmes : voir la liste des sélecteurs) ; le bouton « Ajouter le défi » est un bouton de jeu comme « Ajouter » (liste #ajouterJoueur).
+   Le reste est calculé à partir de la couleur du texte de l'écran (currentColor) : lisible sur les thèmes sombres comme sur Givre et Kawaii. */
+.ecranDefisPersonnels{ --defis-accent: #FFD700; --defis-erreur: #ff9c9c; }
+html[data-theme="givre"] .ecranDefisPersonnels,
+html[data-theme="kawaii"] .ecranDefisPersonnels{ --defis-accent: var(--givre-accent, #0f6aa6); --defis-erreur: #c62828; }
+html[data-theme="halloween"] .ecranDefisPersonnels{ --defis-accent: #ff9a3c; }
+html[data-theme="justrose"] .ecranDefisPersonnels{ --defis-accent: #ffc2de; }
+html[data-theme="musique"] .ecranDefisPersonnels{ --defis-accent: #d9c9ff; }
+html[data-theme="patrick"] .ecranDefisPersonnels{ --defis-accent: #7dff9f; }
+html[data-theme="valentin"] .ecranDefisPersonnels{ --defis-accent: #ffb3cf; }
+html[data-theme="galaxie"] .ecranDefisPersonnels{ --defis-accent: #FFE81F; }
+.ecranDefisPersonnels .defisPersonnelsContenu{
+  width: 100%;
+  max-width: 520px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
-.defisPersonnelsContenu h2{ margin: 0 0 4px; text-align: center; }
-.defisPersonnelsIntro{ margin: 0 0 8px; text-align: center; opacity: .85; }
-.defisPersonnelsNiveau{ display: flex; align-items: center; gap: 10px; }
-.defisPersonnelsNiveau select,
-.defisPersonnelsContenu textarea{
+.ecranDefisPersonnels h2{ margin: 0; text-align: center; }
+.defisPersonnelsIntro{ margin: 0; text-align: center; opacity: .85; font-size: 15px; line-height: 1.4; }
+.defisFormulaire, .carteDefiPersonnel{
+  background: color-mix(in srgb, currentColor 9%, transparent);
+  border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  border-radius: 18px;
+}
+.defisFormulaire{ display: flex; flex-direction: column; gap: 8px; padding: 16px; }
+.defisEtiquette{ font-size: 13px; font-weight: 900; letter-spacing: .05em; text-transform: uppercase; opacity: .85; margin-top: 4px; }
+.defisEtiquette:first-child{ margin-top: 0; }
+.defisFormulaire select,
+.defisFormulaire textarea{
   width: 100%;
   box-sizing: border-box;
-  border: 1px solid rgba(255,255,255,.25);
-  border-radius: 12px;
-  background: rgba(0,0,0,.25);
-  color: #fff;
-  padding: 12px;
+  margin: 0;
+  padding: 12px 14px;
   font: inherit;
+  font-size: 16px; /* (moins : l'iPhone zoomerait sur le champ) */
+  color: inherit;
+  background-color: color-mix(in srgb, currentColor 7%, transparent);
+  border: 1px solid color-mix(in srgb, currentColor 32%, transparent);
+  border-radius: 12px;
+  outline: none;
 }
-.defisPersonnelsContenu textarea{ resize: vertical; min-height: 96px; }
-.defisPersonnelsInsertion{ display: flex; gap: 8px; }
-.defisPersonnelsInsertion button,
-.listeDefisPersonnels button,
-#btnAjouterDefiPersonnel{
-  border: 0;
-  border-radius: 10px;
-  padding: 10px 12px;
-  font-weight: 900;
+.defisFormulaire select{
+  -webkit-appearance: none;
+  appearance: none;
+  padding-right: 40px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 18px;
+}
+.defisFormulaire select option{ color: #222; background: #fff; }
+.defisFormulaire textarea{ resize: vertical; min-height: 92px; line-height: 1.35; }
+.defisFormulaire textarea::placeholder{ color: inherit; opacity: .5; }
+.defisFormulaire select:focus,
+.defisFormulaire textarea:focus{ border-color: var(--defis-accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--defis-accent) 30%, transparent); }
+.defisPiedChamp{ display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.defisPersonnelsInsertion{ display: flex; flex-wrap: wrap; gap: 8px; }
+.defisPersonnelsInsertion button{
+  padding: 6px 12px;
+  font: 800 14px/1.2 ui-monospace, Menlo, Consolas, monospace;
+  color: inherit;
+  background: transparent;
+  border: 1px solid color-mix(in srgb, currentColor 40%, transparent);
+  border-radius: 999px;
   cursor: pointer;
 }
-.defiPersonnelErreur{ min-height: 20px; margin: 0; color: #ff9c9c; }
-.defiPersonnelApercu{ margin: 0; padding: 12px; border-radius: 10px; background: rgba(255,255,255,.08); }
-#btnAjouterDefiPersonnel{ background: #FFD700; color: #321400; padding: 14px; }
-.listeDefisPersonnels{ display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
-.carteDefiPersonnel{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 12px;
+.defisPersonnelsInsertion button:active{ background: color-mix(in srgb, currentColor 16%, transparent); }
+.defisCompteur{ font-size: 13px; opacity: .7; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.defiPersonnelErreur:empty{ display: none; }
+.defiPersonnelErreur{ margin: 0; font-size: 14px; font-weight: 800; color: var(--defis-erreur); }
+.defiPersonnelApercu{
+  margin: 0;
+  padding: 12px 14px;
   border-radius: 12px;
-  background: rgba(255,255,255,.08);
+  border-left: 4px solid var(--defis-accent);
+  background: color-mix(in srgb, currentColor 8%, transparent);
+  line-height: 1.4;
 }
-.carteDefiPersonnel strong{ min-width: 0; }
-.carteDefiPersonnel div{ display: flex; gap: 6px; flex: 0 0 auto; }
+/* Givre et Kawaii : bouton à leur dégradé (comme leur « Retour ») */
+html[data-theme="givre"] #ecranDefisPersonnels #btnAjouterDefiPersonnel{
+  background: var(--givre-bouton); color: #fff; text-shadow: 0 1px 2px rgba(8, 60, 100, 0.55);
+  box-shadow: inset 0 -2px 0 rgba(8, 60, 100, 0.25), 0 6px 14px rgba(26, 146, 214, 0.28);
+}
+html[data-theme="kawaii"] #ecranDefisPersonnels #btnAjouterDefiPersonnel{
+  background: var(--givre-bouton); color: #fff; text-shadow: 0 1px 2px rgba(100, 8, 100, 0.55);
+  box-shadow: inset 0 -2px 0 rgba(100, 8, 100, 0.25), 0 6px 14px rgba(214, 26, 120, 0.28);
+}
+#btnAjouterDefiPersonnel{ width: 100%; margin: 6px 0 0; padding: 14px 18px; font-size: 17px; font-weight: 900; border: none; border-radius: 16px; cursor: pointer; }
+.defisTitreListe{ margin: 10px 0 0; font-size: 16px; font-weight: 900; color: var(--defis-accent); }
+.listeDefisPersonnels{ display: flex; flex-direction: column; gap: 10px; }
+.defisVide{ margin: 0; padding: 18px; text-align: center; opacity: .7; border: 1px dashed color-mix(in srgb, currentColor 35%, transparent); border-radius: 14px; }
+.carteDefiPersonnel{ display: flex; flex-direction: column; gap: 10px; padding: 14px; }
+.carteDefiCorps{ display: flex; flex-direction: column; align-items: flex-start; gap: 8px; min-width: 0; }
+.carteDefiTexte{ margin: 0; line-height: 1.4; overflow-wrap: anywhere; }
+.badgeNiveauDefi{
+  padding: 3px 10px;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: #321400;
+  background: #FFD700;
+  border-radius: 999px;
+}
+.badgeNiveauDefi.niveau-A{ background: #8fe3a1; }
+.badgeNiveauDefi.niveau-B{ background: #ffd54a; }
+.badgeNiveauDefi.niveau-C{ background: #ff9a57; }
+.badgeNiveauDefi.niveau-HA, .badgeNiveauDefi.niveau-HB{ background: #ff5f7e; color: #fff; }
+.carteDefiActions{ display: flex; gap: 8px; }
+.carteDefiActions button{
+  flex: 1 1 0;
+  padding: 9px 12px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  color: inherit;
+  background: transparent;
+  border: 1px solid color-mix(in srgb, currentColor 40%, transparent);
+  border-radius: 12px;
+  cursor: pointer;
+}
+.carteDefiActions button.danger{ color: var(--defis-erreur); border-color: color-mix(in srgb, var(--defis-erreur) 60%, transparent); }
+.carteDefiActions button:active{ background: color-mix(in srgb, currentColor 14%, transparent); }
+@media (prefers-reduced-motion: reduce){ .ecranDefisPersonnels *{ transition: none; } }
 
 /* ===== Écran « Installer Alcuno » (téléphone, jeu pas installé : voir js/reglages.js) ===== */
 #ecranInstallation{
@@ -5829,7 +5900,7 @@ html[data-theme="givre"] #ecranInstallation #btnInstallationInstaller{
 html[data-theme="givre"] #ecranInstallation #btnInstallationPlusTard{ color: var(--givre-texte); }
 
 /* ===== Mode bourré (textes plus gros) : écrans « Règles du jeu » et « Installer Alcuno » ===== */
-html.accessibilite #ecranRegles h2{ font-size: clamp(26px, 6vw, 42px); }
+html.accessibilite #ecranRegles h2,html.accessibilite #ecranDefisPersonnels h2{ font-size: clamp(26px, 6vw, 42px); }
 html.accessibilite #ecranRegles .blocRegles h3{ font-size: 21px; }
 html.accessibilite #ecranRegles .nomRegle{ font-size: 20px; }
 html.accessibilite #ecranRegles .detailRegle{ font-size: 17px; }
@@ -5850,7 +5921,7 @@ html:not([data-theme="givre"]):where(:not([data-theme="kawaii"])) :is(#btnModeEn
   #btnCreerPartie, #btnRejoindrePartie, #btnRegarderPartie, #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #validerRegarder, #btnScannerQR,
   #lancerPartieEnLigne, #btnRejouerMemes, #btnModifierJoueurs, #btnChoixPseudoAnnuler, #listeChoixPseudo button,
   #btnConfirmerAccueilOui, #btnConfirmerAccueilNon, #btnConfirmerHoteOui, #btnConfirmerHoteNon,
-  #btnConfirmerRetraitOui, #btnConfirmerRetraitNon, #ajouterJoueur, #jouer, #supprimerJoueur, #nouvellePartie,
+  #btnConfirmerRetraitOui, #btnConfirmerRetraitNon, #ajouterJoueur, #btnAjouterDefiPersonnel, #jouer, #supprimerJoueur, #nouvellePartie,
   #termineSuppression, #btnInstallationInstaller){
   background-image: linear-gradient(180deg, #ffd426, #f6b800);
   color: #fff;
@@ -6038,7 +6109,7 @@ html:not([data-theme="givre"]):where(:not([data-theme="kawaii"])) :is(#overlayPi
   #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #validerRegarder, #btnScannerQR, #lancerPartieEnLigne, #btnRejouerMemes,
   #btnModifierJoueurs, #btnChoixPseudoAnnuler, #listeChoixPseudo button, #btnConfirmerAccueilOui,
   #btnConfirmerAccueilNon, #btnConfirmerHoteOui, #btnConfirmerHoteNon, #btnConfirmerRetraitOui,
-  #btnConfirmerRetraitNon, #ajouterJoueur, #jouer, #supprimerJoueur, #nouvellePartie, #termineSuppression,
+  #btnConfirmerRetraitNon, #ajouterJoueur, #btnAjouterDefiPersonnel, #jouer, #supprimerJoueur, #nouvellePartie, #termineSuppression,
   #btnInstallationInstaller, #overlayPigeon .bouton-pigeon, #overlayPlus4 .bouton-pigeon, #overlayCupidon .bouton-pigeon, #overlayDuel button,
   #overlayFinUnRestants .bouton-pigeon, #overlayPredictionFin .bouton-pigeon, #overlayRegleUnique .bouton-annulation,
   #overlayAnnulation button),
@@ -6046,7 +6117,7 @@ html:not([data-theme="givre"]):where(:not([data-theme="kawaii"])) :is(#overlayPi
   #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #validerRegarder, #btnScannerQR, #lancerPartieEnLigne, #btnRejouerMemes,
   #btnModifierJoueurs, #btnChoixPseudoAnnuler, #listeChoixPseudo button, #btnConfirmerAccueilOui,
   #btnConfirmerAccueilNon, #btnConfirmerHoteOui, #btnConfirmerHoteNon, #btnConfirmerRetraitOui,
-  #btnConfirmerRetraitNon, #ajouterJoueur, #jouer, #supprimerJoueur, #nouvellePartie, #termineSuppression,
+  #btnConfirmerRetraitNon, #ajouterJoueur, #btnAjouterDefiPersonnel, #jouer, #supprimerJoueur, #nouvellePartie, #termineSuppression,
   #btnInstallationInstaller, #overlayPigeon .bouton-pigeon, #overlayPlus4 .bouton-pigeon, #overlayCoupDeFoudre .bouton-pigeon, #overlayDuel button,
   #overlayFinUnRestants .bouton-pigeon, #overlayPredictionFin .bouton-pigeon, #overlayRegleUnique .bouton-annulation,
   #overlayAnnulation button){
@@ -6057,7 +6128,7 @@ html:not([data-theme="givre"]):where(:not([data-theme="kawaii"])) :is(#overlayPi
     #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #validerRegarder, #btnScannerQR, #lancerPartieEnLigne, #btnRejouerMemes,
     #btnModifierJoueurs, #btnChoixPseudoAnnuler, #listeChoixPseudo button, #btnConfirmerAccueilOui,
     #btnConfirmerAccueilNon, #btnConfirmerHoteOui, #btnConfirmerHoteNon, #btnConfirmerRetraitOui,
-    #btnConfirmerRetraitNon, #ajouterJoueur, #jouer, #supprimerJoueur, #nouvellePartie, #termineSuppression,
+    #btnConfirmerRetraitNon, #ajouterJoueur, #btnAjouterDefiPersonnel, #jouer, #supprimerJoueur, #nouvellePartie, #termineSuppression,
     #btnInstallationInstaller, #overlayPigeon .bouton-pigeon, #overlayPlus4 .bouton-pigeon, #overlayCupidon .bouton-pigeon, #overlayDuel button,
     #overlayFinUnRestants .bouton-pigeon, #overlayPredictionFin .bouton-pigeon, #overlayRegleUnique .bouton-annulation,
     #overlayAnnulation button):hover:not(:disabled),
@@ -6065,7 +6136,7 @@ html:not([data-theme="givre"]):where(:not([data-theme="kawaii"])) :is(#overlayPi
     #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #validerRegarder, #btnScannerQR, #lancerPartieEnLigne, #btnRejouerMemes,
     #btnModifierJoueurs, #btnChoixPseudoAnnuler, #listeChoixPseudo button, #btnConfirmerAccueilOui,
     #btnConfirmerAccueilNon, #btnConfirmerHoteOui, #btnConfirmerHoteNon, #btnConfirmerRetraitOui,
-    #btnConfirmerRetraitNon, #ajouterJoueur, #jouer, #supprimerJoueur, #nouvellePartie, #termineSuppression,
+    #btnConfirmerRetraitNon, #ajouterJoueur, #btnAjouterDefiPersonnel, #jouer, #supprimerJoueur, #nouvellePartie, #termineSuppression,
     #btnInstallationInstaller, #overlayPigeon .bouton-pigeon, #overlayPlus4 .bouton-pigeon, #overlayCoupDeFoudre .bouton-pigeon, #overlayDuel button,
     #overlayFinUnRestants .bouton-pigeon, #overlayPredictionFin .bouton-pigeon, #overlayRegleUnique .bouton-annulation,
     #overlayAnnulation button):hover:not(:disabled){
@@ -6081,7 +6152,7 @@ html:not([data-theme="givre"]):where(:not([data-theme="kawaii"])) :is(#overlayPi
   #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #validerRegarder, #btnScannerQR, #lancerPartieEnLigne, #btnRejouerMemes,
   #btnModifierJoueurs, #btnChoixPseudoAnnuler, #listeChoixPseudo button, #btnConfirmerAccueilOui,
   #btnConfirmerAccueilNon, #btnConfirmerHoteOui, #btnConfirmerHoteNon, #btnConfirmerRetraitOui,
-  #btnConfirmerRetraitNon, #ajouterJoueur, #jouer, #supprimerJoueur, #nouvellePartie, #termineSuppression,
+  #btnConfirmerRetraitNon, #ajouterJoueur, #btnAjouterDefiPersonnel, #jouer, #supprimerJoueur, #nouvellePartie, #termineSuppression,
   #btnInstallationInstaller):hover:not(:disabled){
     filter: none;
     box-shadow: 0 0 0 1px var(--noir-btn-bord-survol), 0 8px 20px rgba(0, 0, 0, 0.7) !important;
@@ -6094,7 +6165,7 @@ html:not([data-theme="givre"]):where(:not([data-theme="kawaii"])) :is(#overlayPi
   #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #validerRegarder, #btnScannerQR, #lancerPartieEnLigne, #btnRejouerMemes,
   #btnModifierJoueurs, #btnChoixPseudoAnnuler, #listeChoixPseudo button, #btnConfirmerAccueilOui,
   #btnConfirmerAccueilNon, #btnConfirmerHoteOui, #btnConfirmerHoteNon, #btnConfirmerRetraitOui,
-  #btnConfirmerRetraitNon, #ajouterJoueur, #jouer, #supprimerJoueur, #nouvellePartie, #termineSuppression,
+  #btnConfirmerRetraitNon, #ajouterJoueur, #btnAjouterDefiPersonnel, #jouer, #supprimerJoueur, #nouvellePartie, #termineSuppression,
   #btnInstallationInstaller, #overlayPigeon .bouton-pigeon, #overlayPlus4 .bouton-pigeon, #overlayCupidon .bouton-pigeon, #overlayDuel button,
   #overlayFinUnRestants .bouton-pigeon, #overlayPredictionFin .bouton-pigeon, #overlayRegleUnique .bouton-annulation,
   #overlayAnnulation button):hover:not(:disabled),
@@ -6102,7 +6173,7 @@ html:not([data-theme="givre"]):where(:not([data-theme="kawaii"])) :is(#overlayPi
   #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #validerRegarder, #btnScannerQR, #lancerPartieEnLigne, #btnRejouerMemes,
   #btnModifierJoueurs, #btnChoixPseudoAnnuler, #listeChoixPseudo button, #btnConfirmerAccueilOui,
   #btnConfirmerAccueilNon, #btnConfirmerHoteOui, #btnConfirmerHoteNon, #btnConfirmerRetraitOui,
-  #btnConfirmerRetraitNon, #ajouterJoueur, #jouer, #supprimerJoueur, #nouvellePartie, #termineSuppression,
+  #btnConfirmerRetraitNon, #ajouterJoueur, #btnAjouterDefiPersonnel, #jouer, #supprimerJoueur, #nouvellePartie, #termineSuppression,
   #btnInstallationInstaller, #overlayPigeon .bouton-pigeon, #overlayPlus4 .bouton-pigeon, #overlayCoupDeFoudre .bouton-pigeon, #overlayDuel button,
   #overlayFinUnRestants .bouton-pigeon, #overlayPredictionFin .bouton-pigeon, #overlayRegleUnique .bouton-annulation,
   #overlayAnnulation button):hover:not(:disabled){
@@ -7186,7 +7257,7 @@ html[data-theme="soleil"] header::after{
   box-shadow: 0 0 14px rgba(255,150,110,0.45) !important;
 }
 /* Boutons : dégradé soleil, texte blanc */
-html[data-theme="soleil"][data-theme] body :is(#btnModeEnLigne, #btnModeClassique, #btnContinuerOptions, .btnRetour, #btnPartagerJeu, #ajouterJoueur, #jouer, #supprimerJoueur,
+html[data-theme="soleil"][data-theme] body :is(#btnModeEnLigne, #btnModeClassique, #btnContinuerOptions, .btnRetour, #btnPartagerJeu, #ajouterJoueur, #btnAjouterDefiPersonnel, #jouer, #supprimerJoueur,
   #nouvellePartie, #btnRejouerMemes, #btnModifierJoueurs, #btnReprendrePause,
   #btnCreerPartie, #btnRejoindrePartie, #btnRegarderPartie, #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #validerRegarder, #btnScannerQR,
   #lancerPartieEnLigne, #btnChoixPseudoAnnuler, #listeChoixPseudo button, #btnConfirmerAccueilOui, #btnConfirmerAccueilNon,
@@ -7525,7 +7596,7 @@ html[data-theme="noir"] :is(#btnModeEnLigne, #btnModeClassique, #btnContinuerOpt
   #btnCreerPartie, #btnRejoindrePartie, #btnRegarderPartie, #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #validerRegarder, #btnScannerQR,
   #lancerPartieEnLigne, #btnRejouerMemes, #btnModifierJoueurs, #btnChoixPseudoAnnuler, #listeChoixPseudo button,
   #btnConfirmerAccueilOui, #btnConfirmerAccueilNon, #btnConfirmerHoteOui, #btnConfirmerHoteNon,
-  #btnConfirmerRetraitOui, #btnConfirmerRetraitNon, #ajouterJoueur, #jouer, #supprimerJoueur, #nouvellePartie,
+  #btnConfirmerRetraitOui, #btnConfirmerRetraitNon, #ajouterJoueur, #btnAjouterDefiPersonnel, #jouer, #supprimerJoueur, #nouvellePartie,
   #termineSuppression, #btnInstallationInstaller){
   background-image: var(--noir-btn-fond);
   color: var(--noir-btn-texte);
@@ -8357,7 +8428,7 @@ html[data-theme="galaxie"] :is(#ecranPause){ background: rgba(2,3,10,.75) !impor
 html[data-theme="galaxie"] .voletPause-feuille{ background: #050a1a !important; border-top: 2px solid #4aa8ff !important; box-shadow: 0 -4px 22px rgba(40,140,255,.45) !important; }
 html[data-theme="galaxie"] .voletPause-nom{ color:#FFE81F !important; }
 html[data-theme="galaxie"] .voletPause-ok{ background: linear-gradient(180deg,#1a2b55,#0a1430) !important; }
-html[data-theme="galaxie"] :is(#ecranReglages, #ecranRegles){ background: #02030a !important; }
+html[data-theme="galaxie"] :is(#ecranReglages, #ecranRegles, #ecranDefisPersonnels){ background: #02030a !important; }
 html[data-theme="galaxie"] #ecranRegles .blocRegles{
   background: linear-gradient(180deg, rgba(14,22,44,.92), rgba(6,10,22,.92)) !important;
   border: 1.5px solid #8fd0ff !important; border-radius: 16px !important;
@@ -8368,7 +8439,7 @@ html[data-theme="galaxie"] :is(#ecranReglages .blocReglage, #ecranReglages .opti
   border: 1.5px solid #8fd0ff !important; border-radius: 16px !important;
   box-shadow: 0 0 6px #4aa8ff, 0 0 16px rgba(40,140,255,.55), inset 0 0 10px rgba(80,170,255,.22) !important; }
 html[data-theme="galaxie"] #ecranReglages .blocReglage .optionReglage{ background: transparent !important; border:none !important; }
-html[data-theme="galaxie"] :is(#ecranReglages .optionTitre, #ecranRegles h3, #ecranReglages h2, #ecranRegles h2){ color:#FFE81F !important; }
+html[data-theme="galaxie"] :is(#ecranReglages .optionTitre, #ecranRegles h3, #ecranReglages h2, #ecranRegles h2, #ecranDefisPersonnels h2){ color:#FFE81F !important; }
 html[data-theme="galaxie"] #ecranReglages .optionReglage input:checked + .interrupteur{ background:#1a7bff !important; box-shadow: 0 0 10px #39a0ff !important; }
 html[data-theme="galaxie"] :is(.btnRetour){ border-radius: 8px !important; }
 /* Créateurs (écran des crédits) : comme les Règles et les Réglages, sabre bleu, titre jaune Star Wars, ciel étoilé */

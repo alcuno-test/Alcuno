@@ -79,14 +79,28 @@
   function apercu(texte){
     return String(texte || "").replace(/\{nom1\}/g, "Léa").replace(/\{nom2\}/g, "Tom").replace(/\{nom\}/g, "Léa");
   }
-  function majCompteur(){
+  // Le mode hard est secret tant qu'il n'est pas débloqué (js/reglages.js) : on n'en parle, et on ne propose ses niveaux, qu'ensuite
+  function hardOuvert(){
+    try { return typeof hardDebloque === "function" && hardDebloque(); } catch(e){ return false; }
+  }
+  const NOMS_NIVEAUX = { A: "Léger", B: "Moyen", C: "Osé", HA: "Hard HA", HB: "Hard HB" };
+  function nomNiveau(n){ return tr(NOMS_NIVEAUX[n] || n); }
+  function majTextes(){
+    const ouvert = hardOuvert();
     const note = document.getElementById("noteDefisPersonnels");
     if(note) {
       const n = Object.keys(lire()).length;
-      note.textContent = n ? `${n} ${tr(n === 1 ? "défi personnalisé" : "défis personnalisés")}.` : tr("Ajoute tes propres défis pour les modes hot et hard.");
+      note.textContent = n
+        ? `${n} ${tr(n === 1 ? "défi personnalisé" : "défis personnalisés")}.`
+        : tr(ouvert ? "Ajoute tes propres défis pour les modes hot et hard." : "Ajoute tes propres défis pour le mode hot.");
     }
+    const notePartie = document.getElementById("noteDefisPersonnelsPartie");
+    if(notePartie) notePartie.textContent = tr(ouvert ? "Ajoute tes propres défis hot ou hard." : "Ajoute tes propres défis hot.");
+    const choix = document.getElementById("niveauDefiPersonnel");
+    if(choix) Array.from(choix.options).forEach((o) => { if(/^H/.test(o.value)) { o.hidden = !ouvert; o.disabled = !ouvert; } });
   }
-  global.DefisPersonnels = { CLE, NIVEAUX, lire, valider, enregistrer, supprimer, remplacer, pourPartie, apercu, majCompteur };
+  function majCompteur(){ majTextes(); }
+  global.DefisPersonnels = { CLE, NIVEAUX, lire, valider, enregistrer, supprimer, remplacer, pourPartie, apercu, majCompteur, majTextes, nomNiveau, hardOuvert };
   if(typeof module !== "undefined" && module.exports) module.exports = global.DefisPersonnels;
 })(typeof window !== "undefined" ? window : globalThis);
 
@@ -100,7 +114,9 @@ if(typeof document !== "undefined" && !document.documentElement.classList.contai
   const liste = document.getElementById("listeDefisPersonnels");
   const bouton = document.getElementById("btnAjouterDefiPersonnel");
 
+  const compteur = document.getElementById("compteurDefiPersonnel");
   function majApercu(){
+    if(compteur && texte) compteur.textContent = texte.value.length + "/160";
     if(!apercu) return;
     apercu.textContent = texte && texte.value.trim()
       ? tr("Aperçu : ") + DefisPersonnels.apercu(texte.value.trim())
@@ -118,13 +134,28 @@ if(typeof document !== "undefined" && !document.documentElement.classList.contai
     if(!liste) return;
     const defis = DefisPersonnels.lire();
     liste.replaceChildren();
-    Object.keys(defis).sort().forEach((cle) => {
+    const cles = Object.keys(defis).sort();
+    if(!cles.length){
+      const vide = document.createElement("p");
+      vide.className = "defisVide";
+      vide.textContent = tr("Aucun défi pour l'instant.");
+      liste.appendChild(vide);
+    }
+    cles.forEach((cle) => {
       const d = defis[cle];
       const carte = document.createElement("article");
       carte.className = "carteDefiPersonnel";
-      const titre = document.createElement("strong");
-      titre.textContent = d.n + " — " + DefisPersonnels.apercu(d.t);
+      const corps = document.createElement("div");
+      corps.className = "carteDefiCorps";
+      const badge = document.createElement("span");
+      badge.className = "badgeNiveauDefi niveau-" + d.n;
+      badge.textContent = DefisPersonnels.nomNiveau(d.n);
+      const titre = document.createElement("p");
+      titre.className = "carteDefiTexte";
+      titre.textContent = DefisPersonnels.apercu(d.t);
+      corps.append(badge, titre);
       const actions = document.createElement("div");
+      actions.className = "carteDefiActions";
       const modifier = document.createElement("button");
       modifier.type = "button";
       modifier.textContent = tr("Modifier");
@@ -136,13 +167,18 @@ if(typeof document !== "undefined" && !document.documentElement.classList.contai
         majApercu();
         texte.focus();
         if(erreur) erreur.textContent = "";
+        if(ecran && ecran.scrollTo) ecran.scrollTo({ top: 0, behavior: "smooth" });
       });
       const supprimer = document.createElement("button");
       supprimer.type = "button";
+      supprimer.className = "danger";
       supprimer.textContent = tr("Supprimer");
-      supprimer.addEventListener("click", () => DefisPersonnels.supprimer(cle));
+      supprimer.addEventListener("click", () => {
+        if(!confirm(tr("Supprimer ce défi ?"))) return;
+        DefisPersonnels.supprimer(cle);
+      });
       actions.append(modifier, supprimer);
-      carte.append(titre, actions);
+      carte.append(corps, actions);
       liste.appendChild(carte);
     });
     DefisPersonnels.majCompteur();
@@ -171,6 +207,7 @@ if(typeof document !== "undefined" && !document.documentElement.classList.contai
   if(retour) retour.addEventListener("click", () => fermerPage(ecran));
   const ouvrir = document.getElementById("btnMesDefis");
   if(ouvrir) ouvrir.addEventListener("click", () => {
+    DefisPersonnels.majTextes();
     dessiner();
     ouvrirPage(ecran);
   });

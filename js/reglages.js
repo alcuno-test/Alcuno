@@ -1134,6 +1134,7 @@ function hardDebloque(){
 }
 function majOptionHard(){
   document.getElementById("ligneModeHard").hidden = !hardDebloque();
+  if (window.DefisPersonnels) DefisPersonnels.majTextes(); // (js/defis-personnels.js : on ne parle du mode hard qu'une fois débloqué)
 }
 // « Jojo » (majuscules et accents ignorés) : le nom reste un joueur normal
 function estCodeHard(nom){

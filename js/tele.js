@@ -308,7 +308,7 @@ function ecranPourTele(){
   if (o.id === "overlayCouleur") {
     choix = Array.from(o.querySelectorAll(".carre-couleur")).map((c) => {
       const nom = (c.className.match(/carre-(vert|jaune|rouge|bleu)/) || [])[1] || "";
-      return { t: nom.toUpperCase(), c: nom };
+      return { t: tr(nom).toUpperCase(), c: nom }; // (tr : « green », « verde »… sur la télé aussi)
     }).filter((c) => c.c);
   }
   const blocHot = o.querySelector(".bloc-hot");

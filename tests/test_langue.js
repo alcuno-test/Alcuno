@@ -72,65 +72,23 @@ for(const cle of ["Il est dans Réglages › Thèmes.", "Bravo, album complet !"
   assert.ok(anglais[cle] && espagnol[cle], `traduction de l'album manquante : ${cle}`);
   assert.ok(italien[cle], `traduction italienne de l'album manquante : ${cle}`);
 }
-const clesConfidentialite = [
-  "Alcuno · Politique de confidentialité · dernière mise à jour : 20 novembre 2026",
-  "Éditeur de l'application et contact",
-  "Alcuno est un jeu gratuit développé à titre individuel par son créateur (compte GitHub :",
-  "). Pour toute question relative à cette politique ou au traitement des données, vous pouvez utiliser le bouton « Signaler un bug » des Réglages ou ouvrir une demande sur la page GitHub du projet.",
-  "Données conservées sur l'appareil",
-  "Le jeu conserve dans le stockage local de votre navigateur les éléments suivants :",
-  "vos préférences : thème, effets sonores, musique, annonces vocales, langue, options d'accessibilité, mode Préhistoire et organisation des Réglages ;",
-  "vos déblocages (thèmes secrets, mode Hard et album de stickers) ;",
-  "les informations de la partie en ligne conservées pour permettre sa reprise (code et pseudonyme) ;",
-  "un identifiant aléatoire (voir la section « Statistiques d'utilisation ») ainsi qu'une copie du jeu permettant son utilisation hors connexion.",
-  "Les données saisies dans l'éthylotest (poids et sexe) ainsi que le journal de diagnostic (« mouchard », désactivé par défaut)",
-  "restent exclusivement sur votre appareil",
-  ", sauf si vous joignez volontairement un rapport de bug alors que le mouchard est activé.",
-  "Pour supprimer ces données, effacez les données du site dans les paramètres de votre navigateur.",
-  "Statistiques d'utilisation",
-  "Afin d'établir des statistiques d'utilisation, le jeu transmet les données suivantes à sa base de données (Google Firebase) :",
-  "un identifiant aléatoire de 12 caractères, propre à l'appareil (il ne correspond ni à votre nom ni à un identifiant publicitaire) ;",
-  "le type d'appareil (iPhone, Android ou ordinateur), le thème sélectionné, la version du jeu, la date de la dernière visite, l'état d'installation et l'indication qu'une partie a déjà été lancée ;",
-  "des compteurs : visites, parties lancées (par mode et par heure), parties terminées (durée et nombre de joueurs), cartes dorées et choix effectués pour chaque défi du mode Hot ;",
-  "l'état courant de l'appareil (menu, partie classique, en ligne ou affichage TV), supprimé lors de la déconnexion ;",
-  "des informations techniques fournies par le navigateur : navigateur, version du système, dimensions de l'écran, langue et fuseau horaire ;",
-  "(pays, région, ville) ainsi que le",
-  "fournisseur d'accès à Internet",
-  ", déterminés à partir de votre adresse IP par un service tiers (ipwho.is ou, à défaut, get.geojs.io). Ces services traitent votre adresse IP pour fournir cette information. Alcuno ne conserve pas votre adresse IP et ne sollicite aucune donnée de localisation GPS.",
-  "Ces statistiques sont accessibles uniquement au développeur. Elles ne comprennent ni nom, ni pseudonyme, ni adresse e-mail. Elles ne font pas l'objet d'une suppression automatique.",
-  "Rapports d'erreur",
-  "Lorsqu'une erreur est détectée, le jeu transmet un rapport technique, dans la limite de cinq catégories d'erreurs par ouverture de l'application. Le rapport contient un message expurgé (le texte entre guillemets est supprimé afin d'éviter la transmission d'un pseudonyme ou d'un code de partie), le nom du fichier, le numéro de ligne, la version du jeu et le type d'appareil.",
-  "Parties en ligne et affichage sur téléviseur",
-  "Lors d'une partie en ligne ou de son affichage sur un téléviseur, le jeu enregistre dans Firebase le code de la partie, les pseudonymes des joueurs, le rôle d'hôte, l'état de la partie et les actions effectuées par les participants.",
-  "Toute personne disposant du code d'une partie peut consulter son contenu",
-  ". Pour éviter de communiquer votre nom réel aux autres participants, choisissez un pseudonyme.",
-  "Les parties sont supprimées automatiquement après trois heures d'inactivité ou, au plus tard, dix heures après leur création. Le nettoyage est effectué toutes les heures.",
-  "Authentification Google (facultative)",
-  "Lorsque vous choisissez de vous connecter avec Google, Firebase Authentication assure la gestion de votre compte. Votre nom et votre adresse e-mail restent auprès de Google/Firebase ; ils ne sont pas copiés dans la base de données du jeu. Le jeu y enregistre votre progression (déblocages, album de stickers et réglages), accessible et modifiable uniquement par vous.",
-  "Pour supprimer votre profil et les données de progression en ligne, accédez aux Réglages, rubrique Appareil, puis sélectionnez « Supprimer mon profil ». Cette action supprime le compte ainsi que la progression sauvegardée en ligne. Les données déjà conservées localement sur votre appareil ne sont pas supprimées.",
-  "Signalement d'un problème",
-  "Le signalement est transmis uniquement à votre initiative. Il comprend le texte saisi, un diagnostic technique (version du jeu, navigateur et appareil, état du réseau, dimensions de l'écran, code de la partie et pseudonyme si vous êtes en partie, journal des actions et erreurs récentes), le journal du mouchard lorsqu'il est activé, ainsi que les photos ou vidéos que vous joignez.",
-  "Le rapport est transmis au service tiers",
-  ", qui ne requiert pas de compte. Veuillez ne pas inclure d'informations sensibles (mot de passe, coordonnées personnelles, photo d'une autre personne, etc.).",
-  "Caméra, synthèse vocale et partage",
-  ": l'accès est demandé uniquement lors du scan du code QR d'une partie. L'image est traitée sur votre appareil ; elle n'est ni enregistrée ni transmise.",
-  "Synthèse vocale",
-  ": les annonces vocales utilisent le moteur de synthèse vocale de votre appareil.",
-  "Partage et presse-papiers",
-  ": ces fonctions sont utilisées uniquement lorsque vous sélectionnez « Partager » ou « Copier ».",
-  "Services tiers",
-  "(hébergement du jeu ; comme tout hébergeur, ce service reçoit l'adresse IP des personnes qui accèdent au site) ;",
-  "(transmission des rapports de bug) ;",
-  "(page d'authentification, uniquement si vous choisissez de vous connecter).",
-  "L'application ne diffuse aucune publicité et n'intègre aucun outil de suivi publicitaire.",
-  "Droits relatifs aux données personnelles",
-  "Vous pouvez demander l'accès aux données vous concernant, leur rectification ou leur suppression. Les statistiques sont associées à un identifiant aléatoire stocké sur votre appareil et ne sont pas rattachées directement à votre identité ; il peut donc être difficile d'identifier les statistiques d'une personne précise. Pour supprimer votre profil Google, utilisez la fonction « Supprimer mon profil » dans les Réglages.",
-  "La présente politique peut être mise à jour afin de refléter l'évolution du jeu. La date indiquée en haut de page correspond à sa dernière mise à jour.",
-  "Le contenu de cette page suit la langue sélectionnée dans l'application."
-];
-for(const cle of clesConfidentialite){
-  assert.ok(anglais[cle] && espagnol[cle], `traduction de confidentialité manquante : ${cle}`);
+// Politique de confidentialité : CHAQUE morceau de texte de la page doit être traduit dans les trois langues
+// (même découpage que js/langue.js : texte nettoyé des espaces, sans script ni style)
+const textesPolitique = politique
+  .replace(/<(script|style)\b[\s\S]*?<\/\1>/gi, "").replace(/<!--[\s\S]*?-->/g, "")
+  .split(/<[^>]+>/).map((x) => x.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/\s+/g, " ").trim())
+  .filter((x) => x && x !== "Alcuno – Politique de confidentialité" && !/^[\w./:-]+$/.test(x)); // (les adresses, comme github.com/…, ne se traduisent pas ; le titre de l'onglet est traduit par le script de la page)
+assert.ok(textesPolitique.length > 60, "la politique de confidentialité doit avoir tout son texte");
+for(const cle of textesPolitique){
+  assert.ok(anglais[cle], `traduction anglaise de confidentialité manquante : ${cle}`);
+  assert.ok(espagnol[cle], `traduction espagnole de confidentialité manquante : ${cle}`);
   assert.ok(italien[cle], `traduction italienne de confidentialité manquante : ${cle}`);
+}
+for(const rubrique of ["introduction", "editeur", "donnees", "destinataires", "transferts", "securite", "cookies", "droits", "modifications"]){
+  assert.ok(politique.includes(`id="${rubrique}"`), `la politique doit avoir la rubrique ${rubrique}`);
+}
+for(const mot of ["Défis personnalisés", "Compte Google", "Stockage sur votre appareil"]){
+  assert.ok(politique.includes(mot), `la politique doit parler de : ${mot}`);
 }
 
 const document = {

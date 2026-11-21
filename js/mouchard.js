@@ -70,9 +70,9 @@ ligneVersion.addEventListener("pointerup", () => {
     lignesMouchard = [];
     noter(`=== mouchard activé · ${VERSION_AFFICHEE} · ${navigator.userAgent}`);
     noter(`écran ${innerWidth}x${innerHeight} · appli installée : ${estEnAppli}`);
-    afficherToast("Mouchard activé : reproduis le bug, puis « Copier le diagnostic »", 4000);
+    afficherToast(tr("Mouchard activé : reproduis le bug, puis « Copier le diagnostic »"), 4000);
   } else {
-    afficherToast("Mouchard coupé", 2000);
+    afficherToast(tr("Mouchard coupé"), 2000);
   }
   sauverMouchard();
   majLigneVersionMouchard();
