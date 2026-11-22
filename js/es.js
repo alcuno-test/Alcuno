@@ -207,7 +207,7 @@ window.TEXTES_ES = {
 "<strong>L'eau aussi, ça se boit 😉</strong></span>": "<strong>El agua también se bebe 😉</strong></span>",
 "ALBUM": "ÁLBUM",
 "Accessibilité pour les gens bourrés 🍻": "Accesibilidad para gente borracha 🍻",
-"Mode daltonien 👁️": "Modo daltónico 👁️",
+"Accessibilité pour les daltoniens 👁️": "Accesibilidad para daltónicos 👁️",
 "La couleur écrite sur les cartes et dans le choix de couleur.": "El color escrito en las cartas y al elegir color.",
 "Accident, personne en danger": "Accidente, persona en peligro",
 "Accueil": "Inicio",
