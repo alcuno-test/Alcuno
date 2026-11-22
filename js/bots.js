@@ -1,0 +1,183 @@
+// =============================================================================================
+// ALCUNO : Bots (partie classique seulement)
+// (fichier chargé après ceux d'avant dans index.html : voir l'en-tête de script.js)
+// =============================================================================================
+// #region Bots
+// « 🤖 Ajouter un bot » (à côté de « Ajouter un joueur », avant la partie) : un joueur au nom tiré au hasard, joué par le
+// téléphone. À son tour, il retourne une carte tout seul ; il fait aussi tous les choix qui lui reviennent (couleur, nouveau
+// pigeon, duel, distribution du +4, carte dorée, pari de fin, Cupidon, Coup de foudre), en visant plutôt les vrais joueurs.
+// Ses gorgées sont perdues (il ne boit pas, et elles ne comptent pas dans le récap)… sauf quand il décide de les refiler à
+// quelqu'un (CHANCE_REFILE_BOT). Pas en ligne (pour l'instant), pas en mode hard (il faut 2 vrais joueurs).
+// Les choix passent par les mêmes boutons qu'un vrai joueur (surAction, js/synchro-en-ligne.js) : la partie gardée en
+// mémoire les rejoue comme les autres après un plantage.
+const CLE_BOTS = "alcuno_bots";
+const NOMS_BOTS = ["Robert", "Gérard", "Josiane", "Bernard", "Ginette", "Michel", "Huguette", "Jean-Mi", "Monique", "Roger",
+  "Simone", "Gégé", "Paulette", "Jacky", "Lucienne", "Dédé", "Raymonde", "Momo", "Germaine", "Titouan"];
+const CHANCE_REFILE_BOT = 0.25; // « de temps en temps », le bot refile ses gorgées au lieu de les perdre
+const MAX_BOTS = 6;
+
+let botsPartie = new Set();
+try { (JSON.parse(localStorage.getItem(CLE_BOTS) || "[]") || []).forEach((n) => { if (typeof n === "string") botsPartie.add(n); }); } catch (e) {}
+function sauverBots(){
+  try { localStorage.setItem(CLE_BOTS, JSON.stringify([...botsPartie].filter((n) => joueurs.includes(n)))); } catch (e) {}
+}
+
+// Un bot : seulement en classique, et seulement s'il est encore dans la liste des joueurs
+function estBot(nom){
+  return !enLigneActif && botsPartie.has(nom) && joueurs.includes(nom);
+}
+function botsPresents(){
+  return joueurs.filter((n) => estBot(n));
+}
+// Un vrai joueur prend ce nom (ou le bot a été retiré) : ce n'est plus un bot
+function retirerBot(nom){
+  if (botsPartie.delete(nom)) sauverBots();
+}
+// Vrais joueurs disponibles (pas en pause), en indices
+function indicesHumains(sauf = -1){
+  return joueurs.map((_, i) => i).filter((i) => i !== sauf && !estBot(joueurs[i]) && !estEnPause(joueurs[i]));
+}
+const auHasard = (liste) => liste[Math.floor(Math.random() * liste.length)];
+
+// ----- Bouton « Ajouter un bot »
+const btnAjouterBot = document.getElementById("ajouterBot");
+function ajouterBot(){
+  if (partieLancee || enLigneActif) return;
+  if (botsPresents().length >= MAX_BOTS) { afficherToast(tr`${MAX_BOTS} bots au plus`, 2500); return; }
+  const pris = (n) => joueurs.some((j) => (j || "").toLocaleLowerCase("fr-FR") === n.toLocaleLowerCase("fr-FR"));
+  const libres = NOMS_BOTS.filter((n) => !pris(n));
+  let nom = libres.length ? auHasard(libres) : "";
+  for (let k = 2; !nom; k++) { const essai = "Robot " + k; if (!pris(essai)) nom = essai; }
+  botsPartie.add(nom);
+  joueurs.push(nom);
+  sauverBots();
+  afficherJoueurs();
+}
+if (btnAjouterBot) {
+  btnAjouterBot.addEventListener("click", ajouterBot);
+}
+// (« Ajouter un bot » : visible comme « Ajouter un joueur », sauf en ligne)
+function majBoutonBot(){
+  if (!btnAjouterBot) return;
+  btnAjouterBot.style.display = (partieLancee || enLigneActif) ? "none" : "";
+}
+
+// ----- Gorgées d'un bot : perdues, ou (de temps en temps) refilées à un vrai joueur au hasard.
+// refiler(indexHumain, message) : la suite normale (annonce + annulations) pour ce joueur. Renvoie false si ce n'est pas un bot.
+function gorgeesDuBot(joueurIndex, nbGorgees, classeCarte, msg, onFinish, refiler){
+  const bot = joueurs[joueurIndex];
+  if (!estBot(bot)) return false;
+  const humains = indicesHumains();
+  if (humains.length && Math.random() < CHANCE_REFILE_BOT) {
+    const h = auHasard(humains), nom = joueurs[h];
+    const quoi = nbGorgees === 1 ? tr("sa gorgée") : tr`ses ${texteGorgees(nbGorgees)}`;
+    const texte = `${msg}\n${tr`${bot} a décidé de refiler ${quoi} à ${nom}. Normalement on n'a pas le droit, mais ${bot} s'en bat les couilles.`}\n${tr`Donc ${nom}, tu bois ${texteGorgees(nbGorgees)}.`}`;
+    noterHistorique(tr`${bot} refile ${texteGorgees(nbGorgees)} à ${nom}`);
+    refiler(h, texte);
+    return true;
+  }
+  const texte = `${msg}\n${tr`${bot} est un bot : ses gorgées partent dans le vide 🤖`}`;
+  afficherRegleBloc(regleZero, msg);
+  regleZero.style.display = "block";
+  zeroEnCours = true;
+  montrerOverlayRegle(texte, classeCarte);
+  executerApresOverlayRegleUnique(() => { if (typeof onFinish === "function") onFinish(); });
+  return true;
+}
+
+// ----- Le bot joue : à son tour (une carte du plateau), et les choix qui lui reviennent
+const DELAI_BOT = () => 900 + Math.random() * 700; // le temps qu'on voie ce qui se passe
+let actionBotPrevue = null;
+
+function proprietaire(el){
+  const o = el._net && el._net.owner;
+  return typeof o === "function" ? o() : o;
+}
+function visibleBot(el){
+  return el.isConnected && el.getClientRects().length > 0 && !el.closest("[hidden]");
+}
+function pretBot(el){
+  return typeof actionPrete === "function" && actionPrete(el) && !(el._net.valide && !el._net.valide()) && visibleBot(el);
+}
+function declencher(el){
+  const ev = (el._net && el._net.evenement) || "pointerdown";
+  if (ev === "click") el.click();
+  else if (ev.startsWith("pointer")) el.dispatchEvent(new PointerEvent(ev, { bubbles: true }));
+  else el.dispatchEvent(new Event(ev, { bubbles: true }));
+}
+const idDe = (el) => el.dataset.netId || "";
+// Boutons qu'un bot ne touche jamais (revenir en arrière, effacer) : ils n'entrent même pas dans « ce qui lui revient »
+// (sinon le « Retour » du pari, qui appartient à celui qui vient de parier, bloquait le bot suivant)
+const IDS_JAMAIS_BOT = /^(plus4:annuler|plus4:reset|pred:retour|cupidon:retour|foudre:retour|pause:)/;
+const indexDe = (el) => Number(idDe(el).split(":").pop());
+
+// Choix parmi les boutons proposés à ce bot (tous du même écran)
+function choisirPourBot(bot, choix){
+  const ids = (prefixe) => choix.filter((el) => idDe(el).startsWith(prefixe));
+  const humain = (liste) => liste.filter((el) => !estBot(joueurs[indexDe(el)]));
+  const versHumain = (liste) => auHasard(humain(liste).length ? humain(liste) : liste);
+  // +4 : une gorgée à la fois, plutôt à ceux qui ont le moins bu (un peu de malice), puis Valider
+  const valider4 = ids("plus4:valider")[0];
+  if (valider4) return valider4;
+  const plus4 = humain(ids("plus4:joueur:"));
+  if (plus4.length) {
+    const min = Math.min(...plus4.map((el) => gorgeesBues[joueurs[indexDe(el)]] || 0));
+    const moinsBu = plus4.filter((el) => (gorgeesBues[joueurs[indexDe(el)]] || 0) <= min + 2);
+    return auHasard(Math.random() < 0.7 ? moinsBu : plus4);
+  }
+  if (ids("plus4:joueur:").length) return auHasard(ids("plus4:joueur:"));
+  // Cupidon : lier deux vrais joueurs, sinon briser un lien
+  // (« Valider » n'est proposé qu'avec 2 joueurs choisis : les choisis ont un 💘)
+  if (ids("cupidon:valider").length) return ids("cupidon:valider")[0];
+  const libresCupidon = ids("cupidon:joueur:").filter((el) => !el.innerText.includes("💘"));
+  if (libresCupidon.length) return versHumain(libresCupidon);
+  if (ids("cupidon:lier").length) return ids("cupidon:lier")[0];
+  if (ids("cupidon:briser").length) return ids("cupidon:briser")[0];
+  if (ids("cupidon:lien:").length) return auHasard(ids("cupidon:lien:"));
+  // Coup de foudre : un vrai joueur… puis le cul sec (un bot ne fait pas de bisou)
+  if (ids("foudre:culsec").length) return ids("foudre:culsec")[0];
+  if (ids("foudre:joueur:").length) return versHumain(ids("foudre:joueur:"));
+  // Nouveau pigeon, adversaire du duel, victime de la carte dorée : un vrai joueur
+  for (const p of ["pigeon:", "duel:choix:", "doree:"]) if (ids(p).length) return versHumain(ids(p));
+  // Défi hot ou annulations (normalement jamais pour un bot) : il boit, et annule le plus possible
+  if (ids("defi:bois").length) return ids("defi:bois")[0];
+  if (ids("annul:").length) return ids("annul:").sort((a, b) => indexDe(b) - indexDe(a))[0];
+  // Couleur, carte du duel, pari de fin… : au hasard
+  return choix.length ? auHasard(choix) : null;
+}
+
+function actionDuBot(){
+  if (enLigneActif || !partieLancee || !botsPresents().length) return null;
+  if (typeof rattrapageEnCours !== "undefined" && rattrapageEnCours) return null;
+  if (typeof repriseClassiqueEnCours !== "undefined" && repriseClassiqueEnCours) return null;
+  if (typeof pauseEnCours !== "undefined" && pauseEnCours) return null;
+  if (document.documentElement.classList.contains("mode-tele")) return null;
+  // 1) un choix qui revient à un bot (écran par-dessus le plateau)
+  const proposes = [...document.querySelectorAll("[data-net-id]")].filter((el) => !el.closest("#plateau") && el._net && !IDS_JAMAIS_BOT.test(idDe(el)) && estBot(proprietaire(el)) && pretBot(el));
+  if (proposes.length) {
+    const bot = proprietaire(proposes[0]);
+    return choisirPourBot(bot, proposes.filter((el) => proprietaire(el) === bot));
+  }
+  // 2) son tour : une carte cachée du plateau au hasard (quand plus rien n'est affiché par-dessus)
+  if (typeof overlayOuvert === "function" && overlayOuvert()) return null;
+  if (voileOverlays.classList.contains("visible")) return null;
+  const cartes = [...plateau.querySelectorAll(".Carte:not(.retournee)")].filter((c) => c._net && estBot(proprietaire(c)) && pretBot(c));
+  return cartes.length ? auHasard(cartes) : null;
+}
+
+// Toutes les 300 ms : si un bot a quelque chose à faire, il le fait après un petit temps de « réflexion »
+// (refait le point juste avant : l'écran a pu changer entre-temps)
+setInterval(() => {
+  if (actionBotPrevue) return;
+  const el = actionDuBot();
+  if (!el) return;
+  actionBotPrevue = setTimeout(() => {
+    actionBotPrevue = null;
+    const encore = actionDuBot();
+    if (!encore) return;
+    // même écran : on garde l'élément choisi s'il est toujours proposé, sinon le nouveau choix
+    const cible = (el.isConnected && pretBot(el) && estBot(proprietaire(el))) ? el : encore;
+    declencher(cible);
+  }, DELAI_BOT());
+}, 300);
+// #endregion

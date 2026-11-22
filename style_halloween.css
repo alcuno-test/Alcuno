@@ -260,14 +260,14 @@
     #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #validerRegarder, #btnScannerQR, #lancerPartieEnLigne, #btnRejouerMemes,
     #btnModifierJoueurs, #btnChoixPseudoAnnuler, #listeChoixPseudo button, #btnConfirmerAccueilOui,
     #btnConfirmerAccueilNon, #btnConfirmerHoteOui, #btnConfirmerHoteNon, #btnConfirmerRetraitOui,
-    #btnConfirmerRetraitNon, #ajouterJoueur, #btnAjouterDefiPersonnel, #jouer, #supprimerJoueur, #nouvellePartie, #termineSuppression,
+    #btnConfirmerRetraitNon, :is(#ajouterJoueur, #ajouterBot), #btnAjouterDefiPersonnel, #jouer, #supprimerJoueur, #nouvellePartie, #termineSuppression,
     #btnInstallationInstaller, #overlayPigeon .bouton-pigeon, #overlayPlus4 .bouton-pigeon, #overlayCupidon .bouton-pigeon, #overlayDuel button,
     #overlayFinUnRestants .bouton-pigeon, #overlayPredictionFin .bouton-pigeon, #overlayRegleUnique .bouton-annulation,
     #overlayAnnulation button):hover:not(:disabled), :where(html[data-theme="halloween"]) body :is(#btnModeEnLigne, #btnModeClassique, #btnContinuerOptions, .btnRetour, #btnPartagerJeu, #btnCreerPartie, #btnRejoindrePartie, #btnRegarderPartie,
     #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #validerRegarder, #btnScannerQR, #lancerPartieEnLigne, #btnRejouerMemes,
     #btnModifierJoueurs, #btnChoixPseudoAnnuler, #listeChoixPseudo button, #btnConfirmerAccueilOui,
     #btnConfirmerAccueilNon, #btnConfirmerHoteOui, #btnConfirmerHoteNon, #btnConfirmerRetraitOui,
-    #btnConfirmerRetraitNon, #ajouterJoueur, #btnAjouterDefiPersonnel, #jouer, #supprimerJoueur, #nouvellePartie, #termineSuppression,
+    #btnConfirmerRetraitNon, :is(#ajouterJoueur, #ajouterBot), #btnAjouterDefiPersonnel, #jouer, #supprimerJoueur, #nouvellePartie, #termineSuppression,
     #btnInstallationInstaller, #overlayPigeon .bouton-pigeon, #overlayPlus4 .bouton-pigeon, #overlayCoupDeFoudre .bouton-pigeon, #overlayDuel button,
     #overlayFinUnRestants .bouton-pigeon, #overlayPredictionFin .bouton-pigeon, #overlayRegleUnique .bouton-annulation,
     #overlayAnnulation button):hover:not(:disabled){ box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.9), 0 6px 20px rgba(255,180,100,0.55) !important; }
@@ -465,7 +465,7 @@ html[data-theme="halloween"] #ecranTele .tele-pied{ color: rgba(255,255,255,.85)
 
 /* ----- Boutons : presque noirs, texte blanc, sur tous les écrans -----
    (mêmes boutons que les autres thèmes habillés, Soleil couchant par exemple : tous les boutons du jeu doivent être aux couleurs du thème) */
-html[data-theme="halloween"][data-theme] body :is(#btnModeEnLigne, #btnModeClassique, #btnContinuerOptions, .btnRetour, #btnPartagerJeu, #ajouterJoueur, #btnAjouterDefiPersonnel, #jouer, #supprimerJoueur,
+html[data-theme="halloween"][data-theme] body :is(#btnModeEnLigne, #btnModeClassique, #btnContinuerOptions, .btnRetour, #btnPartagerJeu, :is(#ajouterJoueur, #ajouterBot), #btnAjouterDefiPersonnel, #jouer, #supprimerJoueur,
   #nouvellePartie, #btnRejouerMemes, #btnModifierJoueurs, #btnReprendrePause,
   #btnCreerPartie, #btnRejoindrePartie, #btnRegarderPartie, #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #validerRegarder, #btnScannerQR,
   #lancerPartieEnLigne, #btnChoixPseudoAnnuler, #listeChoixPseudo button, #btnConfirmerAccueilOui, #btnConfirmerAccueilNon,
@@ -473,7 +473,7 @@ html[data-theme="halloween"][data-theme] body :is(#btnModeEnLigne, #btnModeClass
   #btnInstallationInstaller, #ecranRegles .btnFaqLien, #choixMode .btnInstaller, #menu #btnCaster, #ecranCaster button:not(.btnRetour), #btnFermerScanner, #ecranReprise button,
   #overlayPigeon .bouton-pigeon, #overlayPlus4 .bouton-pigeon, #overlayCupidon .bouton-pigeon, #overlayFinUnRestants .bouton-pigeon,
   #overlayAnnulation button, #overlayRegleUnique .bouton-annulation, #overlayDuel button:not(:disabled), #overlayPredictionFin .bouton-pigeon),
-html[data-theme="halloween"][data-theme] body :is(#btnModeEnLigne, #btnModeClassique, #btnContinuerOptions, .btnRetour, #btnPartagerJeu, #ajouterJoueur, #btnAjouterDefiPersonnel, #jouer, #supprimerJoueur,
+html[data-theme="halloween"][data-theme] body :is(#btnModeEnLigne, #btnModeClassique, #btnContinuerOptions, .btnRetour, #btnPartagerJeu, :is(#ajouterJoueur, #ajouterBot), #btnAjouterDefiPersonnel, #jouer, #supprimerJoueur,
   #nouvellePartie, #btnRejouerMemes, #btnModifierJoueurs, #btnReprendrePause,
   #btnCreerPartie, #btnRejoindrePartie, #btnRegarderPartie, #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #validerRegarder, #btnScannerQR,
   #lancerPartieEnLigne, #btnChoixPseudoAnnuler, #listeChoixPseudo button, #btnConfirmerAccueilOui, #btnConfirmerAccueilNon,
@@ -655,7 +655,7 @@ html[data-theme="halloween"] :is(h2, #titreReglages, .titreBloc, .aProposTitre, 
 }
 /* Texte courant et boutons */
 html[data-theme="halloween"] body :is(#btnModeEnLigne, #btnModeClassique, #btnContinuerOptions, #nouvellePartie,
-  #btnPartagerJeu, #btnRejouerMemes, #btnModifierJoueurs, #btnReprendrePause, #ajouterJoueur, #btnAjouterDefiPersonnel, #jouer, #supprimerJoueur,
+  #btnPartagerJeu, #btnRejouerMemes, #btnModifierJoueurs, #btnReprendrePause, :is(#ajouterJoueur, #ajouterBot), #btnAjouterDefiPersonnel, #jouer, #supprimerJoueur,
   #btnCreerPartie, #btnRejoindrePartie, #btnRegarderPartie, #btnRevenirPartie, #validerRevenir, #validerCreation, #validerRejoindre, #validerRegarder,
   #btnScannerQR, #lancerPartieEnLigne, #btnChoixPseudoAnnuler, #btnConfirmerAccueilOui, #btnConfirmerAccueilNon,
   #btnConfirmerHoteOui, #btnConfirmerHoteNon, #btnConfirmerRetraitOui, #btnConfirmerRetraitNon, #termineSuppression,
