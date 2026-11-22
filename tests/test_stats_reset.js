@@ -80,6 +80,10 @@ export const signInWithEmailAndPassword = async (auth, email, mdp) => {
   if (mdp !== "bon") { const e = new Error("x"); e.code = "auth/invalid-credential"; throw e; }
   utilisateur = { uid: "UID-TEST-123" }; ecouteurs.forEach((e) => e(utilisateur)); return { user: utilisateur };
 };
+export class GoogleAuthProvider {}
+export class OAuthProvider { constructor(id){ this.id = id; } credential(c){ return c; } }
+export const signInWithCredential = async () => { throw new Error("connexion Google simulée : non gérée"); };
+export const signInWithPopup = async () => { throw new Error("connexion Google simulée : non gérée"); };
 export const signOut = async () => { utilisateur = null; ecouteurs.forEach((e) => e(null)); };
 `;
 
@@ -444,11 +448,11 @@ export const signOut = async () => { utilisateur = null; ecouteurs.forEach((e) =
     window.__notifier();
   });
   await page.waitForTimeout(300);
-  const direct = await page.evaluate(() => ({ legende: document.getElementById("pubDirectLegende").textContent, lignes: [...document.querySelectorAll("#pubDirectListe .appLigne")].map((l) => l.textContent),
-    images: document.querySelectorAll("#pubDirectListe img").length, injecte: !!window.__injecte, debord: [...document.querySelectorAll("#pubDirectListe .appLigne")].some((e) => e.getBoundingClientRect().right > 391) }));
+  const direct = await page.evaluate(() => ({ legende: document.getElementById("pubDirectLegende").textContent, lignes: [...document.querySelectorAll("#pubDirectListe .liveCarte")].map((l) => l.textContent),
+    images: document.querySelectorAll("#pubDirectListe img").length, injecte: !!window.__injecte, debord: [...document.querySelectorAll("#pubDirectListe .liveCarte")].some((e) => e.getBoundingClientRect().right > 391) }));
   verifier(/3 appareils connectés/.test(direct.legende) && direct.lignes.length === 3 && /Télé castée/.test(direct.lignes[0]) && /Appareil inconnu/.test(direct.lignes[0])
-    && /Partie en ligne · .*Toulouse, Occitanie/.test(direct.lignes[2]) && /Thème : /.test(direct.lignes[2]) && /Orange S\.A\./.test(direct.lignes[2]) && /Téléphone · iOS 17\.5 · Safari 17/.test(direct.lignes[2]) && /il est \d\d:\d\d chez lui/.test(direct.lignes[2])
-    && /Au menu · .*Montréal/.test(direct.lignes[1]) && /<img src=x/.test(direct.lignes[1]) && !direct.lignes.join().includes("aaaaaaaaaa02") && direct.images === 0 && !direct.injecte && !direct.debord,
+    && /Partie en ligne.*Toulouse, Occitanie/.test(direct.lignes[2]) && /🎨 /.test(direct.lignes[2]) && /Orange S\.A\./.test(direct.lignes[2]) && /Téléphone/.test(direct.lignes[2]) && /iOS 17\.5/.test(direct.lignes[2]) && /Safari 17/.test(direct.lignes[2]) && /🕒 \d\d:\d\d chez lui/.test(direct.lignes[2])
+    && /Montréal/.test(direct.lignes[1]) && /<img src=x/.test(direct.lignes[1]) && !direct.lignes.join().includes("aaaaaaaaaa02") && direct.images === 0 && !direct.injecte && !direct.debord,
     `Public : infos en temps réel, 3 présences récentes (la plus ancienne ignorée), thème et fiche rapprochés, texte piégé inerte (${JSON.stringify(direct)})`);
   await page.evaluate((v) => { window.__arbre.presence = JSON.parse(v); window.__notifier(); }, presAvant);
   await page.click('#pubPeriode button[data-jours="30"]');
