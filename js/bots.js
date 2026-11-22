@@ -39,28 +39,41 @@ function indicesHumains(sauf = -1){
 }
 const auHasard = (liste) => liste[Math.floor(Math.random() * liste.length)];
 
-// ----- Bouton « Ajouter un bot »
+// ----- Bouton « Ajouter un bot » : prénom tiré au hasard, puis « Ajouter le bot Roméo à la partie ? » Oui / Non
 const btnAjouterBot = document.getElementById("ajouterBot");
-function ajouterBot(){
-  if (partieLancee || enLigneActif) return;
-  if (botsPresents().length >= MAX_BOTS) { afficherToast(tr`${MAX_BOTS} bots au plus`, 2500); return; }
+const ecranConfirmerBot = document.getElementById("ecranConfirmerBot");
+let botPropose = "";
+function nomBotLibre(){
   const pris = (n) => joueurs.some((j) => (j || "").toLocaleLowerCase("fr-FR") === n.toLocaleLowerCase("fr-FR"));
   const libres = NOMS_BOTS.filter((n) => !pris(n));
-  let nom = libres.length ? auHasard(libres) : "";
-  for (let k = 2; !nom; k++) { const essai = "Robot " + k; if (!pris(essai)) nom = essai; }
+  if (libres.length) return auHasard(libres);
+  for (let k = 2; ; k++) { const essai = "Robot " + k; if (!pris(essai)) return essai; }
+}
+function proposerBot(){
+  if (partieLancee || enLigneActif || estModeHard()) return;
+  if (botsPresents().length >= MAX_BOTS) { afficherToast(tr`${MAX_BOTS} bots au plus`, 2500); return; }
+  botPropose = nomBotLibre();
+  document.getElementById("titreConfirmerBot").innerText = tr`Ajouter le bot ${botPropose} à la partie ?`.replace(/ ([?!])/g, "\u00a0$1"); // (le « ? » ne passe jamais seul à la ligne)
+  ecranConfirmerBot.style.display = "";
+}
+function ajouterBot(nom){
+  ecranConfirmerBot.style.display = "none";
+  if (!nom || partieLancee || enLigneActif || estModeHard() || joueurs.includes(nom)) return;
   botsPartie.add(nom);
   joueurs.push(nom);
   sauverBots();
   afficherJoueurs();
 }
-if (btnAjouterBot) {
-  btnAjouterBot.addEventListener("click", ajouterBot);
-}
-// (« Ajouter un bot » : visible comme « Ajouter un joueur », sauf en ligne)
+if (btnAjouterBot) btnAjouterBot.addEventListener("click", proposerBot);
+document.getElementById("btnConfirmerBotOui").addEventListener("click", () => ajouterBot(botPropose));
+document.getElementById("btnConfirmerBotNon").addEventListener("click", () => { ecranConfirmerBot.style.display = "none"; });
+// (« Ajouter un bot » : visible comme « Ajouter un joueur », sauf en ligne et en mode hard, où il faut 2 vrais joueurs)
 function majBoutonBot(){
   if (!btnAjouterBot) return;
-  btnAjouterBot.style.display = (partieLancee || enLigneActif) ? "none" : "";
+  btnAjouterBot.style.display = (partieLancee || enLigneActif || estModeHard()) ? "none" : "";
 }
+caseModeHard.addEventListener("change", majBoutonBot);
+majBoutonBot();
 
 // ----- Gorgées d'un bot : perdues, ou (de temps en temps) refilées à un vrai joueur au hasard.
 // refiler(indexHumain, message) : la suite normale (annonce + annulations) pour ce joueur. Renvoie false si ce n'est pas un bot.

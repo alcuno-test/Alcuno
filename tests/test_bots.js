@@ -20,8 +20,21 @@ const URL = process.env.URL_JEU || "http://localhost:8765/index.html";
     $("#btnModeClassique").click();
     if ($("#btnContinuerOptions")) $("#btnContinuerOptions").click();
     $("#nomJoueur").value = "Léa"; pd($("#ajouterJoueur"));
+    // mode hard : pas de bouton
+    caseModeHard.checked = true; caseModeHard.dispatchEvent(new Event("change"));
+    res.cacheEnHard = $("#ajouterBot").style.display === "none";
+    caseModeHard.checked = false; caseModeHard.dispatchEvent(new Event("change"));
+    res.visibleSansHard = $("#ajouterBot").style.display !== "none";
+    // confirmation : « Non » n'ajoute rien, « Oui » ajoute le bot proposé
     $("#ajouterBot").click();
+    res.question = $("#titreConfirmerBot").innerText;
+    $("#btnConfirmerBotNon").click();
+    res.apresNon = joueurs.length;
+    $("#ajouterBot").click();
+    const propose = $("#titreConfirmerBot").innerText;
+    $("#btnConfirmerBotOui").click();
     res.bot = joueurs[1];
+    res.ajouteCeluiPropose = propose.includes(res.bot) && $("#ecranConfirmerBot").style.display === "none";
     res.estBot = estBot(res.bot);
     res.badge = !!$("#listeJoueurs .badge-bot");
     res.jouerVisible = $("#jouer").style.display !== "none";
@@ -52,6 +65,10 @@ const URL = process.env.URL_JEU || "http://localhost:8765/index.html";
     // pas de bot en mode hard
     return res;
   });
+  assert.ok(r.cacheEnHard && r.visibleSansHard, "« Ajouter un bot » caché en mode hard");
+  assert.match(r.question, /^Ajouter le bot .+ à la partie \?$/, "question de confirmation avec le prénom");
+  assert.equal(r.apresNon, 1, "« Non » : pas de bot ajouté");
+  assert.ok(r.ajouteCeluiPropose, "« Oui » : le bot proposé est ajouté");
   assert.ok(r.estBot && r.badge, "bot ajouté, avec sa pastille 🤖");
   assert.ok(r.jouerVisible, "1 joueur + 1 bot : on peut lancer la partie");
   assert.equal(r.gorgeesBot, 0, "les gorgées d'un bot ne comptent pas");
