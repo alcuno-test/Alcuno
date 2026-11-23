@@ -10823,25 +10823,28 @@ html:is([data-theme="givre"], [data-theme="kawaii"]) #tutoriel .tuto-points span
 #ecranRegles .reglesLiens .btnFaqLien{ margin: 0; }
 #ecranRegles:is(.album, .faq) .reglesLiens{ display: none; }
 
-/* ===== Givre : le dos des cartes commence à givrer =====
+/* ===== Givre : les cartes commencent à givrer =====
    Le givre part du fond blanc du plateau et mord sur la carte depuis les bords, par plaques irrégulières ; un
    dessin différent selon la place de la carte (6 images, plus des miroirs). Images prêtes (Cartes/givre/*.webp) et
    pas de filtres SVG : redessinés à chaque image du défilement, ils cassaient l'affichage sur Android (cf. Star Wars).
-   Pas sur les faces, ni sur la carte « 1 » qui s'envole, ni sur les cartes recachées de la télé. */
-html[data-theme="givre"] .Carte:not(.retournee):not(.carte-envol):not(.carte-recachee){ position: relative; }
-html[data-theme="givre"] .Carte:not(.retournee):not(.carte-envol):not(.carte-recachee)::before{
+   Sur les dos partout, et sur les faces retournées du plateau. Pas sur la carte « 1 » qui s'envole, ni sur les
+   cartes recachées (faces fermées, télé), ni dans le tutoriel. */
+html[data-theme="givre"] :is(.Carte:not(.retournee), #plateau .Carte.retournee:not(.recachee)):not(.carte-envol):not(.carte-recachee){ position: relative; }
+html[data-theme="givre"] :is(.Carte:not(.retournee), #plateau .Carte.retournee:not(.recachee)):not(.carte-envol):not(.carte-recachee)::before{
   content: "";
   position: absolute;
   inset: -5.13% -8%; /* (déborde un peu sur le fond : la carte est prise dans le blanc) */
   pointer-events: none;
   background: url("Cartes/givre/givre_1.webp") center / 100% 100% no-repeat;
 }
-html[data-theme="givre"] .Carte:not(.retournee):not(.carte-envol):not(.carte-recachee):nth-child(6n+2)::before{ background-image: url("Cartes/givre/givre_2.webp"); }
-html[data-theme="givre"] .Carte:not(.retournee):not(.carte-envol):not(.carte-recachee):nth-child(6n+3)::before{ background-image: url("Cartes/givre/givre_3.webp"); }
-html[data-theme="givre"] .Carte:not(.retournee):not(.carte-envol):not(.carte-recachee):nth-child(6n+4)::before{ background-image: url("Cartes/givre/givre_4.webp"); }
-html[data-theme="givre"] .Carte:not(.retournee):not(.carte-envol):not(.carte-recachee):nth-child(6n+5)::before{ background-image: url("Cartes/givre/givre_5.webp"); }
-html[data-theme="givre"] .Carte:not(.retournee):not(.carte-envol):not(.carte-recachee):nth-child(6n)::before{ background-image: url("Cartes/givre/givre_6.webp"); }
-html[data-theme="givre"] .Carte:not(.retournee):not(.carte-envol):not(.carte-recachee):nth-child(5n)::before{ transform: scaleX(-1); }
-html[data-theme="givre"] .Carte:not(.retournee):not(.carte-envol):not(.carte-recachee):nth-child(7n)::before{ transform: rotate(180deg); }
+html[data-theme="givre"] :is(.Carte:not(.retournee), #plateau .Carte.retournee:not(.recachee)):not(.carte-envol):not(.carte-recachee):nth-child(6n+2)::before{ background-image: url("Cartes/givre/givre_2.webp"); }
+html[data-theme="givre"] :is(.Carte:not(.retournee), #plateau .Carte.retournee:not(.recachee)):not(.carte-envol):not(.carte-recachee):nth-child(6n+3)::before{ background-image: url("Cartes/givre/givre_3.webp"); }
+html[data-theme="givre"] :is(.Carte:not(.retournee), #plateau .Carte.retournee:not(.recachee)):not(.carte-envol):not(.carte-recachee):nth-child(6n+4)::before{ background-image: url("Cartes/givre/givre_4.webp"); }
+html[data-theme="givre"] :is(.Carte:not(.retournee), #plateau .Carte.retournee:not(.recachee)):not(.carte-envol):not(.carte-recachee):nth-child(6n+5)::before{ background-image: url("Cartes/givre/givre_5.webp"); }
+html[data-theme="givre"] :is(.Carte:not(.retournee), #plateau .Carte.retournee:not(.recachee)):not(.carte-envol):not(.carte-recachee):nth-child(6n)::before{ background-image: url("Cartes/givre/givre_6.webp"); }
+html[data-theme="givre"] :is(.Carte:not(.retournee), #plateau .Carte.retournee:not(.recachee)):not(.carte-envol):not(.carte-recachee):nth-child(5n)::before{ transform: scaleX(-1); }
+html[data-theme="givre"] :is(.Carte:not(.retournee), #plateau .Carte.retournee:not(.recachee)):not(.carte-envol):not(.carte-recachee):nth-child(7n)::before{ transform: rotate(180deg); }
+/* Tutoriel : cartes sans givre */
+html[data-theme="givre"] #tutoriel .Carte::before{ content: none !important; }
 /* Android, duel : le ::before de ces cartes est déjà le halo qui clignote (voir plus haut) => pas de givre dessus */
-html.android[data-theme="givre"] #overlayDuel .Carte.duel-a-choisir::before{ inset: 0; background: none; transform: none; }
+html.android[data-theme="givre"] #overlayDuel .Carte.duel-a-choisir::before{ inset: 0 !important; background: none !important; transform: none !important; }
