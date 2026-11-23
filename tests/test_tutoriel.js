@@ -107,24 +107,25 @@ const ok = (p) => p.click("#tutoriel .voletPause-ok");
   assert.ok(!(await ouvert(a.p)), "pas pour un ancien joueur");
   await a.p.close();
 
-  // ----- vrai nouveau joueur (téléphone vierge, pas un robot de test) : il s'ouvre tout seul
-  const n = await b.newPage({ viewport: { width: 1000, height: 780 } });
-  await n.addInitScript(() => Object.defineProperty(navigator, "webdriver", { get: () => false }));
-  await n.goto(URL); await n.waitForTimeout(1500);
-  assert.ok(await ouvert(n), "nouveau joueur détecté tout seul");
+  // ----- vrai nouveau joueur (pas un robot de test) : dans l'appli installée, il s'ouvre tout seul
+  const appli = async (enAppli) => {
+    const page = await b.newPage({ viewport: { width: 390, height: 780 } });
+    await page.addInitScript((enAppli) => {
+      Object.defineProperty(navigator, "webdriver", { get: () => false });
+      if (enAppli) Object.defineProperty(navigator, "standalone", { value: true });
+    }, enAppli);
+    await page.goto(URL); await page.waitForTimeout(1500);
+    return page;
+  };
+  const n = await appli(true);
+  assert.ok(await ouvert(n), "nouveau joueur, appli installée : il s'ouvre tout seul");
   await n.close();
+  // ----- dans le navigateur : rien (et rien de noté : il viendra à l'installation)
+  const nav = await appli(false);
+  assert.ok(!(await ouvert(nav)), "pas dans le navigateur");
+  assert.equal(await nav.evaluate(() => localStorage.getItem("alcuno_tutoriel")), null, "rien de noté dans le navigateur");
+  await nav.close();
 
-  // ----- iPhone dans le navigateur : l'écran « Installer Alcuno » d'abord, le tutoriel quand on le ferme
-  const ctx = await b.newContext({ ...require("playwright").devices["iPhone 13"] });
-  const i = await ctx.newPage();
-  await i.addInitScript(() => Object.defineProperty(navigator, "webdriver", { get: () => false }));
-  await i.goto(URL); await i.waitForTimeout(1500);
-  assert.ok(!(await ouvert(i)) && await i.evaluate(() => document.getElementById("ecranInstallation").style.display !== "none"), "l'écran d'installation passe avant");
-  await i.evaluate(() => document.getElementById("btnInstallationPlusTard").click());
-  await i.waitForTimeout(1200);
-  assert.ok(await ouvert(i), "puis le tutoriel");
-  await ctx.close();
-
-  console.log("Tutoriel : ouverture pour les nouveaux, mini-partie jusqu'au bout, Passer, retour, rejoué depuis les Règles.");
+  console.log("Tutoriel : ouverture pour les nouveaux (appli installée), mini-partie jusqu'au bout, Passer, retour, rejoué depuis les Règles.");
   await b.close();
 })().catch((e) => { console.error(e); process.exit(1); });

@@ -3132,7 +3132,8 @@ if (estEnAppli && !aideDejaVue() && !nouveauQuiVientDInstaller()) {
 if (!document.documentElement.classList.contains("mode-tele") && estEnAppli && !aideDejaVue()) { // (pas sur la télé)
   const verifierAideAccueil = () => {
     if (aideDejaVue()) { clearInterval(surveillance); return; }
-    if (typeof tutorielEnAttente === "function" && tutorielEnAttente()) return; // (le tutoriel d'abord : les flèches viennent à sa fin, js/tutoriel.js)
+    // (le tutoriel d'abord : les flèches viennent à sa fin ; on attend aussi que js/tutoriel.js, chargé en dernier, soit là)
+    if (typeof tutorielEnAttente !== "function" || tutorielEnAttente()) return;
     const accueilLibre = !partieLancee &&
       document.getElementById("choixMode").style.display !== "none" &&
       [ecranInstallation, ecranReglages, ecranRegles, ecranCredits].every((page) => page.style.display === "none") &&

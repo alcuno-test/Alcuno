@@ -3,8 +3,9 @@
 // Une mini-partie pour de faux, par-dessus l'accueil : on retourne une carte, le tour passe au joueur suivant,
 // doigt appuyé pour revoir une règle, prénom touché pour une pause, pari sur la dernière carte. « Passer » à
 // tout moment. À la fin : l'aide des flèches dorées vers les Règles et les Réglages (js/reglages.js).
-// Seulement pour les nouveaux joueurs (rien d'un joueur d'avant dans ce téléphone), une seule fois ; on le
-// revoit depuis l'écran des Règles (« 🎓 Tutoriel »).
+// Seulement à la première ouverture de l'appli tout juste installée, pour un nouveau joueur (rien d'un joueur
+// d'avant dans ce téléphone), une seule fois ; pas dans le navigateur. On le revoit depuis l'écran des Règles
+// (« 🎓 Tutoriel »).
 // =============================================================================================
 // #region Tutoriel
 const CLE_TUTORIEL = "alcuno_tutoriel"; // "a_voir" : nouveau joueur qui ne l'a pas encore vu ; "vu" : vu ou passé
@@ -286,11 +287,12 @@ function brancherPlateauTuto(plateauTuto){
 // Écran des Règles : « 🎓 Tutoriel » le rejoue (on revient aux Règles à la fin)
 document.getElementById("btnTutoDepuisRegles").addEventListener("click", () => afficherTutoriel(true));
 
-// Lancement tout seul : nouveau joueur, sur l'accueil quand rien d'autre n'est ouvert (partie, invitation par
-// QR code, écran d'installation, en attente de Chrome pour l'installation…). Pas sur la télé.
+// Lancement tout seul : nouveau joueur, dans l'appli installée (estEnAppli, js/reglages.js : dans le navigateur,
+// rien n'est décidé, pour qu'il vienne à l'installation), sur l'accueil quand rien d'autre n'est ouvert (partie,
+// invitation par QR code…). Pas sur la télé.
 // Robots de test (navigator.webdriver) : jamais tout seul, sauf si le test l'a demandé (alcuno_tutoriel = "a_voir").
 if (!document.documentElement.classList.contains("mode-tele")) {
-  if (etatTutoriel() === null && !navigator.webdriver) noterTutoriel(joueurToutNeuf() && !premierePartieJouee() ? "a_voir" : "vu");
+  if (etatTutoriel() === null && estEnAppli && !navigator.webdriver) noterTutoriel(joueurToutNeuf() && !premierePartieJouee() ? "a_voir" : "vu");
   // APPLI TEST (MODE_TEST, script.js) : à chaque ouverture, pour le voir et le régler (pas dans le vrai jeu)
   if (MODE_TEST && !navigator.webdriver) noterTutoriel("a_voir");
   if (etatTutoriel() === "a_voir") {
