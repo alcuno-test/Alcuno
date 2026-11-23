@@ -153,10 +153,10 @@ function fermerTutoriel(fini){
   window.removeEventListener("resize", replacerDoigtTuto);
   fermerVoletCarte();
   racine.classList.add("tuto-sortie");
-  setTimeout(() => racine.remove(), 300);
+  setTimeout(() => racine.remove(), 480);
   if (depuisRegles) return;
   // Fini : les flèches vers les Règles et les Réglages (une fois). Passé : plus rien ne s'ouvre.
-  if (fini) { if (!aideDejaVue()) setTimeout(afficherAideAccueil, 320); }
+  if (fini) { if (!aideDejaVue()) afficherAideAccueil(); } // (les flèches arrivent par-dessus pendant que le tutoriel s'efface : fondu enchaîné)
   else { try { localStorage.setItem(CLE_AIDE_VUE, "1"); } catch (e) {} }
 }
 
