@@ -2375,7 +2375,7 @@ body.mode-en-ligne #jouer{
 }
 
 /* Petit message « En attente de X » quand on tape hors de son tour */
-#toastEnLigne{
+:is(#toastEnLigne, #toastRetrait){
   position: fixed;
   left: 50%;
   bottom: calc(24px + env(safe-area-inset-bottom, 0px));
@@ -2394,7 +2394,7 @@ body.mode-en-ligne #jouer{
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
-#toastEnLigne.visible{
+:is(#toastEnLigne, #toastRetrait).visible{
   opacity: 1;
   transform: translate(-50%, 0);
   pointer-events: auto; /* on peut le jeter vers le bas (js/synchro-en-ligne.js) */
@@ -3494,7 +3494,7 @@ html.accessibilite .bouton-doree,
 html.accessibilite .bouton-annulation,
 html.accessibilite .titreBloc,
 html.accessibilite #ecranReglages .interrupteur,
-html.accessibilite #toastEnLigne{
+html.accessibilite :is(#toastEnLigne, #toastRetrait){
   zoom: 1.2;
 }
 
@@ -4827,7 +4827,7 @@ html[data-theme="givre"] #enLigne .btnExclure{
 html[data-theme="givre"] #codePartieAffiche{
   color: var(--givre-accent);
 }
-html[data-theme="givre"] #toastEnLigne{
+html[data-theme="givre"] :is(#toastEnLigne, #toastRetrait){
   background: #fff;
   color: var(--givre-accent);
   box-shadow: 0 0 0 1px var(--givre-bord) inset, 0 8px 24px rgba(13, 53, 80, 0.2);
@@ -10804,3 +10804,61 @@ html.daltonien .carre-couleur-nom{
 
 /* ===== Bots (js/bots.js) : pastille 🤖 à côté du nom ===== */
 .badge-bot{ display: inline-block; margin-left: 4px; font-size: .9em; line-height: 1; vertical-align: middle; }
+
+/* ===== Retirer un joueur avant la partie : ✕ sur son nom, bandeau « Annuler » 5 s (js/plateau.js) ===== */
+html #listeJoueurs .btnPauseJoueur.btnRetirerJoueur{ color: #ff6b81; border-color: rgba(255, 107, 129, 0.55); opacity: 1; }
+html #listeJoueurs .btnPauseJoueur.btnRetirerJoueur svg{ width: 11px; height: 11px; }
+html[data-theme="givre"] #listeJoueurs .btnPauseJoueur.btnRetirerJoueur,
+html[data-theme="kawaii"] #listeJoueurs .btnPauseJoueur.btnRetirerJoueur{ color: #d0213f; border-color: rgba(208, 33, 63, 0.5); }
+html #listeJoueurs .joueur-ligne.joueur-revient{ animation: joueurRevient 0.6s ease; }
+@keyframes joueurRevient{
+  0%{ transform: scale(0.6); opacity: 0; }
+  40%{ transform: scale(1.06); opacity: 1; box-shadow: 0 0 0 2px #FFD700; }
+  100%{ transform: none; box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
+}
+#toastRetrait{
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  padding: 8px 8px 12px 18px;
+  overflow: hidden;
+  text-align: left;
+  color: #fff;
+}
+#toastRetrait .toastRetrait-texte{ flex: 1 1 auto; min-width: 0; overflow-wrap: anywhere; }
+html #toastRetrait .toastRetrait-annuler{
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 8px 12px;
+  min-width: 0;
+  width: auto;
+  height: auto;
+  border: 0;
+  border-radius: 8px;
+  background: rgba(255, 215, 0, 0.16);
+  box-shadow: none;
+  color: #FFD700;
+  font: 900 14px Arial, sans-serif;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-shadow: none;
+  cursor: pointer;
+}
+#toastRetrait .toastRetrait-barre{
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 4px;
+  background: #FFD700;
+  transform-origin: left;
+}
+#toastRetrait.visible .toastRetrait-barre{ animation: toastRetraitBarre 5s linear forwards; }
+@keyframes toastRetraitBarre{ from{ transform: scaleX(1); } to{ transform: scaleX(0); } }
+html[data-theme="givre"] #toastRetrait{ color: #0d3550; }
+html[data-theme="givre"] #toastRetrait .toastRetrait-annuler{ background: rgba(26, 146, 214, 0.14); color: var(--givre-accent); }
+html[data-theme="givre"] #toastRetrait .toastRetrait-barre{ background: var(--givre-accent); }
+html[data-theme="kawaii"] #toastRetrait .toastRetrait-annuler{ background: rgba(255, 92, 160, 0.14); color: var(--givre-accent); }
+html[data-theme="kawaii"] #toastRetrait .toastRetrait-barre{ background: var(--givre-accent); }

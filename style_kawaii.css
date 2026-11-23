@@ -219,7 +219,7 @@ html[data-theme="kawaii"] #enLigne .btnExclure{
 html[data-theme="kawaii"] #codePartieAffiche{
   color: var(--givre-accent);
 }
-html[data-theme="kawaii"] #toastEnLigne{
+html[data-theme="kawaii"] :is(#toastEnLigne, #toastRetrait){
   background: #ffffff;
   color: var(--givre-accent);
   box-shadow: 0 0 0 1px var(--givre-bord) inset, 0 8px 24px rgba(80, 13, 80, 0.2);

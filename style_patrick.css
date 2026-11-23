@@ -156,7 +156,7 @@
 :where(html[data-theme="patrick"]) #btnAccueilClassique, :where(html[data-theme="patrick"]) #enLigne #btnAccueilEnLigne, :where(html[data-theme="patrick"]) #ecranNouvellePartie #btnAccueil{ -webkit-text-stroke: 1.2px #d9ffe5; color: #d9ffe5; text-shadow:
     0 2px 0 rgba(6,70,40,0.95),
     0 3px 8px rgba(0,0,0,0.45); }
-:where(html[data-theme="patrick"]) #toastEnLigne{ color: #d9ffe5; box-shadow: 0 0 0 1px rgba(200,255,220,0.45) inset, 0 8px 24px rgba(0,0,0,0.45); }
+:where(html[data-theme="patrick"]) :is(#toastEnLigne, #toastRetrait){ color: #d9ffe5; box-shadow: 0 0 0 1px rgba(200,255,220,0.45) inset, 0 8px 24px rgba(0,0,0,0.45); }
 :where(html[data-theme="patrick"]) #ecranCredits{ background:
     radial-gradient(ellipse 85% 28% at 50% 30%, rgba(200,255,220,0.16), transparent 100%),
     radial-gradient(ellipse 45% 22% at 15% 72%, rgba(255,77,77,0.10), transparent 100%),

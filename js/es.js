@@ -1007,6 +1007,8 @@ window.TEXTES_ES = {
 "{0} MODE HARD": "{0} MODO HARD",
 "{0} a quitté la partie": "{0} ha salido de la partida",
 "{0} a trouvé ! Il/elle distribue {1} !": "¡{0} ha acertado! ¡Reparte {1}!",
+"Retirer {0}": "Quitar a {0}",
+"{0} a été retiré": "Has quitado a {0}",
 "{0} a été retiré de la partie": "Han eliminado a {0} de la partida",
 "{0} annulée{1}. \nTu bois {2}.": "{0} anulado{1}. \nBebes {2}.",
 "{0} boit": "{0} bebe",

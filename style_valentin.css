@@ -155,7 +155,7 @@
 :where(html[data-theme="valentin"]) #btnAccueilClassique, :where(html[data-theme="valentin"]) #enLigne #btnAccueilEnLigne, :where(html[data-theme="valentin"]) #ecranNouvellePartie #btnAccueil{ -webkit-text-stroke: 1.2px #ffe3ee; color: #ffe3ee; text-shadow:
     0 2px 0 rgba(138,18,68,0.95),
     0 3px 8px rgba(0,0,0,0.45); }
-:where(html[data-theme="valentin"]) #toastEnLigne{ color: #ffe3ee; box-shadow: 0 0 0 1px rgba(255,200,222,0.45) inset, 0 8px 24px rgba(0,0,0,0.45); }
+:where(html[data-theme="valentin"]) :is(#toastEnLigne, #toastRetrait){ color: #ffe3ee; box-shadow: 0 0 0 1px rgba(255,200,222,0.45) inset, 0 8px 24px rgba(0,0,0,0.45); }
 :where(html[data-theme="valentin"]) #ecranCredits{ background:
     radial-gradient(ellipse 85% 28% at 50% 30%, rgba(255,200,222,0.16), transparent 100%),
     radial-gradient(ellipse 45% 22% at 15% 72%, rgba(255,77,77,0.10), transparent 100%),

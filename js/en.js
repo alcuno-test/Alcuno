@@ -1107,6 +1107,8 @@ window.TEXTES_EN = {
 "{0} MODE HARD": "{0} HARD MODE",
 "{0} a quitté la partie": "{0} left the game",
 "{0} a trouvé ! Il/elle distribue {1} !": "{0} got it right! They give out {1}!",
+"Retirer {0}": "Remove {0}",
+"{0} a été retiré": "{0} was removed",
 "{0} a été retiré de la partie": "{0} was removed from the game",
 "{0} annulée{1}. \nTu bois {2}.": "{0} cancelled. \nYou drink {2}.",
 "{0} boit": "{0} drinks",

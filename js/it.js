@@ -1107,6 +1107,8 @@ window.TEXTES_IT = {
 "{0} MODE HARD": "{0} MODALITÀ HARD",
 "{0} a quitté la partie": "{0} ha lasciato la partita",
 "{0} a trouvé ! Il/elle distribue {1} !": "{0} ha indovinato! Distribuisce {1}!",
+"Retirer {0}": "Rimuovi {0}",
+"{0} a été retiré": "{0} è stato rimosso",
 "{0} a été retiré de la partie": "{0} è stato rimosso dalla partita",
 "{0} annulée{1}. \nTu bois {2}.": "{0} annullato{1}. \nBevi {2}.",
 "{0} boit": "{0} beve",
