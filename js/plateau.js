@@ -11,15 +11,11 @@ const reglePigeon = document.getElementById("reglePigeon");
 const messagesBar = document.getElementById("messages");
 
 const menu = document.getElementById("menu");
-const suppression = document.getElementById("suppression");
-const listeSuppression = document.getElementById("listeSuppression");
 
 const nomJoueurInput = document.getElementById("nomJoueur");
 const btnAjouter = document.getElementById("ajouterJoueur");
 const btnJouer = document.getElementById("jouer");
-const btnSupprimer = document.getElementById("supprimerJoueur");
 const btnNouvellePartie = document.getElementById("nouvellePartie");
-const btnTermine = document.getElementById("termineSuppression");
 const btnAccueilClassique = document.getElementById("btnAccueilClassique");
 const messageTexte = document.getElementById("messageTexte");
 
@@ -1764,10 +1760,9 @@ function afficherJoueurs(){
   majStickyJoueurActif();
 }
 
-// Retirer un joueur : seulement avant la partie, avec le ✕ sur chaque nom. Jamais en partie (l'ancien bouton reste caché).
+// Retirer un joueur : seulement avant la partie, avec le ✕ sur chaque nom (jamais en partie).
 // Ajouter : seulement avant la partie (en ligne, les joueurs viennent de la salle d'attente).
 function majBoutonsJoueurs(){
-  btnSupprimer.style.display = "none";
   nomJoueurInput.style.display = partieLancee ? "none" : "";
   btnAjouter.style.display = partieLancee ? "none" : "";
   if(typeof majBoutonBot === "function") majBoutonBot(); // (« Ajouter un bot », js/bots.js)
@@ -1905,16 +1900,6 @@ btnAjouter.addEventListener("pointerdown", (e) => {
 });
 nomJoueurInput.addEventListener("keydown", e=>{ if(e.key==="Enter") ajouterJoueur(); });
 
-const titreSuppression = suppression.querySelector("h2");
-
-// (en partie, « Terminé » s'appelle « Annuler » : on ferme sans rien retirer)
-btnTermine.addEventListener("click", ()=>{
-  suppression.style.display="none";
-  menu.style.display = ""; // (la disposition vient du CSS : flex, ou grille sur téléphone)
-  unlockScroll();
-  afficherJoueurs();
-});
-
 /* ===== RETIRER UN JOUEUR AVANT LA PARTIE : ✕ sur son nom, « Annuler » pendant 5 s ===== */
 const ICONE_RETIRER_JOUEUR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" fill="none"/></svg>';
 const DUREE_ANNULER_RETRAIT = 5000;
@@ -1979,106 +1964,14 @@ function cacherToastRetrait(){
   toast.classList.remove("visible");
 }
 
-/* ===== RETIRER UN JOUEUR PENDANT LA PARTIE : plus proposé (aucun bouton n'ouvre cet écran) =====
-   retirerJoueurEnJeu reste : un joueur en ligne qui quitte la partie, et les anciennes parties gardées en mémoire. */
+/* ===== UN JOUEUR QUI PART EN PLEINE PARTIE (en ligne : il quitte la partie ; ou ancienne partie gardée en mémoire) =====
+   Personne ne peut retirer quelqu'un d'autre en partie. */
 // Seulement plateau au repos : aucun overlay, aucun choix en cours, pas pendant le pari de fin
 // (il reste alors 1 carte). En ligne, c'est vérifié à nouveau sur chaque téléphone au moment du retrait.
 function plateauLibre(){
   return partieLancee && !choixPigeonEnCours && !duelEnCours && !predictionEnCours &&
     cartesRestantes() !== 1 && !document.querySelector('[id^="overlay"]');
 }
-
-function ouvrirRetraitEnJeu(){
-  if(joueurs.length <= 2){
-    afficherToast(tr("Il faut au moins 3 joueurs pour en retirer un"));
-    return;
-  }
-  if(!plateauLibre()){
-    afficherToast(tr("Attends la fin de l'action en cours"));
-    return;
-  }
-
-  titreSuppression.innerText = tr("Retirer un joueur de la partie");
-  btnTermine.innerText = tr("Annuler");
-  listeSuppression.innerHTML = "";
-  joueurs.forEach((nom) => {
-    const bouton = document.createElement("button");
-    bouton.type = "button";
-    bouton.className = "supp-item supp-retrait";
-    bouton.innerHTML = `<span class="supp-name">${echapperHtml(avecCouronne(nom))}</span>${badgeDeconnecte(nom)}`;
-    bouton.addEventListener("click", () => demanderConfirmationRetrait(nom));
-    listeSuppression.appendChild(bouton);
-  });
-
-  menu.style.display = "none";
-  suppression.style.display = "flex";
-  lockScroll();
-}
-
-const ecranConfirmerRetrait = document.getElementById("ecranConfirmerRetrait");
-let retraitEnAttente = null;
-
-function demanderConfirmationRetrait(nom){
-  if(estSpectateur) return; // (un spectateur ne retire personne)
-  retraitEnAttente = nom;
-  document.getElementById("titreConfirmerRetrait").innerText = tr`Retirer ${nom} de la partie ?`;
-
-  let texte = tr("La partie continue sans lui/elle.");
-  if(enLigneActif && nom === pseudoActuel){
-    texte = tr("Tu vas quitter la partie. Elle continuera sans toi.");
-  } else if(enLigneActif && nom === hotePartie){
-    const i = joueurs.indexOf(nom);
-    texte = tr`C'est l'hôte : le rôle d'hôte passera à ${joueurs[(i + 1) % joueurs.length]}.\nLa partie continue sans lui/elle.`;
-  }
-  document.getElementById("texteConfirmerRetrait").innerText = texte;
-  ecranConfirmerRetrait.style.display = "";
-}
-
-function fermerRetraitEnJeu(){
-  retraitEnAttente = null;
-  ecranConfirmerRetrait.style.display = "none";
-  if(suppression.style.display !== "none"){
-    suppression.style.display = "none";
-    menu.style.display = ""; // (la disposition vient du CSS : flex, ou grille sur téléphone)
-    unlockScroll();
-  }
-}
-
-document.getElementById("btnConfirmerRetraitNon").addEventListener("click", () => {
-  retraitEnAttente = null;
-  ecranConfirmerRetrait.style.display = "none";
-});
-
-document.getElementById("btnConfirmerRetraitOui").addEventListener("click", () => {
-  const nom = retraitEnAttente;
-  fermerRetraitEnJeu();
-  if(!nom || !joueurs.includes(nom)) return;
-  if(joueurs.length <= 2){
-    afficherToast(tr("Il faut au moins 3 joueurs pour en retirer un"));
-    return;
-  }
-  if(!plateauLibre()){
-    afficherToast(tr("Une action vient de commencer : réessaie juste après"));
-    return;
-  }
-
-  if(!enLigneActif){
-    retirerJoueurEnJeu(nom);
-    noterActionClassique(`retrait-classique:${nom}`);
-    afficherToast(tr`${nom} a été retiré de la partie`);
-    return;
-  }
-
-  const moiMeme = nom === pseudoActuel;
-  ecrireAction(idRetrait(nom))
-    .then(() => {
-      // Retrait de soi-même : on part tout de suite (si le retrait n'a pas déjà été appliqué ici)
-      if(!moiMeme || !codePartieActuel) return;
-      quitterPartieEnLigne();
-      allerAccueil();
-    })
-    .catch(() => afficherToast(tr("Connexion perdue, réessaie")));
-});
 
 // Applique le retrait (identique sur tous les téléphones en ligne). Le tour, le pigeon, ses « 1 » et
 // l'hôte sont mis à jour ; les overlays sont fermés à ce moment-là, rien d'autre ne dépend de lui.

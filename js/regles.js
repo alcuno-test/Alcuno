@@ -2039,10 +2039,6 @@ function retourMenu(){
   majMusique(); // retour aux menus : la musique remonte
   finUnOverlayAffiche = false;
 
-  // Écrans du retrait en cours de partie (nouvelle manche, départ, partie fermée...)
-  retraitEnAttente = null;
-  ecranConfirmerRetrait.style.display = "none";
-  suppression.style.display = "none";
 
 
   // ✅ reset des annulations (compteurs "un") pour une nouvelle partie
@@ -2087,7 +2083,6 @@ function retourMenu(){
   if(overlayDuel) overlayDuel.remove();
 
   btnNouvellePartie.style.display = "none";
-  btnSupprimer.style.display = "none"; // (plus de retrait de joueur en partie ; avant la partie : ✕ sur chaque nom)
   btnJouer.style.display = joueurs.length >= 2 ? "inline-block" : "none";
   menu.style.display = ""; // (la disposition vient du CSS : flex, ou grille sur téléphone)
 
@@ -2247,9 +2242,5 @@ function reinitialiserEcransJeu(){
   document.getElementById("jeu").style.display = "none";
 }
 
-// on force l'UI du menu (au cas où)
-suppression.style.display = "none";
-
-btnSupprimer.style.display = "none"; // (plus de retrait de joueur en partie ; avant la partie : ✕ sur chaque nom)
 
 // #endregion

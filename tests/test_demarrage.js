@@ -292,7 +292,7 @@ function verifier(ok, texte){
     for (const nom of ["Tom", "Lea"]) { await page.fill("#nomJoueur", nom); await page.click("#ajouterJoueur"); await page.waitForTimeout(250); }
     const disposition = () => page.evaluate(() => {
       const haut = (id) => Math.round(document.getElementById(id).getBoundingClientRect().top);
-      return { ligne1: haut("nomJoueur") === haut("ajouterJoueur") && haut("ajouterJoueur") === haut("supprimerJoueur") || Math.abs(haut("nomJoueur") - haut("ajouterJoueur")) < 8,
+      return { ligne1: Math.abs(haut("nomJoueur") - haut("ajouterJoueur")) < 8,
         jouerSousLigne1: haut("jouer") > haut("nomJoueur") + 30, hauteurMenu: Math.round(document.getElementById("menu").getBoundingClientRect().height) };
     });
     const avant = await disposition();

@@ -21,7 +21,7 @@ const URL = process.env.URL_JEU || "http://localhost:8765/index.html";
     if ($("#btnContinuerOptions")) $("#btnContinuerOptions").click();
     for (const n of ["Léa", "Tom", "Max", "Inès"]) { $("#nomJoueur").value = n; pd($("#ajouterJoueur")); }
     res.croixAvant = document.querySelectorAll("#listeJoueurs .btnRetirerJoueur").length;
-    res.boutonSupprimerCache = $("#supprimerJoueur").style.display === "none";
+    res.boutonSupprimerCache = !$("#supprimerJoueur") && !$("#suppression");
     // retirer Max puis annuler : il revient à sa place
     croix("Max").click();
     res.apresRetrait = joueurs.join(",");
@@ -49,11 +49,11 @@ const URL = process.env.URL_JEU || "http://localhost:8765/index.html";
     $("#toastRetrait .toastRetrait-annuler").click();
     res.joueursEnPartie = joueurs.join(",");
     res.croixEnPartie = document.querySelectorAll("#listeJoueurs .btnRetirerJoueur").length;
-    res.boutonEnPartie = $("#supprimerJoueur").style.display !== "none";
+    res.boutonEnPartie = !!document.querySelector("#supprimerJoueur, #suppression");
     return res;
   });
   assert.equal(r.croixAvant, 4, "un ✕ sur chaque nom avant la partie");
-  assert.ok(r.boutonSupprimerCache, "plus de bouton « Supprimer un joueur » avant la partie");
+  assert.ok(r.boutonSupprimerCache, "plus de bouton ni de page « Supprimer un joueur »");
   assert.equal(r.apresRetrait, "Léa,Tom,Inès");
   assert.equal(r.toast, "Max a été retiré");
   assert.equal(r.apresAnnuler, "Léa,Tom,Max,Inès", "Annuler : Max revient à sa place");
