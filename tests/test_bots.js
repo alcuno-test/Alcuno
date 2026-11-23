@@ -82,6 +82,60 @@ const URL = process.env.URL_JEU || "http://localhost:8765/index.html";
   const src = fs.readFileSync(path.join(__dirname, "..", "js", "bots.js"), "utf8");
   assert.ok(src.includes("s'en bat les couilles"), "message du bot qui refile ses gorgées");
   assert.ok(fs.readFileSync(path.join(__dirname, "..", "js", "regles.js"), "utf8").includes("Pas de bot en mode hard"), "pas de bot en mode hard");
+  // ----- Le relou (« Oh non pas lui... ») : seulement en thème Sombre, s'acharne sur une victime
+  const p2 = await b.newPage({ viewport: { width: 390, height: 844 } });
+  p2.on("pageerror", (e) => erreurs.push(e.message));
+  await p2.goto(URL);
+  await p2.waitForTimeout(2500);
+  const rr = await p2.evaluate(async () => {
+    const $ = (s) => document.querySelector(s);
+    const pd = (el) => el.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
+    const attendre = (ms) => new Promise((ok) => setTimeout(ok, ms));
+    const res = {};
+    $("#btnModeClassique").click();
+    if ($("#btnContinuerOptions")) $("#btnContinuerOptions").click();
+    for (const n of ["Léa", "Tom", "Max"]) { $("#nomJoueur").value = n; pd($("#ajouterJoueur")); }
+    const hasard = Math.random;
+    Math.random = () => 0.1; // (tirage : le relou est proposé)
+    document.documentElement.dataset.theme = "bordeaux";
+    $("#ajouterBot").click();
+    res.pasEnBordeaux = !$("#titreConfirmerBot").innerText.includes("Oh non pas lui");
+    $("#btnConfirmerBotNon").click();
+    document.documentElement.dataset.theme = "noir";
+    $("#ajouterBot").click();
+    res.titre = $("#titreConfirmerBot").innerText;
+    res.texte = $("#texteConfirmerBot").innerText;
+    $("#btnConfirmerBotOui").click();
+    Math.random = hasard;
+    res.relou = joueurs[3];
+    pd($("#jouer"));
+    for (let i = 0; i < 30 && !victimeDuRelou; i++) await attendre(100);
+    res.victime = victimeDuRelou;
+    res.historique = historiqueCartes.length >= 0;
+    // ses gorgées : refilées à sa victime (tirage forcé)
+    document.querySelectorAll("[id^=overlay]").forEach((o) => o.remove());
+    const messages = [];
+    const o = window.montrerOverlayRegle; window.montrerOverlayRegle = function(m, ...a){ messages.push(String(m)); return o.call(this, m, ...a); };
+    Math.random = () => 0.1;
+    annoncerBoireAvecAnnulation(3, 2, "plus_2_rouge");
+    Math.random = hasard;
+    res.refile = messages[0] || "";
+    // +4 du relou : tout pour sa victime
+    document.querySelectorAll("[id^=overlay]").forEach((x) => x.remove());
+    afficherOverlayPlus4(3, "plus_4");
+    for (let i = 0; i < 80 && document.getElementById("overlayPlus4"); i++) await attendre(100);
+    res.plus4 = messages.filter((m) => m.startsWith("+4") || m.includes("(+4)")).join(" | ");
+    return res;
+  });
+  assert.ok(rr.pasEnBordeaux, "le relou n'est pas proposé hors du thème Sombre");
+  assert.match(rr.titre, /Oh non pas lui\.\.\./, "proposé en thème Sombre");
+  assert.match(rr.texte, /s'acharner/, "texte de confirmation du relou");
+  assert.equal(rr.relou, "Oh non pas lui...");
+  assert.ok(["Léa", "Tom", "Max"].includes(rr.victime), "une victime choisie au lancement");
+  assert.ok(rr.refile.includes(`à ${rr.victime}. Encore ${rr.victime}. Évidemment.`), "ses gorgées refilées à sa victime : " + rr.refile);
+  assert.ok(rr.plus4.includes(rr.victime) && !["Léa", "Tom", "Max"].filter((n) => n !== rr.victime).some((n) => rr.plus4.includes(n)), "tout le +4 pour sa victime : " + rr.plus4);
+  assert.deepEqual(erreurs, [], "aucune erreur dans la page (relou)");
+
   // Prénoms : liste du jeu, ajouts et retraits depuis le pilotage (config/bots)
   const C = require("../js/config-lib.js");
   assert.deepEqual(C.nomsBots({}), ["Robert", "Bernard", "Michel", "Jean-Mi", "Roger", "Simone", "Gégé", "Jacky", "Lucienne", "Dédé", "Momo", "Titouan",

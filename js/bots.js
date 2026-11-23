@@ -40,6 +40,25 @@ function indicesHumains(sauf = -1){
 }
 const auHasard = (liste) => liste[Math.floor(Math.random() * liste.length)];
 
+// ----- Le relou : « Oh non pas lui... », proposé seulement en thème Sombre (une fois sur CHANCE_RELOU, un seul par partie).
+// Au lancement, il choisit une victime au hasard parmi les vrais joueurs, et s'acharne sur elle : nouveau pigeon, duel,
+// carte dorée, tout le +4, Cupidon, Coup de foudre… et ses gorgées, il les lui refile souvent (CHANCE_REFILE_RELOU).
+const NOM_RELOU_FR = "Oh non pas lui...";
+const CHANCE_RELOU = 1 / 3, CHANCE_REFILE_RELOU = 0.5;
+const nomRelou = () => tr(NOM_RELOU_FR);
+const estRelou = (nom) => nom === nomRelou() && estBot(nom);
+let victimeDuRelou = null;
+// Sa victime (une nouvelle si l'ancienne est partie, en pause, ou si c'est une autre partie) ; annoncée en haut de l'écran
+function victimeRelou(){
+  if (victimeDuRelou && joueurs.includes(victimeDuRelou) && !estBot(victimeDuRelou) && !estEnPause(victimeDuRelou)) return victimeDuRelou;
+  const humains = indicesHumains();
+  if (!humains.length) return null;
+  victimeDuRelou = joueurs[auHasard(humains)];
+  try { afficherNotificationHaut("😈", tr`${nomRelou()} a choisi sa victime : ${victimeDuRelou}`); } catch (e) {}
+  noterHistorique(tr`${nomRelou()} a choisi sa victime : ${victimeDuRelou}`);
+  return victimeDuRelou;
+}
+
 // ----- Bouton « Ajouter un bot » : prénom tiré au hasard, puis « Ajouter le bot Roméo à la partie ? » Oui / Non
 const btnAjouterBot = document.getElementById("ajouterBot");
 const ecranConfirmerBot = document.getElementById("ecranConfirmerBot");
@@ -53,7 +72,9 @@ function nomBotLibre(){
 function proposerBot(){
   if (partieLancee || enLigneActif || estModeHard()) return;
   if (botsPresents().length >= MAX_BOTS) { afficherToast(tr`${MAX_BOTS} bots au plus`, 2500); return; }
-  botPropose = nomBotLibre();
+  const relou = document.documentElement.dataset.theme === "noir" && !joueurs.includes(nomRelou()) && Math.random() < CHANCE_RELOU;
+  botPropose = relou ? nomRelou() : nomBotLibre();
+  document.getElementById("texteConfirmerBot").innerText = relou ? tr("Il va s'acharner sur l'un de vous. Bon courage 😈") : tr("Il joue tout seul et ne boit pas… enfin, presque 🤖");
   document.getElementById("titreConfirmerBot").innerText = tr`Ajouter le bot ${botPropose} à la partie ?`.replace(/ ([?!])/g, "\u00a0$1"); // (le « ? » ne passe jamais seul à la ligne)
   ecranConfirmerBot.style.display = "";
 }
@@ -82,7 +103,17 @@ function gorgeesDuBot(joueurIndex, nbGorgees, classeCarte, msg, onFinish, refile
   const bot = joueurs[joueurIndex];
   if (!estBot(bot)) return false;
   const humains = indicesHumains();
-  if (humains.length && Math.random() < CHANCE_REFILE_BOT) {
+  // le relou : souvent, et toujours à sa victime
+  const victime = estRelou(bot) ? victimeRelou() : null;
+  if (victime && Math.random() < CHANCE_REFILE_RELOU) {
+    const h = joueurs.indexOf(victime);
+    const quoi = nbGorgees === 1 ? tr("sa gorgée") : tr`ses ${texteGorgees(nbGorgees)}`;
+    const texte = `${msg}\n${tr`${bot} refile ${quoi} à ${victime}. Encore ${victime}. Évidemment.`}\n${tr`Donc ${victime}, tu bois ${texteGorgees(nbGorgees)}.`}`;
+    noterHistorique(tr`${bot} refile ${texteGorgees(nbGorgees)} à ${victime}`);
+    refiler(h, texte);
+    return true;
+  }
+  if (!victime && humains.length && Math.random() < CHANCE_REFILE_BOT) {
     const h = auHasard(humains), nom = joueurs[h];
     const quoi = nbGorgees === 1 ? tr("sa gorgée") : tr`ses ${texteGorgees(nbGorgees)}`;
     const texte = `${msg}\n${tr`${bot} a décidé de refiler ${quoi} à ${nom}. Normalement on n'a pas le droit, mais ${bot} s'en bat les couilles.`}\n${tr`Donc ${nom}, tu bois ${texteGorgees(nbGorgees)}.`}`;
@@ -129,11 +160,15 @@ const indexDe = (el) => Number(idDe(el).split(":").pop());
 function choisirPourBot(bot, choix){
   const ids = (prefixe) => choix.filter((el) => idDe(el).startsWith(prefixe));
   const humain = (liste) => liste.filter((el) => !estBot(joueurs[indexDe(el)]));
-  const versHumain = (liste) => auHasard(humain(liste).length ? humain(liste) : liste);
+  // (le relou vise toujours sa victime quand elle est proposée)
+  const victime = estRelou(bot) ? victimeRelou() : null;
+  const surVictime = (liste) => victime ? liste.filter((el) => joueurs[indexDe(el)] === victime) : [];
+  const versHumain = (liste) => surVictime(liste)[0] || auHasard(humain(liste).length ? humain(liste) : liste);
   // +4 : une gorgée à la fois, plutôt à ceux qui ont le moins bu (un peu de malice), puis Valider
   const valider4 = ids("plus4:valider")[0];
   if (valider4) return valider4;
   const plus4 = humain(ids("plus4:joueur:"));
+  if (surVictime(plus4).length) return surVictime(plus4)[0]; // (le relou : tout pour sa victime)
   if (plus4.length) {
     const min = Math.min(...plus4.map((el) => gorgeesBues[joueurs[indexDe(el)]] || 0));
     const moinsBu = plus4.filter((el) => (gorgeesBues[joueurs[indexDe(el)]] || 0) <= min + 2);
@@ -161,7 +196,9 @@ function choisirPourBot(bot, choix){
 }
 
 function actionDuBot(){
+  if (!partieLancee) victimeDuRelou = null; // (nouvelle partie : nouvelle victime)
   if (enLigneActif || !partieLancee || !botsPresents().length) return null;
+  if (estBot(nomRelou())) victimeRelou(); // (choisie et annoncée dès le début de la partie)
   if (typeof rattrapageEnCours !== "undefined" && rattrapageEnCours) return null;
   if (typeof repriseClassiqueEnCours !== "undefined" && repriseClassiqueEnCours) return null;
   if (typeof pauseEnCours !== "undefined" && pauseEnCours) return null;

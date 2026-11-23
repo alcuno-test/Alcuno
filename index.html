@@ -9,7 +9,7 @@
          (Avant : « ?t= » + l'heure, différent à chaque lancement : tout le jeu était retéléchargé à chaque ouverture,
          environ 400 Ko. Maintenant, tant que la version ne change pas, le navigateur se contente de vérifier.) -->
     <script>
-        window.VERSION_FICHIERS = "9.96.30";
+        window.VERSION_FICHIERS = "9.96.31";
         // (ailleurs que sur le vrai site — poste de dev, appli de test — : l'heure en plus, comme avant, pour voir tout de
         // suite un fichier modifié sans changer de version)
         window.ANTI_CACHE = /(^|\.)github\.io$/i.test(location.hostname) ? window.VERSION_FICHIERS : window.VERSION_FICHIERS + "-" + Date.now();
@@ -776,7 +776,7 @@
         <!-- « Ajouter un bot » : confirmation avec le prénom tiré au hasard (js/bots.js) ; même habillage que « Retourner à l'accueil ? » -->
         <section class="ecranConfirmerAccueil" id="ecranConfirmerBot" style="display:none;">
             <h2 id="titreConfirmerBot">Ajouter un bot ?</h2>
-            <p class="texteConfirmation">Il joue tout seul et ne boit pas… enfin, presque 🤖</p>
+            <p class="texteConfirmation" id="texteConfirmerBot">Il joue tout seul et ne boit pas… enfin, presque 🤖</p>
             <button type="button" id="btnConfirmerBotOui">Oui</button>
             <button type="button" id="btnConfirmerBotNon">Non</button>
         </section>
