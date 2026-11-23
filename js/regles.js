@@ -2087,7 +2087,7 @@ function retourMenu(){
   if(overlayDuel) overlayDuel.remove();
 
   btnNouvellePartie.style.display = "none";
-  btnSupprimer.style.display = "inline-block";
+  btnSupprimer.style.display = "none"; // (plus de retrait de joueur en partie ; avant la partie : ✕ sur chaque nom)
   btnJouer.style.display = joueurs.length >= 2 ? "inline-block" : "none";
   menu.style.display = ""; // (la disposition vient du CSS : flex, ou grille sur téléphone)
 
@@ -2250,6 +2250,6 @@ function reinitialiserEcransJeu(){
 // on force l'UI du menu (au cas où)
 suppression.style.display = "none";
 
-btnSupprimer.style.display = "inline-block";
+btnSupprimer.style.display = "none"; // (plus de retrait de joueur en partie ; avant la partie : ✕ sur chaque nom)
 
 // #endregion

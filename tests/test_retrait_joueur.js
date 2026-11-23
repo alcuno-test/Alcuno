@@ -1,4 +1,4 @@
-// Retirer un joueur avant la partie : ✕ sur chaque nom, bandeau « Annuler » 5 s ; pas de ✕ en partie.
+// Retirer un joueur avant la partie : ✕ sur chaque nom, bandeau « Annuler » 5 s ; rien en partie.
 // Le jeu doit être servi (comme les autres tests navigateur) : URL_JEU, par défaut http://localhost:8765/index.html
 const assert = require("node:assert/strict");
 const { chromium } = require("playwright");
@@ -49,6 +49,7 @@ const URL = process.env.URL_JEU || "http://localhost:8765/index.html";
     $("#toastRetrait .toastRetrait-annuler").click();
     res.joueursEnPartie = joueurs.join(",");
     res.croixEnPartie = document.querySelectorAll("#listeJoueurs .btnRetirerJoueur").length;
+    res.boutonEnPartie = $("#supprimerJoueur").style.display !== "none";
     return res;
   });
   assert.equal(r.croixAvant, 4, "un ✕ sur chaque nom avant la partie");
@@ -64,6 +65,7 @@ const URL = process.env.URL_JEU || "http://localhost:8765/index.html";
   assert.ok(r.toastApresJouer, "bandeau fermé au lancement de la partie");
   assert.equal(r.joueursEnPartie, "Tom,Max,Hugo", "la partie part sans le joueur retiré");
   assert.equal(r.croixEnPartie, 0, "pas de ✕ en partie");
+  assert.equal(r.boutonEnPartie, false, "aucun moyen de retirer un joueur en partie (3 joueurs)");
   assert.deepEqual(erreurs, [], "aucune erreur dans la page");
   console.log("Retrait avant la partie : ✕, Annuler (5 s), rien en partie.");
   await b.close();

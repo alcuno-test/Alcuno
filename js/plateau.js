@@ -1764,11 +1764,10 @@ function afficherJoueurs(){
   majStickyJoueurActif();
 }
 
-// « Retirer un joueur » : seulement en partie, s'il en reste plus de 2 (avant la partie, c'est le ✕ sur chaque nom).
+// Retirer un joueur : seulement avant la partie, avec le ✕ sur chaque nom. Jamais en partie (l'ancien bouton reste caché).
 // Ajouter : seulement avant la partie (en ligne, les joueurs viennent de la salle d'attente).
 function majBoutonsJoueurs(){
-  const supprimer = partieLancee && joueurs.length > 2;
-  btnSupprimer.style.display = supprimer ? "inline-block" : "none";
+  btnSupprimer.style.display = "none";
   nomJoueurInput.style.display = partieLancee ? "none" : "";
   btnAjouter.style.display = partieLancee ? "none" : "";
   if(typeof majBoutonBot === "function") majBoutonBot(); // (« Ajouter un bot », js/bots.js)
@@ -1908,12 +1907,6 @@ nomJoueurInput.addEventListener("keydown", e=>{ if(e.key==="Enter") ajouterJoueu
 
 const titreSuppression = suppression.querySelector("h2");
 
-// "click" (et pas pointerdown) : sinon le doigt relevé choisit tout de suite le joueur placé dessous.
-// Seulement en partie (avant, c'est le ✕ sur chaque nom).
-btnSupprimer.addEventListener("click", ()=>{
-  if(partieLancee) ouvrirRetraitEnJeu();
-});
-
 // (en partie, « Terminé » s'appelle « Annuler » : on ferme sans rien retirer)
 btnTermine.addEventListener("click", ()=>{
   suppression.style.display="none";
@@ -1986,7 +1979,8 @@ function cacherToastRetrait(){
   toast.classList.remove("visible");
 }
 
-/* ===== RETIRER UN JOUEUR PENDANT LA PARTIE ===== */
+/* ===== RETIRER UN JOUEUR PENDANT LA PARTIE : plus proposé (aucun bouton n'ouvre cet écran) =====
+   retirerJoueurEnJeu reste : un joueur en ligne qui quitte la partie, et les anciennes parties gardées en mémoire. */
 // Seulement plateau au repos : aucun overlay, aucun choix en cours, pas pendant le pari de fin
 // (il reste alors 1 carte). En ligne, c'est vérifié à nouveau sur chaque téléphone au moment du retrait.
 function plateauLibre(){
