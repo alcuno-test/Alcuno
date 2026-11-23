@@ -11,8 +11,9 @@
 // Les choix passent par les mêmes boutons qu'un vrai joueur (surAction, js/synchro-en-ligne.js) : la partie gardée en
 // mémoire les rejoue comme les autres après un plantage.
 const CLE_BOTS = "alcuno_bots";
-const NOMS_BOTS = ["Robert", "Gérard", "Josiane", "Bernard", "Ginette", "Michel", "Huguette", "Jean-Mi", "Monique", "Roger",
-  "Simone", "Gégé", "Paulette", "Jacky", "Lucienne", "Dédé", "Raymonde", "Momo", "Germaine", "Titouan"];
+// Prénoms : ceux du jeu (ConfigLib.NOMS_BOTS, js/config-lib.js), moins ceux retirés et plus ceux ajoutés depuis le pilotage
+// (stats.html → Bots, « config/bots »)
+const nomsDesBots = () => ConfigLib.nomsBots(typeof configDistante === "object" ? configDistante : {});
 const CHANCE_REFILE_BOT = 0.25; // « de temps en temps », le bot refile ses gorgées au lieu de les perdre
 const MAX_BOTS = 6;
 
@@ -45,7 +46,7 @@ const ecranConfirmerBot = document.getElementById("ecranConfirmerBot");
 let botPropose = "";
 function nomBotLibre(){
   const pris = (n) => joueurs.some((j) => (j || "").toLocaleLowerCase("fr-FR") === n.toLocaleLowerCase("fr-FR"));
-  const libres = NOMS_BOTS.filter((n) => !pris(n));
+  const libres = nomsDesBots().filter((n) => !pris(n));
   if (libres.length) return auHasard(libres);
   for (let k = 2; ; k++) { const essai = "Robot " + k; if (!pris(essai)) return essai; }
 }

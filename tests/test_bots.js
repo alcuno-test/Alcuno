@@ -82,6 +82,21 @@ const URL = process.env.URL_JEU || "http://localhost:8765/index.html";
   const src = fs.readFileSync(path.join(__dirname, "..", "js", "bots.js"), "utf8");
   assert.ok(src.includes("s'en bat les couilles"), "message du bot qui refile ses gorgées");
   assert.ok(fs.readFileSync(path.join(__dirname, "..", "js", "regles.js"), "utf8").includes("Pas de bot en mode hard"), "pas de bot en mode hard");
+  // Prénoms : liste du jeu, ajouts et retraits depuis le pilotage (config/bots)
+  const C = require("../js/config-lib.js");
+  assert.deepEqual(C.nomsBots({}), ["Robert", "Bernard", "Michel", "Jean-Mi", "Roger", "Simone", "Gégé", "Jacky", "Lucienne", "Dédé", "Momo", "Titouan",
+    "Léo", "Francis", "Jeremiah", "Pinocchio", "Philippe", "Julie", "Carla", "Sid"], "les 20 prénoms du jeu");
+  let cfg = C.valider(C.appliquer({}, { op: "bot_ajout", nom: "Roméo" }, 1).config);
+  cfg = C.valider(C.appliquer(cfg, { op: "bot_suppr", nom: "Jean-Mi" }, 1).config);
+  assert.deepEqual(cfg.bots, { "jean-mi": false, romeo: "Roméo" }, "ajout et retrait gardés dans config/bots");
+  assert.ok(C.nomsBots(cfg).includes("Roméo") && !C.nomsBots(cfg).includes("Jean-Mi"), "liste finale");
+  assert.ok(C.appliquer(cfg, { op: "bot_ajout", nom: "léo" }, 1).erreur, "pas de doublon");
+  assert.ok(C.appliquer(cfg, { op: "bot_ajout", nom: "R2-D2" }, 1).erreur, "lettres seulement");
+  assert.ok(!C.nomsBots(C.valider(C.appliquer(cfg, { op: "bot_ajout", nom: "Jean Mi" }, 1).config)).includes("Jean Mi"), "un prénom du jeu retiré revient écrit comme dans le jeu");
+  assert.deepEqual(C.valider({ bots: { robert: "Pirate", "x y": "Zoé", lea: false } }).bots, undefined, "valeurs mal formées ignorées");
+  const regles = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "database.rules.json"), "utf8"));
+  assert.ok(regles.rules.config.bots, "règles Firebase : config/bots autorisé");
+
   console.log(`Bots : ${r.bot} ajouté, joue son tour, parie (${r.pariDuBot}), ne boit pas.`);
   await b.close();
 })().catch((e) => { console.error(e); process.exit(1); });
