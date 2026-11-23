@@ -1850,6 +1850,9 @@ function lancerPartie(){
     alert(tr("Pas de bot en mode hard : il faut 2 vrais joueurs."));
     return;
   }
+  // Joueurs remplacés par un bot pendant la partie d'avant : de nouveau eux-mêmes (après un plantage, le rejeu les remplace
+  // au même moment qu'avant) (js/bots.js)
+  if(typeof rendreLesRemplaces === "function") rendreLesRemplaces();
   couleurDuelEnAttente = null;
 
   plateau.innerHTML = "";

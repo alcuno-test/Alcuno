@@ -10862,3 +10862,7 @@ html[data-theme="givre"] #toastRetrait .toastRetrait-annuler{ background: rgba(2
 html[data-theme="givre"] #toastRetrait .toastRetrait-barre{ background: var(--givre-accent); }
 html[data-theme="kawaii"] #toastRetrait .toastRetrait-annuler{ background: rgba(255, 92, 160, 0.14); color: var(--givre-accent); }
 html[data-theme="kawaii"] #toastRetrait .toastRetrait-barre{ background: var(--givre-accent); }
+
+/* En partie : tout le cadre du prénom ouvre le volet (pause, remplacer par un bot) */
+#listeJoueurs .joueur-ligne.joueur-touchable{ cursor: pointer; -webkit-tap-highlight-color: transparent; }
+#listeJoueurs .joueur-ligne.joueur-touchable:active{ filter: brightness(1.25); }

@@ -849,11 +849,15 @@ function rendreVoletGlissable(volet){
   }, true);
 }
 
-// Volet « Léa » (au tap sur ⏸ / ▶) : confirmation, puis l'action de jeu (évènement « alcuno-pause »)
+// Volet « Léa » (au tap sur son nom ou sur ⏸ / ▶) : pause ou retour (évènement « alcuno-pause »), et en classique
+// « 🤖 Remplacer par un bot » (même nom, joué par le téléphone, js/bots.js) ou « reprend la main » s'il avait été remplacé
 function ouvrirVoletPause(nom, bouton){
   fermerVoletPause();
   const enPause = estEnPause(nom);
-  if(!enPause && indexJoueursActifs().length <= 2){
+  const pausePossible = enPause || indexJoueursActifs().length > 2;
+  const bot = typeof peutRemplacerParBot === "function" && peutRemplacerParBot(nom);
+  const reprendre = typeof peutReprendreLaMain === "function" && peutReprendreLaMain(nom);
+  if(!pausePossible && !bot && !reprendre){
     afficherNotificationHaut("", tr("Il faut au moins 2 joueurs qui ne sont pas en pause"), true);
     return;
   }
@@ -864,20 +868,38 @@ function ouvrirVoletPause(nom, bouton){
       <div class="voletPause-nom"></div>
       <div class="voletPause-texte"></div>
       <button type="button" class="voletPause-ok"></button>
-      <button type="button" class="voletPause-annuler">Annuler</button>
+      <button type="button" class="voletPause-annuler voletPause-bot"></button>
+      <button type="button" class="voletPause-annuler voletPause-fermer">Annuler</button>
     </div>`; traduireElement(volet);
   volet.querySelector(".voletPause-nom").textContent = avecCouronne(nom);
   volet.querySelector(".voletPause-texte").innerHTML = enPause
     ? tr("De retour parmi nous ?")
-    : tr("En pause clope, aux toilettes…<br>Son tour sera sauté jusqu'à ce qu'il revienne.");
-  volet.querySelector(".voletPause-ok").textContent = enPause ? tr`${nom} est de retour` : tr`Mettre ${nom} en pause`;
+    : pausePossible
+      ? tr("En pause clope, aux toilettes…<br>Son tour sera sauté jusqu'à ce qu'il revienne.")
+      : tr("Le téléphone peut jouer à sa place.");
+  const ok = volet.querySelector(".voletPause-ok");
+  if(pausePossible){
+    ok.textContent = enPause ? tr`${nom} est de retour` : tr`Mettre ${nom} en pause`;
+    ok.addEventListener("click", () => {
+      fermerVoletPause();
+      if(bouton.isConnected) bouton.dispatchEvent(new Event("alcuno-pause"));
+    });
+  } else {
+    ok.remove();
+  }
+  const btnBot = volet.querySelector(".voletPause-bot");
+  if(bot || reprendre){
+    btnBot.textContent = reprendre ? tr`🙋 ${nom} reprend la main` : tr("🤖 Remplacer par un bot");
+    btnBot.addEventListener("click", () => {
+      fermerVoletPause();
+      if(reprendre) reprendreLaMain(nom); else remplacerParBot(nom);
+    });
+  } else {
+    btnBot.remove();
+  }
   rendreVoletGlissable(volet);
   volet.addEventListener("click", (e) => { if(e.target === volet) fermerVoletPause(); });
-  volet.querySelector(".voletPause-annuler").addEventListener("click", fermerVoletPause);
-  volet.querySelector(".voletPause-ok").addEventListener("click", () => {
-    fermerVoletPause();
-    if(bouton.isConnected) bouton.dispatchEvent(new Event("alcuno-pause"));
-  });
+  volet.querySelector(".voletPause-fermer").addEventListener("click", fermerVoletPause);
   document.body.appendChild(volet);
 }
 function fermerVoletPause(){
@@ -1711,8 +1733,10 @@ function afficherJoueurs(){
         pret: () => partieLancee && !predictionEnCours,
         valide: () => joueurs.includes(nom) && (estEnPause(nom) || indexJoueursActifs().length > 2)
       }, () => basculerPauseJoueur(nom));
-      bouton.addEventListener("click", () => ouvrirVoletPause(nom, bouton));
       ligne.appendChild(bouton);
+      // tout le cadre du prénom ouvre le volet (le ⏸ / ▶ aussi : son clic remonte jusqu'ici), joueur actif compris
+      ligne.classList.add("joueur-touchable");
+      ligne.addEventListener("click", () => ouvrirVoletPause(nom, bouton));
     });
   }
 
