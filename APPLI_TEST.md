@@ -27,6 +27,7 @@ ne portent pas son nom : les deux applis effaceraient le cache l'une de l'autre.
   version affiche « · TEST ».
 - `.github/workflows/nettoyage.yml` : pointe vers la base de TEST (ne doit jamais recevoir le secret du vrai jeu).
 - Tests en ligne (tests/*.ps1) : pointent vers la base de TEST.
+- Tutoriel du premier lancement (js/tutoriel.js) : s'ouvre à chaque ouverture du jeu (MODE_TEST), pas seulement pour les nouveaux.
 
 ## Reporter une nouveauté vers le vrai jeu
 

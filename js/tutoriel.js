@@ -291,10 +291,12 @@ document.getElementById("btnTutoDepuisRegles").addEventListener("click", () => a
 // Robots de test (navigator.webdriver) : jamais tout seul, sauf si le test l'a demandé (alcuno_tutoriel = "a_voir").
 if (!document.documentElement.classList.contains("mode-tele")) {
   if (etatTutoriel() === null && !navigator.webdriver) noterTutoriel(joueurToutNeuf() && !premierePartieJouee() ? "a_voir" : "vu");
+  // APPLI TEST (MODE_TEST, script.js) : à chaque ouverture, pour le voir et le régler (pas dans le vrai jeu)
+  if (MODE_TEST && !navigator.webdriver) noterTutoriel("a_voir");
   if (etatTutoriel() === "a_voir") {
     const verifierTutoriel = () => {
       if (etatTutoriel() !== "a_voir") { clearInterval(surveillanceTuto); return; }
-      if (premierePartieJouee()) { noterTutoriel("vu"); clearInterval(surveillanceTuto); return; } // (a déjà joué entre-temps)
+      if (premierePartieJouee() && !(MODE_TEST && !navigator.webdriver)) { noterTutoriel("vu"); clearInterval(surveillanceTuto); return; } // (a déjà joué entre-temps)
       const accueilLibre = !partieLancee && !ouvertureAutoEnAttente &&
         document.getElementById("choixMode").style.display !== "none" &&
         [ecranInstallation, ecranReglages, ecranRegles, ecranCredits].every((page) => page.style.display === "none") &&
