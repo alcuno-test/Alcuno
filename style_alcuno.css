@@ -4887,21 +4887,16 @@ html[data-theme="givre"] .fin-choix-recap .ligne{
   border-bottom-color: var(--givre-bord);
 }
 
-/* Lueurs dorées des cartes (carte dorée, cartes du duel) : bleues */
+/* Lueurs dorées des cartes (carte dorée, cartes du duel) : aucune lueur en Givre (un halo bleu se voyait derrière le
+   givre des cartes et cassait tout) ; seulement l'ombre douce sous la carte dorée */
 html[data-theme="givre"] :is(#overlayCarteDoree .doree-carte-vedette, #overlayRegleUnique.overlay-doree .Carte,
   #overlayPredictionFin .reveal-doree .Carte){
-  animation-name: lueurGivre;
-}
-@keyframes lueurGivre{
-  0%, 100% { box-shadow: 0 0 0 1px rgba(26, 146, 214, 0.5), 0 10px 26px rgba(13, 53, 80, 0.25), 0 0 18px rgba(26, 155, 224, 0.3); }
-  50%      { box-shadow: 0 0 0 1px rgba(26, 146, 214, 0.9), 0 10px 26px rgba(13, 53, 80, 0.25), 0 0 38px rgba(26, 155, 224, 0.6); }
+  animation: none;
+  box-shadow: 0 10px 26px rgba(13, 53, 80, 0.25);
 }
 html[data-theme="givre"] #overlayDuel .Carte.duel-a-choisir{
-  animation-name: duelPulseGivre;
-}
-@keyframes duelPulseGivre{
-  0%, 100% { box-shadow: 0 0 0 2px rgba(26, 146, 214, 0.55), 0 0 10px rgba(26, 146, 214, 0.25); }
-  50%      { box-shadow: 0 0 0 2px rgba(26, 146, 214, 0.95), 0 0 28px rgba(26, 146, 214, 0.6); }
+  animation: none;
+  box-shadow: none;
 }
 
 /* Annonce « Nouvelle partie » */
@@ -10141,8 +10136,8 @@ html.android #overlayDuel .Carte.duel-a-choisir::before{
   box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.95), 0 0 24px rgba(255, 215, 0, 0.6);
   animation: duelLueurAndroid 1.6s ease-in-out infinite;
 }
-html.android[data-theme="givre"] #overlayDuel .Carte.duel-a-choisir{ box-shadow: 0 0 0 2px rgba(26, 146, 214, 0.75); }
-html.android[data-theme="givre"] #overlayDuel .Carte.duel-a-choisir::before{ box-shadow: 0 0 0 2px rgba(26, 146, 214, 0.95), 0 0 24px rgba(26, 146, 214, 0.6); }
+html.android[data-theme="givre"] #overlayDuel .Carte.duel-a-choisir{ box-shadow: none; } /* (Givre : pas de halo ; le ::before est le givre) */
+html.android[data-theme="givre"] #overlayDuel .Carte.duel-a-choisir::before{ box-shadow: none; animation: none; }
 @keyframes duelLueurAndroid{ 0%, 100%{ opacity: 0.2; } 50%{ opacity: 1; } }
 html.android.faces-fermees[data-theme] #plateau .Carte.retournee.recachee,
 html.android.faces-fermees #plateau .Carte.retournee.recachee{ filter: none !important; position: relative; }
@@ -10882,15 +10877,13 @@ html[data-theme="givre"] .Carte:not(#tutoriel .Carte):not(html.faces-fermees #pl
 html[data-theme="givre"] .Carte:not(#tutoriel .Carte):not(html.faces-fermees #plateau .recachee):not(.carte-recachee):nth-child(7n)::before{ transform: rotate(180deg); }
 /* Tutoriel : cartes sans givre */
 html[data-theme="givre"] #tutoriel .Carte::before{ content: none !important; }
-/* Android, duel : le ::before de ces cartes est déjà le halo qui clignote (voir plus haut) => pas de givre dessus */
-html.android[data-theme="givre"] #overlayDuel .Carte.duel-a-choisir::before{ inset: 0 !important; background: none !important; transform: none !important; }
 /* Givre, duel : la carte choisie n'est plus assombrie (le filtre noircissait aussi le givre autour : un pavé gris). Elle
    « gèle » à la place : un voile de glace posé dessus, toujours un peu surélevée. */
 html[data-theme="givre"] :is(#overlayDuel, #ecranTele .tele-ecran-cartes) .Carte.duel-selected{ filter: none; }
 html[data-theme="givre"] :is(#overlayDuel, #ecranTele .tele-ecran-cartes) .Carte.duel-selected::after{
   content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
   background: linear-gradient(160deg, rgba(255, 255, 255, 0.78), rgba(205, 234, 249, 0.62));
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.9), inset 0 0 14px rgba(26, 146, 214, 0.25);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.9), inset 0 0 14px rgba(255, 255, 255, 0.6);
   animation: givreVoile 0.25s ease-out both;
 }
 @keyframes givreVoile{ from{ opacity: 0; } to{ opacity: 1; } }
