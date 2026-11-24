@@ -579,7 +579,9 @@ function remplirTexteRegle(boxTexte, message){
     el.className = i === 0 ? "regle-titre" : "regle-detail";
     if (estNote(texte)) el.classList.add("regle-note");
     else if (avecNotes && i > 0) el.classList.add("regle-boit");
-    el.innerText = texte;
+    // Espace insécable devant « : ; ! ? » et après « (typographie française) : sinon le « : » de « Pour s'en
+    // débarrasser : tirer un 3 » pouvait partir seul à la ligne
+    el.innerText = texte.replace(/ ([:;!?»])/g, "\u00A0$1").replace(/« /g, "«\u00A0");
     boxTexte.appendChild(el);
   });
 }
