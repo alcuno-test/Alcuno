@@ -1418,6 +1418,7 @@ function jouerVictoirePariTele(zone, face){
     couronne.textContent = "👑";
     bloc.appendChild(couronne);
   });
+  if (face) jouerSon("victoire"); // (Sons/victoire.mp3 : souffle de la carte, pop des confettis, fanfare, étincelles, calés sur l'animation)
   // (sans face : écran redessiné après coup, ou mouvements réduits : tout de suite l'état final, sans confettis)
   if (!face || (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches)) {
     zone.classList.add("tele-victoire-finie");
