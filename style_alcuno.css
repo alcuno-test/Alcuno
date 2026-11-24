@@ -10887,19 +10887,17 @@ html[data-theme="givre"] :is(#overlayDuel, #ecranTele .tele-ecran-cartes) .Carte
   animation: givreVoile 0.25s ease-out both;
 }
 @keyframes givreVoile{ from{ opacity: 0; } to{ opacity: 1; } }
-/* Givre, duel : la carte du perdant gigote => son givre se détache et tombe, la carte finit dégivrée (et son halo
-   rouge se voit en entier). « translate » (et pas « transform ») : garde les miroirs / demi-tours du dessin. */
+/* Givre, duel : la carte du perdant gigote => son givre éclate en morceaux qui tombent (briserGivre, js/regles.js) et
+   la carte finit dégivrée. Sur la carte, le givre disparaît aussitôt (les morceaux prennent le relais) ; sans les
+   morceaux (télé, animations réduites), il s'efface en fondu. */
 html[data-theme="givre"] :is(#overlayDuel, #ecranTele .tele-ecran-cartes) .Carte.duel-perdant::before{
-  animation: givreTombe 0.85s cubic-bezier(0.55, 0, 0.9, 0.45) 0.08s both;
+  animation: givreFond 0.6s ease-in 0.1s both;
 }
-@keyframes givreTombe{
-  0%   { translate: 0 0; scale: 1; opacity: 1; }
-  20%  { translate: 0 1.5%; scale: 1; opacity: 1; }
-  100% { translate: 0 38%; scale: 0.94; opacity: 0; }
-}
-@media (prefers-reduced-motion: reduce){
-  html[data-theme="givre"] :is(#overlayDuel, #ecranTele .tele-ecran-cartes) .Carte.duel-perdant::before{ animation-name: givreFond; }
-  @keyframes givreFond{ to{ opacity: 0; } }
+html[data-theme="givre"] #overlayDuel .Carte.duel-perdant.givre-brise::before{ animation: none; opacity: 0; }
+@keyframes givreFond{ to{ opacity: 0; } }
+.givre-morceau{
+  position: fixed; z-index: 2147483600; pointer-events: none; will-change: translate, rotate, opacity;
+  filter: drop-shadow(0 0 0.8px rgba(20, 110, 180, 0.9)) drop-shadow(0 1px 2px rgba(20, 110, 180, 0.35)); /* (éclats de glace : bord bleuté, lisibles sur le fond clair) */
 }
 /* Givre : la carte dorée (face et dos) n'est jamais givrée */
 html[data-theme="givre"] .Carte:is(.carte_doree, .dos_dore)::before{ content: none !important; }
