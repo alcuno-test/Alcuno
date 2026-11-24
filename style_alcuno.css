@@ -10809,6 +10809,13 @@ html[data-theme="noir"] #tutoriel .tuto-voile{ background: rgba(0, 0, 0, 0.86); 
 #tutoriel .tuto-feuille{ position: relative; animation: voletPauseMonte 0.35s cubic-bezier(0.2, 0.9, 0.3, 1) both; min-height: 210px; }
 #tutoriel .tuto-feuille.tuto-change .voletPause-nom,
 #tutoriel .tuto-feuille.tuto-change .voletPause-texte{ animation: aideAccueilEntree 0.3s ease both; }
+/* Glisser la fiche vers la droite : étape d'avant (js/tutoriel.js). Le texte et les boutons suivent le doigt. */
+#tutoriel .tuto-feuille{ touch-action: pan-y; }
+#tutoriel .tuto-feuille > :not(.tuto-points){ transform: translateX(var(--glisse, 0px)); }
+#tutoriel .tuto-feuille.tuto-relache > :not(.tuto-points){ transition: transform 0.2s ease; }
+#tutoriel .tuto-feuille.tuto-change-retour .voletPause-nom,
+#tutoriel .tuto-feuille.tuto-change-retour .voletPause-texte{ animation: tutoRetour 0.3s ease both; }
+@keyframes tutoRetour{ from{ opacity: 0; translate: -28px 0; } to{ opacity: 1; translate: 0 0; } }
 #tutoriel .voletPause-texte em{ font-style: normal; color: #FFD700; }
 #tutoriel .voletPause-texte b{ color: #fff; }
 #tutoriel .tuto-points{ display: flex; justify-content: center; gap: 6px; margin: 2px 0 14px; }
