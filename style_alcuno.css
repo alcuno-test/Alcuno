@@ -10901,3 +10901,5 @@ html[data-theme="givre"] :is(#overlayDuel, #ecranTele .tele-ecran-cartes) .Carte
   html[data-theme="givre"] :is(#overlayDuel, #ecranTele .tele-ecran-cartes) .Carte.duel-perdant::before{ animation-name: givreFond; }
   @keyframes givreFond{ to{ opacity: 0; } }
 }
+/* Givre : la carte dorée (face et dos) n'est jamais givrée */
+html[data-theme="givre"] .Carte:is(.carte_doree, .dos_dore)::before{ content: none !important; }
