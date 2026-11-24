@@ -10903,3 +10903,14 @@ html[data-theme="givre"] :is(#overlayDuel, #ecranTele .tele-ecran-cartes) .Carte
 }
 /* Givre : la carte dorée (face et dos) n'est jamais givrée */
 html[data-theme="givre"] .Carte:is(.carte_doree, .dos_dore)::before{ content: none !important; }
+/* Givre : la carte dorée reste DORÉE — titre « CARTE DORÉE », ✦ et étincelles en or (or foncé : lisible sur le fond blanc) */
+html[data-theme="givre"][data-theme][data-theme] :is(#overlayRegleUnique, #overlayCarteDoree, #overlayPredictionFin) .doree-titre{
+  color: #f0b400 !important;
+  text-shadow: 0 2px 0 #8a6200, 0 0 18px rgba(255, 215, 0, 0.55) !important;
+}
+html[data-theme="givre"][data-theme][data-theme] :is(#overlayRegleUnique, #overlayCarteDoree, #overlayPredictionFin) .doree-etincelle{
+  color: #f0b400 !important;
+  text-shadow: 0 1px 0 #8a6200, 0 0 10px rgba(255, 215, 0, 0.7) !important;
+}
+html[data-theme="givre"] .etincelle.e0{ --c: #f0b400; } html[data-theme="givre"] .etincelle.e1{ --c: #ffd23f; }
+html[data-theme="givre"] .etincelle.e2{ --c: #c99200; } html[data-theme="givre"] .etincelle.e3{ --c: #ffe680; }
