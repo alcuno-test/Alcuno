@@ -100,12 +100,14 @@ const ETAPES_TUTO = [
   () => {
     const cachees = [...tuto.racine.querySelectorAll(".tuto-plateau .Carte:not(.retournee)")];
     cachees.slice(1).forEach((carte) => carte.classList.add("tuto-partie"));
-    tutoIndice(cachees.slice(0, 1));
+    // (mise en avant fixe, sans doigt ni clignotement : on ne la touche pas, on parie dessus)
+    cachees[0].classList.add("tuto-derniere");
     tutoTexte(tr("La dernière carte"), tr`Quand il ne reste qu'<b>une carte</b>, chacun parie sur son type. Ceux qui trouvent distribuent <em>${texteCulSec()}</em> !`);
     tutoBoutons([[tr("Suivant"), () => tutoEtape(6)]]);
   },
   // 6 : fin
   () => {
+    tuto.racine.querySelectorAll(".tuto-derniere").forEach((carte) => carte.classList.remove("tuto-derniere"));
     tutoIndice([]);
     tutoTexte(tr("À toi de jouer !"), tr("<b>Mode classique</b> : un seul téléphone, qu'on se passe à tour de rôle.<br><b>Mode en ligne</b> : chacun joue sur son téléphone."));
     tutoBoutons([[tr("C'est parti !"), () => fermerTutoriel(true)]]);

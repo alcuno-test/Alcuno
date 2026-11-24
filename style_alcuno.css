@@ -10785,6 +10785,28 @@ html[data-theme="noir"] #tutoriel .tuto-voile{ background: rgba(0, 0, 0, 0.86); 
 }
 #tutoriel .tuto-plateau .Carte{ width: 64px; margin: 0; transition: opacity 0.4s ease, transform 0.25s ease, box-shadow 0.25s ease; }
 #tutoriel .tuto-plateau .Carte.tuto-partie{ opacity: 0; pointer-events: none; }
+/* Étape « La dernière carte » : la carte restante mise en avant (lueur fixe et « ? » dans le coin : on parie dessus, on ne la touche pas) */
+#tutoriel .tuto-plateau .Carte.tuto-derniere{
+  position: relative;
+  cursor: default;
+  transform: scale(1.08);
+  box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.9), 0 0 22px rgba(255, 215, 0, 0.45);
+}
+#tutoriel .tuto-plateau .Carte.tuto-derniere::after{
+  content: "?";
+  position: absolute;
+  right: -12px;
+  top: -12px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #FFD700;
+  color: #3a2300;
+  font: 900 20px/30px Arial, sans-serif;
+  text-align: center;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.45);
+  animation: aideAccueilEntree 0.35s ease both;
+}
 #tutoriel .tuto-plateau .Carte.carte-appuyee{ transform: scale(1.08); box-shadow: 0 0 0 3px #FFD700, 0 0 22px rgba(255, 215, 0, 0.7); }
 #tutoriel .tuto-indice{ animation: tutoIndice 1.3s ease-in-out infinite; }
 @keyframes tutoIndice{

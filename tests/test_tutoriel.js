@@ -76,6 +76,7 @@ const ok = (p) => p.click("#tutoriel .voletPause-ok");
   await ok(p);
   assert.equal(await titre(p), "La dernière carte");
   assert.equal(await p.locator("#tutoriel .tuto-plateau .Carte:not(.retournee):not(.tuto-partie)").count(), 1, "une seule carte cachée reste");
+  assert.ok(await p.evaluate(() => !document.querySelector("#tutoriel .tuto-indice") && document.querySelector("#tutoriel .tuto-doigt").hidden && !!document.querySelector("#tutoriel .tuto-derniere")), "dernière carte : mise en avant, sans doigt ni clignotement (rien à toucher)");
   await ok(p);
   assert.equal(await titre(p), "À toi de jouer !");
   assert.ok(await p.evaluate(() => document.querySelector("#tutoriel .tuto-passer").hidden), "pas de « Passer » à la fin");
