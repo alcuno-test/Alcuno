@@ -10884,3 +10884,27 @@ html[data-theme="givre"] .Carte:not(#tutoriel .Carte):not(html.faces-fermees #pl
 html[data-theme="givre"] #tutoriel .Carte::before{ content: none !important; }
 /* Android, duel : le ::before de ces cartes est déjà le halo qui clignote (voir plus haut) => pas de givre dessus */
 html.android[data-theme="givre"] #overlayDuel .Carte.duel-a-choisir::before{ inset: 0 !important; background: none !important; transform: none !important; }
+/* Givre, duel : la carte choisie n'est plus assombrie (le filtre noircissait aussi le givre autour : un pavé gris). Elle
+   « gèle » à la place : un voile de glace posé dessus, toujours un peu surélevée. */
+html[data-theme="givre"] :is(#overlayDuel, #ecranTele .tele-ecran-cartes) .Carte.duel-selected{ filter: none; }
+html[data-theme="givre"] :is(#overlayDuel, #ecranTele .tele-ecran-cartes) .Carte.duel-selected::after{
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.78), rgba(205, 234, 249, 0.62));
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.9), inset 0 0 14px rgba(26, 146, 214, 0.25);
+  animation: givreVoile 0.25s ease-out both;
+}
+@keyframes givreVoile{ from{ opacity: 0; } to{ opacity: 1; } }
+/* Givre, duel : la carte du perdant gigote => son givre se détache et tombe, la carte finit dégivrée (et son halo
+   rouge se voit en entier). « translate » (et pas « transform ») : garde les miroirs / demi-tours du dessin. */
+html[data-theme="givre"] :is(#overlayDuel, #ecranTele .tele-ecran-cartes) .Carte.duel-perdant::before{
+  animation: givreTombe 0.85s cubic-bezier(0.55, 0, 0.9, 0.45) 0.08s both;
+}
+@keyframes givreTombe{
+  0%   { translate: 0 0; scale: 1; opacity: 1; }
+  20%  { translate: 0 1.5%; scale: 1; opacity: 1; }
+  100% { translate: 0 38%; scale: 0.94; opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce){
+  html[data-theme="givre"] :is(#overlayDuel, #ecranTele .tele-ecran-cartes) .Carte.duel-perdant::before{ animation-name: givreFond; }
+  @keyframes givreFond{ to{ opacity: 0; } }
+}
