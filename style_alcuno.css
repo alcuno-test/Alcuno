@@ -10914,3 +10914,8 @@ html[data-theme="givre"][data-theme][data-theme] :is(#overlayRegleUnique, #overl
 }
 html[data-theme="givre"] .etincelle.e0{ --c: #f0b400; } html[data-theme="givre"] .etincelle.e1{ --c: #ffd23f; }
 html[data-theme="givre"] .etincelle.e2{ --c: #c99200; } html[data-theme="givre"] .etincelle.e3{ --c: #ffe680; }
+/* Givre : aucune ombre ni contour autour des cartes (elle se voyait en gris derrière le givre ; le contour rouge de la
+   carte du perdant au duel est retiré aussi) — sauf le tutoriel, sans givre */
+html[data-theme="givre"] .Carte:not(#tutoriel .Carte){ box-shadow: none !important; }
+/* Givre : la carte qui s'envole vers le prénom (le 1) n'a pas de givre */
+html[data-theme="givre"] .Carte:is(.carte-envol, .tele-envol)::before{ content: none !important; }
