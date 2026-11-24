@@ -10893,7 +10893,7 @@ html[data-theme="givre"] :is(#overlayDuel, #ecranTele .tele-ecran-cartes) .Carte
 html[data-theme="givre"] :is(#overlayDuel, #ecranTele .tele-ecran-cartes) .Carte.duel-perdant::before{
   animation: givreFond 0.6s ease-in 0.1s both;
 }
-html[data-theme="givre"] #overlayDuel .Carte.duel-perdant.givre-brise::before{ animation: none; opacity: 0; }
+html[data-theme="givre"] :is(#overlayDuel, #ecranTele .tele-ecran-cartes) .Carte.duel-perdant.givre-brise::before{ animation: none; opacity: 0; }
 @keyframes givreFond{ to{ opacity: 0; } }
 .givre-morceau{
   position: fixed; z-index: 2147483600; pointer-events: none; will-change: translate, rotate, opacity;
@@ -10903,8 +10903,8 @@ html[data-theme="givre"] #overlayDuel .Carte.duel-perdant.givre-brise::before{ a
 html[data-theme="givre"] .Carte:is(.carte_doree, .dos_dore)::before{ content: none !important; }
 /* Givre : la carte dorée reste DORÉE — titre « CARTE DORÉE », ✦ et étincelles en or (or foncé : lisible sur le fond blanc) */
 html[data-theme="givre"][data-theme][data-theme] :is(#overlayRegleUnique, #overlayCarteDoree, #overlayPredictionFin) .doree-titre{
-  color: #f0b400 !important;
-  text-shadow: 0 2px 0 #8a6200, 0 0 18px rgba(255, 215, 0, 0.55) !important;
+  color: #a87800 !important; /* (or foncé : contraste 3,5 sur le fond clair ; l'éclat doré autour le garde « or ») */
+  text-shadow: 0 1px 0 #5c4100, 0 0 16px rgba(255, 200, 0, 0.7) !important;
 }
 html[data-theme="givre"][data-theme][data-theme] :is(#overlayRegleUnique, #overlayCarteDoree, #overlayPredictionFin) .doree-etincelle{
   color: #f0b400 !important;
@@ -10917,3 +10917,27 @@ html[data-theme="givre"] .etincelle.e2{ --c: #c99200; } html[data-theme="givre"]
 html[data-theme="givre"] .Carte:not(#tutoriel .Carte){ box-shadow: none !important; }
 /* Givre : la carte qui s'envole vers le prénom (le 1) n'a pas de givre */
 html[data-theme="givre"] .Carte:is(.carte-envol, .tele-envol)::before{ content: none !important; }
+/* Givre : les 4 couleurs à choisir (carte Couleur) givrent comme les cartes, sans ombre */
+html[data-theme="givre"] #overlayCouleur .carre-couleur{ position: relative; isolation: isolate; box-shadow: none !important; }
+html[data-theme="givre"] #overlayCouleur .carre-couleur::before{ /* (z-index -1 : sous le nom de la couleur du mode daltonien) */
+  content: ""; position: absolute; inset: -7%; pointer-events: none; z-index: -1;
+  background: url("Cartes/givre/givre_1.webp") center / 100% 100% no-repeat;
+}
+html[data-theme="givre"] #overlayCouleur .carre-couleur:nth-child(2)::before{ background-image: url("Cartes/givre/givre_3.webp"); transform: scaleX(-1); }
+html[data-theme="givre"] #overlayCouleur .carre-couleur:nth-child(3)::before{ background-image: url("Cartes/givre/givre_4.webp"); transform: rotate(180deg); }
+html[data-theme="givre"] #overlayCouleur .carre-couleur:nth-child(4)::before{ background-image: url("Cartes/givre/givre_6.webp"); }
+/* Givre, télé : comme sur le téléphone — les 4 couleurs à choisir givrées (sans ombre), le carré de la couleur choisie
+   sans halo, et le titre de la carte dorée en or */
+html[data-theme="givre"] #ecranTele .tele-puce.tele-puce-couleur.tele-puce-couleur{ position: relative; isolation: isolate; box-shadow: none; }
+html[data-theme="givre"] #ecranTele .tele-puce.tele-puce-couleur::before{ /* (z-index -1 : sous le nom de la couleur, qui reste lisible) */
+  content: ""; position: absolute; inset: -14% -6%; pointer-events: none; z-index: -1;
+  background: url("Cartes/givre/givre_1.webp") center / 100% 100% no-repeat;
+}
+html[data-theme="givre"] #ecranTele .tele-puce.tele-puce-couleur:nth-child(2)::before{ background-image: url("Cartes/givre/givre_3.webp"); transform: scaleX(-1); }
+html[data-theme="givre"] #ecranTele .tele-puce.tele-puce-couleur:nth-child(3)::before{ background-image: url("Cartes/givre/givre_4.webp"); transform: rotate(180deg); }
+html[data-theme="givre"] #ecranTele .tele-puce.tele-puce-couleur:nth-child(4)::before{ background-image: url("Cartes/givre/givre_6.webp"); }
+html[data-theme="givre"] #ecranTele .tele-couleur-carre{ box-shadow: none; }
+html[data-theme="givre"][data-theme] #ecranTele .tele-ecran-doree .tele-ecran-titre{
+  color: #a87800 !important;
+  text-shadow: 0 0.15vh 0 #5c4100, 0 0 2vh rgba(255, 200, 0, 0.7) !important;
+}

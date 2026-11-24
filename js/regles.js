@@ -1081,7 +1081,8 @@ function briserGivre(carte){
       fragment.appendChild(m);
     }
   }
-  document.body.appendChild(fragment);
+  // (sur la télé, tout ce qui n'est pas son écran est caché : les morceaux y vont)
+  (carte.closest("#ecranTele") || document.body).appendChild(fragment);
   carte.classList.add("givre-brise");
 }
 
