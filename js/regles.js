@@ -981,19 +981,24 @@ function lancerOverlayChoixDuel(joueurActuel, carteDuel = ""){
   containerBoutons.className = "duel-boutons";
   content.appendChild(containerBoutons);
 
-  let shifumi = false; // (en ligne : duel Shifumi choisi par celui qui a tiré le 4, voir plus bas)
+  let shifumi = ""; // "" : duel classique ; sinon la façon de jouer le Shifumi (voir plus bas)
   const nbDuellistes = joueurs.filter(nom => !estEnPause(nom)).length; // (2 seulement : le choix est forcé, pas de « Mauvais joueur ? »)
 
-  // En ligne : celui qui a tiré le 4 choisit d'abord le duel, classique (les 2 cartes) ou Shifumi (pierre, feuille, ciseaux
-  // en secret sur le téléphone de chacun des 2 joueurs). En classique, pas encore de Shifumi : un seul téléphone pour tous.
+  // Celui qui a tiré le 4 choisit d'abord le duel : classique (les 2 cartes) ou Shifumi (pierre, feuille, ciseaux).
+  // En ligne, le Shifumi se joue en secret sur le téléphone de chacun des 2 joueurs ; en classique (un seul téléphone),
+  // deux façons à l'essai : « cartes » (chacun choisit à son tour, une carte de dos apparaît, puis les deux se retournent)
+  // et « écran partagé » (téléphone posé entre les deux, chacun ses 3 boutons, tout le monde appuie sur « SHIFUMI ! »).
   if(shifumiPossible()){
     titre.innerText = tr("DUEL ! Classique ou Shifumi ?");
-    [["classique", tr("⚔️ Classique")], ["shifumi", tr("✊ Shifumi")]].forEach(([type, texte]) => {
+    const types = enLigneActif
+      ? [["classique", tr("⚔️ Classique")], ["telephones", tr("✊ Shifumi")]]
+      : [["classique", tr("⚔️ Classique")], ["cartes", tr("🃏 Shifumi cartes")], ["partage", tr("📱 Shifumi écran partagé")]];
+    types.forEach(([type, texte]) => {
       const btn = document.createElement("button");
       btn.className = "bouton-pigeon";
       btn.innerText = texte;
       surAction(btn, "duel:type:" + type, { owner: choisisseur, once: true }, () => {
-        shifumi = type === "shifumi";
+        shifumi = type === "classique" ? "" : type;
         containerBoutons.style.pointerEvents = "none";
         setTimeout(() => {
           if(!overlay.isConnected) return;
@@ -1057,14 +1062,16 @@ function lancerOverlayChoixDuel(joueurActuel, carteDuel = ""){
 
   function lancerLeDuel(j1, j2){
     overlay.innerHTML = "";
-    if(shifumi) afficherOverlayShifumi(overlay, j1, j2);
+    if(shifumi === "cartes") afficherOverlayShifumiCartes(overlay, j1, j2);
+    else if(shifumi === "partage") afficherOverlayShifumiPartage(overlay, j1, j2);
+    else if(shifumi) afficherOverlayShifumi(overlay, j1, j2);
     else afficherOverlayTirageDuel(overlay, j1, j2, carteDuel);
   }
 }
 
-// Shifumi au duel : seulement en ligne pour l'instant (chacun choisit sur son téléphone, sans que l'autre voie)
+// Shifumi au duel : en ligne et en classique (pas sur l'écran d'un spectateur, qui ne choisit rien de toute façon)
 function shifumiPossible(){
-  return !!enLigneActif;
+  return true;
 }
 
 // Thème Givre, duel : le givre de la carte du perdant (son ::before, voir style_alcuno.css) éclate en morceaux qui
@@ -1339,6 +1346,359 @@ function afficherOverlayShifumi(overlay, j1, j2){
       : neutre;
     const gorg = gorgeesDuel(valeurCarteDuel(carteEnJeu), duelMultiplicateur);
     terminerDuel(overlay, perdant, gorg, carteEnJeu, tr`${joueurs[perdant]} boit ${texteGorgees(gorg)}`, generation, 3200);
+  }
+
+  nouvelleManche();
+}
+
+// Haut commun des Shifumi du mode classique : carte du paquet des duels en jeu, titre, « Tris VS Ylana »
+function enteteShifumi(overlay, j1, j2, classe){
+  overlay.classList.add("duel-shifumi", classe);
+  resetPaquetDuelSiBesoin();
+  const carteEnJeu = paquetDuel.shift();
+  const content = document.createElement("div");
+  content.className = "duel-content shifumi-content";
+  overlay.appendChild(content);
+  ajouterCarteVedette(content, carteEnJeu, "shifumi-carte");
+  const titre = document.createElement("div");
+  titre.className = "titre-pigeon duel-main-title";
+  titre.innerText = tr("SHIFUMI");
+  content.appendChild(titre);
+  const vs = document.createElement("div");
+  vs.className = "duel-vs";
+  const nomVs = (idx) => { const n = document.createElement("span"); n.className = "duel-vs-nom"; n.textContent = joueurs[idx]; return n; };
+  const motVs = document.createElement("b");
+  motVs.className = "duel-vs-mot";
+  motVs.textContent = "VS";
+  vs.append(nomVs(j1), " ", motVs, " ", nomVs(j2));
+  content.appendChild(vs);
+  return { content, titre, carteEnJeu };
+}
+
+// Résultat d'un Shifumi : null = égalité, sinon l'index du gagnant
+function gagnantShifumi(j1, c1, j2, c2){
+  if(c1 === c2) return null;
+  return BAT_SHIFUMI[c1] === c2 ? j1 : j2;
+}
+
+// Carte Shifumi (dos, puis face qui se retourne), pour la variante « cartes »
+function creerCarteShifumi(nom){
+  const carte = document.createElement("div");
+  carte.className = "shifumi-carte-jeu";
+  carte.innerHTML = `<div class="shifumi-carte-interieur"><div class="shifumi-carte-dos"><span class="shifumi-dos-motif">✊✋✌️</span><span class="shifumi-dos-titre">SHIFUMI</span></div>` +
+    `<div class="shifumi-carte-face"><span class="shifumi-face-image"></span><span class="shifumi-face-nom"></span></div></div>` +
+    `<span class="duel-label shifumi-carte-joueur">${echapperHtml(nom)}</span>`;
+  return carte;
+}
+
+// ===== Shifumi CARTES (classique, un seul téléphone) =====
+// Chacun son tour choisit pierre, feuille ou ciseaux (on se passe le téléphone) : une carte Shifumi de dos apparaît
+// à chaque choix. Une fois les 2 cartes posées : suspense, puis elles se retournent. Égalité : ×2 et on rejoue.
+// Actions « shifumi:<manche>:<joueur>:<choix> » : rejouées à la reprise d'une partie, comme le reste.
+function afficherOverlayShifumiCartes(overlay, j1, j2){
+  const generation = generationPartie;
+  const { content, titre, carteEnJeu } = enteteShifumi(overlay, j1, j2, "shifumi-cartes");
+
+  const table = document.createElement("div");
+  table.className = "shifumi-table";
+  table.dataset.tele = ""; // (télé : rien des cartes avant qu'elles soient retournées)
+  content.appendChild(table);
+
+  const info = document.createElement("div");
+  info.className = "duel-info shifumi-info";
+  content.appendChild(info);
+
+  const zoneChoix = document.createElement("div");
+  zoneChoix.className = "shifumi-zone";
+  zoneChoix.dataset.tele = "";
+  content.appendChild(zoneChoix);
+
+  const resultat = document.createElement("div");
+  resultat.className = "duel-info shifumi-resultat";
+  content.appendChild(resultat);
+
+  let manche = 0;
+  let choix = {};
+  const cartes = {};
+
+  function aQui(idx){
+    zoneChoix.innerHTML = "";
+    info.innerText = tr`${joueurs[idx]} : fais ton choix !`;
+    const rangee = document.createElement("div");
+    rangee.className = "shifumi-options";
+    CHOIX_SHIFUMI.forEach((c) => {
+      const option = document.createElement("div");
+      option.className = "shifumi-option";
+      option.setAttribute("role", "button");
+      option.innerHTML = `<span class="shifumi-image">${IMAGE_SHIFUMI[c]}</span><span class="shifumi-nom">${echapperHtml(nomChoixShifumi(c))}</span>`;
+      surAction(option, `shifumi:${manche}:${idx}:${c}`, { owner: joueurs[idx], once: true, valide: () => !choix[idx] }, () => choisir(idx, c));
+      rangee.appendChild(option);
+    });
+    zoneChoix.appendChild(rangee);
+  }
+
+  function nouvelleManche(){
+    manche++;
+    choix = {};
+    overlay.classList.remove("shifumi-revele");
+    table.innerHTML = "";
+    table.dataset.tele = "";
+    resultat.innerText = "";
+    aQui(j1);
+  }
+
+  function choisir(idx, c){
+    if(choix[idx] || generation !== generationPartie) return;
+    choix[idx] = c;
+    sonClicTheme();
+    vibrer(40);
+    // Sa carte arrive de dos sur la table
+    cartes[idx] = creerCarteShifumi(joueurs[idx]);
+    table.appendChild(cartes[idx]);
+    if(!choix[j2]){ aQui(j2); return; }
+    zoneChoix.innerHTML = "";
+    suspense();
+  }
+
+  function suspense(){
+    const etapes = [tr("Pierre…"), tr("Feuille…"), tr("Ciseaux…")];
+    info.innerText = etapes[0];
+    etapes.forEach((t, i) => setTimeout(() => {
+      if(generation !== generationPartie || !overlay.isConnected) return;
+      info.innerText = t;
+    }, delai(i * 550)));
+    setTimeout(() => {
+      if(generation !== generationPartie || !overlay.isConnected) return;
+      reveler();
+    }, delai(etapes.length * 550 + 150));
+  }
+
+  function reveler(){
+    const c1 = choix[j1], c2 = choix[j2];
+    [[j1, c1], [j2, c2]].forEach(([idx, c]) => {
+      const carte = cartes[idx];
+      carte.querySelector(".shifumi-face-image").textContent = IMAGE_SHIFUMI[c];
+      carte.querySelector(".shifumi-face-nom").textContent = nomChoixShifumi(c);
+      carte.classList.add("retournee");
+    });
+    table.dataset.tele = `${joueurs[j1]} : ${IMAGE_SHIFUMI[c1]} ${nomChoixShifumi(c1)}   —   ${joueurs[j2]} : ${IMAGE_SHIFUMI[c2]} ${nomChoixShifumi(c2)}`;
+    overlay.classList.add("shifumi-revele");
+    info.innerText = tr("SHIFUMI !");
+    jouerSon("cartes");
+
+    const gagnant = gagnantShifumi(j1, c1, j2, c2);
+    if(gagnant === null){
+      duelMultiplicateur *= 2;
+      titre.innerText = tr("SHIFUMI ×") + duelMultiplicateur;
+      resultat.innerText = tr("Égalité ! Les gorgées sont multipliées : ×") + duelMultiplicateur;
+      setTimeout(() => {
+        if(generation !== generationPartie || !overlay.isConnected) return;
+        nouvelleManche();
+      }, delai(2400));
+      return;
+    }
+    const perdant = gagnant === j1 ? j2 : j1;
+    cartes[gagnant].classList.add("shifumi-gagnant");
+    cartes[perdant].classList.add("shifumi-perdant");
+    compterStat("duels", joueurs[gagnant]);
+    resultat.innerText = tr`${joueurs[perdant]} a perdu, ${joueurs[gagnant]} gagne`;
+    const gorg = gorgeesDuel(valeurCarteDuel(carteEnJeu), duelMultiplicateur);
+    terminerDuel(overlay, perdant, gorg, carteEnJeu, tr`${joueurs[perdant]} boit ${texteGorgees(gorg)}`, generation, 3200);
+  }
+
+  nouvelleManche();
+}
+
+// ===== Shifumi ÉCRAN PARTAGÉ (classique, un seul téléphone posé à plat entre les 2 joueurs) =====
+// L'écran est coupé en deux : en bas les 3 boutons du 1er joueur, en haut ceux du 2e (à l'envers, tournés vers lui).
+// « C'est parti » lance « Pierre… Feuille… Ciseaux… SHIFUMI ! » : chacun appuie juste après « SHIFUMI ! », dans un temps
+// très court (FENETRE_SHIFUMI) : trop tôt ou trop tard, c'est perdu. Les boutons ne bougent pas quand on appuie : seul le
+// geste se voit, comme avec une vraie main, et il est trop tard pour réagir à celui de l'autre.
+// Reprise d'une partie : l'heure des appuis ne se rejoue pas ; ce qui est gardé, c'est le résultat de chacun
+// (« shifumi:<manche>:<joueur>:<pierre|feuille|ciseaux|tot|lent> »), joué par des éléments cachés à la fin du décompte.
+const FENETRE_SHIFUMI = 900;   // (ms après « SHIFUMI ! » pour appuyer)
+const PAS_DECOMPTE_SHIFUMI = 650;
+function afficherOverlayShifumiPartage(overlay, j1, j2){
+  const generation = generationPartie;
+  const { content, titre, carteEnJeu } = enteteShifumi(overlay, j1, j2, "shifumi-partage");
+  const bot = (idx) => typeof estBot === "function" && estBot(joueurs[idx]);
+
+  const info = document.createElement("div");
+  info.className = "duel-info shifumi-info";
+  content.appendChild(info);
+
+  const resultat = document.createElement("div");
+  resultat.className = "duel-info shifumi-resultat";
+  content.appendChild(resultat);
+
+  let go = null; // (« C'est parti ! » : un nouveau bouton à chaque manche, avec sa propre action)
+
+  // Une moitié par joueur : j1 en bas (dans le sens du téléphone), j2 en haut (retournée)
+  const moitie = {};
+  [[j2, "haut"], [j1, "bas"]].forEach(([idx, cote]) => {
+    const m = document.createElement("div");
+    m.className = "shifumi-moitie shifumi-moitie-" + cote;
+    m.dataset.tele = "";
+    m.innerHTML = `<div class="duel-label shifumi-moitie-nom">${echapperHtml(joueurs[idx])}</div><div class="shifumi-options"></div><div class="duel-label shifumi-moitie-texte"></div>`;
+    if(cote === "haut") overlay.insertBefore(m, content); else overlay.appendChild(m);
+    moitie[idx] = m;
+  });
+
+  let manche = 0;
+  let phase = "attente";        // attente -> decompte -> go -> fini
+  let appuis = {};              // (en direct) idx -> choix | "tot"
+  let resultats = {};           // (joués) idx -> choix | "tot" | "lent"
+  let finFenetre = null;
+
+  function nouvelleManche(){
+    manche++;
+    phase = "attente";
+    appuis = {};
+    resultats = {};
+    overlay.classList.remove("shifumi-revele", "shifumi-decompte");
+    resultat.innerText = "";
+    info.innerText = tr("Posez le téléphone entre vous deux. Appuyez juste après « SHIFUMI ! »");
+    const nouveau = document.createElement("button");
+    nouveau.className = "bouton-pigeon shifumi-go";
+    nouveau.innerText = tr("C'est parti !");
+    surAction(nouveau, `shifumi:${manche}:go`, { once: true, pret: () => phase === "attente" }, () => decompte());
+    if(go) go.replaceWith(nouveau); else content.insertBefore(nouveau, resultat);
+    go = nouveau;
+    [j1, j2].forEach((idx) => {
+      const m = moitie[idx];
+      m.classList.remove("shifumi-gagnant", "shifumi-perdant");
+      m.querySelector(".shifumi-moitie-texte").innerText = bot(idx) ? tr("🤖 joue tout seul") : "";
+      const rangee = m.querySelector(".shifumi-options");
+      rangee.innerHTML = "";
+      if(bot(idx)) return;
+      CHOIX_SHIFUMI.forEach((c) => {
+        const option = document.createElement("div");
+        option.className = "shifumi-option";
+        option.setAttribute("role", "button");
+        option.innerHTML = `<span class="shifumi-image">${IMAGE_SHIFUMI[c]}</span><span class="shifumi-nom">${echapperHtml(nomChoixShifumi(c))}</span>`;
+        // Appui en direct : noté avec son moment (pas une action de jeu : voir les éléments cachés plus bas)
+        option.addEventListener("pointerdown", (e) => {
+          e.preventDefault();
+          if(appuis[idx] || (phase !== "decompte" && phase !== "go")) return;
+          appuis[idx] = phase === "go" ? c : "tot";
+          vibrer(30);
+        });
+        rangee.appendChild(option);
+      });
+    });
+    // Éléments cachés : le résultat de chaque joueur, joué (et gardé pour la reprise) à la fin du décompte
+    overlay.querySelectorAll(".shifumi-resultat-cache").forEach((e) => e.remove());
+    [j1, j2].forEach((idx) => {
+      [...CHOIX_SHIFUMI, "tot", "lent"].forEach((r) => {
+        const el = document.createElement("div");
+        el.className = "shifumi-resultat-cache";
+        el.dataset.idx = idx;
+        el.dataset.r = r;
+        el.hidden = true;
+        el.dataset.tele = "";
+        surAction(el, `shifumi:${manche}:${idx}:${r}`, { once: true, pret: () => phase === "go" || phase === "fini", valide: () => !resultats[idx] },
+          () => noterResultat(idx, r));
+        overlay.appendChild(el);
+      });
+    });
+  }
+
+  function decompte(){
+    if(phase !== "attente") return;
+    phase = "decompte";
+    go.hidden = true;
+    overlay.classList.add("shifumi-decompte");
+    const etapes = [tr("Pierre…"), tr("Feuille…"), tr("Ciseaux…")];
+    info.innerText = etapes[0];
+    jouerSon("bouton");
+    etapes.forEach((t, i) => i && setTimeout(() => {
+      if(generation !== generationPartie || !overlay.isConnected) return;
+      info.innerText = t;
+      jouerSon("bouton");
+    }, delai(i * PAS_DECOMPTE_SHIFUMI)));
+    setTimeout(() => {
+      if(generation !== generationPartie || !overlay.isConnected) return;
+      phase = "go";
+      info.innerText = tr("SHIFUMI !");
+      jouerSon("cartes");
+      vibrer(60);
+      // Un bot appuie au bon moment, au hasard
+      [j1, j2].forEach((idx) => { if(bot(idx) && !appuis[idx]) appuis[idx] = CHOIX_SHIFUMI[Math.floor(Math.random() * 3)]; });
+      finFenetre = setTimeout(fermerFenetre, rattrapageEnCours ? 0 : FENETRE_SHIFUMI);
+    }, delai(etapes.length * PAS_DECOMPTE_SHIFUMI));
+  }
+
+  // Fin du temps pour appuyer : le résultat de chacun est joué par son élément caché (gardé pour la reprise)
+  function fermerFenetre(){
+    if(generation !== generationPartie || !overlay.isConnected || phase !== "go") return;
+    // Reprise en cours : les résultats gardés arrivent tout seuls ; s'ils manquent (téléphone coupé pendant le décompte),
+    // on réessaie après la reprise : personne n'aura appuyé, la manche se rejoue
+    if(rattrapageEnCours){ finFenetre = setTimeout(fermerFenetre, 300); return; }
+    [j1, j2].forEach((idx) => {
+      if(resultats[idx]) return;
+      const r = appuis[idx] || "lent";
+      const el = overlay.querySelector(`.shifumi-resultat-cache[data-idx="${idx}"][data-r="${r}"]`);
+      if(el) el.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
+    });
+  }
+
+  function noterResultat(idx, r){
+    if(resultats[idx] || generation !== generationPartie) return;
+    resultats[idx] = r;
+    if(resultats[j1] && resultats[j2]){ clearTimeout(finFenetre); reveler(); }
+  }
+
+  function texteMoitie(idx, r){
+    if(r === "tot") return tr("Trop tôt !");
+    if(r === "lent") return tr("Trop tard !");
+    return IMAGE_SHIFUMI[r] + " " + nomChoixShifumi(r);
+  }
+
+  function reveler(){
+    phase = "fini";
+    overlay.classList.remove("shifumi-decompte");
+    overlay.classList.add("shifumi-revele");
+    const r1 = resultats[j1], r2 = resultats[j2];
+    const valide = (r) => CHOIX_SHIFUMI.includes(r);
+    [j1, j2].forEach((idx) => {
+      const r = resultats[idx];
+      const m = moitie[idx];
+      m.querySelector(".shifumi-options").innerHTML = valide(r)
+        ? `<div class="shifumi-option shifumi-choix-revele"><span class="shifumi-image">${IMAGE_SHIFUMI[r]}</span><span class="shifumi-nom">${echapperHtml(nomChoixShifumi(r))}</span></div>`
+        : `<div class="duel-info shifumi-rate">${echapperHtml(texteMoitie(idx, r))}</div>`;
+    });
+    // (télé et joueur du bas : le résultat au centre)
+    info.innerText = `${joueurs[j1]} : ${texteMoitie(j1, r1)}  —  ${joueurs[j2]} : ${texteMoitie(j2, r2)}`;
+
+    let gagnant;
+    if(valide(r1) && valide(r2)) gagnant = gagnantShifumi(j1, r1, j2, r2);
+    else if(valide(r1)) gagnant = j1;
+    else if(valide(r2)) gagnant = j2;
+    else gagnant = undefined; // (personne n'a joué à temps : on recommence, sans ×2)
+
+    if(gagnant === null || gagnant === undefined){
+      const egalite = gagnant === null;
+      if(egalite) duelMultiplicateur *= 2;
+      titre.innerText = duelMultiplicateur > 1 ? tr("SHIFUMI ×") + duelMultiplicateur : tr("SHIFUMI");
+      const texte = egalite ? tr("Égalité ! Les gorgées sont multipliées : ×") + duelMultiplicateur : tr("Personne n'a joué à temps : on recommence !");
+      resultat.innerText = texte;
+      [j1, j2].forEach((idx) => { moitie[idx].querySelector(".shifumi-moitie-texte").innerText = texte; });
+      setTimeout(() => {
+        if(generation !== generationPartie || !overlay.isConnected) return;
+        nouvelleManche();
+      }, delai(2600));
+      return;
+    }
+    const perdant = gagnant === j1 ? j2 : j1;
+    moitie[gagnant].classList.add("shifumi-gagnant");
+    moitie[perdant].classList.add("shifumi-perdant");
+    moitie[gagnant].querySelector(".shifumi-moitie-texte").innerText = tr("Gagné !");
+    moitie[perdant].querySelector(".shifumi-moitie-texte").innerText = tr("Perdu !");
+    jouerSon("cartes");
+    compterStat("duels", joueurs[gagnant]);
+    resultat.innerText = tr`${joueurs[perdant]} a perdu, ${joueurs[gagnant]} gagne`;
+    const gorg = gorgeesDuel(valeurCarteDuel(carteEnJeu), duelMultiplicateur);
+    terminerDuel(overlay, perdant, gorg, carteEnJeu, tr`${joueurs[perdant]} boit ${texteGorgees(gorg)}`, generation, 3400);
   }
 
   nouvelleManche();

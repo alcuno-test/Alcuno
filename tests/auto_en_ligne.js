@@ -13,6 +13,7 @@
   const tick = () => {
     if (!actif) return;
     if ($("#ecranRattrapage")) return setTimeout(tick, 200);
+    if (window.__laisserDuels && $("#overlayDuel")) return setTimeout(tick, 200); // (un test joue les duels lui-même)
     if ($("#overlayPlus4")) {
       const valider = $$("#overlayPlus4 .plus4-action-btn").find(b => b.innerText.includes("Valider"));
       if (cliquable(valider)) pd(valider); else { const b = $$("#overlayPlus4 .plus4-joueur-btn")[(nbPlus4++) % 2]; if (b) pd(b); }
