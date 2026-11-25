@@ -981,52 +981,90 @@ function lancerOverlayChoixDuel(joueurActuel, carteDuel = ""){
   containerBoutons.className = "duel-boutons";
   content.appendChild(containerBoutons);
 
-  let picks = [];
-  let debutChoix = -1; // action du 1er joueur choisi (« Annuler » retire les 2 choix)
+  let shifumi = false; // (en ligne : duel Shifumi choisi par celui qui a tiré le 4, voir plus bas)
   const nbDuellistes = joueurs.filter(nom => !estEnPause(nom)).length; // (2 seulement : le choix est forcé, pas de « Mauvais joueur ? »)
 
-  joueurs.forEach((nom, idx)=>{
-    if(estEnPause(nom)) return; // (en pause : pas de duel)
-    const btn = document.createElement("button");
-    btn.className = "bouton-pigeon";
-    btn.innerText = nom;
-
-    surAction(btn, "duel:choix:" + idx, { owner: choisisseur, once: true }, ()=>{
-      if(picks.length >= 2) return;
-      if(picks.includes(idx)) return;
-
-      if(picks.length === 0) debutChoix = positionActionCourante();
-      picks.push(idx);
-      btn.disabled = true; // (aspect « déjà choisi » : style_alcuno.css, #overlayDuel .duel-boutons button:disabled)
-      btn.style.cursor = "not-allowed";
-
-      if(picks.length === 2){
-        if(aleatoire() < 0.5) picks.reverse(); // qui commence : au hasard (avant : le 1er joueur touché)
-        // Les autres joueurs ne réagissent plus (même aspect) : un 3e tap rapide n'envoie plus d'action
+  // En ligne : celui qui a tiré le 4 choisit d'abord le duel, classique (les 2 cartes) ou Shifumi (pierre, feuille, ciseaux
+  // en secret sur le téléphone de chacun des 2 joueurs). En classique, pas encore de Shifumi : un seul téléphone pour tous.
+  if(shifumiPossible()){
+    titre.innerText = tr("DUEL ! Classique ou Shifumi ?");
+    [["classique", tr("⚔️ Classique")], ["shifumi", tr("✊ Shifumi")]].forEach(([type, texte]) => {
+      const btn = document.createElement("button");
+      btn.className = "bouton-pigeon";
+      btn.innerText = texte;
+      surAction(btn, "duel:type:" + type, { owner: choisisseur, once: true }, () => {
+        shifumi = type === "shifumi";
         containerBoutons.style.pointerEvents = "none";
-        if(nbDuellistes > 2) proposerAnnulerChoix(choisisseur, debutChoix); // « Mauvais joueur ? Annuler » quelques secondes
-        // Le tirage remplace l'écran 0,2 s plus tard : on voit le « pop » du 2e bouton (script.js).
-        // En ligne, la carte choisie ensuite attend que le tirage soit affiché (tenterAction).
         setTimeout(() => {
-          if(!overlay.isConnected) return; // (partie relancée / overlay fermé entre-temps)
-          overlay.innerHTML = "";
-          afficherOverlayTirageDuel(overlay, picks[0], picks[1], carteDuel);
+          if(!overlay.isConnected) return;
+          containerBoutons.innerHTML = "";
+          containerBoutons.style.pointerEvents = "";
+          titre.innerText = shifumi ? tr("SHIFUMI ! Choisis 2 joueurs") : tr("DUEL ! Choisis 2 joueurs");
+          choisirLesJoueurs();
         }, delai(200));
-      }
+      });
+      containerBoutons.appendChild(btn);
+    });
+    document.body.appendChild(overlay);
+    return;
+  }
+  document.body.appendChild(overlay);
+  choisirLesJoueurs();
+
+  function choisirLesJoueurs(){
+    let picks = [];
+    let debutChoix = -1; // action du 1er joueur choisi (« Annuler » retire les 2 choix)
+
+    joueurs.forEach((nom, idx)=>{
+      if(estEnPause(nom)) return; // (en pause : pas de duel)
+      const btn = document.createElement("button");
+      btn.className = "bouton-pigeon";
+      btn.innerText = nom;
+
+      surAction(btn, "duel:choix:" + idx, { owner: choisisseur, once: true }, ()=>{
+        if(picks.length >= 2) return;
+        if(picks.includes(idx)) return;
+
+        if(picks.length === 0) debutChoix = positionActionCourante();
+        picks.push(idx);
+        btn.disabled = true; // (aspect « déjà choisi » : style_alcuno.css, #overlayDuel .duel-boutons button:disabled)
+        btn.style.cursor = "not-allowed";
+
+        if(picks.length === 2){
+          if(aleatoire() < 0.5) picks.reverse(); // qui commence : au hasard (avant : le 1er joueur touché)
+          // Les autres joueurs ne réagissent plus (même aspect) : un 3e tap rapide n'envoie plus d'action
+          containerBoutons.style.pointerEvents = "none";
+          if(nbDuellistes > 2) proposerAnnulerChoix(choisisseur, debutChoix); // « Mauvais joueur ? Annuler » quelques secondes
+          // Le tirage remplace l'écran 0,2 s plus tard : on voit le « pop » du 2e bouton (script.js).
+          // En ligne, la carte choisie ensuite attend que le tirage soit affiché (tenterAction).
+          setTimeout(() => {
+            if(!overlay.isConnected) return; // (partie relancée / overlay fermé entre-temps)
+            lancerLeDuel(picks[0], picks[1]);
+          }, delai(200));
+        }
+      });
+
+      containerBoutons.appendChild(btn);
     });
 
-    containerBoutons.appendChild(btn);
-  });
-
-  document.body.appendChild(overlay);
-
-  // Seulement 2 joueurs en jeu : le choix est forcé, on passe directement au tirage (sans demander quoi que ce soit)
-  if(nbDuellistes === 2){
-    const duellistes = joueurs.map((nom, idx) => idx).filter(idx => !estEnPause(joueurs[idx]));
-    if(aleatoire() < 0.5) duellistes.reverse(); // qui commence : au hasard
-    overlay.innerHTML = "";
-    afficherOverlayTirageDuel(overlay, duellistes[0], duellistes[1], carteDuel);
+    // Seulement 2 joueurs en jeu : le choix est forcé, on passe directement au tirage (sans demander quoi que ce soit)
+    if(nbDuellistes === 2){
+      const duellistes = joueurs.map((nom, idx) => idx).filter(idx => !estEnPause(joueurs[idx]));
+      if(aleatoire() < 0.5) duellistes.reverse(); // qui commence : au hasard
+      lancerLeDuel(duellistes[0], duellistes[1]);
+    }
   }
+
+  function lancerLeDuel(j1, j2){
+    overlay.innerHTML = "";
+    if(shifumi) afficherOverlayShifumi(overlay, j1, j2);
+    else afficherOverlayTirageDuel(overlay, j1, j2, carteDuel);
+  }
+}
+
+// Shifumi au duel : seulement en ligne pour l'instant (chacun choisit sur son téléphone, sans que l'autre voie)
+function shifumiPossible(){
+  return !!enLigneActif;
 }
 
 // Thème Givre, duel : le givre de la carte du perdant (son ::before, voir style_alcuno.css) éclate en morceaux qui
@@ -1086,6 +1124,224 @@ function briserGivre(carte){
   // (sur la télé, tout ce qui n'est pas son écran est caché : les morceaux y vont)
   (carte.closest("#ecranTele") || document.body).appendChild(fragment);
   carte.classList.add("givre-brise");
+}
+
+// Fin d'un duel (classique ou Shifumi) : on enlève l'écran du duel après le temps de lire le résultat (attente, en ms),
+// ou dès qu'on tape sur l'écran, puis « X boit N gorgées » (avec ses « UN » pour annuler)
+function terminerDuel(overlay, perdant, gorg, cartePerdant, msg, generation, attente){
+  let suiteFaite = false;
+  const suite = () => {
+    if(suiteFaite || generation !== generationPartie) return;
+    suiteFaite = true;
+    overlay.removeEventListener("pointerdown", suite);
+
+    // L'annonce « X boit N gorgées » apparaît en fondu PAR-DESSUS le duel, et le duel n'est
+    // retiré dessous qu'une fois l'annonce affichée (avant : le plateau apparaissait entre les deux)
+    // (avec la carte du perdant, celle qui fixe ses gorgées, plutôt que le 4 qui a lancé le duel)
+    annoncerBoireAvecAnnulation(perdant, gorg, cartePerdant, msg);
+    // gorgée pour la couleur de celui qui a tiré le 4 (annoncée avant le duel) : gardée en dernière ligne des Règles
+    if(couleurDuelEnAttente){ ajouterLigneCouleurRegles(couleurDuelEnAttente); couleurDuelEnAttente = null; }
+    setTimeout(() => {
+      overlay.remove();
+      unlockScroll();
+    }, delai(450));
+
+    // Puis on restaure l'état du jeu (sans attendre la fin d'overlay ici)
+    setTimeout(() => {
+      if(generation !== generationPartie) return;
+      duelEnCours = false;
+      choixPigeonEnCours = false;
+      duelMultiplicateur = 1;
+      afficherJoueurActif();
+    }, delai(1800));
+  };
+  setTimeout(suite, delai(attente));
+  overlay.addEventListener("pointerdown", suite);
+}
+
+// ===== DUEL SHIFUMI (en ligne) =====
+// Une carte du paquet des duels est tirée et montrée en grand : ses gorgées sont l'enjeu. Les 2 joueurs choisissent pierre,
+// feuille ou ciseaux sur LEUR téléphone (les autres, la télé et les spectateurs ne voient que « {nom} fait son choix ») ;
+// une fois les 2 choix faits : suspense, puis les deux choix et le résultat. Le perdant boit les gorgées de la carte ;
+// égalité : gorgées ×2, et on rejoue (même carte), comme au duel classique.
+// Chaque choix est une action en ligne (« shifumi:<manche>:<joueur>:<choix> ») jouée sur tous les téléphones dans le même
+// ordre : tout le monde arrive au même résultat ; les boutons des autres existent partout, mais cachés.
+const CHOIX_SHIFUMI = ["pierre", "feuille", "ciseaux"];
+const IMAGE_SHIFUMI = { pierre: "✊", feuille: "✋", ciseaux: "✌️" };
+const BAT_SHIFUMI = { pierre: "ciseaux", feuille: "pierre", ciseaux: "feuille" };
+function nomChoixShifumi(c){ return c === "pierre" ? tr("Pierre") : c === "feuille" ? tr("Feuille") : tr("Ciseaux"); }
+
+function afficherOverlayShifumi(overlay, j1, j2){
+  const generation = generationPartie;
+  overlay.classList.add("duel-shifumi");
+  resetPaquetDuelSiBesoin();
+  const carteEnJeu = paquetDuel.shift(); // (même paquet, même ordre sur tous les téléphones)
+  const moi = (idx) => enLigneActif && !estSpectateur && joueurs[idx] === pseudoActuel;
+  const jeJoue = moi(j1) || moi(j2);
+  const adversaire = (idx) => idx === j1 ? j2 : j1;
+
+  const content = document.createElement("div");
+  content.className = "duel-content shifumi-content";
+  overlay.appendChild(content);
+  ajouterCarteVedette(content, carteEnJeu, "shifumi-carte");
+
+  const titre = document.createElement("div");
+  titre.className = "titre-pigeon duel-main-title";
+  titre.innerText = tr("SHIFUMI");
+  content.appendChild(titre);
+
+  const vs = document.createElement("div");
+  vs.className = "duel-vs";
+  const nomVs = (idx) => { const n = document.createElement("span"); n.className = "duel-vs-nom"; n.textContent = joueurs[idx]; return n; };
+  const motVs = document.createElement("b");
+  motVs.className = "duel-vs-mot";
+  motVs.textContent = "VS";
+  vs.append(nomVs(j1), " ", motVs, " ", nomVs(j2));
+  content.appendChild(vs);
+
+  const info = document.createElement("div");
+  info.className = "duel-info shifumi-info";
+  content.appendChild(info);
+
+  // « {nom} fait son choix » / « {nom} a choisi ✓ », pour les 2 joueurs
+  const statuts = document.createElement("div");
+  statuts.className = "shifumi-statuts";
+  content.appendChild(statuts);
+  const statut = {};
+  [j1, j2].forEach((idx) => { statut[idx] = document.createElement("div"); statut[idx].className = "duel-label shifumi-statut"; statuts.appendChild(statut[idx]); });
+
+  // Les 3 choix de chaque joueur : visibles seulement sur son téléphone. data-tele="" : jamais lus par la télé
+  const zoneChoix = document.createElement("div");
+  zoneChoix.className = "shifumi-zone";
+  zoneChoix.dataset.tele = "";
+  content.appendChild(zoneChoix);
+  const monChoix = document.createElement("div");
+  monChoix.className = "duel-label shifumi-mon-choix";
+  monChoix.dataset.tele = "";
+  content.appendChild(monChoix);
+
+  // Révélation : le choix de chacun, côte à côte
+  const reveal = document.createElement("div");
+  reveal.className = "shifumi-reveal";
+  content.appendChild(reveal);
+
+  const resultat = document.createElement("div");
+  resultat.className = "duel-info shifumi-resultat";
+  content.appendChild(resultat);
+
+  let manche = 0;
+  let choix = {};
+
+  function majStatuts(){
+    [j1, j2].forEach((idx) => {
+      const fait = !!choix[idx];
+      statut[idx].classList.toggle("fait", fait);
+      statut[idx].innerText = fait ? tr`${joueurs[idx]} a choisi ✓` : tr`${joueurs[idx]} fait son choix…`;
+    });
+  }
+
+  function nouvelleManche(){
+    manche++;
+    choix = {};
+    overlay.classList.remove("shifumi-revele");
+    reveal.innerHTML = "";
+    resultat.innerText = "";
+    monChoix.innerText = "";
+    zoneChoix.innerHTML = "";
+    statuts.style.display = "";
+    info.innerText = jeJoue ? tr("Fais ton choix !") : tr("Duel Shifumi en cours...");
+    info.dataset.tele = tr("Duel Shifumi en cours..."); // (télé : même texte, que ce téléphone soit dans le duel ou pas)
+    [j1, j2].forEach((idx) => {
+      const rangee = document.createElement("div");
+      rangee.className = "shifumi-options";
+      if(!moi(idx)) rangee.hidden = true; // (boutons de l'autre joueur : là pour rejouer son action, mais cachés)
+      CHOIX_SHIFUMI.forEach((c) => {
+        const option = document.createElement("div");
+        option.className = "shifumi-option";
+        option.setAttribute("role", "button");
+        option.innerHTML = `<span class="shifumi-image">${IMAGE_SHIFUMI[c]}</span><span class="shifumi-nom">${echapperHtml(nomChoixShifumi(c))}</span>`;
+        surAction(option, `shifumi:${manche}:${idx}:${c}`, { owner: joueurs[idx], once: true, valide: () => !choix[idx] },
+          () => choisir(idx, c, rangee));
+        rangee.appendChild(option);
+      });
+      zoneChoix.appendChild(rangee);
+    });
+    majStatuts();
+  }
+
+  function choisir(idx, c, rangee){
+    if(choix[idx] || generation !== generationPartie) return;
+    choix[idx] = c;
+    rangee.querySelectorAll(".shifumi-option").forEach((o) => { o.dataset.netUtilise = "1"; });
+    if(moi(idx)){
+      sonClicTheme();
+      rangee.hidden = true;
+      monChoix.innerText = tr`Tu as choisi : ${IMAGE_SHIFUMI[c]} ${nomChoixShifumi(c)}`;
+      info.innerText = tr`En attente de ${joueurs[adversaire(idx)]}…`;
+    }
+    majStatuts();
+    if(choix[j1] && choix[j2]) suspense();
+  }
+
+  // Les 2 ont choisi : « Pierre… Feuille… Ciseaux… », puis les deux choix et le résultat
+  function suspense(){
+    zoneChoix.innerHTML = "";
+    monChoix.innerText = "";
+    delete info.dataset.tele;
+    const etapes = [tr("Pierre…"), tr("Feuille…"), tr("Ciseaux…")];
+    etapes.forEach((t, i) => setTimeout(() => {
+      if(generation !== generationPartie || !overlay.isConnected) return;
+      info.innerText = t;
+    }, delai(i * 550)));
+    info.innerText = etapes[0];
+    setTimeout(() => {
+      if(generation !== generationPartie || !overlay.isConnected) return;
+      reveler();
+    }, delai(etapes.length * 550 + 150));
+  }
+
+  function reveler(){
+    const c1 = choix[j1], c2 = choix[j2];
+    statuts.style.display = "none";
+    info.innerText = tr("SHIFUMI !");
+    reveal.innerHTML = "";
+    [[j1, c1], [j2, c2]].forEach(([idx, c]) => {
+      const bloc = document.createElement("div");
+      bloc.className = "shifumi-revele-joueur";
+      bloc.innerHTML = `<span class="duel-label shifumi-revele-nom">${echapperHtml(joueurs[idx])}</span>` +
+        `<span class="shifumi-image">${IMAGE_SHIFUMI[c]}</span><span class="duel-label shifumi-nom">${echapperHtml(nomChoixShifumi(c))}</span>`;
+      reveal.appendChild(bloc);
+    });
+    overlay.classList.add("shifumi-revele");
+    jouerSon("cartes");
+
+    if(c1 === c2){
+      duelMultiplicateur *= 2;
+      titre.innerText = tr("SHIFUMI ×") + duelMultiplicateur;
+      resultat.innerText = tr("Égalité ! Les gorgées sont multipliées : ×") + duelMultiplicateur;
+      setTimeout(() => {
+        if(generation !== generationPartie || !overlay.isConnected) return;
+        nouvelleManche();
+      }, delai(2200));
+      return;
+    }
+
+    const gagnant = BAT_SHIFUMI[c1] === c2 ? j1 : j2;
+    const perdant = adversaire(gagnant);
+    reveal.children[gagnant === j1 ? 0 : 1].classList.add("shifumi-gagnant");
+    reveal.children[perdant === j1 ? 0 : 1].classList.add("shifumi-perdant");
+    compterStat("duels", joueurs[gagnant]); // (récap de fin : duels gagnés)
+    // Les joueurs du duel lisent « tu as perdu / gagné » ; les autres et la télé, les deux noms
+    const neutre = tr`${joueurs[perdant]} a perdu, ${joueurs[gagnant]} gagne`;
+    resultat.dataset.tele = neutre;
+    resultat.innerText = moi(perdant) ? tr`${joueurs[perdant]}, tu as perdu !\n${joueurs[gagnant]} gagne`
+      : moi(gagnant) ? tr`${joueurs[gagnant]}, tu as gagné !\n${joueurs[perdant]} perd`
+      : neutre;
+    const gorg = gorgeesDuel(valeurCarteDuel(carteEnJeu), duelMultiplicateur);
+    terminerDuel(overlay, perdant, gorg, carteEnJeu, tr`${joueurs[perdant]} boit ${texteGorgees(gorg)}`, generation, 3200);
+  }
+
+  nouvelleManche();
 }
 
 function afficherOverlayTirageDuel(overlay, j1, j2, carteDuel = ""){
@@ -1212,37 +1468,7 @@ function afficherOverlayTirageDuel(overlay, j1, j2, carteDuel = ""){
     briserGivre(perdant === j1 ? carteDeJ1 : carteDeJ2); // (thème Givre : son givre éclate et tombe en morceaux)
     (perdant === j1 ? carteDeJ2 : carteDeJ1).classList.add("duel-gagnant");
     info.innerText = joueurs[perdant] + tr(" perd le duel !");
-
-    // 1) on enlève l’overlay du duel après le temps de lire le reveal (2,2 s),
-    //    ou dès qu'on tape sur l'écran
-    let suiteFaite = false;
-    const suite = () => {
-      if(suiteFaite || generation !== generationPartie) return;
-      suiteFaite = true;
-      overlay.removeEventListener("pointerdown", suite);
-
-      // L'annonce « X boit N gorgées » apparaît en fondu PAR-DESSUS le duel, et le duel n'est
-      // retiré dessous qu'une fois l'annonce affichée (avant : le plateau apparaissait entre les deux)
-      // (avec la carte du perdant, celle qui fixe ses gorgées, plutôt que le 4 qui a lancé le duel)
-      annoncerBoireAvecAnnulation(perdant, gorg, cartePerdant, msg);
-      // gorgée pour la couleur de celui qui a tiré le 4 (annoncée avant le duel) : gardée en dernière ligne des Règles
-      if(couleurDuelEnAttente){ ajouterLigneCouleurRegles(couleurDuelEnAttente); couleurDuelEnAttente = null; }
-      setTimeout(() => {
-        overlay.remove();
-        unlockScroll();
-      }, delai(450));
-
-      // Puis on restaure l'état du jeu (sans attendre la fin d'overlay ici)
-      setTimeout(() => {
-        if(generation !== generationPartie) return;
-        duelEnCours = false;
-        choixPigeonEnCours = false;
-        duelMultiplicateur = 1;
-        afficherJoueurActif();
-      }, delai(1800));
-    };
-    setTimeout(suite, delai(2200));
-    overlay.addEventListener("pointerdown", suite);
+    terminerDuel(overlay, perdant, gorg, cartePerdant, msg, generation, 2200);
   }
 
   function onChoose(which){

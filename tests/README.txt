@@ -25,6 +25,16 @@ Démarrage rapide (30 secondes, Linux / macOS / Windows)
   ne sortent que dans ce thème. Résultat attendu : « TOUT EST OK ». GitHub le lance aussi à chaque
   push (onglet Actions, « Tests de démarrage »).
 
+Duel Shifumi en ligne (1 minute, Linux / macOS / Windows, vrai Firebase de l'appli TEST)
+-----------------------------------------------------------------------------------------
+  node tests/test_shifumi_en_ligne.js
+     THEME=givre : dans un autre thème ; CAPTURES=dossier : garde des captures des 3 téléphones
+
+  Trois téléphones (A crée, B et C rejoignent). Celui qui a tiré le 4 choisit « Shifumi », puis les 2 joueurs ;
+  chacun choisit sur son téléphone, les autres ne voient que « {nom} fait son choix ». Vérifie qu'aucun choix
+  ne se voit ailleurs (ni dans ce qui part vers la télé), l'égalité ×2, « tu as perdu / gagné », les gorgées
+  du perdant, et que les 3 téléphones finissent dans le même état. Résultat attendu : « TOUT EST OK ».
+
 Spectateur en ligne (10 secondes, Linux / macOS / Windows)
 ----------------------------------------------------------
   node tests/test_spectateur.js
