@@ -6669,7 +6669,7 @@ html[data-theme="givre"] #ecranTele .tele-prepa-joueur{
   color: #0a7f8a;
   box-shadow: 0 0.8vh 2vh rgba(13,53,80,0.1);
 }
-html[data-theme="givre"] #ecranTele .tele-pied{ color: rgba(13,53,80,0.45); }
+html[data-theme="givre"] #ecranTele .tele-pied{ color: rgba(13,53,80,0.75); }
 
 /* ===== Réglages > Signaler un bug : petit lien discret sous « Partager le lien » ===== */
 #ecranReglages .lienBug{
@@ -7412,14 +7412,14 @@ html[data-theme="soleil"] #ecranTele .tele-tour{
 html[data-theme="soleil"] #ecranTele .tele-tour-nom{ color: #ffcf86; text-shadow: 0 0.4vh 0 #b8456a; }
 html[data-theme="soleil"] #ecranTele .tele-joueur{ color: #fff1df; }
 html[data-theme="soleil"] #ecranTele .tele-joueur-actif{ color: #ffcf86; }
-html[data-theme="soleil"] #ecranTele .tele-badge{ background: linear-gradient(180deg, #ffb35c, #f2775c); color: #fff; }
+html[data-theme="soleil"] #ecranTele .tele-badge{ background: linear-gradient(180deg, #ffb35c, #f2775c); color: #3a1230; }
 html[data-theme="soleil"] #ecranTele .tele-regles{ color: #ffe0b0; }
 html[data-theme="soleil"] #ecranTele .tele-prepa-joueur{ background: rgba(22,32,72,0.5); border-color: rgba(255,205,170,0.45); color: #fff1df; }
 html[data-theme="soleil"] #ecranTele :is(.tele-restantes, .tele-pied, .tele-son-coupe, .tele-prepa-info){ color: #3a1f4a; }
 /* Annonces : « heure dorée », comme les overlays du téléphone */
 html[data-theme="soleil"] #ecranTele .tele-ecran{ background: linear-gradient(180deg, #fcc98a 0%, #f7a072 38%, #e9787a 72%, #b8657f 100%); }
 html[data-theme="soleil"] #ecranTele .tele-ecran-titre{ color: #2a1a44; text-shadow: 0 0.3vh 0 rgba(255,240,220,0.6); }
-html[data-theme="soleil"] #ecranTele .tele-ecran-detail{ color: #8a1f4a; }
+html[data-theme="soleil"] #ecranTele .tele-ecran-detail{ color: #6b1838; }
 /* Pause */
 /* Créateurs : ciel du soir sombre (le bas clair du dégradé rendait les noms jaunes illisibles), qui part
    de la couleur de la barre de l'iPhone */
@@ -10394,7 +10394,7 @@ html:is([data-theme="givre"], [data-theme="kawaii"], [data-theme="soleil"]) #ecr
 html:is([data-theme="givre"], [data-theme="kawaii"], [data-theme="soleil"]) #ecranTele .tele-victoire-onde{ border-color: #f0a000; box-shadow: 0 0 4vh #f0a000, inset 0 0 4vh #f0a000; }
 html:is([data-theme="givre"], [data-theme="kawaii"]) #ecranTele .tele-pari-nom{ color: #1b2a3a; }
 html:is([data-theme="givre"], [data-theme="kawaii"], [data-theme="soleil"]) #ecranTele .tele-pari-vide{ color: #5a4300; border-color: rgba(60, 40, 0, 0.45); }
-html:is([data-theme="givre"], [data-theme="kawaii"], [data-theme="soleil"]) #ecranTele .tele-pari-en-cours .tele-pari-vide{ color: #8a5a00; border-color: #c98a00; }
+html:is([data-theme="givre"], [data-theme="kawaii"], [data-theme="soleil"]) #ecranTele .tele-pari-en-cours .tele-pari-vide{ color: #6b4300; border-color: #a86f00; }
 #ecranTele .tele-pari-apres .tele-pari-joueur{ width: 17vh; padding: 1.2vh 1vh; }
 #ecranTele .tele-pari-apres .tele-pari-joueur .Carte, #ecranTele .tele-pari-apres .tele-pari-vide{ width: 11vh; }
 #ecranTele .tele-pari-apres.tele-pari-nombreux .tele-pari-joueur{ width: 13vh; }
@@ -10990,7 +10990,8 @@ html[data-theme="givre"] #ecranTele .tele-puce.tele-puce-couleur:nth-child(3)::b
 html[data-theme="givre"] #ecranTele .tele-puce.tele-puce-couleur:nth-child(4)::before{ background-image: url("Cartes/givre/givre_6.webp"); }
 html[data-theme="givre"] #ecranTele .tele-couleur-carre{ box-shadow: none; }
 /* Thèmes clairs : nom de la couleur (VERT…) assombri, titre « Joueurs » de Givre plus foncé, ✦ ✦ ✦ du récap de la carte dorée en or foncé */
-html:is([data-theme="givre"], [data-theme="kawaii"], [data-theme="soleil"]) #ecranTele .tele-couleur b{ color: var(--c-texte, var(--c)); }
+html:is([data-theme="givre"], [data-theme="kawaii"]) #ecranTele .tele-couleur b{ color: var(--c-texte, var(--c)); }
+html[data-theme="soleil"] #ecranTele .tele-couleur b{ color: var(--c-clair, var(--c)); }
 html[data-theme="givre"] #ecranTele .tele-prepa-titre{ color: #0b6aa3; }
 html:is([data-theme="givre"], [data-theme="kawaii"], [data-theme="soleil"]) .recap-eclats{ color: #a87800; opacity: 1; }
 html[data-theme="givre"][data-theme] #ecranTele .tele-ecran-doree .tele-ecran-titre{
