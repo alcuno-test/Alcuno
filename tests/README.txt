@@ -34,6 +34,14 @@ Duel Shifumi en mode classique (2 minutes, Linux / macOS / Windows)
   retournent. Vérifie aussi le dos de chaque thème, l'égalité ×2, les gorgées, un bot dans le duel, et qu'une partie
   coupée en plein Shifumi se reprend à l'identique. Résultat attendu : « TOUT EST OK ».
 
+Duel Shifumi en mode hot et hard (1 minute, Linux / macOS / Windows)
+--------------------------------------------------------------------
+  node tests/test_shifumi_hot.js
+
+  Le défi proposé au perdant suit les gorgées finales, égalités comprises (×2, ×4…) : hot A jusqu'à 4, B de 5 à 10,
+  C au-dessus ; hard HA jusqu'à 4, HB au-dessus ; aussi en mode PJ (moitié des gorgées, 10 au plus).
+  Résultat attendu : « TOUT EST OK ».
+
 Duel Shifumi en ligne (1 minute, Linux / macOS / Windows, vrai Firebase de l'appli TEST)
 -----------------------------------------------------------------------------------------
   node tests/test_shifumi_en_ligne.js
