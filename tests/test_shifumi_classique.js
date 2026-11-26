@@ -1,8 +1,7 @@
-// Duel Shifumi en mode CLASSIQUE (un seul téléphone), les deux façons à l'essai :
-//  - « cartes » : chacun son tour choisit, une carte Shifumi de dos apparaît à chaque choix, puis les deux se retournent ;
-//  - « écran partagé » : téléphone posé entre les deux, chacun ses 3 boutons, on appuie juste après « SHIFUMI ! ».
-// Vérifie : le choix entre Classique / cartes / écran partagé, les cartes de dos (rien du choix à l'écran ni vers la télé),
-// égalité ×2, gorgées du perdant, trop tôt / trop tard, un bot qui joue tout seul, et la reprise d'une partie coupée.
+// Duel Shifumi en mode CLASSIQUE (un seul téléphone) : chacun son tour choisit pierre, feuille ou ciseaux, une carte
+// Shifumi de dos apparaît à chaque choix, puis les deux se retournent.
+// Vérifie : le choix entre Classique / Shifumi, les cartes de dos (rien du choix à l'écran ni vers la télé), le dos de
+// chaque thème, égalité ×2, gorgées du perdant, un bot qui joue tout seul, et la reprise d'une partie coupée.
 //   node tests/test_shifumi_classique.js        (CAPTURES=dossier : garde des captures ; THEME=givre : un autre thème)
 const http = require("http"), fs = require("fs"), path = require("path");
 function charger(){
@@ -70,7 +69,6 @@ const CAPTURES = process.env.CAPTURES || "";
       retournees: vis(".shifumi-carte-jeu.retournee").length,
       faces: vis(".shifumi-face-image").map((f) => f.textContent).join(""),
       info: t(".shifumi-info"), resultat: t(".shifumi-resultat"), titre: t(".duel-main-title"),
-      moities: t(".shifumi-moitie"), go: vis(".shifumi-go").length,
       tele: JSON.stringify((etatPourTele().ecran) || {}),
       regles: (document.getElementById("overlayRegleUnique") || {}).innerText || ""
     };
@@ -95,8 +93,8 @@ const CAPTURES = process.env.CAPTURES || "";
   const ordre = () => p.evaluate(() => [...document.querySelectorAll("#overlayDuel .duel-vs-nom")].map((n) => n.textContent));
 
   // ===== 1) CARTES =====
-  const types = await lancerDuel("cartes", "Tris", "Ylana");
-  verifier(types.length === 3 && /Classique/.test(types[0]) && /cartes/.test(types[1]) && /partagé/.test(types[2]), `choix du duel en classique : ${types.join(" / ")}`);
+  const types = await lancerDuel("Shifumi", "Tris", "Ylana");
+  verifier(types.length === 2 && /Classique/.test(types[0]) && /Shifumi/.test(types[1]), `choix du duel en classique : ${types.join(" / ")}`);
   let [A, B] = await ordre();
   let e = await lire();
   verifier(e.options === 3 && e.cartes === 0 && e.info.includes(`${A} : fais ton choix`), `cartes : ${A} choisit en premier, 3 choix, aucune carte (${e.info})`);
@@ -128,58 +126,9 @@ const CAPTURES = process.env.CAPTURES || "";
   verifier(e.regles.includes(`${A} boit 14 gorgées`), `le perdant boit 7 × 2 = 14 gorgées (${e.regles.split("\n")[0]})`);
   await fermerAnnonces();
 
-  // ===== 2) ÉCRAN PARTAGÉ =====
-  await lancerDuel("partagé", "Tris", "Max", "cinq_vert");
-  [A, B] = await ordre();
-  e = await lire();
-  verifier(e.options === 6 && e.go === 1, `écran partagé : 3 boutons par joueur, « C'est parti ! » (${e.options} boutons)`);
-  const sens = await p.evaluate(() => [...document.querySelectorAll("#overlayDuel .shifumi-moitie")].map((m) => getComputedStyle(m).transform));
-  verifier(sens[0] !== "none" && sens[1] === "none", "la moitié du haut est à l'envers (tournée vers l'autre joueur)");
-  await capture("partage_1");
-  // Appui pendant le décompte = trop tôt
-  await tap("#overlayDuel .shifumi-go"); await attendre(300);
-  const moitie = (idx, choix) => p.evaluate(([idx, choix]) => {
-    const m = document.querySelectorAll("#overlayDuel .shifumi-moitie")[idx]; // 0 = haut (B), 1 = bas (A)
-    const o = [...m.querySelectorAll(".shifumi-option")].find((x) => x.innerText.includes(choix));
-    o.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
-  }, [idx, choix]);
-  await moitie(1, "Pierre"); // A appuie trop tôt
-  await p.waitForFunction(() => /SHIFUMI !/.test(document.querySelector("#overlayDuel .shifumi-info").innerText), null, { timeout: 5000 });
-  await moitie(0, "Ciseaux"); // B à temps
-  e = await attendreQue((x) => /gagne/.test(x.resultat) || /Égalité|recommence/.test(x.resultat));
-  verifier(e.resultat.includes(`${A} a perdu, ${B} gagne`) && /Trop tôt/.test(e.moities), `trop tôt : ${A} perd (${e.resultat})`);
-  await capture("partage_2");
-  await attendreQue((x) => /boit/.test(x.regles), 8000);
-  await fermerAnnonces();
-
-  // Égalité puis victoire, à temps ; un bot qui joue tout seul
-  await lancerDuel("partagé", "Tris", "Max", "cinq_vert");
-  [A, B] = await ordre();
-  await tap("#overlayDuel .shifumi-go");
-  await p.waitForFunction(() => /SHIFUMI !/.test(document.querySelector("#overlayDuel .shifumi-info").innerText), null, { timeout: 5000 });
-  await moitie(0, "Feuille"); await moitie(1, "Feuille");
-  e = await attendreQue((x) => /Égalité/.test(x.resultat));
-  verifier(/×2/.test(e.titre) && /Feuille/.test(e.info), `écran partagé : égalité ×2 (${e.info})`);
-  await capture("partage_3");
-  e = await attendreQue((x) => x.go === 1, 6000);
-  await tap("#overlayDuel .shifumi-go");
-  await p.waitForFunction(() => /SHIFUMI !/.test(document.querySelector("#overlayDuel .shifumi-info").innerText), null, { timeout: 5000 });
-  e = await attendreQue((x) => /recommence|gagne/.test(x.resultat), 4000);
-  verifier(/recommence/.test(e.resultat) && /Trop tard/.test(e.moities), `personne n'appuie : trop tard pour les deux, on recommence (${e.resultat})`);
-  e = await attendreQue((x) => x.go === 1, 6000);
-  await tap("#overlayDuel .shifumi-go");
-  await p.waitForFunction(() => /SHIFUMI !/.test(document.querySelector("#overlayDuel .shifumi-info").innerText), null, { timeout: 5000 });
-  await moitie(0, "Pierre"); await moitie(1, "Feuille");
-  e = await attendreQue((x) => /gagne/.test(x.resultat));
-  verifier(e.resultat.includes(`${B} a perdu, ${A} gagne`) && /Gagné/.test(e.moities) && /Perdu/.test(e.moities), `feuille bat pierre (${e.resultat})`);
-  await attendre(600); await capture("partage_4");
-  e = await attendreQue((x) => /boit/.test(x.regles), 8000);
-  verifier(e.regles.includes(`${B} boit 10 gorgées`), `5 × 2 = 10 gorgées (${e.regles.split("\n")[0]})`);
-  await fermerAnnonces();
-
   // ===== 3) Reprise d'une partie coupée : les duels Shifumi (tirés pour de vrai) se rejouent à l'identique =====
   // Nouvelle partie jouée par le robot des tests (tests/auto_en_ligne.js, marche aussi en classique) ; à chaque 4 tiré, le
-  // test prend la main : Shifumi cartes au 1er duel, écran partagé au 2e. Puis la page est rechargée et la partie reprise.
+  // test prend la main : Shifumi aux 2 premiers duels. Puis la page est rechargée et la partie reprise.
   await p.evaluate(() => { localStorage.removeItem("alcuno_partie_classique"); });
   await p.goto(url); await attendre(1200);
   await p.evaluate(async () => {
@@ -207,21 +156,15 @@ const CAPTURES = process.env.CAPTURES || "";
       await attendre(150); continue;
     }
     await p.evaluate(() => window.__auto.stop());
-    const type = duelsJoues.length === 0 ? "cartes" : "partagé";
-    await tap("#overlayDuel .duel-boutons .bouton-pigeon", type); await attendre(500);
+    await tap("#overlayDuel .duel-boutons .bouton-pigeon", "Shifumi"); await attendre(500);
     // les 2 premiers joueurs proposés (s'il y en a 3)
     for (let i = 0; i < 2; i++) { await p.evaluate(() => { const b = [...document.querySelectorAll("#overlayDuel .duel-boutons .bouton-pigeon")].find((x) => !x.disabled); if (b) b.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true })); }); await attendre(150); }
     await attendre(600);
-    if (type === "cartes") {
-      await tap("#overlayDuel .shifumi-option", "Feuille"); await attendre(250);
-      await tap("#overlayDuel .shifumi-option", "Pierre");
-    } else {
-      await tap("#overlayDuel .shifumi-go");
-      await p.waitForFunction(() => /SHIFUMI !/.test((document.querySelector("#overlayDuel .shifumi-info") || {}).innerText || ""), null, { timeout: 5000 });
-      await moitie(0, "Ciseaux"); await moitie(1, "Feuille");
-    }
+    const [premier, second] = duelsJoues.length === 0 ? ["Feuille", "Pierre"] : ["Ciseaux", "Feuille"];
+    await tap("#overlayDuel .shifumi-option", premier); await attendre(250);
+    await tap("#overlayDuel .shifumi-option", second);
     const fin = await attendreQue((x) => /gagne/.test(x.resultat), 8000);
-    duelsJoues.push(type + " : " + fin.resultat);
+    duelsJoues.push(fin.resultat);
     await attendreQue((x) => !x.ouvert, 8000);
     await p.evaluate(() => window.__auto.start());
   }
@@ -259,7 +202,7 @@ const CAPTURES = process.env.CAPTURES || "";
 
   // ===== 4) Un bot dans le duel « cartes » : il choisit tout seul =====
   await p.evaluate(() => { botsPartie.add("Max"); });
-  await lancerDuel("cartes", "Tris", "Max");
+  await lancerDuel("Shifumi", "Tris", "Max");
   [A, B] = await ordre();
   const humain = A === "Max" ? 1 : 0;
   if (humain === 0) await tap("#overlayDuel .shifumi-option", "Pierre");

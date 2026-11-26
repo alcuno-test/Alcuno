@@ -30,10 +30,9 @@ Duel Shifumi en mode classique (2 minutes, Linux / macOS / Windows)
   node tests/test_shifumi_classique.js
      THEME=givre : dans un autre thème ; CAPTURES=dossier : garde des captures
 
-  Un seul téléphone. Les deux façons à l'essai : « cartes » (chacun son tour, une carte Shifumi de dos par choix, puis
-  elles se retournent) et « écran partagé » (téléphone posé entre les deux, on appuie juste après « SHIFUMI ! » : trop tôt
-  ou trop tard, c'est perdu). Vérifie aussi l'égalité ×2, les gorgées, un bot dans le duel, et qu'une partie coupée en
-  plein Shifumi se reprend à l'identique. Résultat attendu : « TOUT EST OK ».
+  Un seul téléphone : chacun son tour choisit, une carte Shifumi de dos apparaît à chaque choix, puis elles se
+  retournent. Vérifie aussi le dos de chaque thème, l'égalité ×2, les gorgées, un bot dans le duel, et qu'une partie
+  coupée en plein Shifumi se reprend à l'identique. Résultat attendu : « TOUT EST OK ».
 
 Duel Shifumi en ligne (1 minute, Linux / macOS / Windows, vrai Firebase de l'appli TEST)
 -----------------------------------------------------------------------------------------
