@@ -1385,7 +1385,7 @@ function gagnantShifumi(j1, c1, j2, c2){
 function creerCarteShifumi(nom){
   const carte = document.createElement("div");
   carte.className = "shifumi-carte-jeu";
-  carte.innerHTML = `<div class="shifumi-carte-interieur"><div class="shifumi-carte-dos"><span class="shifumi-dos-motif">✊✋✌️</span><span class="shifumi-dos-titre">SHIFUMI</span></div>` +
+  carte.innerHTML = `<div class="shifumi-carte-interieur"><div class="shifumi-carte-dos"></div>` +
     `<div class="shifumi-carte-face"><span class="shifumi-face-image"></span><span class="shifumi-face-nom"></span></div></div>` +
     `<span class="duel-label shifumi-carte-joueur">${echapperHtml(nom)}</span>`;
   return carte;
@@ -1403,6 +1403,10 @@ function afficherOverlayShifumiCartes(overlay, j1, j2){
   table.className = "shifumi-table";
   table.dataset.tele = ""; // (télé : rien des cartes avant qu'elles soient retournées)
   content.appendChild(table);
+  const precharge = document.createElement("div"); // (dos des cartes Shifumi chargé dès maintenant, voir style_alcuno.css)
+  precharge.className = "shifumi-carte-dos shifumi-precharge";
+  precharge.dataset.tele = "";
+  content.appendChild(precharge);
 
   const info = document.createElement("div");
   info.className = "duel-info shifumi-info";

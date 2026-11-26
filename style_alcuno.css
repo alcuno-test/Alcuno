@@ -9275,14 +9275,21 @@ html[data-theme="givre"] #overlayDuel .duel-content :is(.shifumi-nom, .shifumi-s
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
   box-shadow: 0 10px 24px rgba(0,0,0,0.5);
 }
-#overlayDuel .duel-content .shifumi-carte-dos{
-  border: 3px solid var(--shifumi-bord, #FFD700);
-  background:
-    repeating-linear-gradient(45deg, rgba(255,255,255,0.07) 0 8px, transparent 8px 16px),
-    radial-gradient(circle at 50% 40%, var(--shifumi-dos-clair, #b3123f), var(--shifumi-dos, #4a0718));
+/* Dos des cartes Shifumi (outils/generer_dos_shifumi.py) : un seul dos pour tous les thèmes, sauf Star Wars, Kawaii et
+   BDSM qui ont le leur ; Givre : le dos commun, givré comme les cartes du thème */
+#overlayDuel .duel-content .shifumi-carte-dos{ background: url("Cartes/shifumi/dos_shifumi.svg") center / 100% 100% no-repeat; }
+html[data-theme="galaxie"] #overlayDuel .duel-content .shifumi-carte-dos{ background-image: url("Cartes/shifumi/dos_shifumi_galaxie.svg"); }
+html.android[data-theme="galaxie"] #overlayDuel .duel-content .shifumi-carte-dos{ background-image: url("Cartes/shifumi/dos_shifumi_galaxie_android.webp"); } /* (flous SVG : cassés sur Android) */
+html[data-theme="kawaii"] #overlayDuel .duel-content .shifumi-carte-dos{ background-image: url("Cartes/shifumi/dos_shifumi_kawaii.svg"); }
+html[data-theme="donjon"] #overlayDuel .duel-content .shifumi-carte-dos{ background-image: url("Cartes/shifumi/dos_shifumi_donjon.svg"); }
+html[data-theme="givre"] #overlayDuel .duel-content .shifumi-carte-dos::before{
+  content: ""; position: absolute; inset: -5.13% -8%; pointer-events: none;
+  background: url("Cartes/givre/givre_1.webp") center / 100% 100% no-repeat;
 }
-#overlayDuel .duel-content .shifumi-dos-motif{ font-size: clamp(14px, 4.4vw, 20px); letter-spacing: -2px; filter: drop-shadow(0 2px 2px rgba(0,0,0,.5)); }
-#overlayDuel .duel-content .shifumi-dos-titre{ color: var(--shifumi-bord, #FFD700); font: 900 clamp(10px, 3vw, 14px)/1 Arial, sans-serif; letter-spacing: 0.08em; text-shadow: 0 1px 2px #000; }
+html[data-theme="givre"] #overlayDuel .duel-content .shifumi-carte-jeu:nth-child(2) .shifumi-carte-dos::before{ background-image: url("Cartes/givre/givre_4.webp"); transform: scaleX(-1); }
+/* (chargé dès l'ouverture du duel : sinon la 1re carte de dos pouvait apparaître vide, le temps que l'image arrive) */
+#overlayDuel .duel-content .shifumi-carte-dos.shifumi-precharge{ position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; box-shadow: none; }
+html[data-theme="givre"] #overlayDuel .duel-content .shifumi-carte-dos.shifumi-precharge::before{ content: none; }
 #overlayDuel .duel-content .shifumi-carte-face{ transform: rotateY(180deg); background: linear-gradient(180deg, #fffdf6, #f1e6cf); border: 3px solid var(--shifumi-bord, #FFD700); }
 #overlayDuel .duel-content .shifumi-face-image{ font-size: clamp(40px, 13vw, 62px); line-height: 1; }
 #overlayDuel .duel-content .shifumi-face-nom{ color: #3a1020; font: 900 clamp(13px, 3.8vw, 18px)/1 Arial, sans-serif; }
@@ -9325,8 +9332,6 @@ html[data-theme="givre"] #overlayDuel .duel-content :is(.shifumi-nom, .shifumi-s
 #overlayDuel.shifumi-partage .shifumi-rate{ color: #ff6b6b; font-size: clamp(24px, 7vw, 36px); }
 html[data-theme="soleil"] #overlayDuel.shifumi-partage > .shifumi-moitie :is(.shifumi-nom, .shifumi-moitie-nom, .shifumi-moitie-texte){ color: #6b1838; text-shadow: none; }
 html[data-theme="givre"] #overlayDuel.shifumi-partage > .shifumi-moitie :is(.shifumi-nom, .shifumi-moitie-nom, .shifumi-moitie-texte){ color: #0b6aa3; text-shadow: none; }
-html[data-theme="givre"] #overlayDuel{ --shifumi-dos: #0b4f7a; --shifumi-dos-clair: #3fb8ff; }
-html[data-theme="soleil"] #overlayDuel{ --shifumi-dos: #7a1440; --shifumi-dos-clair: #e0457b; }
 html[data-theme="soleil"] #overlayDuel .duel-content .shifumi-carte-joueur, html[data-theme="givre"] #overlayDuel .duel-content .shifumi-carte-joueur{ text-shadow: none; }
 @media (prefers-reduced-motion: reduce){
   #overlayDuel .duel-content .shifumi-carte-jeu{ animation: none; }

@@ -38,6 +38,7 @@ const CAPTURES = process.env.CAPTURES || "";
     if (!sessionStorage.getItem("__init")) {
       sessionStorage.setItem("__init", "1");
       localStorage.setItem("alcuno_theme", t); localStorage.setItem("alcuno_tutoriel", "vu");
+      for (const cle of ["alcuno_theme_galaxie", "alcuno_theme_donjon", "alcuno_theme_kawaii"]) localStorage.setItem(cle, "1"); // (thèmes secrets débloqués)
       localStorage.setItem("alcuno_premiere_partie_jouee", "1"); localStorage.setItem("alcuno_aide_vue", "1"); localStorage.removeItem("alcuno_bots");
     }
   } catch (e) {} }, THEME);
@@ -105,6 +106,10 @@ const CAPTURES = process.env.CAPTURES || "";
   e = await lire();
   verifier(e.cartes === 1 && e.retournees === 0 && e.options === 3 && e.info.includes(`${B} : fais ton choix`), `1er choix : une carte de dos apparaît, au tour de ${B}`);
   verifier(!/Pierre|✊/.test(e.info + e.resultat + e.tele) && !e.faces, "la carte de dos ne dit rien du choix (ni à l'écran ni vers la télé)");
+  const dos = await p.evaluate(() => ({ theme: document.documentElement.dataset.theme, image: getComputedStyle(document.querySelector("#overlayDuel .shifumi-carte-jeu .shifumi-carte-dos")).backgroundImage,
+    givre: getComputedStyle(document.querySelector("#overlayDuel .shifumi-carte-jeu .shifumi-carte-dos"), "::before").backgroundImage }));
+  const dosAttendu = { galaxie: "dos_shifumi_galaxie", kawaii: "dos_shifumi_kawaii", donjon: "dos_shifumi_donjon" }[dos.theme] || "dos_shifumi.svg";
+  verifier(dos.theme === THEME && dos.image.includes(dosAttendu) && (THEME === "givre") === /givre_/.test(dos.givre), `dos de la carte Shifumi en ${dos.theme} : ${dos.image.split("/").pop()}${/givre_/.test(dos.givre) ? " + givre" : ""}`);
   await attendre(400); await capture("cartes_2");
   await tap("#overlayDuel .shifumi-option", "Pierre"); await attendre(300);
   e = await lire();
