@@ -30,13 +30,13 @@ open("Cartes/shifumi/dos_shifumi.svg", "w").write(commun)
 open("Cartes/shifumi/dos_shifumi_galaxie.svg", "w").write(shi_fumi(open("Cartes/dos_galaxie_argent.svg").read()))
 open("Cartes/shifumi/dos_shifumi_kawaii.svg", "w").write(shi_fumi(open("Cartes/dos_kawaii_alcuno_licorne.svg").read()))
 
-# BDSM : le cœur masqué du dos du thème, plus petit en haut, « SHIFUMI » en rouge et les trois mains
+# BDSM : le cœur masqué du dos du thème, plus petit en haut, « SHIFUMI » en rouge
 donjon = open("Cartes/dos_donjon.svg").read()
 debut = donjon.index('<path d="M26 74')
 fin = donjon.rindex("</svg>")
 cadre, coeur = donjon[:debut], donjon[debut:fin]
-donjon = (cadre + '<g transform="translate(50 60) scale(.62) translate(-50 -83)">' + coeur + '</g>'
-  + '<text x="50" y="112" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="15" text-anchor="middle" letter-spacing="1" fill="#d8102a" stroke="#000" stroke-width="2" paint-order="stroke">SHIFUMI</text>'
-  + MAINS.format(y=134, t=13) + "</svg>\n")
+donjon = (cadre + '<g transform="translate(50 66) scale(.62) translate(-50 -83)">' + coeur + '</g>'
+  + '<text x="50" y="118" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="15" text-anchor="middle" letter-spacing="1" fill="#d8102a" stroke="#000" stroke-width="2" paint-order="stroke">SHIFUMI</text>'
+  + "</svg>\n")
 open("Cartes/shifumi/dos_shifumi_donjon.svg", "w").write(donjon)
 print("Dos Shifumi écrits dans Cartes/shifumi/")
