@@ -1417,8 +1417,6 @@ window.TEXTES_IT = {
 "RÉFLEXE !": "RIFLESSI!",
 "RÉFLEXE ×": "RIFLESSI ×",
 "TAPE !": "TOCCA!",
-"Tape la carte dès qu'elle se retourne !": "Tocca la carta appena si gira!",
-"Tape ici dès que la carte se retourne !": "Tocca qui appena la carta si gira!",
 "Prêts ?": "Pronti?",
 "Attention…": "Attenti…",
 "Duel Réflexe en cours...": "Duello di riflessi in corso...",
@@ -1430,4 +1428,6 @@ window.TEXTES_IT = {
 "On recommence.": "Si ricomincia.",
 "DUEL !": "DUELLO!",
 "Classique, Shifumi ou Réflexe ?": "Classico, Morra cinese o Riflessi?",
+"Tape l'écran dès que « TAPE ! » s'affiche": "Tocca lo schermo appena compare «TOCCA!»",
+"Tape ici dès que « TAPE ! » s'affiche": "Tocca qui appena compare «TOCCA!»",
 };

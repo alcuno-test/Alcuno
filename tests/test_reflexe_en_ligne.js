@@ -1,6 +1,6 @@
 // Duel RÉFLEXE EN LIGNE, à trois « téléphones » (trois pages Playwright sans mémoire commune) : A crée, B et C rejoignent.
-// Celui qui a tiré le 4 choisit « Réflexe », puis les 2 joueurs ; chacun tape la carte sur SON téléphone quand elle se
-// retourne (chaque téléphone tire son propre moment et mesure le temps de réaction lui-même, envoyé avec l'action).
+// Celui qui a tiré le 4 choisit « Réflexe », puis les 2 joueurs ; chacun tape l'écran de SON téléphone quand « TAPE ! »
+// s'affiche (chaque téléphone tire son propre moment et mesure le temps de réaction lui-même, envoyé avec l'action).
 // Vérifie : faux départ (perdu tout de suite), le plus rapide gagne (temps affichés partout), « trop lent » envoyé tout
 // seul au bout de 5 s, égalité => ×2 et on rejoue, gorgées du perdant, la télé, et des états identiques partout.
 // ATTENTION : ça écrit une partie de test dans la base Firebase de l'appli TEST (jamais dans le vrai jeu). Dure ~2 minutes.
@@ -55,8 +55,8 @@ const attendre = (ms) => new Promise((r) => setTimeout(r, ms));
     const t = (sel) => vis(sel).map((e) => e.innerText.replace(/\s+/g, " ").trim()).join(" | ");
     return {
       ouvert: !!o, reflexe: !!(o && o.classList.contains("duel-reflexe")),
-      zones: vis(".reflexe-zone").length, retournee: vis(".reflexe-carte.retournee").length, cartes: vis(".reflexe-carte").length,
-      info: t(".reflexe-info"), temps: t(".reflexe-temps"), resultat: (vis(".shifumi-resultat")[0] || {}).innerText || "",
+      zones: vis(".reflexe-zone").length, retournee: vis(".reflexe-signal-go").length, cartes: vis(".carte-vedette").length,
+      info: t(".reflexe-signal"), temps: t(".reflexe-temps"), resultat: (vis(".shifumi-resultat")[0] || {}).innerText || "",
       titre: (o && o.querySelector(".duel-main-title") || {}).innerText || "",
       tele: typeof etatPourTele === "function" ? JSON.stringify(etatPourTele().ecran || {}) : "",
       regles: (document.getElementById("overlayRegleUnique") || {}).innerText || ""
@@ -114,7 +114,7 @@ const attendre = (ms) => new Promise((r) => setTimeout(r, ms));
     let { types, debut } = await lancer("sept_vert");
     console.log(`Tireur : ${T.pseudo} ; duel : ${D1.pseudo} contre ${D2.pseudo}`);
     verifier(/Classique/.test(types) && /Shifumi/.test(types) && /Réflexe/.test(types), `le tireur a le choix : ${types}`);
-    verifier(debut.every((e) => e.reflexe && e.cartes === 1 && e.retournee === 0), "l'écran Réflexe s'ouvre sur les 3 téléphones, carte de dos");
+    verifier(debut.every((e) => e.reflexe && e.cartes === 1 && e.retournee === 0), "l'écran Réflexe s'ouvre sur les 3 téléphones, avec la carte en jeu");
     verifier(debut[idx(D1)].zones === 1 && debut[idx(D2)].zones === 1 && debut[idx(T)].zones === 0, `chaque joueur du duel a sa carte à taper, celui qui regarde non (${debut.map((e) => e.zones)})`);
     verifier(/Prêts/.test(debut[idx(D1)].info) && /Réflexe en cours/.test(debut[idx(T)].info), `joueurs : « ${debut[idx(D1)].info} » ; les autres : « ${debut[idx(T)].info} »`);
     verifier(debut.every((e) => /Réflexe en cours/.test(e.tele) && !/Tape la carte/.test(e.tele)), "la télé lit « Duel Réflexe en cours... »");
@@ -132,7 +132,7 @@ const attendre = (ms) => new Promise((r) => setTimeout(r, ms));
     ({ debut } = await lancer("cinq_vert"));
     const tapApres = async (X, ms) => { const e = await attendreQue(X, (x) => x.retournee === 1, 15000); await attendre(ms); await pd(X, "#overlayDuel .reflexe-zone"); return e; };
     const [r1] = await Promise.all([tapApres(D1, 150), tapApres(D2, 900)]);
-    verifier(/TAPE/.test(r1.info), `au retournement, le joueur lit « ${r1.info} »`);
+    verifier(/TAPE/.test(r1.info), `le joueur lit « ${r1.info} »`);
     fin = await Promise.all(tous.map((X) => attendreQue(X, (e) => /gagn/.test(e.resultat))));
     const tempsDe = (e, n) => Number((e.temps.match(new RegExp(n + " : (\\d+) ms")) || [])[1]);
     const t1 = tempsDe(fin[idx(T)], D1.pseudo), t2 = tempsDe(fin[idx(T)], D2.pseudo);
@@ -159,7 +159,7 @@ const attendre = (ms) => new Promise((r) => setTimeout(r, ms));
     const eg = await Promise.all(tous.map((X) => attendreQue(X, (e) => /Égalité/.test(e.resultat))));
     verifier(eg.every((e) => /×2/.test(e.titre)), `égalité partout : ${eg.map((e) => e.titre)} (${eg[0].temps})`);
     const m2 = await Promise.all(tous.map((X) => attendreQue(X, (e) => e.retournee === 0 && !e.resultat, 8000)));
-    verifier(m2.every((e) => e.retournee === 0 && !e.resultat), "on rejoue : carte de dos à nouveau");
+    verifier(m2.every((e) => e.retournee === 0 && !e.resultat), "on rejoue : plus de « TAPE ! », on attend à nouveau");
     await Promise.all([tapApres(D1, 700), tapApres(D2, 150)]);
     fin = await Promise.all(tous.map((X) => attendreQue(X, (e) => /gagn/.test(e.resultat))));
     verifier(fin[idx(T)].resultat.includes(`${D1.pseudo} a perdu, ${D2.pseudo} gagne`), `2e manche : ${fin[idx(T)].temps} — ${fin[idx(T)].resultat}`);

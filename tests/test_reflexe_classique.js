@@ -1,6 +1,7 @@
 // Duel RÉFLEXE en mode CLASSIQUE (un seul téléphone) : écran coupé en deux (une moitié par joueur, celle du haut à l'envers),
-// une carte Réflexe de dos qui se retourne au bout d'un temps au hasard ; le premier qui tape ensuite gagne, taper avant
-// = faux départ (perdu). Vérifie : le choix du duel (3 types), les dos de chaque thème, faux départ, temps de réaction,
+// la carte en jeu au milieu, puis « TAPE ! » en gros au bout d'un temps au hasard ; le premier qui tape ensuite gagne,
+// taper avant = faux départ (perdu). Vérifie : le choix du duel (3 types), faux départ, temps de réaction, les taps qui
+// continuent après le résultat (ni le résultat, ni l'annonce « X boit… », ni les « Annuler N » ne partent tout seuls),
 // le tap du perdant juste après qui ne saute pas le résultat, un bot qui tape tout seul (après le retournement), et la
 // reprise d'une partie coupée (les temps sont gardés dans les actions, rejouées à l'identique).
 //   node tests/test_reflexe_classique.js
@@ -65,8 +66,8 @@ const CAPTURES = process.env.CAPTURES || "";
     const vis = (sel) => o ? [...o.querySelectorAll(sel)].filter((e) => e.getClientRects().length) : [];
     const t = (sel) => vis(sel).map((e) => e.innerText.replace(/\s+/g, " ").trim()).join(" | ");
     return {
-      ouvert: !!o, zones: vis(".reflexe-zone").length, retournee: vis(".reflexe-carte.retournee").length,
-      info: t(".reflexe-info"), temps: t(".reflexe-temps"), resultat: t(".shifumi-resultat"), titre: t(".duel-main-title"),
+      ouvert: !!o, zones: vis(".reflexe-zone").length, retournee: vis(".reflexe-signal-go").length,
+      info: t(".reflexe-signal"), temps: t(".reflexe-temps"), resultat: t(".shifumi-resultat"), titre: t(".duel-main-title"),
       zonesTexte: t(".reflexe-zone"), tele: JSON.stringify((etatPourTele().ecran) || {}),
       regles: (document.getElementById("overlayRegleUnique") || {}).innerText || ""
     };
@@ -95,34 +96,24 @@ const CAPTURES = process.env.CAPTURES || "";
   verifier(types.length === 3 && /Classique/.test(types[0]) && /Shifumi/.test(types[1]) && /Réflexe/.test(types[2]), `3 duels proposés : ${types.join(" / ")}`);
   let [BAS, HAUT] = await ordre();
   let e = await lire();
-  verifier(e.zones === 2 && e.retournee === 0 && /Prêts/.test(e.info), `2 zones de tap, carte de dos, « ${e.info} »`);
+  verifier(e.zones === 2 && e.retournee === 0 && /Prêts/.test(e.info), `2 zones de tap, « ${e.info} »`);
   const geo = await p.evaluate(() => {
     const r = (s) => document.querySelector("#overlayDuel " + s).getBoundingClientRect();
-    return { haut: r(".reflexe-zone-haut"), bas: r(".reflexe-zone-bas"), carte: r(".reflexe-carte"),
+    return { haut: r(".reflexe-zone-haut"), bas: r(".reflexe-zone-bas"), carte: r(".reflexe-enjeu"), autres: document.querySelectorAll("#overlayDuel .shifumi-carte-jeu, #overlayDuel .shifumi-carte-dos").length,
       rot: getComputedStyle(document.querySelector("#overlayDuel .reflexe-zone-haut")).transform, h: innerHeight, l: innerWidth,
       deborde: document.getElementById("overlayDuel").scrollHeight > innerHeight + 2 };
   });
   verifier(geo.haut.top < geo.carte.top && geo.carte.bottom < geo.bas.top && geo.bas.bottom <= geo.h + 1 && !geo.deborde,
-    `zone de ${HAUT} en haut, carte au milieu, zone de ${BAS} en bas, tout tient à l'écran (${Math.round(geo.haut.top)}/${Math.round(geo.carte.top)}/${Math.round(geo.bas.bottom)} sur ${geo.h})`);
+    `zone de ${HAUT} en haut, la carte en jeu au milieu, zone de ${BAS} en bas, tout tient à l'écran (${Math.round(geo.haut.top)}/${Math.round(geo.carte.top)}/${Math.round(geo.bas.bottom)} sur ${geo.h})`);
   verifier(/matrix\(-1/.test(geo.rot), `la zone du haut est à l'envers (${geo.rot})`);
   verifier(/Réflexe en cours/.test(e.tele) && !/Tape ici/.test(e.tele), "la télé lit « Duel Réflexe en cours... », pas les zones");
-  // Dos de la carte, thème par thème
-  const dos = await p.evaluate(() => {
-    const out = {}; const el = document.querySelector("#overlayDuel .reflexe-carte .shifumi-carte-dos"); const avant = document.documentElement.dataset.theme;
-    for (const t of ["bordeaux", "givre", "galaxie", "kawaii", "donjon", "soleil"]) {
-      document.documentElement.dataset.theme = t;
-      out[t] = getComputedStyle(el).backgroundImage.split("/").pop().replace(/["')]/g, "") + (/givre_/.test(getComputedStyle(el, "::before").backgroundImage) ? " + givre" : "");
-    }
-    document.documentElement.dataset.theme = avant; return out;
-  });
-  const dosAttendus = { bordeaux: "dos_reflexe.svg", givre: "dos_reflexe.svg + givre", galaxie: "dos_reflexe_galaxie.svg", kawaii: "dos_reflexe_kawaii.svg", donjon: "dos_reflexe_donjon.svg", soleil: "dos_reflexe.svg" };
-  verifier(Object.keys(dosAttendus).every((t) => dos[t] === dosAttendus[t]), "dos Réflexe par thème : " + JSON.stringify(dos));
+  verifier(geo.autres === 0, "plus de carte Réflexe qui se retourne : seulement la carte en jeu");
   await capture("1_attente");
 
   // ===== 2) Faux départ : le joueur du bas tape avant le retournement =====
   await tap("#overlayDuel .reflexe-zone-bas");
   e = await attendreQue((x) => /gagne/.test(x.resultat));
-  verifier(e.retournee === 0, "faux départ : la carte reste de dos");
+  verifier(e.retournee === 0, "faux départ : « TAPE ! » ne s'affiche pas");
   verifier(e.resultat.includes(`${BAS} a perdu, ${HAUT} gagne`) && e.info.includes(`Faux départ de ${BAS}`) && /faux départ/.test(e.temps),
     `faux départ : « ${e.info} » — ${e.temps} — ${e.resultat}`);
   await capture("2_faux_depart");
@@ -139,7 +130,7 @@ const CAPTURES = process.env.CAPTURES || "";
   const delaiRetour = Date.now() - t0;
   const barreAuRetour = await p.evaluate(() => !!document.getElementById("annulerChoix"));
   verifier(e.retournee === 1 && /TAPE/.test(e.info) && barre && !barreAuRetour && delaiRetour > 5000,
-    `la carte ne se retourne qu'après la barre « Mauvais joueur ? » (qui cache la zone du bas) : au bout de ${delaiRetour} ms (« ${e.info} »)`);
+    `« TAPE ! » seulement après la barre « Mauvais joueur ? » (qui cache la zone du bas) : au bout de ${delaiRetour} ms (« ${e.info} »)`);
   await capture("3_retournee");
   await attendre(200);
   await tap("#overlayDuel .reflexe-zone-haut");
@@ -152,6 +143,42 @@ const CAPTURES = process.env.CAPTURES || "";
   await capture("4_resultat");
   e = await attendreQue((x) => /boit/.test(x.regles), 8000);
   verifier(e.regles.includes(`${BAS} boit 5 gorgées`), `le perdant boit 5 gorgées (${e.regles.split("\n")[0]})`);
+  await fermerAnnonces();
+
+  // ===== 3 bis) Les taps continuent après le résultat : rien ne doit partir tout seul (Tris a 2 annulations) =====
+  await p.evaluate(() => { annulations["Tris"] = 2; });
+  await lancerDuel("Tris", "Ylana", "six_vert");
+  [BAS, HAUT] = await ordre();
+  const perdantA = BAS;
+  // le joueur du bas fait un faux départ, puis tout le monde continue de taper partout pendant 2,5 s
+  await tap("#overlayDuel .reflexe-zone-bas");
+  const tFin = Date.now();
+  const taps = setInterval(() => p.evaluate(() => { for (const sel of ["#overlayDuel .reflexe-zone-bas", "#overlayDuel .reflexe-zone-haut", "#overlayDuel", "#overlayRegleUnique", "#overlayAnnulation .bouton-annulation"]) { const el = document.querySelector(sel); if (el) el.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true })); } }).catch(() => {}), 120);
+  await attendre(2500);
+  clearInterval(taps);
+  e = await lire();
+  verifier(e.ouvert && /gagne/.test(e.resultat), `résultat toujours affiché après 2,5 s de taps (« ${e.resultat} »)`);
+  e = await attendreQue((x) => !x.ouvert && /boit/.test(x.regles), 6000);
+  const dureeResultat = Date.now() - tFin;
+  verifier(dureeResultat > 3300, `le résultat reste ${dureeResultat} ms, même en tapant`);
+  // tap tout de suite sur l'annonce : ignoré ; plus tard : la ferme
+  await tap("#overlayRegleUnique");
+  await attendre(150);
+  verifier(await p.evaluate(() => !!document.getElementById("overlayRegleUnique") && !document.getElementById("overlayRegleUnique").dataset.enFermeture), "tap juste à l'apparition de « … boit … » : ignoré");
+  await attendre(800);
+  if (perdantA === "Tris") {
+    await tap("#overlayRegleUnique");
+    await p.waitForFunction(() => document.getElementById("overlayAnnulation"), null, { timeout: 8000 }).catch(() => {});
+    await tap("#overlayAnnulation .bouton-annulation", "Annuler 2");
+    await attendre(200);
+    verifier(await p.evaluate(() => !!document.getElementById("overlayAnnulation") && annulations["Tris"] === 2), "tap juste à l'apparition des « Annuler N » : ignoré");
+    await attendre(900);
+    await tap("#overlayAnnulation .bouton-annulation", "Annuler 1");
+    await attendre(400);
+    verifier(await p.evaluate(() => annulations["Tris"] === 1), "puis « Annuler 1 » marche normalement");
+  } else console.log("      (perdant : " + perdantA + ", sans annulation : partie annulations non vérifiée)");
+  await fermerAnnonces();
+  await p.evaluate(async () => { for (let i = 0; i < 20 && document.querySelector("#overlayResultatAnnulation, #overlayAnnulation"); i++) { const o = document.querySelector("#overlayResultatAnnulation"); if (o) o.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true })); await new Promise((r) => setTimeout(r, 300)); } });
   await fermerAnnonces();
 
   // ===== 4) Un bot dans le duel : il tape tout seul, après le retournement (jamais de faux départ) =====

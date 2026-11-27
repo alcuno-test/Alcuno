@@ -1,11 +1,9 @@
-# Dos des cartes Shifumi (duel Shifumi « cartes », js/regles.js) et des cartes Réflexe (duel Réflexe : « RÉFLEXE » sur
-# une ligne à la place de « SHI / FUMI », sans emoji) : un dos commun à tous les thèmes, plus un dos pour
+# Dos des cartes Shifumi (duel Shifumi « cartes », js/regles.js) : un dos commun à tous les thèmes, plus un dos pour
 # Star Wars (galaxie), Kawaii et BDSM (donjon), faits à partir des dos de cartes de ces thèmes (« ALC / UNO » devient
 # « SHI / FUMI »). Givre : le dos commun, givré en CSS comme les autres cartes. Lancer depuis la racine du jeu :
 #   python3 outils/generer_dos_shifumi.py
-# Android : les dos Star Wars ont des flous SVG (cassés sur Android, comme les autres dos du thème) : une copie en image,
-# Cartes/shifumi/dos_shifumi_galaxie_android.webp et dos_reflexe_galaxie_android.webp (300 x 468), est faite à partir
-# du SVG (capture du navigateur).
+# Android : le dos Star Wars a des flous SVG (cassés sur Android, comme les autres dos du thème) : une copie en image,
+# Cartes/shifumi/dos_shifumi_galaxie_android.webp (300 x 468), est faite à partir du SVG (capture du navigateur).
 import re
 
 def shi_fumi(svg):
@@ -42,17 +40,4 @@ donjon = (cadre + '<g transform="translate(50 66) scale(.62) translate(-50 -83)"
   + "</svg>\n")
 open("Cartes/shifumi/dos_shifumi_donjon.svg", "w").write(donjon)
 
-# ===== Réflexe : « RÉFLEXE » sur une ligne, au milieu de l'ovale =====
-def reflexe(svg, taille):
-    # « ALC » devient « RÉFLEXE » (plus petit, descendu au milieu des 2 lignes), « UNO » disparaît
-    svg = re.sub(r'(<text[^>]*?)y="(\d+(?:\.\d+)?)"([^>]*?)font-size="\d+(?:\.\d+)?"([^>]*>)ALC<',
-                 lambda m: f'{m.group(1)}y="{round(float(m.group(2)) + 11, 1)}"{m.group(3)}font-size="{taille}"{m.group(4)}RÉFLEXE<', svg)
-    return re.sub(r'\s*<text[^>]*>UNO</text>', "", svg)
-
-open("Cartes/shifumi/dos_reflexe.svg", "w").write(commun
-  .replace('<text x="50" y="72" font-size="25">SHI</text>\n    <text x="50" y="98" font-size="21">FUMI</text>',
-           '<text x="50" y="83" font-size="14.5">RÉFLEXE</text>'))
-open("Cartes/shifumi/dos_reflexe_galaxie.svg", "w").write(reflexe(open("Cartes/dos_galaxie_argent.svg").read(), 15))
-open("Cartes/shifumi/dos_reflexe_kawaii.svg", "w").write(reflexe(open("Cartes/dos_kawaii_alcuno_licorne.svg").read(), 14))
-open("Cartes/shifumi/dos_reflexe_donjon.svg", "w").write(donjon.replace(">SHIFUMI<", ">RÉFLEXE<"))
-print("Dos Shifumi et Réflexe écrits dans Cartes/shifumi/")
+print("Dos Shifumi écrits dans Cartes/shifumi/")

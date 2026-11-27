@@ -4542,6 +4542,12 @@ html[data-theme="givre"] #ecranNouvellePartie #btnAccueil{
   -webkit-text-stroke-color: #1a9be0;
   text-shadow: 0 2px 0 #0b5a8c, 0 3px 8px rgba(13, 53, 80, 0.2);
 }
+/* (hors du bandeau, sur le fond clair des écrans « Revenir », salle d'attente et « Nouvelle partie » : plus foncé, sinon trop pâle) */
+html[data-theme="givre"] #enLigne #btnAccueilEnLigne,
+html[data-theme="givre"] #ecranNouvellePartie #btnAccueil{
+  color: #0b6aa3;
+  -webkit-text-stroke-color: #0b6aa3;
+}
 html[data-theme="givre"] #choixMode #btnReglages path,
 html[data-theme="givre"] #choixMode #btnReglages circle{
   stroke: #1a9be0;
@@ -7140,7 +7146,7 @@ html[data-theme="soleil"] #btnCaster{
 }
 /* Icônes du haut */
 html[data-theme="soleil"] :is(#btnRegles, header #btnReglesJeu) path{ stroke: var(--soleil-creme) !important; }
-html[data-theme="soleil"] #btnReglages svg *, html[data-theme="soleil"] #btnAccueilClassique{ color: var(--soleil-creme) !important; -webkit-text-stroke-color: var(--soleil-creme) !important; stroke: var(--soleil-creme); }
+html[data-theme="soleil"] #btnReglages svg *, html[data-theme="soleil"] :is(#btnAccueilClassique, #enLigne #btnAccueilEnLigne, #ecranNouvellePartie #btnAccueil){ color: var(--soleil-creme) !important; -webkit-text-stroke-color: var(--soleil-creme) !important; stroke: var(--soleil-creme); }
 /* Bouton Réglages de l'accueil : crème avec la même ombre que le livre des règles (la règle générale
    #choixMode #btnReglages, plus précise que celle du dessus, le laissait en jaune doré) */
 html[data-theme="soleil"] #choixMode #btnReglages :is(path, circle){ stroke: var(--soleil-creme); }
@@ -9299,56 +9305,61 @@ html[data-theme="givre"] #overlayDuel .duel-content .shifumi-carte-dos.shifumi-p
 #overlayDuel .duel-content .shifumi-carte-jeu.shifumi-perdant{ animation: shifumiPose 0.45s cubic-bezier(.2,1.3,.4,1) both, shifumiSecoue 0.5s 0.75s ease both; }
 @keyframes shifumiPose{ from{ transform: translateY(40px) scale(0.6); opacity: 0; } to{ transform: none; opacity: 1; } }
 
-/* --- Duel RÉFLEXE (js/regles.js afficherOverlayReflexe) : une carte de dos qui se retourne, le premier qui tape gagne ---
-   (tout en display explicite et !important sur les écarts : « #overlayDuel div:nth-child(2/3) » touche n'importe quel div) */
+/* --- Duel RÉFLEXE (js/regles.js afficherOverlayReflexe) : la carte en jeu au milieu, puis « TAPE ! » en gros, en vert ;
+   le premier qui tape gagne (tout en display explicite et !important sur les écarts : « #overlayDuel div:nth-child(2/3) »
+   touche n'importe quel div) */
 #overlayDuel .duel-content.reflexe-content{ display: flex !important; flex-direction: column; align-items: stretch; justify-content: space-between; gap: 10px !important; }
-#overlayDuel .duel-content .reflexe-milieu{ display: flex !important; flex-direction: column; align-items: center; justify-content: center; gap: clamp(8px, 2vw, 16px) !important; flex: 1 1 auto; }
-#overlayDuel .duel-content .Carte.carte-vedette.reflexe-enjeu{ width: clamp(70px, 20vw, 110px); }
-#overlayDuel.reflexe-classique .duel-content .Carte.carte-vedette.reflexe-enjeu{ width: clamp(56px, 15vw, 90px); }
-#overlayDuel .duel-content .reflexe-carte .shifumi-carte-interieur{ width: clamp(96px, 30vw, 140px); transition-duration: 0.18s; transition-timing-function: ease-out; }
-#overlayDuel.reflexe-classique .duel-content .reflexe-carte .shifumi-carte-interieur{ width: clamp(80px, 24vw, 120px); }
-#overlayDuel .duel-content .reflexe-carte{ animation: none; }
-#overlayDuel .duel-content .reflexe-face{ background: linear-gradient(180deg, #33e06b, #0f9d3a); border-color: #eaffef; }
-#overlayDuel .duel-content .reflexe-face-eclair{ font-size: clamp(34px, 11vw, 54px); line-height: 1; }
-#overlayDuel .duel-content .reflexe-face-texte{ color: #fff; font: 900 clamp(18px, 5.5vw, 28px)/1 Arial Black, Arial, sans-serif; text-shadow: 0 2px 4px rgba(0,0,0,0.45); }
+#overlayDuel.reflexe-en-ligne .duel-content.reflexe-content{ justify-content: center; }
+#overlayDuel .duel-content .reflexe-milieu{ display: flex !important; flex-direction: column; align-items: center; justify-content: center; gap: clamp(8px, 2vw, 14px) !important; flex: 1 1 auto; }
+#overlayDuel .duel-content .Carte.carte-vedette.reflexe-enjeu{ width: clamp(96px, 30vw, 150px); }
+#overlayDuel.reflexe-classique .duel-content .Carte.carte-vedette.reflexe-enjeu{ width: clamp(70px, 20vw, 110px); }
+/* « Prêts ? » / « Attention… » / « TAPE ! » */
+#overlayDuel .duel-content .reflexe-signal{
+  color: var(--shifumi-texte, #FFD700); font: 900 clamp(30px, 9vw, 52px)/1.05 Arial Black, Arial, sans-serif; text-align: center;
+  text-shadow: 2px 2px 6px #000; min-height: 1.1em; max-width: 92vw; overflow-wrap: anywhere;
+}
+#overlayDuel .duel-content .reflexe-signal.reflexe-signal-petit{ font-size: clamp(20px, 5.6vw, 30px); }
+#overlayDuel .duel-content .reflexe-signal.reflexe-signal-attention{ animation: reflexeAttention 0.9s ease-in-out infinite alternate; }
+#overlayDuel .duel-content .reflexe-signal.reflexe-signal-go{
+  color: #2fe36a; font-size: clamp(64px, 21vw, 120px); text-shadow: 0 0 22px rgba(47,227,106,0.75), 3px 3px 0 #000;
+  animation: reflexeGo 0.16s cubic-bezier(.2,1.6,.4,1) both;
+}
+@keyframes reflexeAttention{ from{ opacity: 0.55; } to{ opacity: 1; } }
+@keyframes reflexeGo{ from{ transform: scale(0.4); } to{ transform: none; } }
+#overlayDuel .duel-content .reflexe-consigne{ width: auto; max-width: 92vw; opacity: 0.85; }
+#overlayDuel .duel-content .reflexe-consigne:empty{ display: none !important; }
 /* Zone de tap d'un joueur */
 #overlayDuel .duel-content .reflexe-zone{
   display: flex !important; flex-direction: column; align-items: center; justify-content: center; gap: 8px !important;
   border: 3px dashed var(--shifumi-bord, #FFD700); border-radius: 18px; padding: 14px 10px; min-height: clamp(110px, 19vh, 190px);
   background: rgba(255,255,255,0.06); cursor: pointer; user-select: none; -webkit-user-select: none; touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent; transition: background-color 0.15s, border-color 0.15s, transform 0.1s;
+  -webkit-tap-highlight-color: transparent; transition: background-color 0.1s, border-color 0.1s, transform 0.1s;
 }
-#overlayDuel .duel-content .reflexe-zone[hidden]{ display: none !important; } /* (en ligne : la zone de l'autre joueur, cachée) */
+#overlayDuel .reflexe-zone[hidden]{ display: none !important; } /* (en ligne : la zone de l'autre joueur, cachée) */
 #overlayDuel .duel-content .reflexe-zone:active{ transform: scale(0.98); }
 #overlayDuel .duel-content .reflexe-zone-haut{ transform: rotate(180deg); }
 #overlayDuel .duel-content .reflexe-zone-haut:active{ transform: rotate(180deg) scale(0.98); }
 #overlayDuel .duel-content .reflexe-zone-nom{ width: auto; max-width: 80vw; overflow-wrap: anywhere; }
 #overlayDuel .duel-content .reflexe-zone-texte{ color: var(--shifumi-texte, #FFD700); font: 800 clamp(15px, 4.2vw, 20px)/1.2 Arial, sans-serif; text-align: center; text-shadow: 2px 2px 5px #000; }
 #overlayDuel .duel-content .reflexe-zone-texte:empty{ display: none; }
-#overlayDuel.reflexe-go .duel-content .reflexe-zone:not(.faite){ border-style: solid; border-color: #33e06b; background: rgba(51,224,107,0.16); }
+#overlayDuel.reflexe-go .duel-content .reflexe-zone:not(.faite){ border-style: solid; border-color: #2fe36a; background: rgba(47,227,106,0.18); }
 #overlayDuel .duel-content .reflexe-zone.faite{ border-style: solid; }
 #overlayDuel .duel-content .reflexe-zone.gagnante{ border-color: var(--shifumi-bord, #FFD700); box-shadow: 0 0 26px var(--shifumi-bord, #FFD700); }
 #overlayDuel .duel-content .reflexe-zone.perdante{ border-color: #e53935; background: rgba(229,57,53,0.16); box-shadow: 0 0 22px rgba(229,57,53,0.7); }
 #overlayDuel .duel-content .reflexe-zone.perdante .reflexe-zone-texte{ animation: shifumiSecoue 0.5s ease both; }
-/* En ligne : la zone est la carte (sur le téléphone du joueur), sans cadre */
-#overlayDuel .duel-content .reflexe-zone.reflexe-zone-carte{ border: none; background: none; min-height: 0; padding: 0; }
-#overlayDuel.reflexe-go .duel-content .reflexe-zone.reflexe-zone-carte:not(.faite){ background: none; }
-#overlayDuel .duel-content .reflexe-zone-carte.gagnante, #overlayDuel .duel-content .reflexe-zone-carte.perdante{ box-shadow: none; background: none; }
-#overlayDuel .duel-content .reflexe-zone-carte.gagnante .reflexe-face{ box-shadow: 0 0 0 3px var(--shifumi-bord, #FFD700), 0 0 30px var(--shifumi-bord, #FFD700); }
-#overlayDuel .duel-content .reflexe-zone-carte.perdante .reflexe-face{ border-color: #e53935; box-shadow: 0 0 26px rgba(229,57,53,0.8); }
+/* En ligne : tout l'écran est la zone (calque transparent par-dessus, sur le téléphone du joueur) */
+#overlayDuel .reflexe-zone.reflexe-zone-ecran{
+  position: absolute; inset: 0; z-index: 2; display: block; cursor: pointer; background: transparent;
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none;
+}
+#overlayDuel .reflexe-zone.reflexe-zone-ecran > *{ display: none; }
+#overlayDuel.reflexe-go .reflexe-zone.reflexe-zone-ecran:not(.faite){ box-shadow: inset 0 0 0 6px #2fe36a, inset 0 0 60px rgba(47,227,106,0.35); }
 #overlayDuel .duel-content .reflexe-temps{ display: flex !important; flex-direction: column; align-items: center; gap: 4px !important; color: #fff; font: 700 clamp(15px, 4.2vw, 20px)/1.2 Arial, sans-serif; text-shadow: 2px 2px 5px #000; }
-#overlayDuel .duel-content .reflexe-temps:empty, #overlayDuel .duel-content .reflexe-info:empty{ display: none !important; }
-#overlayDuel.reflexe-go:not(.shifumi-revele) .duel-content .reflexe-info{ color: #33e06b; }
-/* Dos des cartes Réflexe (outils/generer_dos_shifumi.py) : comme ceux du Shifumi */
-#overlayDuel .duel-content .shifumi-carte-dos.reflexe-dos{ background-image: url("Cartes/shifumi/dos_reflexe.svg"); }
-html[data-theme="galaxie"] #overlayDuel .duel-content .shifumi-carte-dos.reflexe-dos{ background-image: url("Cartes/shifumi/dos_reflexe_galaxie.svg"); }
-html.android[data-theme="galaxie"] #overlayDuel .duel-content .shifumi-carte-dos.reflexe-dos{ background-image: url("Cartes/shifumi/dos_reflexe_galaxie_android.webp"); }
-html[data-theme="kawaii"] #overlayDuel .duel-content .shifumi-carte-dos.reflexe-dos{ background-image: url("Cartes/shifumi/dos_reflexe_kawaii.svg"); }
-html[data-theme="donjon"] #overlayDuel .duel-content .shifumi-carte-dos.reflexe-dos{ background-image: url("Cartes/shifumi/dos_reflexe_donjon.svg"); }
-html[data-theme="soleil"] #overlayDuel .duel-content :is(.reflexe-zone-texte, .reflexe-temps){ color: #6b1838; text-shadow: none; }
-html[data-theme="givre"] #overlayDuel .duel-content :is(.reflexe-zone-texte, .reflexe-temps){ color: #0b6aa3; text-shadow: none; }
+#overlayDuel .duel-content .reflexe-temps:empty{ display: none !important; }
+html[data-theme="soleil"] #overlayDuel .duel-content :is(.reflexe-zone-texte, .reflexe-temps, .reflexe-signal:not(.reflexe-signal-go)){ color: #6b1838; text-shadow: none; }
+html[data-theme="givre"] #overlayDuel .duel-content :is(.reflexe-zone-texte, .reflexe-temps, .reflexe-signal:not(.reflexe-signal-go)){ color: #0b6aa3; text-shadow: none; }
 @media (prefers-reduced-motion: reduce){
-  #overlayDuel .duel-content .reflexe-carte .shifumi-carte-interieur{ transition: none; }
+  #overlayDuel .duel-content .reflexe-signal{ animation: none !important; }
 }
 
 html[data-theme="soleil"] #overlayDuel .duel-content .shifumi-carte-joueur, html[data-theme="givre"] #overlayDuel .duel-content .shifumi-carte-joueur{ text-shadow: none; }
@@ -11190,3 +11201,6 @@ html[data-theme="givre"][data-theme] #ecranTele .tele-ecran-doree .tele-ecran-ti
 
 /* Choix du duel : « DUEL ! » sous la carte, puis la question en plus petit (js/regles.js lancerOverlayChoixDuel) */
 #overlayDuel .duel-content .duel-question{ width: auto; max-width: 92vw; align-self: center; text-align: center; font-size: clamp(17px, 4.8vw, 24px); margin-top: -6px; }
+/* Thèmes clairs : la question du choix du duel et les noms des zones du Réflexe (jaunes par défaut, illisibles sur fond clair) */
+html[data-theme="soleil"] #overlayDuel .duel-content :is(.duel-question, .reflexe-zone-nom, .reflexe-consigne){ color: #6b1838; text-shadow: none; }
+html[data-theme="givre"] #overlayDuel .duel-content :is(.duel-question, .reflexe-zone-nom, .reflexe-consigne){ color: #0b6aa3; text-shadow: none; }

@@ -57,18 +57,18 @@ Duel Réflexe en mode classique (3 minutes, Linux / macOS / Windows)
   node tests/test_reflexe_classique.js
      CAPTURES=dossier : garde des captures
 
-  Un seul téléphone posé entre les deux : écran coupé en deux (la moitié du haut à l'envers), une carte Réflexe de dos
-  qui se retourne au bout d'un temps au hasard, le premier qui tape ensuite gagne. Vérifie : les 3 duels proposés, le
-  dos de chaque thème, le faux départ (carte restée de dos), que la carte attend la fin de la barre « Mauvais joueur ? »
-  (qui cache la zone du bas), le tap du perdant juste après qui ne saute pas le résultat, un bot qui tape tout seul, et
-  la reprise d'une partie coupée (temps gardés dans les actions). Résultat attendu : « TOUT EST OK ».
+  Un seul téléphone posé entre les deux : écran coupé en deux (la moitié du haut à l'envers), la carte en jeu au
+  milieu, puis « TAPE ! » en gros au bout d'un temps au hasard ; le premier qui tape ensuite gagne. Vérifie : les 3 duels
+  proposés, le faux départ, que « TAPE ! » attend la fin de la barre « Mauvais joueur ? » (qui cache la zone du bas), que
+  les taps qui continuent ne sautent ni le résultat, ni l'annonce « X boit… », ni ne choisissent un « Annuler N », un
+  bot qui tape tout seul, et la reprise d'une partie coupée (temps gardés dans les actions). Résultat attendu : « TOUT EST OK ».
 
 Duel Réflexe en ligne (2 minutes, Linux / macOS / Windows, vrai Firebase de l'appli TEST)
 -----------------------------------------------------------------------------------------
   node tests/test_reflexe_en_ligne.js
      CAPTURES=dossier : garde des captures des 3 téléphones
 
-  Trois téléphones. Chacun des 2 joueurs tape la carte sur SON téléphone ; le temps est mesuré sur ce téléphone et
+  Trois téléphones. Chacun des 2 joueurs tape l'écran de SON téléphone quand « TAPE ! » s'affiche ; le temps est mesuré sur ce téléphone et
   envoyé avec l'action. Vérifie : faux départ, le plus rapide gagne (mêmes temps affichés partout), « trop lent » au
   bout de 5 s, égalité ×2, « personne n'a tapé » (on recommence sans doubler), les gorgées, et des états identiques
   sur les 3 téléphones. Résultat attendu : « TOUT EST OK ».

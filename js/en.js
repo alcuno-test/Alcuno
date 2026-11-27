@@ -1417,8 +1417,6 @@ window.TEXTES_EN = {
 "RÉFLEXE !": "REFLEX!",
 "RÉFLEXE ×": "REFLEX ×",
 "TAPE !": "TAP!",
-"Tape la carte dès qu'elle se retourne !": "Tap the card as soon as it flips!",
-"Tape ici dès que la carte se retourne !": "Tap here as soon as the card flips!",
 "Prêts ?": "Ready?",
 "Attention…": "Steady…",
 "Duel Réflexe en cours...": "Reflex duel in progress...",
@@ -1430,4 +1428,6 @@ window.TEXTES_EN = {
 "On recommence.": "Let's go again.",
 "DUEL !": "DUEL!",
 "Classique, Shifumi ou Réflexe ?": "Classic, Rock Paper Scissors or Reflex?",
+"Tape l'écran dès que « TAPE ! » s'affiche": "Tap the screen as soon as “TAP!” appears",
+"Tape ici dès que « TAPE ! » s'affiche": "Tap here as soon as “TAP!” appears",
 };
