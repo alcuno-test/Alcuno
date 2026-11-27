@@ -681,9 +681,8 @@ html[data-theme="halloween"] #stickyJoueurActif:not(.has-couleur):not(.is-pigeon
 }
 html[data-theme="halloween"] #stickyJoueurActif.is-pigeon .sticky-nom{ color: var(--hw-texte) !important; }
 
-/* ----- Noms des thèmes dans les Réglages : en orange citrouille, et plus en bleu / vert / violet -----
-   (chaque thème montrait son nom de SA couleur ; le rond coloré à gauche suffit à les reconnaître) */
-html[data-theme="halloween"] .pastilleTheme .nomTheme{ color: #ff9a3c !important; }
+/* ----- Noms des thèmes dans les Réglages : chacun garde la couleur de SON thème, comme dans tous les autres thèmes
+   (ils étaient tous en orange citrouille ici) ----- */
 
 /* Une exception au « tout en rouge » : la pastille « hors connexion » des Réglages est une pastille d'état
    (fond gris, vert ou ROUGE). Son ✓ / ✗ doit rester blanc, sinon il disparaît sur le fond rouge. */
