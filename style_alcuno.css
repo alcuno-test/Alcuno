@@ -11187,3 +11187,6 @@ html[data-theme="givre"][data-theme] #ecranTele .tele-ecran-doree .tele-ecran-ti
   color: #a87800 !important;
   text-shadow: 0 0.15vh 0 #5c4100, 0 0 2vh rgba(255, 200, 0, 0.7) !important;
 }
+
+/* Choix du duel : « DUEL ! » sous la carte, puis la question en plus petit (js/regles.js lancerOverlayChoixDuel) */
+#overlayDuel .duel-content .duel-question{ width: auto; max-width: 92vw; align-self: center; text-align: center; font-size: clamp(17px, 4.8vw, 24px); margin-top: -6px; }

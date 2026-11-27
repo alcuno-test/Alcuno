@@ -989,7 +989,12 @@ function lancerOverlayChoixDuel(joueurActuel, carteDuel = ""){
   // chacun des 2 joueurs ; en classique (un seul téléphone), avec des cartes : chacun choisit à son tour, une carte de dos
   // apparaît, puis les deux se retournent. Réflexe : voir afficherOverlayReflexe.
   if(shifumiPossible()){
-    titre.innerText = tr("DUEL ! Classique, Shifumi ou Réflexe ?");
+    // « DUEL ! » sous la carte, puis la question en plus petit
+    titre.innerText = tr("DUEL !");
+    const question = document.createElement("div");
+    question.className = "duel-label duel-question";
+    question.innerText = tr("Classique, Shifumi ou Réflexe ?");
+    content.insertBefore(question, containerBoutons);
     const types = [["classique", tr("⚔️ Classique")], [enLigneActif ? "telephones" : "cartes", tr("✊ Shifumi")], ["reflexe", tr("⚡ Réflexe")]];
     types.forEach(([type, texte]) => {
       const btn = document.createElement("button");
@@ -1002,6 +1007,7 @@ function lancerOverlayChoixDuel(joueurActuel, carteDuel = ""){
           if(!overlay.isConnected) return;
           containerBoutons.innerHTML = "";
           containerBoutons.style.pointerEvents = "";
+          question.remove();
           titre.innerText = shifumi === "reflexe" ? tr("RÉFLEXE ! Choisis 2 joueurs")
             : shifumi ? tr("SHIFUMI ! Choisis 2 joueurs") : tr("DUEL ! Choisis 2 joueurs");
           choisirLesJoueurs();
@@ -1660,10 +1666,12 @@ function afficherOverlayReflexe(overlay, j1, j2){
       zone.querySelector(".reflexe-zone-texte").innerText = enLigneActif ? tr("Tape la carte dès qu'elle se retourne !") : tr("Tape ici dès que la carte se retourne !");
       surAction(zone, `reflexe:${manche}:${idx}:`, {
         owner: joueurs[idx], once: true, valide: () => !fini && res[idx] === undefined,
-        charge: () => {
+        charge: (e) => {
           if(forcerLent){ forcerLent = false; return "lent"; }
           if(!retournee) return "tot";
-          return Math.max(1, Math.round(performance.now() - tRetour));
+          // heure du toucher lui-même (pas celle où ce code tourne, parfois un peu après)
+          const t = e && e.timeStamp > 0 ? e.timeStamp : performance.now();
+          return Math.max(1, Math.round(t - tRetour));
         }
       }, (e, valeur) => taper(idx, valeur));
     });
@@ -1685,7 +1693,10 @@ function afficherOverlayReflexe(overlay, j1, j2){
     retournee = true;
     carte.classList.add("retournee");
     overlay.classList.add("reflexe-go");
-    tRetour = performance.now() + 90; // (la face apparaît à mi-retournement, voir style_alcuno.css)
+    // (la face apparaît à mi-retournement, 90 ms après : voir style_alcuno.css ; recalé sur l'image où le retournement
+    // commence vraiment à l'écran)
+    tRetour = performance.now() + 90;
+    requestAnimationFrame((t) => { if(retournee && !fini) tRetour = t + 90; });
     if(jeJoue || !enLigneActif) info.innerText = tr("TAPE !");
     vibrer(60);
     const m = manche;

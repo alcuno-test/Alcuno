@@ -1411,7 +1411,6 @@ window.TEXTES_ES = {
 "{0}, tu as perdu !\n{1} gagne": "{0}, ¡has perdido!\n{1} gana",
 "{0}, tu as gagné !\n{1} perd": "{0}, ¡has ganado!\n{1} pierde",
 "{0} : fais ton choix !": "{0}: ¡elige!",
-"DUEL ! Classique, Shifumi ou Réflexe ?": "¡DUELO! ¿Clásico, Piedra, papel o tijera o Reflejos?",
 "⚡ Réflexe": "⚡ Reflejos",
 "RÉFLEXE ! Choisis 2 joueurs": "¡REFLEJOS! Elige 2 jugadores",
 "RÉFLEXE": "REFLEJOS",
@@ -1429,4 +1428,6 @@ window.TEXTES_ES = {
 "Faux départ de {0} !": "¡Salida en falso de {0}!",
 "Personne n'a tapé !": "¡Nadie ha tocado!",
 "On recommence.": "Volvemos a empezar.",
+"DUEL !": "¡DUELO!",
+"Classique, Shifumi ou Réflexe ?": "¿Clásico, Piedra, papel o tijera o Reflejos?",
 };

@@ -1411,7 +1411,6 @@ window.TEXTES_EN = {
 "{0}, tu as perdu !\n{1} gagne": "{0}, you lost!\n{1} wins",
 "{0}, tu as gagné !\n{1} perd": "{0}, you won!\n{1} loses",
 "{0} : fais ton choix !": "{0}: make your choice!",
-"DUEL ! Classique, Shifumi ou Réflexe ?": "DUEL! Classic, Rock Paper Scissors or Reflex?",
 "⚡ Réflexe": "⚡ Reflex",
 "RÉFLEXE ! Choisis 2 joueurs": "REFLEX! Pick 2 players",
 "RÉFLEXE": "REFLEX",
@@ -1429,4 +1428,6 @@ window.TEXTES_EN = {
 "Faux départ de {0} !": "False start by {0}!",
 "Personne n'a tapé !": "Nobody tapped!",
 "On recommence.": "Let's go again.",
+"DUEL !": "DUEL!",
+"Classique, Shifumi ou Réflexe ?": "Classic, Rock Paper Scissors or Reflex?",
 };

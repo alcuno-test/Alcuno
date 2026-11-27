@@ -1411,7 +1411,6 @@ window.TEXTES_IT = {
 "{0}, tu as perdu !\n{1} gagne": "{0}, hai perso!\n{1} vince",
 "{0}, tu as gagné !\n{1} perd": "{0}, hai vinto!\n{1} perde",
 "{0} : fais ton choix !": "{0}: fai la tua scelta!",
-"DUEL ! Classique, Shifumi ou Réflexe ?": "DUELLO! Classico, Morra cinese o Riflessi?",
 "⚡ Réflexe": "⚡ Riflessi",
 "RÉFLEXE ! Choisis 2 joueurs": "RIFLESSI! Scegli 2 giocatori",
 "RÉFLEXE": "RIFLESSI",
@@ -1429,4 +1428,6 @@ window.TEXTES_IT = {
 "Faux départ de {0} !": "Falsa partenza di {0}!",
 "Personne n'a tapé !": "Nessuno ha toccato!",
 "On recommence.": "Si ricomincia.",
+"DUEL !": "DUELLO!",
+"Classique, Shifumi ou Réflexe ?": "Classico, Morra cinese o Riflessi?",
 };
