@@ -71,8 +71,16 @@ function afficherOverlayFinUnRestants(){
     document.getElementById("btnRejouerMemes").click();
   }, { once: true });
 
+  // « Éthylo avant de rouler » : ouvre l'éthylotest par-dessus l'écran de fin, sur CE téléphone seulement (« Retour »
+  // y ramène ; la partie n'est pas terminée pour autant, ni pour les autres en ligne)
+  const btnEthylo = document.createElement("button");
+  btnEthylo.className = "bouton-pigeon fin-ethylo";
+  btnEthylo.innerText = tr("🚗 Éthylo avant de rouler");
+  btnEthylo.addEventListener("click", () => ouvrirEthylo());
+
   overlay.appendChild(btnRevanche);
   overlay.appendChild(btnTerminer);
+  overlay.appendChild(btnEthylo);
   document.body.appendChild(overlay);
 }
 
