@@ -102,6 +102,15 @@ const OBJECTIF = 12; // cartes retournées à atteindre
       await P.p.close();
       await new Promise((r) => setTimeout(r, 3000));
       const P2 = await ouvrir(P.ctx); // (même « téléphone » : se souvient du pseudo)
+      if (process.env.DEBUG) await P2.p.evaluate(() => {
+        window.__dbg = [];
+        const pile = () => (new Error().stack || "").split("\n").slice(2, 7).map((l) => l.trim().replace(/\(?https?:\/\/[^/]+\//, "").replace(/\)$/, "")).join(" < ");
+        for (const nom of ["montrerDefiHot", "fermerOverlayRegleUnique", "annoncerBoireAvecAnnulation", "finirBoireHot", "montrerOverlayRegle", "finirRattrapage"]) {
+          const o = window[nom]; if (typeof o !== "function") continue;
+          window[nom] = function (...a) { const r = o.apply(this, a);
+            window.__dbg.push(`${nom}(${a.filter((x) => typeof x !== "object" && typeof x !== "function").map(String).join(",").slice(0, 60)}) ratt=${rattrapageEnCours} seq=${typeof prochainSeq !== "undefined" ? prochainSeq : "?"} verrou=${overlayRegleVerrouille} => ${r === null ? "null" : typeof r} | ${pile()}`); return r; };
+        }
+      });
       await P2.p.evaluate((c) => { document.getElementById("btnModeEnLigne").click(); document.getElementById("btnRevenirPartie").click(); document.getElementById("codeRevenir").value = c.toLowerCase(); document.getElementById("validerRevenir").click(); }, code);
       const revenu = await P2.p.waitForFunction(() => !document.getElementById("ecranRattrapage") && document.querySelectorAll("#plateau .Carte").length === 52, null, { timeout: 90000 }).then(() => true, () => false);
       verifier(revenu, `${nomP} revient avec le code : la partie se recharge (52 cartes)`);
@@ -121,7 +130,7 @@ const OBJECTIF = 12; // cartes retournées à atteindre
         const f = window.__etatFileAlcuno ? window.__etatFileAlcuno() : {};
         const ov = [...document.querySelectorAll('body > [id^="overlay"], body > [id^="ecran"]')].filter((o) => o.getClientRects().length && getComputedStyle(o).display !== "none").map((o) => o.id + " « " + o.innerText.replace(/\s+/g, " ").slice(0, 160) + " »");
         return JSON.stringify({ pseudo: pseudoActuel, joueurs, tour: joueurs[indexJoueur % joueurs.length], duel: duelEnCours, pigeon: typeof choixPigeonEnCours !== "undefined" && choixPigeonEnCours,
-          ecrans: ov, prochainSeq: f.prochainSeq, ratt: f.rattrapageEnCours, trait: f.traitementEnCours, trou: f.trouEnAttente, file: (f.actions || []).slice(-8), journal: (f.journal || []).slice(-25) }, null, 1);
+          dbg: (window.__dbg || []).slice(-30), ecrans: ov, prochainSeq: f.prochainSeq, ratt: f.rattrapageEnCours, trait: f.traitementEnCours, trou: f.trouEnAttente, file: (f.actions || []).slice(-8), journal: (f.journal || []).slice(-25) }, null, 1);
       }).catch((e) => "erreur " + e.message));
       for (const X of [reste.p, P2.p]) await X.evaluate(() => window.__auto.stop());
       await new Promise((r) => setTimeout(r, 6000));
