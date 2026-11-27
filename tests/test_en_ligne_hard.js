@@ -117,6 +117,12 @@ const OBJECTIF = 12; // cartes retournées à atteindre
         await new Promise((r) => setTimeout(r, 1000));
       }
       verifier(apres >= avant + 6, `la partie continue après le retour (${avant} -> ${apres} cartes)`);
+      if (apres < avant + 6 || process.env.DEBUG) for (const [n, X] of [["reste", reste.p], ["revenu", P2.p]]) console.log(`  --- ${n} :`, await X.evaluate(() => {
+        const f = window.__etatFileAlcuno ? window.__etatFileAlcuno() : {};
+        const ov = [...document.querySelectorAll('body > [id^="overlay"], body > [id^="ecran"]')].filter((o) => o.getClientRects().length && getComputedStyle(o).display !== "none").map((o) => o.id + " « " + o.innerText.replace(/\s+/g, " ").slice(0, 160) + " »");
+        return JSON.stringify({ pseudo: pseudoActuel, joueurs, tour: joueurs[indexJoueur % joueurs.length], duel: duelEnCours, pigeon: typeof choixPigeonEnCours !== "undefined" && choixPigeonEnCours,
+          ecrans: ov, prochainSeq: f.prochainSeq, ratt: f.rattrapageEnCours, trait: f.traitementEnCours, trou: f.trouEnAttente, file: (f.actions || []).slice(-8), journal: (f.journal || []).slice(-25) }, null, 1);
+      }).catch((e) => "erreur " + e.message));
       for (const X of [reste.p, P2.p]) await X.evaluate(() => window.__auto.stop());
       await new Promise((r) => setTimeout(r, 6000));
       const [e1, e2] = [await reste.p.evaluate(() => window.__etat()), await P2.p.evaluate(() => window.__etat())];
