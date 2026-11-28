@@ -11237,3 +11237,4 @@ html[data-theme="chandeleur"] #overlayDuel{ --shifumi-texte: #fff3e0; }
 html[data-theme="cerisier"] #ecranReglages #pastilleDonjon .nomTheme{ color: #ff4f5f; }
 /* Casino : ligne de celui qui choisit au pari de fin, fond vert sombre (jaune sur vert clair : peu lisible) */
 html[data-theme="vert"] #overlayPredictionFin .fin-choix-recap .ligne.en-cours{ background: rgba(0, 35, 14, 0.5); box-shadow: inset 0 0 0 1px rgba(255, 215, 0, 0.45); }
+html[data-theme="chandeleur"] #overlayDuel .duel-content .reflexe-zone-nom{ color: #fff3e0; }

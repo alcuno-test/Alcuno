@@ -156,7 +156,9 @@ async function verifierEcran(page, theme, mode, controlerBoutons = true) {
   return { problemes, selection: avec.selection,
     // (habillé = fond ou couleur du texte changés : une simple bordure différente, comme en Prestige, ne compte pas,
     // sinon tous les autres boutons, dorés comme ceux de l'accueil, passaient pour « oubliés »)
-    boutonsHabilles: avec.boutons.filter((x) => lookBase.has(x.cle) && lookBase.get(x.cle).split("|").slice(0, 3).join("|") !== x.look.split("|").slice(0, 3).join("|")).length };
+    // (seulement les boutons principaux de l'accueil, « Mode en ligne » et « Mode classique », comme test_themes.js : Prestige
+    // garde exprès les boutons dorés de base, et un autre détail de l'accueil changé ne veut pas dire « boutons habillés »)
+    boutonsHabilles: avec.boutons.filter((x) => /#btnMode(EnLigne|Classique)\b/.test(x.cle) && lookBase.has(x.cle) && lookBase.get(x.cle).split("|").slice(0, 3).join("|") !== x.look.split("|").slice(0, 3).join("|")).length };
 }
 
 // Planche des captures (à ouvrir dans un navigateur) + rapport texte
