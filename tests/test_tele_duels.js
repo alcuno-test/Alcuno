@@ -48,29 +48,32 @@ const attendre = (ms) => new Promise((r) => setTimeout(r, ms));
     const fermer = () => tel.evaluate(async () => { for (let i = 0; i < 40 && (duelEnCours || document.getElementById("overlayRegleUnique")); i++) { if (document.getElementById("overlayRegleUnique")) fermerOverlayRegleUnique(); await new Promise((r) => setTimeout(r, 200)); } });
     const etats = [];
 
-    // Shifumi « en ligne » (l'écran des téléphones reliés : la télé ne voit que « Duel Shifumi en cours... », puis la révélation)
-    await tel.evaluate(() => { paquetDuel.splice(0, paquetDuel.length, "sept_vert", "deux_bleu", "neuf_rouge", "cinq_jaune"); lancerOverlayChoixDuel(0, "quatre_vert"); });
-    await attendre(300);
-    await tel.evaluate(() => { const o = document.getElementById("overlayDuel"); o.innerHTML = ""; afficherOverlayShifumi(o, 0, 1); });
-    await attendre(600);
-    await tap('#overlayDuel .shifumi-option', "Pierre"); await attendre(400);
-    const secretEnLigne = await etat();
-    etats.push({ nom: "Shifumi en ligne : un joueur a choisi (secret)", e: secretEnLigne, secret: "Pierre" });
-    await tel.evaluate(() => { const r = [...document.querySelectorAll("#overlayDuel .shifumi-options")][1]; const o = [...r.querySelectorAll(".shifumi-option")].find((x) => x.innerText.includes("Ciseaux")); o.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true })); });
-    await tel.waitForFunction(() => document.querySelector("#overlayDuel.shifumi-revele"), null, { timeout: 8000 }).catch(() => {});
-    await attendre(900);
-    etats.push({ nom: "Shifumi en ligne : révélation et résultat", e: await etat() });
-    await fermer();
+    // Shifumi « en ligne » (l'écran des téléphones reliés : la télé ne voit que « Duel Shifumi en cours... », puis la révélation).
+    // Deux fois : le 1er joueur choisit d'abord, puis c'est le 2e qui choisit d'abord (rien du 1er choix ne doit se voir)
+    for (const premier of [0, 1]) {
+      await tel.evaluate(() => { paquetDuel.splice(0, paquetDuel.length, "sept_vert", "deux_bleu", "neuf_rouge", "cinq_jaune"); lancerOverlayChoixDuel(0, "quatre_vert"); });
+      await attendre(300);
+      await tel.evaluate(() => { const o = document.getElementById("overlayDuel"); o.innerHTML = ""; afficherOverlayShifumi(o, 0, 1); });
+      await attendre(600);
+      const choisir = (rang, quoi) => tel.evaluate(([rang, quoi]) => { const r = [...document.querySelectorAll("#overlayDuel .shifumi-options")][rang]; const o = [...r.querySelectorAll(".shifumi-option")].find((x) => x.innerText.includes(quoi)); o.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true })); }, [rang, quoi]);
+      await choisir(premier, "Pierre"); await attendre(400);
+      etats.push({ nom: `Shifumi en ligne : ${premier ? "le 2e" : "le 1er"} joueur a choisi (secret)`, e: await etat(), secret: true });
+      await choisir(1 - premier, "Ciseaux");
+      await tel.waitForFunction(() => document.querySelector("#overlayDuel.shifumi-revele"), null, { timeout: 8000 }).catch(() => {});
+      await attendre(900);
+      if (!premier) etats.push({ nom: "Shifumi en ligne : révélation et résultat", e: await etat(), revele: true });
+      await fermer();
+    }
 
     // Shifumi en classique (cartes)
     await tel.evaluate(() => { paquetDuel.splice(0, paquetDuel.length, "six_vert", "deux_bleu", "neuf_rouge", "cinq_jaune"); lancerOverlayChoixDuel(0, "quatre_vert"); });
     await attendre(300); await tap("#overlayDuel .duel-boutons .bouton-pigeon", "Shifumi"); await attendre(800);
     await tap("#overlayDuel .shifumi-option", "Feuille"); await attendre(500);
-    etats.push({ nom: "Shifumi classique : une carte de dos posée", e: await etat(), secret: "Feuille" });
+    etats.push({ nom: "Shifumi classique : une carte de dos posée", e: await etat(), secret: true });
     await tap("#overlayDuel .shifumi-option", "Pierre");
     await tel.waitForFunction(() => document.querySelector("#overlayDuel.shifumi-revele"), null, { timeout: 8000 }).catch(() => {});
     await attendre(1200);
-    etats.push({ nom: "Shifumi classique : cartes retournées", e: await etat() });
+    etats.push({ nom: "Shifumi classique : cartes retournées", e: await etat(), revele: true });
     await fermer();
 
     // Réflexe
@@ -93,7 +96,7 @@ const attendre = (ms) => new Promise((r) => setTimeout(r, ms));
     await tv.addInitScript(C.scriptMesure());
     await tv.addInitScript(() => document.addEventListener("DOMContentLoaded", () => { const s = document.createElement("style"); s.textContent = "*,*::before,*::after{transition:none!important;animation-duration:0s!important;animation-delay:0s!important}"; document.head.appendChild(s); }));
     await tv.goto(C.URL_JEU + "?tele", { waitUntil: "load" }); await attendre(1000);
-    for (const [k, { nom, e, secret }] of etats.entries()) {
+    for (const [k, { nom, e, secret, revele }] of etats.entries()) {
       const debut = errTv.length;
       const complet = Object.assign(JSON.parse(JSON.stringify(e)), { theme, voix: 0, musique: 0, sons: [], envols: [], rappel: null, eau: null });
       // (la page télé du test, sans téléphone relié, peut se remettre d'elle-même sur son écran d'attente : on redessine
@@ -110,7 +113,17 @@ const attendre = (ms) => new Promise((r) => setTimeout(r, ms));
       const r = await C.verifierEcran(tv, theme, "tele", false);
       await dessiner();
       const texte = await tv.evaluate(() => { const o = document.querySelector("#ecranTele .tele-ecran"); return o && !o.hidden ? o.innerText.replace(/\s+/g, " ") : ""; });
-      if (secret && texte.includes(secret)) r.problemes.push(`SECRET VISIBLE  « ${secret} » se voit sur la télé avant la révélation`);
+      // Avant la révélation : aucun emoji ni mot de choix, ni dans le texte, ni dans ce qui part vers la télé
+      const fuite = /✊|✋|✌|Pierre|Feuille|Ciseaux/;
+      if (secret && (fuite.test(texte) || fuite.test(JSON.stringify(e.ecran || {})))) r.problemes.push(`SECRET VISIBLE  un choix se voit sur la télé avant la révélation (« ${texte.slice(0, 120)} »)`);
+      // Révélation : les deux emojis en grand avec le nom de chaque joueur dessous, et pas les mots « Pierre », « Feuille »…
+      if (revele) {
+        const bloc = await tv.evaluate(() => [...document.querySelectorAll("#ecranTele .tele-shifumi-joueur")].map((j) => ({ e: j.querySelector(".tele-shifumi-emoji").textContent, n: j.querySelector(".tele-shifumi-nom").textContent,
+          taille: parseFloat(getComputedStyle(j.querySelector(".tele-shifumi-emoji")).fontSize), tailleNom: parseFloat(getComputedStyle(j.querySelector(".tele-shifumi-nom")).fontSize) })));
+        if (bloc.length !== 2 || !bloc.every((j) => /✊|✋|✌/.test(j.e) && /Tris|Ylana/.test(j.n) && j.taille >= 66 && j.tailleNom >= 28))
+          r.problemes.push(`RÉVÉLATION     emojis et noms pas en grand sur la télé : ${JSON.stringify(bloc)}`);
+        if (/Pierre|Feuille|Ciseaux/.test(texte)) r.problemes.push(`RÉVÉLATION     les mots « Pierre », « Feuille »… s'affichent encore (« ${texte.slice(0, 120)} »)`);
+      }
       errTv.slice(debut).forEach((m) => r.problemes.push(`ERREUR JS      ${m}`));
       const image = `${theme}_${k}.png`;
       await tv.screenshot({ path: path.join(dossier, image) });
