@@ -1227,11 +1227,15 @@ function dessinerTele(ecran, etat){
     const zoneTexte = surEcran.querySelector(".tele-ecran-texte");
     zoneTexte.innerHTML = "";
     const lignesTexte = String(e.texte || "").split("\n").filter(Boolean);
+    // Shifumi révélé avec un gagnant : pas la phrase « Ylana a perdu, Tris gagne » (les emojis éclairés le disent) ; la
+    // ligne d'une égalité (« ×2 ») reste
+    const sansPhrase = !!(e.shifumi && e.shifumi.some((j) => j.g) && lignesTexte.length > 1);
+    if (sansPhrase) lignesTexte.pop();
     lignesTexte.forEach((t, i) => {
       const l = document.createElement("div");
       l.className = i === 0 ? "tele-ecran-titre" : (e.go && t === e.go ? "tele-ecran-go" : "tele-ecran-detail");
       // Shifumi révélé : la dernière ligne (« Ylana a perdu, Tris gagne », « Égalité ! … ») en plus gros, sous les emojis
-      if (e.shifumi && i > 0 && i === lignesTexte.length - 1) l.className = "tele-ecran-resultat";
+      if (e.shifumi && !sansPhrase && i > 0 && i === lignesTexte.length - 1) l.className = "tele-ecran-resultat";
       l.innerText = t;
       zoneTexte.appendChild(l);
     });

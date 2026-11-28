@@ -11283,9 +11283,17 @@ html:is([data-theme="givre"], [data-theme="kawaii"], [data-theme="soleil"]) :is(
   font-size: clamp(66px, 8vw, 115px); line-height: 1; background: rgba(255,255,255,0.08); border: 4px solid var(--shifumi-bord, #FFD700);
 }
 #ecranTele .tele-shifumi-nom{ font: 900 clamp(28px, 3.2vw, 48px)/1.1 Arial, sans-serif; color: var(--shifumi-texte, #FFD700); text-shadow: 2px 2px 6px #000; }
-#ecranTele .tele-shifumi-gagnant .tele-shifumi-emoji{ box-shadow: 0 0 0 5px var(--shifumi-bord, #FFD700), 0 0 40px var(--shifumi-bord, #FFD700); }
-#ecranTele .tele-shifumi-perdant .tele-shifumi-emoji{ border-color: #e53935; box-shadow: 0 0 34px rgba(229,57,53,0.8); }
-#ecranTele .tele-shifumi-perdant{ opacity: 0.85; }
+/* (gagnant : plus grand, éclairé, halo ; perdant : plus petit, pâli et à moitié décoloré) */
+#ecranTele .tele-shifumi-joueur{ transition: transform 0.4s ease, opacity 0.4s ease, filter 0.4s ease; }
+#ecranTele .tele-shifumi-gagnant{ transform: scale(1.12); }
+#ecranTele .tele-shifumi-gagnant .tele-shifumi-emoji{
+  background: radial-gradient(circle, rgba(255,255,255,0.55), rgba(255,255,255,0.12) 70%);
+  box-shadow: 0 0 0 6px var(--shifumi-bord, #FFD700), 0 0 60px 10px var(--shifumi-bord, #FFD700), 0 0 120px rgba(255,255,255,0.35);
+  filter: brightness(1.15) saturate(1.2);
+}
+#ecranTele .tele-shifumi-gagnant .tele-shifumi-nom{ filter: brightness(1.25); text-shadow: 0 0 18px var(--shifumi-bord, #FFD700), 2px 2px 6px #000; }
+#ecranTele .tele-shifumi-perdant{ transform: scale(0.88); opacity: 0.45; filter: grayscale(0.65) brightness(0.8); }
+#ecranTele .tele-shifumi-perdant .tele-shifumi-emoji{ border-color: rgba(229,57,53,0.7); box-shadow: none; }
 #ecranTele .tele-ecran-resultat{ font: 900 clamp(26px, 3vw, 44px)/1.15 Arial, sans-serif; color: var(--shifumi-texte, #FFD700); text-shadow: 2px 2px 6px #000; white-space: pre-line; }
 html[data-theme="halloween"] #ecranTele{ --shifumi-bord: #ff9a3c; --shifumi-texte: #ff9a3c; }
 html:is([data-theme="justrose"], [data-theme="musique"]) #ecranTele{ --shifumi-bord: #ffffff; --shifumi-texte: #ffffff; }
