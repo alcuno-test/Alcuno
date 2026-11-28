@@ -1,6 +1,6 @@
 // PARTIE BLOQUÉE EN LIGNE (js/bots.js) : trois « téléphones » (A, B, C) sur la base Firebase de l'appli TEST.
-// 1) Le joueur dont c'est le tour ferme son appli : chez les autres, au bout de 12 s, « On attend X (son tour)… » avec
-//    « Choisir à sa place » et « Remplacer par un bot » ; « Choisir à sa place » fait avancer la partie (une carte pour lui).
+// 1) Le joueur dont c'est le tour ferme son appli : chez les autres, au bout du délai (80 s dans le jeu, raccourci ici à
+//    15 s : window.__attenteBlocage), « On attend X (son tour)… » avec un seul bouton, « Remplacer par un bot ».
 // 2) « Remplacer par un bot » : le bot joue pour lui tout seul (le téléphone qui l'a demandé le fait jouer) pendant que
 //    les autres jouent (robot des tests) ; il est marqué 🤖 partout ; ses gorgées ne comptent pas.
 // 3) Il revient avec le code : « Un bot joue à ta place » → « Reprendre la main » : plus de bot, il rejoue lui-même.
@@ -36,7 +36,7 @@ const verifier = (ok, msg) => { console.log((ok ? "OK    " : "ECHEC ") + msg); i
     const p = await ctx.newPage();
     const erreurs = [];
     p.on("pageerror", (e) => erreurs.push(e.message));
-    await p.addInitScript(() => { try { localStorage.setItem("alcuno_theme", "bordeaux"); localStorage.setItem("alcuno_tutoriel", "vu"); } catch (e) {} });
+    await p.addInitScript(() => { window.__attenteBlocage = 15000; try { localStorage.setItem("alcuno_theme", "bordeaux"); localStorage.setItem("alcuno_tutoriel", "vu"); } catch (e) {} });
     await p.goto(url);
     await p.waitForFunction(() => document.getElementById("btnModeEnLigne") && window.firebaseDB, null, { timeout: 30000 });
     await p.evaluate((a) => { window.alert = (m) => (window.__alertes = window.__alertes || []).push(String(m)); window.confirm = () => true; (0, eval)(a); }, auto);
@@ -66,7 +66,8 @@ const verifier = (ok, msg) => { console.log((ok ? "OK    " : "ECHEC ") + msg); i
     for (const X of tous) await X.p.waitForFunction(() => document.querySelectorAll("#plateau .Carte").length > 0 && joueurs.length === 3, null, { timeout: 40000 });
     await attendre(2000);
 
-    // ----- 1) Celui dont c'est le tour part : « On attend X (son tour)… », puis « Choisir à sa place » -----
+    // ----- 1) Celui dont c'est le tour part : « On attend X (son tour)… », un seul bouton « Remplacer par un bot » -----
+    verifier(await A.p.evaluate(() => { const v = window.__attenteBlocage; delete window.__attenteBlocage; const d = ATTENTE_BLOCAGE(); window.__attenteBlocage = v; return d === 80000; }), "dans le jeu, la barre attend 80 s");
     const nomX = await tour(A);
     const X = tous.find((t) => t.pseudo === nomX);
     const autres = tous.filter((t) => t !== X);
@@ -74,25 +75,19 @@ const verifier = (ok, msg) => { console.log((ok ? "OK    " : "ECHEC ") + msg); i
     await X.p.close();
     const t0 = Date.now();
     let b = "";
-    while (Date.now() - t0 < 40000) { b = await barre(autres[0]); if (b) break; await attendre(500); }
+    while (Date.now() - t0 < 60000) { b = await barre(autres[0]); if (b) break; await attendre(500); }
     const delai = Math.round((Date.now() - t0) / 1000);
-    verifier(b.includes(`On attend ${nomX}`) && b.includes("son tour") && b.includes("Choisir à sa place") && b.includes("Remplacer par un bot"),
-      `chez les autres, au bout de ${delai} s : « ${b} »`);
-    verifier(delai >= 8, `la barre attend un peu avant d'apparaître (${delai} s)`);
+    const boutons = await autres[0].p.evaluate(() => [...document.querySelectorAll("#barreBlocage button")].map((x) => x.innerText.trim()));
+    verifier(b.includes(`On attend ${nomX}`) && b.includes("son tour") && boutons.length === 1 && boutons[0] === "Remplacer par un bot",
+      `chez les autres, au bout de ${delai} s : « ${b} » (boutons : ${boutons.join(" / ")})`);
+    verifier(delai >= 13, `la barre attend le délai avant d'apparaître (${delai} s pour 15 s)`);
     let b2 = ""; const tc = Date.now(); while (Date.now() - tc < 8000 && !b2) { b2 = await barre(autres[1]); if (!b2) await attendre(400); }
     verifier(b2.includes(`On attend ${nomX}`), `chez ${autres[1].pseudo} aussi : « ${b2} »`);
-    const avant = await retournees(autres[0]);
-    verifier(await cliquerBarre(autres[0], "Choisir à sa place"), `${autres[0].pseudo} touche « Choisir à sa place »`);
-    await autres[0].p.waitForFunction((n) => document.querySelectorAll("#plateau .Carte.retournee").length > n, avant, { timeout: 15000 }).catch(() => {});
-    verifier((await retournees(autres[0])) === avant + 1 && (await retournees(autres[1])) === avant + 1, `une carte retournée pour ${nomX}, chez les deux (${avant} → ${await retournees(autres[0])} / ${await retournees(autres[1])})`);
 
     // ----- 2) « Remplacer par un bot » : le bot joue pour lui pendant que les autres jouent -----
-    for (const Y of autres) await Y.p.evaluate(() => window.__auto.start());
-    const t1 = Date.now(); b = "";
-    while (Date.now() - t1 < 120000) { b = await barre(autres[1]); if (b.includes("Remplacer par un bot")) break; for (const Y of autres) await debloquer(Y); await attendre(500); }
-    verifier(b.includes(`On attend ${nomX}`), `la partie revient à ${nomX} et bloque à nouveau : « ${b} »`);
     verifier(await cliquerBarre(autres[1], "Remplacer par un bot"), `${autres[1].pseudo} touche « Remplacer par un bot »`);
     await attendre(2500);
+    for (const Y of autres) await Y.p.evaluate(() => window.__auto.start());
     const bots = await Promise.all(autres.map((Y) => Y.p.evaluate((n) => estBot(n) && !!document.querySelector("#listeJoueurs .badge-bot, .badge-bot"), nomX)));
     verifier(bots.every(Boolean), `${nomX} est un bot chez les deux, avec 🤖 (${bots})`);
     const pilote = await autres[0].p.evaluate((n) => pilotesBots.get(n), nomX);

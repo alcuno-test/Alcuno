@@ -77,9 +77,9 @@ Partie bloquée en ligne (3 minutes, Linux / macOS / Windows, vrai Firebase de l
 -------------------------------------------------------------------------------------------
   node tests/test_blocage_en_ligne.js
 
-  Trois téléphones. Celui dont c'est le tour ferme son appli : chez les autres, au bout de 12 s, « On attend X (son
-  tour)… » avec « Choisir à sa place » (une carte retournée pour lui) et « Remplacer par un bot » (le bot joue ses tours
-  tout seul, marqué 🤖 partout). Il revient avec le code : « Un bot joue à ta place » → « Reprendre la main ». Vérifie
+  Trois téléphones. Celui dont c'est le tour ferme son appli : chez les autres, au bout du délai (80 s dans le jeu,
+  raccourci à 15 s dans le test), « On attend X (son tour)… » avec un seul bouton, « Remplacer par un bot » : le bot joue
+  ses tours tout seul, marqué 🤖 partout. Il revient avec le code : « Un bot joue à ta place » → « Reprendre la main ». Vérifie
   aussi que les 3 téléphones finissent dans le même état. Résultat attendu : « TOUT EST OK ».
 
 Spectateur en ligne (10 secondes, Linux / macOS / Windows)
