@@ -11257,3 +11257,12 @@ html[data-theme="chandeleur"] #overlayDuel .duel-content .reflexe-zone-nom{ colo
 }
 #barreBlocage .barreBlocage-bouton:disabled{ opacity: 0.55; cursor: default; }
 @media (prefers-reduced-motion: reduce){ #barreBlocage{ animation: none; } }
+/* Télé, Réflexe en classique : « TAPE ! » en gros, en vert, comme sur le téléphone */
+#ecranTele .tele-ecran-go{
+  color: #2fe36a; font: 900 clamp(72px, 12vw, 160px)/1 Arial Black, Arial, sans-serif; margin-top: 0.15em;
+  text-shadow: 0 0 30px rgba(47,227,106,0.75), 4px 4px 0 #000; animation: reflexeGo 0.16s cubic-bezier(.2,1.6,.4,1) both;
+}
+/* Givre, Kawaii et Soleil couchant (fond clair) : vert plus foncé pour « TAPE ! » (le vert vif ne ressortait pas), sur la télé et le téléphone */
+html:is([data-theme="givre"], [data-theme="kawaii"], [data-theme="soleil"]) :is(#ecranTele .tele-ecran-go, #overlayDuel .duel-content .reflexe-signal.reflexe-signal-go){
+  color: #0b7a2e; text-shadow: 0 0 18px rgba(47,227,106,0.45), 2px 2px 0 #fff;
+}

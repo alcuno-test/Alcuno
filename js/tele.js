@@ -325,6 +325,8 @@ function ecranPourTele(){
     pari: o.id === "overlayPredictionFin" ? pariPourTele(o) : null,
     hot: blocHot ? hotPourTele(blocHot) : null,
     texte: texteSansBoutons(o),
+    // Réflexe en classique : « TAPE ! » en gros (en ligne, la télé reste sur « Duel Réflexe en cours... » : voir regles.js)
+    go: (() => { const sg = o.querySelector(".reflexe-signal-go"); return sg && sg.dataset.tele === tr("TAPE !") ? sg.dataset.tele : null; })(),
     // (cartes des annonces : leur face sans la classe « retournee » ; cartes du duel encore à choisir : sans face, donc de dos)
     cartes: cartes.slice(0, 4).map(c => faceCarte(c) || (c.classList.contains("dos_dore") ? "d" : "")),
     // Duel : carte déjà choisie (assombrie), puis carte du perdant (en rouge) et du gagnant (estompée), comme sur le téléphone
@@ -1211,7 +1213,7 @@ function dessinerTele(ecran, etat){
     zoneTexte.innerHTML = "";
     String(e.texte || "").split("\n").filter(Boolean).forEach((t, i) => {
       const l = document.createElement("div");
-      l.className = i === 0 ? "tele-ecran-titre" : "tele-ecran-detail";
+      l.className = i === 0 ? "tele-ecran-titre" : (e.go && t === e.go ? "tele-ecran-go" : "tele-ecran-detail");
       l.innerText = t;
       zoneTexte.appendChild(l);
     });
