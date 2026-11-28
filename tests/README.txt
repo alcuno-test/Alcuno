@@ -73,6 +73,15 @@ Duel Réflexe en ligne (2 minutes, Linux / macOS / Windows, vrai Firebase de l'a
   bout de 5 s, égalité ×2, « personne n'a tapé » (on recommence sans doubler), les gorgées, et des états identiques
   sur les 3 téléphones. Résultat attendu : « TOUT EST OK ».
 
+Partie bloquée en ligne (3 minutes, Linux / macOS / Windows, vrai Firebase de l'appli TEST)
+-------------------------------------------------------------------------------------------
+  node tests/test_blocage_en_ligne.js
+
+  Trois téléphones. Celui dont c'est le tour ferme son appli : chez les autres, au bout de 12 s, « On attend X (son
+  tour)… » avec « Choisir à sa place » (une carte retournée pour lui) et « Remplacer par un bot » (le bot joue ses tours
+  tout seul, marqué 🤖 partout). Il revient avec le code : « Un bot joue à ta place » → « Reprendre la main ». Vérifie
+  aussi que les 3 téléphones finissent dans le même état. Résultat attendu : « TOUT EST OK ».
+
 Spectateur en ligne (10 secondes, Linux / macOS / Windows)
 ----------------------------------------------------------
   node tests/test_spectateur.js
